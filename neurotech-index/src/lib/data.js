@@ -58,6 +58,19 @@ export async function getResearchers() {
   return tag('researchers')(data.map(normalizeSupabaseResearcher))
 }
 
+// ── Clinical trials (table added in Phase 1; safe no-op until then) ──────────
+
+export async function getTrials() {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from('clinical_trials')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(200)
+  if (error || !data) return [] // table may not exist yet — fail soft
+  return tag('trials')(data)
+}
+
 // ── News feed ───────────────────────────────────────────────────────────────
 
 export async function getNewsFeed({ topic = null, limit = 10 } = {}) {
