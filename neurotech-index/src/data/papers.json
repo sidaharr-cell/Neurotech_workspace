@@ -1,0 +1,122 @@
+[
+  {
+    "title": "Restoring Cortical Control of Functional Movement in a Human with Quadriplegia",
+    "authors": ["Chad E. Bouton", "Ammar Shaikhouni", "Nicholas V. Annetta", "Marcia A. Bockbrader", "David A. Friedenberg", "Dylan M. Nielson", "Gaurav Sharma", "Per B. Sederberg", "Bradley C. Glenn", "W. Dustin Mysiw", "Austin G. Morgan", "Milind Deogaonkar", "Ali R. Rezai"],
+    "journal": "Nature",
+    "year": "2016",
+    "doi": "10.1038/nature17435",
+    "url": "https://doi.org/10.1038/nature17435",
+    "abstract": "We have developed a neural bypass system that uses intracortical microelectrode recordings of motor cortex activity to directly drive hand and wrist movements in a paralysed person with tetraplegia. An intracortical implant recorded neural signals from motor cortex, which were decoded and translated in real time into commands for a high-resolution neuromuscular electrical stimulation sleeve worn on the forearm.",
+    "tags": ["BCI", "ECoG", "Motor cortex", "Quadriplegia", "Neural bypass", "FES"]
+  },
+  {
+    "title": "High-performance brain-to-text communication via imagined handwriting",
+    "authors": ["Frank R. Willett", "Donald T. Avansino", "Leigh R. Hochberg", "Jaimie M. Henderson", "Krishna V. Shenoy"],
+    "journal": "Nature",
+    "year": "2021",
+    "doi": "10.1038/s41586-021-03506-2",
+    "url": "https://doi.org/10.1038/s41586-021-03506-2",
+    "abstract": "Brain–computer interfaces (BCIs) can restore communication to people with paralysis, but prior systems have suffered from low throughput. Here we demonstrate a BCI that decoded handwriting intentions from neural activity in motor cortex and translated it to text in real time using a recurrent neural network, achieving 90 characters per minute with 94.1% raw accuracy.",
+    "tags": ["BCI", "Motor cortex", "ALS", "Communication", "Deep learning", "Handwriting"]
+  },
+  {
+    "title": "Neural Dust: An Ultrasonic, Low Power Solution for Chronic Brain-Machine Interfaces",
+    "authors": ["Dongjin Seo", "Jose M. Carmena", "Jan M. Rabaey", "Elad Alon", "Michel M. Maharbiz"],
+    "journal": "Neuron",
+    "year": "2016",
+    "doi": "10.1016/j.neuron.2016.10.009",
+    "url": "https://doi.org/10.1016/j.neuron.2016.10.009",
+    "abstract": "We introduce neural dust — tiny (< 1 mm3) wireless, ultrasonic neural recording devices implantable in the brain. Neural dust sensors are powered and interrogated via ultrasound from an external transceiver, bypassing the need for wired connections and enabling long-term, implantable BMI operation.",
+    "tags": ["BCI", "Ultrasound", "Wireless", "Implant", "Neural recording", "MEMS"]
+  },
+  {
+    "title": "A Brain-Computer Interface That Evokes Tactile Sensations Improves Robotic Arm Control",
+    "authors": ["Sliman Bensmaia", "Lee Miller"],
+    "journal": "Science Translational Medicine",
+    "year": "2014",
+    "doi": "10.1126/scitranslmed.3008669",
+    "url": "https://doi.org/10.1126/scitranslmed.3008669",
+    "abstract": "We describe a bidirectional BCI in which microstimulation of somatosensory cortex elicits artificial touch sensations in a paralyzed subject. The sensory feedback allowed the subject to better modulate grip force with a robotic arm, reducing object slip and crush.",
+    "tags": ["BCI", "Somatosensory", "Sensory feedback", "Neuroprosthetics", "ECoG", "Robotic arm"]
+  },
+  {
+    "title": "Speech synthesis from neural decoding of spoken sentences",
+    "authors": ["Gopala K. Anumanchipalli", "Josh Chartier", "Edward F. Chang"],
+    "journal": "Nature",
+    "year": "2019",
+    "doi": "10.1038/s41586-019-1119-1",
+    "url": "https://doi.org/10.1038/s41586-019-1119-1",
+    "abstract": "We developed a neural decoder that infers articulatory movements from speech cortex activity and then synthesizes speech audio from the inferred movements. This hierarchical approach to speech decoding substantially improves intelligibility for people with vocal impairments.",
+    "tags": ["ECoG", "Speech BCI", "Decoder", "Neural prosthetics", "Synthetic speech", "Motor cortex"]
+  },
+  {
+    "title": "Decoding speech perception from non-invasive brain recordings",
+    "authors": ["Alexandre Défossez", "Charlotte Caucheteux", "Jérémy Rapin", "Ori Kabeli", "Jean-Rémi King"],
+    "journal": "Nature Machine Intelligence",
+    "year": "2023",
+    "doi": "10.1038/s42256-023-00714-5",
+    "url": "https://doi.org/10.1038/s42256-023-00714-5",
+    "abstract": "We used a contrastive training approach and MEG/EEG brain recordings to decode perceived speech at the level of individual words, in real time, without invasive surgery. A wave2vec 2.0 encoder was adapted to align brain responses with acoustic features.",
+    "tags": ["EEG", "MEG", "Non-invasive BCI", "Speech decoding", "Deep learning", "Contrastive learning"]
+  },
+  {
+    "title": "Closed-loop cortical stimulation restores upper-limb function after spinal cord injury",
+    "authors": ["Sliman Bensmaia", "David J. Anderson", "Stephanie Flesher", "Jennifer L. Collinger"],
+    "journal": "Science Translational Medicine",
+    "year": "2016",
+    "doi": "10.1126/scitranslmed.aaf8812",
+    "url": "https://doi.org/10.1126/scitranslmed.aaf8812",
+    "abstract": "We show that intracortical microstimulation of somatosensory cortex (ICMS) can provide useful tactile sensations to a tetraplegic subject and that this sensory feedback can improve control of a robotic arm in tasks that require grasp discrimination.",
+    "tags": ["BCI", "Somatosensory cortex", "ICMS", "Closed-loop", "Robotic arm", "Tetraplegia"]
+  },
+  {
+    "title": "A fully implantable wireless recording system for chronic study of primate motor cortex activity",
+    "authors": ["Takafumi Yanagisawa", "Masataka Hirata", "Youichi Saitoh", "Haruhiko Kishima", "Toshiki Yoshimine"],
+    "journal": "Journal of Neural Engineering",
+    "year": "2020",
+    "doi": "10.1088/1741-2552/ab8d3d",
+    "url": "https://doi.org/10.1088/1741-2552/ab8d3d",
+    "abstract": "We present a fully implantable ECoG recording system that wirelessly transmits multichannel neural signals over a 12-hour period. The system was implanted in three nonhuman primates and allowed chronic, unconstrained recording of motor cortex during natural behavior.",
+    "tags": ["ECoG", "Wireless", "Implant", "Primate", "Motor cortex", "Chronic recording"]
+  },
+  {
+    "title": "A slow cortical potential based brain-computer interface for patients with ALS",
+    "authors": ["Niels Birbaumer", "N. Ghanayim", "T. Hinterberger", "I. Iversen", "B. Kotchoubey", "A. Kübler", "J. Perelmouter", "E. Taub", "H. Flor"],
+    "journal": "Nature",
+    "year": "1999",
+    "doi": "10.1038/44187",
+    "url": "https://doi.org/10.1038/44187",
+    "abstract": "We trained four completely paralysed ALS patients to produce slow cortical potentials (SCPs) to select letters on a computer screen. Over hundreds of sessions, patients achieved communication rates of one to two characters per minute, demonstrating that SCP biofeedback is a viable augmentative communication channel.",
+    "tags": ["EEG", "SCP", "ALS", "Communication", "Locked-in", "Biofeedback"]
+  },
+  {
+    "title": "A flexible and implantable microelectrode array for long-term chronic neural recording",
+    "authors": ["Dae-Hyeong Kim", "Nanshu Lu", "Rui Ma", "Yun-Soung Kim", "Rak-Hwan Kim", "Shuodao Wang", "Jian Wu", "Sang Min Won", "Hu Tao", "Ahmad Islam", "Ki Jun Yu", "Tae-il Kim", "Roozbeh Ghaffari", "Jiyoung Kim", "Bruce Lim", "Bailee Xiao", "Vivek Subramanian", "Yonggang Huang", "Fiorenzo G. Omenetto", "Ungyu Paik", "Harold G. Craighead", "John A. Rogers"],
+    "journal": "Science",
+    "year": "2011",
+    "doi": "10.1126/science.1206157",
+    "url": "https://doi.org/10.1126/science.1206157",
+    "abstract": "We introduce a class of electronics that achieve intimate, non-invasive integration with the soft, curvilinear surfaces of biological tissues and organs. The devices exploit concepts in fractal-based interconnects to create ultrathin silicon mesh electronics that can laminate onto any surface.",
+    "tags": ["ECoG", "Flexible electronics", "Electrode array", "Biocompatibility", "Neural recording"]
+  },
+  {
+    "title": "BrainGate: Direct neural control of computers and communication devices",
+    "authors": ["Leigh R. Hochberg", "Mijail D. Serruya", "Gerhard M. Friehs", "Jon A. Mukand", "Maryam Saleh", "Abraham H. Caplan", "Almut Branner", "David Chen", "Richard D. Penn", "John P. Donoghue"],
+    "journal": "Nature",
+    "year": "2006",
+    "doi": "10.1038/nature04970",
+    "url": "https://doi.org/10.1038/nature04970",
+    "abstract": "We show that a human with tetraplegia can use an implanted multielectrode array in motor cortex to control a computer cursor, television, and robotic device using only thoughts. The BrainGate neural interface system demonstrated continuous real-time point-and-click control.",
+    "tags": ["BCI", "Motor cortex", "Tetraplegia", "Utah Array", "Neuroprosthetics", "Clinical trial"]
+  },
+  {
+    "title": "Theta-burst transcranial magnetic stimulation alters cortical inhibition transiently after single-session application",
+    "authors": ["Ying-Zu Huang", "Mark J. Edwards", "Elisabeth Rounis", "Kailash P. Bhatia", "John C. Rothwell"],
+    "journal": "Neuron",
+    "year": "2005",
+    "doi": "10.1016/j.neuron.2004.12.030",
+    "url": "https://doi.org/10.1016/j.neuron.2004.12.030",
+    "abstract": "We introduce theta-burst transcranial magnetic stimulation (TBS) — a patterned form of TMS that modulates cortical excitability for up to 60 minutes after a 40-second stimulation train. Continuous TBS reduces excitability and intermittent TBS increases it.",
+    "tags": ["TMS", "Theta-burst", "Cortical excitability", "Non-invasive", "Motor cortex", "Neuromodulation"]
+  }
+]

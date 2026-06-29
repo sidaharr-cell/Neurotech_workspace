@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Neuralink",
+    "type": "Company",
+    "location": "Fremont, CA, USA",
+    "founded": "2016",
+    "description": "Neuralink develops fully implantable, wireless brain-computer interfaces aimed at treating neurological disorders and eventually enabling high-bandwidth human-AI communication. Their N1 chip records from 1024 electrodes and is currently in the PRIME clinical trial for tetraplegic patients.",
+    "focusAreas": ["BCI", "Neural recording", "Paralysis", "Motor cortex"],
+    "website": "https://neuralink.com",
+    "founders": ["Elon Musk", "Max Hodak", "Paul Merolla", "Phil Sabes", "Tim Hanson", "Vanessa Tolosa", "Ben Rapoport"]
+  },
+  {
+    "name": "Synchron",
+    "type": "Company",
+    "location": "New York, NY, USA",
+    "founded": "2016",
+    "description": "Synchron develops the Stentrode, an endovascular neural interface that is delivered to the motor cortex through blood vessels, eliminating the need for open-brain surgery. The SWITCH trial is the first-in-human clinical study of a permanently implanted BCI in the US.",
+    "focusAreas": ["BCI", "Endovascular", "Paralysis", "Minimally invasive"],
+    "website": "https://synchron.com",
+    "founders": ["Thomas Oxley", "Nicholas Opie", "David Grayden"]
+  },
+  {
+    "name": "OpenBCI",
+    "type": "Company",
+    "location": "Brooklyn, NY, USA",
+    "founded": "2014",
+    "description": "OpenBCI creates open-source biosensing hardware and software for EEG, EMG, and ECG research. Their Cyton and Ganglion boards, Ultracortex headsets, and BrainFlow software are widely used in academic labs, hackathons, and DIY neurotechnology communities worldwide.",
+    "focusAreas": ["EEG", "Open-source", "DIY neuroscience", "Biosensing"],
+    "website": "https://openbci.com",
+    "founders": ["Joel Murphy", "Conor Russomanno"]
+  },
+  {
+    "name": "Kernel",
+    "type": "Company",
+    "location": "Los Angeles, CA, USA",
+    "founded": "2016",
+    "description": "Kernel builds wearable neuroimaging devices including Kernel Flow (fNIRS) and Kernel Flux (MEG) that move brain scanning outside the hospital and into natural environments. Their mission is to make high-resolution neuroimaging accessible for both research and consumer wellness applications.",
+    "focusAreas": ["fNIRS", "MEG", "Wearable neuroimaging", "Cognitive science"],
+    "website": "https://kernel.com",
+    "founders": ["Bryan Johnson"]
+  },
+  {
+    "name": "UCSF Weill Institute for Neurosciences",
+    "type": "Research Institute",
+    "location": "San Francisco, CA, USA",
+    "founded": "2016",
+    "description": "The UCSF Weill Institute brings together over 500 clinicians and researchers across 26 departments to investigate and treat diseases of the brain and nervous system. Notable neurotech research includes ECoG-based speech BCIs (Chang Lab), closed-loop DBS for depression (Krystal Lab), and spinal cord stimulation for paralysis.",
+    "focusAreas": ["ECoG", "Speech BCI", "DBS", "Spinal cord injury", "Neurodegenerative disease"],
+    "website": "https://weill.ucsf.edu",
+    "founders": []
+  },
+  {
+    "name": "MIT McGovern Institute for Brain Research",
+    "type": "Research Institute",
+    "location": "Cambridge, MA, USA",
+    "founded": "2000",
+    "description": "The McGovern Institute at MIT is a world-leading neuroscience research center. Groups here have developed CLARITY (tissue clearing), synthetic retinas, near-field BCI telementry, flexible neural probes, and fundamental work on neural circuits underlying cognition, memory, and motor control.",
+    "focusAreas": ["Neural circuits", "Neural probes", "Memory", "Motor control", "Computational neuroscience"],
+    "website": "https://mcgovern.mit.edu",
+    "founders": ["Patrick J. McGovern", "Lore Harp McGovern"]
+  },
+  {
+    "name": "BrainGate Consortium",
+    "type": "Research Consortium",
+    "location": "Providence, RI, USA (coordinated)",
+    "founded": "2011",
+    "description": "BrainGate is a multi-institution collaborative research program conducting the first long-term clinical trials of intracortical BCIs. Spanning Brown University, Massachusetts General Hospital, Harvard Medical School, and Stanford University, BrainGate has enrolled dozens of participants with ALS, SCI, and brainstem stroke.",
+    "focusAreas": ["BCI", "Clinical trials", "ALS", "SCI", "Motor cortex"],
+    "website": "https://braingate.org",
+    "founders": []
+  },
+  {
+    "name": "Allen Institute for Brain Science",
+    "type": "Research Institute",
+    "location": "Seattle, WA, USA",
+    "founded": "2003",
+    "description": "The Allen Institute produces large-scale open atlases of gene expression, cell types, and neural connectivity in the mouse and human brain. The Allen Brain Atlas, Allen Cell Types Database, and Human Brain Atlas are foundational references used by thousands of neuroscience labs globally.",
+    "focusAreas": ["Brain atlas", "Cell types", "Connectomics", "Gene expression", "Open data"],
+    "website": "https://alleninstitute.org",
+    "founders": ["Paul G. Allen"]
+  },
+  {
+    "name": "Blackrock Neurotech",
+    "type": "Company",
+    "location": "Salt Lake City, UT, USA",
+    "founded": "2008",
+    "description": "Blackrock Neurotech manufactures clinical and research-grade neural recording systems including the Utah Electrode Array (Neuroport) — the most widely implanted intracortical device in human BCI research. Their hardware underpins virtually all BrainGate and similar clinical BCI trials.",
+    "focusAreas": ["Neural recording", "Utah array", "BCI hardware", "Clinical"],
+    "website": "https://blackrockneurotech.com",
+    "founders": []
+  },
+  {
+    "name": "Carnegie Mellon University NeuroTech Lab",
+    "type": "University Lab",
+    "location": "Pittsburgh, PA, USA",
+    "founded": "2009",
+    "description": "The CMU NeuroTech Lab (Schwartz group) focuses on high-performance neuroprosthetics and motor cortex decoding. They pioneered dexterous 7-DOF arm control from motor cortex signals and have collaborated extensively with the University of Pittsburgh for human BCI clinical work.",
+    "focusAreas": ["Motor cortex", "Neuroprosthetics", "Decoding", "Arm control", "Primate BCI"],
+    "website": "https://www.cnbc.cmu.edu",
+    "founders": []
+  },
+  {
+    "name": "Johns Hopkins Applied Physics Laboratory",
+    "type": "Research Lab",
+    "location": "Laurel, MD, USA",
+    "founded": "1942",
+    "description": "APL's Intelligent Systems Center develops advanced prosthetic limbs and neural interfaces under DARPA's Revolutionizing Prosthetics program. They built the DEKA Arm (Luke Arm) and demonstrated the first BCI-controlled modular prosthetic limb with sensory feedback in a human participant.",
+    "focusAreas": ["Prosthetics", "Sensory feedback", "BCI", "DARPA", "Robotic limbs"],
+    "website": "https://www.jhuapl.edu",
+    "founders": []
+  },
+  {
+    "name": "Emotiv",
+    "type": "Company",
+    "location": "San Francisco, CA, USA",
+    "founded": "2011",
+    "description": "Emotiv produces consumer and research EEG headsets (EPOC, Insight, Flex) and cloud-based cognitive analytics software. Their neuroheadsets are among the most widely deployed consumer BCIs, used in workload detection, marketing neuroscience, gaming, and educational research.",
+    "focusAreas": ["Consumer EEG", "Cognitive load", "Emotion detection", "Workload", "Neuromarketing"],
+    "website": "https://emotiv.com",
+    "founders": ["Tan Le", "Nam Do"]
+  }
+]

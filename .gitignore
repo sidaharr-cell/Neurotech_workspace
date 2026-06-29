@@ -1,1 +1,16 @@
+# Local Claude Code settings (machine-specific permissions)
 .claude/settings.local.json
+
+# Secrets — never commit (belt-and-suspenders; subfolders also ignore these)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# OS / editor cruft
+.DS_Store
+
+# Dependencies / build output (each app also has its own .gitignore)
+node_modules/
+dist/
