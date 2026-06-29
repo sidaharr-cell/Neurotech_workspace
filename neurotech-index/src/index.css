@@ -13,21 +13,61 @@
     overflow-x: hidden;
   }
   ::selection {
-    background-color: #4A6CE8;
+    background-color: rgba(79, 124, 255, 0.85);
     color: #fff;
   }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: #F5F6FA; }
-  ::-webkit-scrollbar-thumb { background: #c7d2e8; border-radius: 8px; }
-  ::-webkit-scrollbar-thumb:hover { background: #4A6CE8; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: #070A14; }
+  ::-webkit-scrollbar-thumb { background: #232d4a; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4F7CFF; }
 }
 
 @layer components {
+  /* Faint technical grid */
   .grid-bg {
     background-image:
-      linear-gradient(rgba(74,108,232,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(74,108,232,0.06) 1px, transparent 1px);
-    background-size: 32px 32px;
+      linear-gradient(rgba(79,124,255,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,124,255,0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  /* Glowing gradient text */
+  .text-gradient {
+    background: linear-gradient(100deg, #7DA0FF 0%, #22D3EE 45%, #A855F7 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Glass panel surface */
+  .glass {
+    background: rgba(13, 18, 32, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 124, 255, 0.12);
+  }
+
+  /* Gradient hairline border on hover for cards */
+  .card-hover {
+    transition: transform .25s cubic-bezier(.16,1,.3,1), border-color .25s, box-shadow .25s, background-color .25s;
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: rgba(79, 124, 255, 0.45);
+    box-shadow: 0 0 0 1px rgba(79,124,255,0.15), 0 18px 50px -20px rgba(79,124,255,0.4);
+  }
+
+  /* Radial aurora blobs for hero/background ambiance */
+  .aurora-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .scrollbar-hide::-webkit-scrollbar { display: none; }

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "neurobase-dev",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": ["-lc", "export PATH=\"/Users/sidneyharris/.nvm/versions/node/v24.18.0/bin:$PATH\"; cd /Users/sidneyharris/Desktop/Neurotech/neurotech-index && exec npm run dev"],
+      "port": 5173
+    }
+  ]
+}
