@@ -43,6 +43,9 @@ const ARXIV_QUERIES = [
 ]
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+// How far back to pull content. Wider than "this week" so papers are old enough
+// to have accrued citations/engagement, which is a ranking input (see computeRank).
+const CONTENT_WINDOW_MS = 90 * 24 * 60 * 60 * 1000
 
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms))
@@ -71,10 +74,63 @@ function parsePubmedDate(art) {
   return Number.isNaN(dt.getTime()) ? null : dt.toISOString()
 }
 
+/**
+ * Look up real engagement signals (citation counts) from the free Semantic
+ * Scholar API and attach them to each item. One batched request for the whole
+ * set. Fails soft — if the API is unavailable/rate-limited, items keep 0 and
+ * ranking simply leans on relevance + recency.
+ */
+async function fetchCitations(items) {
+  const ids = []
+  const idxOf = []
+  items.forEach((it, i) => {
+    let id = null
+    if (it.doi) id = `DOI:${it.doi}`
+    else if (it.pmid) id = `PMID:${it.pmid}`
+    else if (it.arxivId) id = `ARXIV:${String(it.arxivId).replace(/v\d+$/, '')}`
+    if (id) { ids.push(id); idxOf.push(i) }
+  })
+  if (!ids.length) return
+  try {
+    const res = await fetch(
+      'https://api.semanticscholar.org/graph/v1/paper/batch?fields=citationCount,influentialCitationCount',
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) }
+    )
+    if (!res.ok) { console.warn(`  Semantic Scholar ${res.status} — ranking without citations`); return }
+    const data = await res.json()
+    let hits = 0
+    data.forEach((rec, k) => {
+      if (!rec) return
+      const it = items[idxOf[k]]
+      it.citationCount = rec.citationCount ?? 0
+      it.influentialCitationCount = rec.influentialCitationCount ?? 0
+      hits++
+    })
+    console.log(`      matched ${hits}/${items.length} items to citation data`)
+  } catch (err) {
+    console.warn('  Semantic Scholar error — ranking without citations:', err.message)
+  }
+}
+
+/**
+ * Composite ranking score (0–1). Blends the AI relevance score with real
+ * engagement (citations, log-scaled) and recency (exponential decay), so the
+ * feed order reflects genuine relevance/engagement rather than a single opinion.
+ */
+function computeRank(item) {
+  const aiNorm = (item.relevanceScore ?? 5) / 10
+  const citeNorm = Math.min(1, Math.log10(1 + (item.citationCount ?? 0)) / 3)          // ~1000 citations → 1
+  const inflNorm = Math.min(1, Math.log10(1 + (item.influentialCitationCount ?? 0)) / 2) // ~100 influential → 1
+  const pub = item.publishedAt || item.published_at
+  const days = pub ? Math.max(0, (Date.now() - new Date(pub).getTime()) / 86400000) : 120
+  const recNorm = Math.exp(-days / 45)                                                  // ~30–45 day half-life
+  return 0.40 * aiNorm + 0.25 * citeNorm + 0.15 * inflNorm + 0.20 * recNorm
+}
+
 // ── PubMed ─────────────────────────────────────────────────────────────────
 
 async function fetchPubMed() {
-  const since = new Date(Date.now() - SEVEN_DAYS_MS)
+  const since = new Date(Date.now() - CONTENT_WINDOW_MS)
   const dateStr = `${since.getFullYear()}/${String(since.getMonth() + 1).padStart(2, '0')}/${String(since.getDate()).padStart(2, '0')}`
 
   const allPmids = new Set()
@@ -162,7 +218,7 @@ async function fetchPubMed() {
 // ── arXiv ──────────────────────────────────────────────────────────────────
 
 async function fetchArXiv() {
-  const cutoff = new Date(Date.now() - SEVEN_DAYS_MS)
+  const cutoff = new Date(Date.now() - CONTENT_WINDOW_MS)
   const results = []
 
   for (const q of ARXIV_QUERIES) {
@@ -223,7 +279,7 @@ async function fetchNews() {
 
   const queries = ['neurotechnology', 'brain computer interface', 'Neuralink', 'neural implant']
   const results = []
-  const cutoff = new Date(Date.now() - SEVEN_DAYS_MS)
+  const cutoff = new Date(Date.now() - CONTENT_WINDOW_MS)
 
   for (const q of queries.slice(0, 2)) { // free tier: 100 req/day
     try {
@@ -288,7 +344,9 @@ async function scoreWithClaude(items) {
           content:
             `You are an expert in neurotechnology. Rate each item for its significance to the field.\n\n` +
             `For each numbered item, respond with a JSON array element containing:\n` +
-            `- "score": integer 1–10 (10 = landmark result; 7+ = important; 4–6 = routine; 1–3 = low relevance)\n` +
+            `- "score": integer 1–10. USE THE FULL RANGE and spread scores — do not cluster. ` +
+            `Reserve 9–10 for genuine landmark advances only (rare); 7–8 = strong/notable; 5–6 = solid but incremental; ` +
+            `3–4 = routine or narrow; 1–2 = tangential. Most items should NOT be 9. Differentiate items within this batch.\n` +
             `- "summary": one crisp sentence on why it matters to neurotech practitioners\n` +
             `- "topics": 1–4 tags chosen ONLY from this list: ${TOPIC_TAGS.join(', ')}\n\n` +
             `Items:\n${prompt}\n\n` +
@@ -366,14 +424,26 @@ async function syncToSupabase(pubmed, arxiv, news) {
     if (error) console.warn('arxiv upsert error:', error.message)
   }
 
-  // Clear news_feed items older than 7 days
+  // Clear feed entries added more than 7 days ago (by when they entered the
+  // feed, not the paper's publication date — older high-impact papers stay).
   await supabase.from('news_feed')
     .delete()
-    .lt('published_at', new Date(Date.now() - SEVEN_DAYS_MS).toISOString())
+    .lt('created_at', new Date(Date.now() - SEVEN_DAYS_MS).toISOString())
 
-  // Build combined feed, sorted by score descending
+  // Attach a composite rank (relevance + engagement + recency) to metadata.
+  const withMeta = (item, base) => ({
+    ...base,
+    metadata: {
+      ...base.metadata,
+      rankScore: computeRank(item),
+      citationCount: item.citationCount ?? 0,
+      influentialCitationCount: item.influentialCitationCount ?? 0,
+    },
+  })
+
+  // Build combined feed, sorted by the composite rank (not the raw AI score).
   const allItems = [
-    ...pubmed.map(p => ({
+    ...pubmed.map(p => withMeta(p, {
       title: p.title,
       summary: p.aiSummary || p.abstract?.slice(0, 300) || '',
       source: p.journal || 'PubMed',
@@ -384,7 +454,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       entry_type: 'paper',
       metadata: { authors: p.authors, journal: p.journal, doi: p.doi, pmid: p.pmid },
     })),
-    ...arxiv.map(p => ({
+    ...arxiv.map(p => withMeta(p, {
       title: p.title,
       summary: p.aiSummary || p.abstract?.slice(0, 300) || '',
       source: 'arXiv',
@@ -395,7 +465,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       entry_type: 'preprint',
       metadata: { authors: p.authors, arxivId: p.arxivId },
     })),
-    ...news.map(n => ({
+    ...news.map(n => withMeta(n, {
       title: n.title,
       summary: n.aiSummary || n.summary || '',
       source: n.source,
@@ -406,7 +476,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       entry_type: 'news',
       metadata: {},
     })),
-  ].sort((a, b) => b.relevance_score - a.relevance_score)
+  ].sort((a, b) => b.metadata.rankScore - a.metadata.rankScore)
 
   // Upsert top 60 into news_feed
   for (const item of allItems.slice(0, 60)) {
@@ -457,9 +527,12 @@ async function main() {
     return
   }
 
-  console.log(`\n[4/4] Scoring ${total} items with Claude haiku...`)
+  console.log(`\n[4/5] Scoring ${total} items with Claude haiku...`)
   const allItems = [...pubmed, ...arxiv, ...news]
   const scored = await scoreWithClaude(allItems)
+
+  console.log('[5/5] Fetching citation counts (Semantic Scholar)...')
+  await fetchCitations(scored)
 
   const scoredPubmed = scored.filter(i => i.source === 'pubmed')
   const scoredArxiv = scored.filter(i => i.source === 'arxiv')
