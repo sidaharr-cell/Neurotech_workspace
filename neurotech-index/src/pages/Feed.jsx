@@ -25,6 +25,7 @@ function FeedCard({ item }) {
     : ''
   const badge = TYPE_BADGE[item.entry_type] || TYPE_BADGE.news
   const label = item.entry_type === 'preprint' ? 'Preprint' : item.entry_type === 'paper' ? 'Paper' : 'News'
+  const cites = item.metadata?.citationCount ?? 0
   return (
     <a href={item.url} target="_blank" rel="noopener noreferrer" className="group flex flex-col glass rounded-2xl p-5 card-hover">
       <div className="flex items-start justify-between gap-2 mb-3">
@@ -42,7 +43,10 @@ function FeedCard({ item }) {
         </p>
       )}
       <div className="flex items-center justify-between gap-2 mt-auto pt-2">
-        <span className="text-xs text-muted truncate">{item.source}</span>
+        <span className="text-xs text-muted truncate">
+          {item.source}
+          {cites > 0 && <span className="text-mint"> · {cites.toLocaleString()} citation{cites === 1 ? '' : 's'}</span>}
+        </span>
         {date && <span className="text-[10px] font-mono text-muted/60 shrink-0">{date}</span>}
       </div>
       {item.topics?.length > 0 && (
@@ -137,10 +141,10 @@ export default function Feed() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="w-4 h-4 text-primary-light" />
-              <p className="font-mono text-xs text-primary-light uppercase tracking-[0.2em] font-semibold">This week in neurotech</p>
+              <p className="font-mono text-xs text-primary-light uppercase tracking-[0.2em] font-semibold">Most significant · last 90 days</p>
             </div>
-            <h2 className="font-display text-2xl font-bold text-ink">Most significant, ranked by AI</h2>
-            <p className="text-muted text-sm mt-1">Each item scored for relevance — the summary explains why it surfaced.</p>
+            <h2 className="font-display text-2xl font-bold text-ink">Ranked by relevance &amp; engagement</h2>
+            <p className="text-muted text-sm mt-1">Blends AI relevance, citation impact, and recency — the summary explains why each matters.</p>
           </div>
           {supabase && <LiveBadge>Live · updates daily at 6am UTC</LiveBadge>}
         </div>
