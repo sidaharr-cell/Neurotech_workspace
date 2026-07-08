@@ -19,8 +19,9 @@ const TYPE_BADGE = {
 }
 
 function FeedCard({ item }) {
+  // Publication date, formatted in UTC so the calendar day matches what was stored.
   const date = item.published_at
-    ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
     : ''
   const badge = TYPE_BADGE[item.entry_type] || TYPE_BADGE.news
   const label = item.entry_type === 'preprint' ? 'Preprint' : item.entry_type === 'paper' ? 'Paper' : 'News'
@@ -76,12 +77,12 @@ function Hero() {
           <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse-slow shadow-[0_0_8px_#34D399]" />
           {total}+ entries · auto-updating daily
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold tracking-tight leading-[1.05] mb-5">
-          The living map of <span className="text-gradient">neurotechnology</span>
+        <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5">
+          Neuro<span className="text-gradient">Base</span>
         </h1>
         <p className="text-muted text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-9">
           An open, AI-curated index of the research, devices, organizations, and clinical trials
-          defining the field — one searchable, interconnected graph.
+          defining the field.
         </p>
         <form onSubmit={submit} className="relative max-w-2xl mx-auto mb-10">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
@@ -122,8 +123,9 @@ export default function Feed() {
 
   useEffect(() => { load() }, [load])
 
+  // Weekly feed shows at most 10 items (after any topic filter).
   const filtered = useMemo(
-    () => (topic ? feed.filter(i => entityMatchesTopic(i, topic)) : feed),
+    () => (topic ? feed.filter(i => entityMatchesTopic(i, topic)) : feed).slice(0, 10),
     [feed, topic]
   )
 
