@@ -58,6 +58,31 @@ export async function getResearchers() {
   return tag('researchers')(data.map(normalizeSupabaseResearcher))
 }
 
+// ── Entry counts (for the hero stats) ───────────────────────────────────────
+
+/**
+ * Real row counts per entity type. Uses Supabase's exact count (no rows
+ * transferred); falls back to the seed JSON lengths when Supabase is absent or
+ * a count fails, so the hero always shows something sensible.
+ */
+export async function getCounts() {
+  const fallback = {
+    papers: papersJson.length,
+    devices: devicesJson.length,
+    organizations: organizationsJson.length,
+    researchers: researchersJson.length,
+  }
+  if (!supabase) return fallback
+
+  const tables = ['papers', 'devices', 'organizations', 'researchers']
+  const counts = {}
+  await Promise.all(tables.map(async t => {
+    const { count, error } = await supabase.from(t).select('*', { count: 'exact', head: true })
+    counts[t] = error || count == null ? fallback[t] : count
+  }))
+  return counts
+}
+
 // ── Clinical trials (table added in Phase 1; safe no-op until then) ──────────
 
 export async function getTrials() {
