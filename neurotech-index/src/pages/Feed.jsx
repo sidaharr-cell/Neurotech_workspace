@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, ExternalLink, Newspaper, TrendingUp, Sparkles } from 'lucide-react'
-import { getNewsFeed } from '../lib/data'
+import { getNewsFeed, getCounts } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { NeuralBackground, LiveBadge, ScoreDot, Loader, EmptyState } from '../components/ui'
 import TopicBar from '../components/TopicBar'
@@ -63,14 +63,24 @@ function FeedCard({ item }) {
 function Hero() {
   const [q, setQ] = useState('')
   const navigate = useNavigate()
-  const total = papersJson.length + devicesJson.length + organizationsJson.length + researchersJson.length
+
+  // Live entity counts from the database (fall back to seed counts while loading).
+  const [counts, setCounts] = useState({
+    papers: papersJson.length,
+    devices: devicesJson.length,
+    organizations: organizationsJson.length,
+    researchers: researchersJson.length,
+  })
+  useEffect(() => { let alive = true; getCounts().then(c => { if (alive) setCounts(c) }); return () => { alive = false } }, [])
+
+  const total = counts.papers + counts.devices + counts.organizations + counts.researchers
 
   const submit = (e) => { e.preventDefault(); navigate(q.trim() ? `/search?q=${encodeURIComponent(q.trim())}` : '/search') }
 
   const stats = [
-    { n: papersJson.length, l: 'Research' },
-    { n: devicesJson.length, l: 'Devices' },
-    { n: organizationsJson.length, l: 'Organizations' },
+    { n: counts.papers, l: 'Research' },
+    { n: counts.devices, l: 'Devices' },
+    { n: counts.organizations, l: 'Organizations' },
   ]
 
   return (
@@ -79,7 +89,7 @@ function Hero() {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <div className="inline-flex items-center gap-2 glass text-primary-light text-xs font-mono px-3 py-1.5 rounded-full mb-8">
           <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse-slow shadow-[0_0_8px_#34D399]" />
-          {total}+ entries · auto-updating daily
+          {total.toLocaleString()} entries · auto-updating daily
         </div>
         <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5">
           Neuro<span className="text-gradient">Base</span>
