@@ -48,6 +48,29 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms))
 }
 
+const MONTHS = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 }
+
+/**
+ * Extract a real publication date (ISO string) from a PubMed <Article>.
+ * Prefers <ArticleDate> (electronic pub date, numeric Y/M/D), then falls back
+ * to the journal <PubDate>. Month may be numeric ("6") or a name ("Jun").
+ * Returns null if no usable year is present.
+ */
+function parsePubmedDate(art) {
+  const src = art?.ArticleDate?.[0] || art?.Journal?.[0]?.JournalIssue?.[0]?.PubDate?.[0]
+  const year = parseInt(src?.Year?.[0], 10)
+  if (!year) return null
+  const rawMonth = src?.Month?.[0]
+  let month = 0
+  if (rawMonth != null) {
+    const n = parseInt(rawMonth, 10)
+    month = Number.isNaN(n) ? (MONTHS[String(rawMonth).toLowerCase().slice(0, 3)] ?? 0) : n - 1
+  }
+  const day = parseInt(src?.Day?.[0], 10) || 1
+  const dt = new Date(Date.UTC(year, month, day))
+  return Number.isNaN(dt.getTime()) ? null : dt.toISOString()
+}
+
 // ── PubMed ─────────────────────────────────────────────────────────────────
 
 async function fetchPubMed() {
@@ -102,8 +125,11 @@ async function fetchPubMed() {
             .trim()
 
           const journal = art?.Journal?.[0]?.Title?.[0] || ''
-          const year = art?.Journal?.[0]?.JournalIssue?.[0]?.PubDate?.[0]?.Year?.[0]
-            || String(new Date().getFullYear())
+          const publishedAt = parsePubmedDate(art)
+          const year = publishedAt
+            ? String(new Date(publishedAt).getUTCFullYear())
+            : (art?.Journal?.[0]?.JournalIssue?.[0]?.PubDate?.[0]?.Year?.[0]
+              || String(new Date().getFullYear()))
 
           const doi = (art?.ELocationID || [])
             .find(e => e.$?.EIdType === 'doi')?._ || null
@@ -114,6 +140,7 @@ async function fetchPubMed() {
             abstract,
             journal,
             year,
+            publishedAt,
             doi,
             pmid,
             url: doi ? `https://doi.org/${doi}` : `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
@@ -351,7 +378,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       summary: p.aiSummary || p.abstract?.slice(0, 300) || '',
       source: p.journal || 'PubMed',
       url: p.url,
-      published_at: new Date().toISOString(),
+      published_at: p.publishedAt || new Date().toISOString(),
       topics: p.topics || [],
       relevance_score: p.relevanceScore || 5,
       entry_type: 'paper',
