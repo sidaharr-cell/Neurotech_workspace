@@ -23,7 +23,7 @@ export const TOPICS = [
   { id: 'optogenetics',   label: 'Optogenetics',              match: ['optogenet', 'opsin'] },
   { id: 'neuromorphic',   label: 'Neuromorphic Computing',    match: ['neuromorphic', 'spiking neural', 'memristor'] },
   { id: 'neuroethics',    label: 'Neuroethics',               match: ['neuroethic', 'ethic', 'privacy', 'policy', 'consent'] },
-]
+].sort((a, b) => a.label.localeCompare(b.label)) // always render alphabetically
 
 // ── Additional cross-cutting filter axes (used where the data supports it) ───
 export const AXES = {
