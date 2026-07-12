@@ -269,6 +269,112 @@ async function fetchArXiv() {
   })
 }
 
+// ── Media & press feeds (RSS · Google News · Reddit · Bluesky) ───────────────
+// All free, no API keys. Everything is normalized to the same news-item shape
+// { title, summary, url, source, publishedAt, entry_type:'news' } and flows into
+// the same AI scoring + ranking as papers.
+
+const UA = 'NeuroBaseBot/1.0 (+https://neurobase.app; neurotech research aggregator)'
+
+// Worldwide press aggregation via Google News RSS (query-based).
+const GOOGLE_NEWS_QUERIES = [
+  'neurotechnology OR "brain-computer interface" OR "neural implant"',
+  '"deep brain stimulation" OR neuroprosthetic OR neurostimulation OR "spinal cord stimulation"',
+  'Neuralink OR Synchron OR "Blackrock Neurotech" OR "Precision Neuroscience" OR "Paradromics"',
+]
+const googleNewsUrl = q =>
+  `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`
+
+// Curated science-media RSS feeds (verified live; fail soft if any URL changes).
+const CURATED_FEEDS = [
+  ['https://www.sciencedaily.com/rss/mind_brain/neuroscience.xml', 'ScienceDaily'],
+  ['https://neurosciencenews.com/feed/', 'Neuroscience News'],
+]
+
+// Free social media: Mastodon publishes public per-hashtag RSS with no auth.
+// (Reddit and Bluesky block unauthenticated access; X's API is paid.)
+const MASTODON_TAGS = ['neurotech', 'neurotechnology', 'neuroscience', 'BCI']
+const mastodonUrl = tag => `https://mastodon.social/tags/${tag}.rss`
+
+function stripHtml(s = '') {
+  return String(s).replace(/<[^>]*>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+}
+const first = v => (Array.isArray(v) ? v[0] : v)
+const textOf = v => { const x = first(v); return typeof x === 'object' ? (x?._ ?? '') : (x ?? '') }
+const toIso = d => { const t = d ? new Date(d).getTime() : NaN; return Number.isNaN(t) ? null : new Date(t).toISOString() }
+
+/** Parse an RSS 2.0 or Atom feed into normalized items. */
+async function parseFeed(xml) {
+  const doc = await parseStringPromise(xml, { explicitArray: true })
+  const out = []
+  const channel = doc?.rss?.channel?.[0]
+  if (channel?.item) {
+    for (const it of channel.item) {
+      out.push({
+        title: stripHtml(textOf(it.title)),
+        url: textOf(it.link),
+        summary: stripHtml(textOf(it.description)),
+        publishedAt: toIso(textOf(it.pubDate)),
+        source: textOf(it.source),
+      })
+    }
+  }
+  if (doc?.feed?.entry) {
+    for (const e of doc.feed.entry) {
+      const links = Array.isArray(e.link) ? e.link : [e.link]
+      const link = (links.find(l => l?.$?.rel === 'alternate') || links[0])?.$?.href || textOf(e.link)
+      out.push({
+        title: stripHtml(textOf(e.title)),
+        url: link,
+        summary: stripHtml(textOf(e.summary) || textOf(e.content)),
+        publishedAt: toIso(textOf(e.published) || textOf(e.updated)),
+        source: stripHtml(textOf(e.author?.[0]?.name)),
+      })
+    }
+  }
+  return out
+}
+
+async function fetchRssFeed(url, label, cap = 15) {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': UA } })
+    if (!res.ok) { console.warn(`  ${label} ${res.status} — skipped`); return [] }
+    const items = await parseFeed(await res.text())
+    return items
+      .filter(i => i.title && i.url)
+      .map(i => ({ ...i, source: i.source || label, entry_type: 'news' }))
+      .slice(0, cap) // feeds are reverse-chronological; keep the newest
+  } catch (err) {
+    console.warn(`  ${label} error — skipped:`, err.message)
+    return []
+  }
+}
+
+/** Pull every free media/press/social source in parallel, dedupe, cap. */
+async function fetchMedia() {
+  const cutoff = Date.now() - CONTENT_WINDOW_MS
+  const batches = await Promise.all([
+    ...GOOGLE_NEWS_QUERIES.map(q => fetchRssFeed(googleNewsUrl(q), 'Google News', 20)),
+    ...CURATED_FEEDS.map(([u, l]) => fetchRssFeed(u, l, 12)),
+    ...MASTODON_TAGS.map(t => fetchRssFeed(mastodonUrl(t), `#${t} · Mastodon`, 6)),
+  ])
+
+  let items = batches.flat().filter(i =>
+    i.title && i.url && (!i.publishedAt || new Date(i.publishedAt).getTime() >= cutoff)
+  )
+
+  // Dedupe by URL and by a normalized title (cross-source overlap is common).
+  const seenUrl = new Set(), seenTitle = new Set(), out = []
+  for (const it of items) {
+    const tkey = it.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60)
+    if (!it.url || seenUrl.has(it.url) || seenTitle.has(tkey)) continue
+    seenUrl.add(it.url); seenTitle.add(tkey); out.push(it)
+  }
+
+  out.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
+  return out.slice(0, 80) // cap to bound scoring cost
+}
+
 // ── NewsAPI ────────────────────────────────────────────────────────────────
 
 async function fetchNews() {
@@ -517,9 +623,11 @@ async function main() {
   const arxiv = await fetchArXiv()
   console.log(`      ${arxiv.length} new preprints`)
 
-  console.log('[3/4] Fetching news...')
-  const news = await fetchNews()
-  console.log(`      ${news.length} news items`)
+  console.log('[3/4] Fetching media & press (Google News · science RSS · Mastodon)...')
+  const media = await fetchMedia()
+  const apiNews = await fetchNews() // NewsAPI, only if a key is set
+  const news = [...media, ...apiNews]
+  console.log(`      ${news.length} media/press items`)
 
   const total = pubmed.length + arxiv.length + news.length
   if (total === 0) {
