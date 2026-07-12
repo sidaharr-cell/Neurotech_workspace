@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { ChevronDown, Search, Menu, X } from 'lucide-react'
+import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
   { to: '/media', label: 'Media', desc: 'News & press coverage' },
@@ -82,12 +83,11 @@ function Masthead() {
         </div>
       </div>
 
-      {/* Nav bar */}
+      {/* Nav bar (Search intentionally omitted — it lives top-right) */}
       <div className="border-t border-rule hidden sm:block">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-7">
           <NavLink to="/" end className={navLink}>Home</NavLink>
           <TopicsDropdown />
-          <NavLink to="/search" className={navLink}>Search</NavLink>
         </nav>
       </div>
 
@@ -138,7 +138,8 @@ function Footer() {
 
 export default function Shell() {
   return (
-    <div className="min-h-screen bg-paper flex flex-col">
+    <div className="min-h-screen flex flex-col">
+      <NeuronBackdrop />
       <Masthead />
       <main className="flex-1">
         <Outlet />
