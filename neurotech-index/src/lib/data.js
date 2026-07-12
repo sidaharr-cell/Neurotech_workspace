@@ -98,18 +98,18 @@ export async function getTrials() {
 
 // ── News feed ───────────────────────────────────────────────────────────────
 
-export async function getNewsFeed({ topic = null, limit = 10 } = {}) {
+export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   if (!supabase) return []
-  let q = supabase.from('news_feed').select('*').limit(200)
-  if (topic) q = q.contains('topics', [topic])
-
-  const { data, error } = await q
+  const { data, error } = await supabase.from('news_feed').select('*').limit(400)
   if (error) { console.warn('news_feed fetch error:', error.message); return [] }
+
+  let rows = data || []
+  if (entryTypes) rows = rows.filter(r => entryTypes.includes(r.entry_type))
 
   // Order by the composite rank (relevance + engagement + recency) written by
   // refresh.js. Fall back to the raw AI score for any legacy rows.
   const rank = r => (r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10)
-  return (data || []).sort((a, b) => rank(b) - rank(a)).slice(0, limit)
+  return rows.sort((a, b) => rank(b) - rank(a)).slice(0, limit)
 }
 
 // ── Normalizers (snake_case DB → camelCase app) ─────────────────────────────

@@ -1,14 +1,13 @@
-import BrowseList from '../components/BrowseList'
+import DirectorySection from '../components/DirectorySection'
 import { getDevices } from '../lib/data'
 
 export default function Devices() {
   return (
-    <BrowseList
-      eyebrow="Hardware & platforms"
+    <DirectorySection
+      kicker="Devices"
       title="Devices & Technologies"
-      sub="From invasive implants to consumer headsets — filter by modality, application, and development stage."
+      sub="Neurotechnology hardware and platforms, from invasive implants to consumer headsets."
       loader={getDevices}
-      showAxes={['modality', 'application', 'stage']}
     />
   )
 }

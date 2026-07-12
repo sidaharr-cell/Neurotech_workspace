@@ -1,124 +1,134 @@
-import { useState, useEffect } from 'react'
-import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
-import { BrainCircuit, Search, Menu, X } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { ChevronDown, Search, Menu, X } from 'lucide-react'
 
-const NAV = [
-  { to: '/', label: 'Feed', end: true },
-  { to: '/research', label: 'Research' },
-  { to: '/devices', label: 'Devices' },
-  { to: '/organizations', label: 'Organizations' },
-  { to: '/trials', label: 'Trials' },
+const TOPICS = [
+  { to: '/media', label: 'Media', desc: 'News & press coverage' },
+  { to: '/research', label: 'Research', desc: 'Published papers & preprints' },
+  { to: '/trials', label: 'Clinical Trials', desc: 'Trials & studies' },
+  { to: '/companies', label: 'Companies', desc: 'Labs, companies & institutes' },
+  { to: '/devices', label: 'Devices', desc: 'Hardware & platforms' },
 ]
 
-function Logo({ size = 'base' }) {
-  const dim = size === 'sm' ? 'w-6 h-6' : 'w-8 h-8'
-  const icon = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4.5 h-4.5'
-  return (
-    <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-      <div className={`${dim} rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform`}>
-        <BrainCircuit className={`${icon} text-white`} strokeWidth={1.8} />
-      </div>
-      <span className="font-display font-bold text-ink text-[15px] tracking-tight">
-        Neuro<span className="text-gradient">Base</span>
-      </span>
-    </Link>
-  )
+function useOutsideClose(ref, onClose) {
+  useEffect(() => {
+    const fn = e => { if (ref.current && !ref.current.contains(e.target)) onClose() }
+    document.addEventListener('mousedown', fn)
+    return () => document.removeEventListener('mousedown', fn)
+  }, [ref, onClose])
 }
 
-function Nav() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [q, setQ] = useState('')
-  const navigate = useNavigate()
+function TopicsDropdown() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  const loc = useLocation()
+  useOutsideClose(ref, () => setOpen(false))
+  useEffect(() => { setOpen(false) }, [loc.pathname])
 
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 16)
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
-  }, [])
-
-  const submitSearch = (e) => {
-    e.preventDefault()
-    navigate(q.trim() ? `/search?q=${encodeURIComponent(q.trim())}` : '/search')
-    setMenuOpen(false)
-  }
-
-  const linkClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors ${isActive ? 'text-ink' : 'text-muted hover:text-ink'}`
+  const active = TOPICS.some(t => loc.pathname.startsWith(t.to))
 
   return (
-    <nav className={`fixed top-0 inset-x-0 z-40 transition-all duration-300 ${scrolled ? 'glass border-b border-divider' : 'bg-transparent border-b border-transparent'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          <Logo />
-
-          <div className="hidden md:flex items-center gap-6">
-            {NAV.map(n => (
-              <NavLink key={n.to} to={n.to} end={n.end} className={linkClass}>
-                {n.label}
-              </NavLink>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <form onSubmit={submitSearch} className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
-              <input
-                value={q}
-                onChange={e => setQ(e.target.value)}
-                placeholder="Search…"
-                className="w-44 lg:w-56 pl-9 pr-3 py-2 text-sm bg-white/[0.04] border border-divider rounded-full text-ink placeholder-muted/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 focus:w-64 transition-all"
-              />
-            </form>
-          </div>
-
-          <button className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
-            {menuOpen ? <X className="w-5 h-5 text-ink" /> : <Menu className="w-5 h-5 text-ink" />}
-          </button>
-        </div>
-      </div>
-
-      {menuOpen && (
-        <div className="md:hidden glass border-b border-divider px-4 pb-4 pt-2 space-y-1">
-          <form onSubmit={submitSearch} className="relative mb-2">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-            <input
-              value={q}
-              onChange={e => setQ(e.target.value)}
-              placeholder="Search…"
-              className="w-full pl-9 pr-3 py-2.5 text-sm bg-white/[0.04] border border-divider rounded-lg text-ink placeholder-muted/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </form>
-          {NAV.map(n => (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`inline-flex items-center gap-1 text-[13px] font-sans font-semibold uppercase tracking-[0.1em] py-3 transition-colors ${active ? 'text-accent' : 'text-ink hover:text-accent'}`}
+        aria-expanded={open}
+      >
+        All Topics <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-50 w-64 bg-paper border border-rule shadow-lg rounded-sm py-1.5 animate-slide-down">
+          {TOPICS.map(t => (
             <NavLink
-              key={n.to}
-              to={n.to}
-              end={n.end}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) => `block py-2.5 px-3 text-sm font-medium rounded-lg transition-colors ${isActive ? 'bg-primary/15 text-ink' : 'text-muted hover:bg-white/5 hover:text-ink'}`}
+              key={t.to}
+              to={t.to}
+              className={({ isActive }) => `block px-4 py-2.5 hover:bg-canvas transition-colors ${isActive ? 'bg-canvas' : ''}`}
             >
-              {n.label}
+              <span className="block font-serif text-[15px] text-ink">{t.label}</span>
+              <span className="block text-[12px] text-muted font-sans mt-0.5">{t.desc}</span>
             </NavLink>
           ))}
         </div>
       )}
-    </nav>
+    </div>
+  )
+}
+
+function Masthead() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
+  const navLink = ({ isActive }) =>
+    `text-[13px] font-sans font-semibold uppercase tracking-[0.1em] py-3 transition-colors ${isActive ? 'text-accent' : 'text-ink hover:text-accent'}`
+
+  return (
+    <header className="border-b border-ink bg-paper">
+      {/* Top row: date · wordmark · search */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-3 items-center py-4">
+          <div className="hidden sm:block text-[12px] text-muted font-sans">{today}</div>
+          <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center text-center">
+            <span className="font-serif text-3xl sm:text-[2.1rem] font-semibold tracking-[-0.02em] text-ink">NeuroBase</span>
+          </Link>
+          <div className="justify-self-end hidden sm:flex">
+            <Link to="/search" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors">
+              <Search className="w-4 h-4" /> Search
+            </Link>
+          </div>
+          <button className="justify-self-end sm:hidden p-1.5" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Nav bar */}
+      <div className="border-t border-rule hidden sm:block">
+        <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-7">
+          <NavLink to="/" end className={navLink}>Home</NavLink>
+          <TopicsDropdown />
+          <NavLink to="/search" className={navLink}>Search</NavLink>
+        </nav>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="sm:hidden border-t border-rule px-4 py-3 space-y-1">
+          <MobileLink to="/" label="Home" onClick={() => setMobileOpen(false)} />
+          {TOPICS.map(t => <MobileLink key={t.to} to={t.to} label={t.label} onClick={() => setMobileOpen(false)} />)}
+          <MobileLink to="/search" label="Search" onClick={() => setMobileOpen(false)} />
+        </div>
+      )}
+    </header>
+  )
+}
+
+function MobileLink({ to, label, onClick }) {
+  return (
+    <NavLink
+      to={to}
+      end={to === '/'}
+      onClick={onClick}
+      className={({ isActive }) => `block py-2 font-sans text-[14px] font-semibold uppercase tracking-[0.08em] ${isActive ? 'text-accent' : 'text-ink'}`}
+    >
+      {label}
+    </NavLink>
   )
 }
 
 function Footer() {
   return (
-    <footer className="border-t border-divider py-10 mt-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-5">
-          <Logo size="sm" />
-          <p className="text-xs text-muted text-center">
-            An open research database for the neurotechnology community · Not affiliated with any institution
+    <footer className="border-t border-ink mt-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="font-serif text-xl font-semibold text-ink">NeuroBase</span>
+          <p className="text-[12px] text-muted font-sans text-center">
+            An open, AI-curated index of neurotechnology · Not affiliated with any institution
           </p>
-          <div className="flex items-center gap-5 text-xs text-muted">
-            <Link to="/research" className="hover:text-ink transition-colors">Research</Link>
-            <Link to="/devices" className="hover:text-ink transition-colors">Devices</Link>
-            <Link to="/trials" className="hover:text-ink transition-colors">Trials</Link>
+          <div className="flex items-center gap-5 text-[12px] font-sans text-muted">
+            <Link to="/research" className="hover:text-accent">Research</Link>
+            <Link to="/devices" className="hover:text-accent">Devices</Link>
+            <Link to="/search" className="hover:text-accent">Search</Link>
           </div>
         </div>
       </div>
@@ -128,9 +138,9 @@ function Footer() {
 
 export default function Shell() {
   return (
-    <div className="min-h-screen bg-background font-body flex flex-col">
-      <Nav />
-      <main className="flex-1 pt-16">
+    <div className="min-h-screen bg-paper flex flex-col">
+      <Masthead />
+      <main className="flex-1">
         <Outlet />
       </main>
       <Footer />
