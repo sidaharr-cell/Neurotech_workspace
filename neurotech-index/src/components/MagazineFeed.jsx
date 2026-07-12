@@ -83,6 +83,9 @@ export default function MagazineFeed() {
 
   // Prefer image-bearing items for the visual slots (lead + featured grid);
   // fill the rest by rank. Papers (no photo) fall back to the neuron motif.
+  // Show ~20 entries total. The visual slots (lead + featured) prefer
+  // image-bearing stories pulled from the full ranked feed; the remaining
+  // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
     const imgs = shown.filter(i => i.metadata?.image)
     const lead = imgs[0] || shown[0]
@@ -93,8 +96,8 @@ export default function MagazineFeed() {
       if (used.has(it)) continue
       featured.push(it); used.add(it)
     }
-    const remaining = shown.filter(i => !used.has(i))
-    return { lead, featured, sidebar: remaining.slice(0, 4), rest: remaining.slice(4, 16) }
+    const remaining = shown.filter(i => !used.has(i)).slice(0, 16)
+    return { lead, featured, sidebar: remaining.slice(0, 4), rest: remaining.slice(4) }
   }, [shown])
 
   return (
