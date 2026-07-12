@@ -303,6 +303,37 @@ const first = v => (Array.isArray(v) ? v[0] : v)
 const textOf = v => { const x = first(v); return typeof x === 'object' ? (x?._ ?? '') : (x ?? '') }
 const toIso = d => { const t = d ? new Date(d).getTime() : NaN; return Number.isNaN(t) ? null : new Date(t).toISOString() }
 
+/** Pull an image URL out of an RSS/Atom item (media tags, enclosure, or <img>). */
+function pickImage(node) {
+  const attr = x => (Array.isArray(x) ? x[0] : x)?.$?.url
+  const cand =
+    attr(node['media:content']) ||
+    attr(node['media:thumbnail']) ||
+    attr(node['media:group']?.[0]?.['media:content']) ||
+    (node.enclosure || []).map(e => e?.$).find(a => (a?.type || '').startsWith('image/'))?.url ||
+    // <img src="…"> embedded in the description/content HTML
+    (textOf(node.description) || textOf(node.content) || textOf(node.summary) || '')
+      .match(/<img[^>]+src=["']([^"']+)["']/i)?.[1]
+  if (!cand || !/^https?:\/\//i.test(cand)) return null
+  return cand
+}
+
+/** Best-effort Open Graph image scrape for a direct article URL. Fails soft. */
+async function getOgImage(url) {
+  if (!url || url.includes('news.google.com')) return null // redirect wrappers — skip
+  try {
+    const ctl = AbortSignal.timeout(4500)
+    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: ctl, redirect: 'follow' })
+    if (!res.ok) return null
+    const html = (await res.text()).slice(0, 200_000)
+    const m =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+    const img = m?.[1]
+    return img && /^https?:\/\//i.test(img) ? img : null
+  } catch { return null }
+}
+
 /** Parse an RSS 2.0 or Atom feed into normalized items. */
 async function parseFeed(xml) {
   const doc = await parseStringPromise(xml, { explicitArray: true })
@@ -316,6 +347,7 @@ async function parseFeed(xml) {
         summary: stripHtml(textOf(it.description)),
         publishedAt: toIso(textOf(it.pubDate)),
         source: textOf(it.source),
+        image: pickImage(it),
       })
     }
   }
@@ -329,6 +361,7 @@ async function parseFeed(xml) {
         summary: stripHtml(textOf(e.summary) || textOf(e.content)),
         publishedAt: toIso(textOf(e.published) || textOf(e.updated)),
         source: stripHtml(textOf(e.author?.[0]?.name)),
+        image: pickImage(e),
       })
     }
   }
@@ -372,7 +405,16 @@ async function fetchMedia() {
   }
 
   out.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
-  return out.slice(0, 80) // cap to bound scoring cost
+  const capped = out.slice(0, 80) // cap to bound scoring cost
+
+  // Fill missing images via Open Graph scrape (direct URLs only), bounded concurrency.
+  const need = capped.filter(i => !i.image && i.url && !i.url.includes('news.google.com'))
+  for (let i = 0; i < need.length; i += 6) {
+    await Promise.all(need.slice(i, i + 6).map(async it => { it.image = await getOgImage(it.url) }))
+  }
+  const withImg = capped.filter(i => i.image).length
+  console.log(`      ${withImg}/${capped.length} media items have an image`)
+  return capped
 }
 
 // ── NewsAPI ────────────────────────────────────────────────────────────────
@@ -580,7 +622,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       topics: n.topics || [],
       relevance_score: n.relevanceScore || 5,
       entry_type: 'news',
-      metadata: {},
+      metadata: { image: n.image || null },
     })),
   ].sort((a, b) => b.metadata.rankScore - a.metadata.rankScore)
 
