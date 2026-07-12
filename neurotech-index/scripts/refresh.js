@@ -285,10 +285,16 @@ const GOOGLE_NEWS_QUERIES = [
 const googleNewsUrl = q =>
   `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`
 
-// Curated science-media RSS feeds (verified live; fail soft if any URL changes).
+// Curated science-media RSS feeds (image-rich where possible; fail soft if a
+// URL changes). Off-topic items are filtered out by AI relevance scoring.
 const CURATED_FEEDS = [
   ['https://www.sciencedaily.com/rss/mind_brain/neuroscience.xml', 'ScienceDaily'],
   ['https://neurosciencenews.com/feed/', 'Neuroscience News'],
+  ['https://news.mit.edu/rss/topic/neuroscience', 'MIT News'],
+  ['https://spectrum.ieee.org/feeds/topic/biomedical.rss', 'IEEE Spectrum'],
+  ['https://www.thetransmitter.org/feed/', 'The Transmitter'],
+  ['https://www.medgadget.com/category/neurology/feed', 'Medgadget'],
+  ['https://www.nature.com/subjects/neuroscience.rss', 'Nature'],
 ]
 
 // Free social media: Mastodon publishes public per-hashtag RSS with no auth.
