@@ -109,7 +109,13 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   // Order by the composite rank (relevance + engagement + recency) written by
   // refresh.js. Fall back to the raw AI score for any legacy rows.
   const rank = r => (r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10)
-  return rows.sort((a, b) => rank(b) - rank(a)).slice(0, limit)
+  const sorted = rows.sort((a, b) => rank(b) - rank(a))
+  const top = sorted.slice(0, limit)
+  // Always surface real-image stories (they rank below papers) so the feed has
+  // photos to feature; the UI decides how many to actually show.
+  const inTop = new Set(top)
+  const realExtra = sorted.slice(limit).filter(r => r.metadata?.imageKind === 'real' && !inTop.has(r))
+  return [...top, ...realExtra]
 }
 
 // ── Normalizers (snake_case DB → camelCase app) ─────────────────────────────
