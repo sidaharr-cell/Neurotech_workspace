@@ -113,9 +113,9 @@ export function NeuronBackdrop() {
   ]
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 90% at 50% -10%, rgba(11,95,166,0.04), transparent 60%)' }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 90% at 50% -10%, rgba(11,95,166,0.02), transparent 60%)' }} />
       <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 760">
-        <g stroke="#0B2540" strokeOpacity="0.06" strokeWidth="1.15" fill="none" strokeLinecap="round">
+        <g stroke="#0B2540" strokeOpacity="0.03" strokeWidth="1" fill="none" strokeLinecap="round">
           {edges.map(([a, b], i) => {
             const n = nodes[a], m = nodes[b]
             const mx = (n[0] + m[0]) / 2 + (i % 2 ? 26 : -26)
@@ -126,8 +126,8 @@ export function NeuronBackdrop() {
         <g fill="#0B2540">
           {nodes.map(([x, y], i) => (
             <g key={i}>
-              <circle cx={x} cy={y} r={i % 4 === 0 ? 6.5 : 4.5} fillOpacity="0.07" />
-              <circle cx={x} cy={y} r={(i % 4 === 0 ? 6.5 : 4.5) + 4} fill="none" stroke="#0B2540" strokeOpacity="0.045" />
+              <circle cx={x} cy={y} r={i % 4 === 0 ? 5.5 : 4} fillOpacity="0.038" />
+              <circle cx={x} cy={y} r={(i % 4 === 0 ? 5.5 : 4) + 4} fill="none" stroke="#0B2540" strokeOpacity="0.025" />
             </g>
           ))}
         </g>
