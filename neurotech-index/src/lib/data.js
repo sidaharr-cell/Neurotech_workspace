@@ -118,6 +118,14 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   return [...top, ...realExtra]
 }
 
+/** A single feed item by id (for the internal detail page). */
+export async function getNewsItem(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('news_feed').select('*').eq('id', id).maybeSingle()
+  if (error) { console.warn('news_item fetch error:', error.message); return null }
+  return data || null
+}
+
 // ── Normalizers (snake_case DB → camelCase app) ─────────────────────────────
 
 function normalizeSupabasePaper(p) {

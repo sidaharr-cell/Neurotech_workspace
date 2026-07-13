@@ -45,6 +45,22 @@ export function fmtDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
+// Relevance score readout (AI significance rating, 1–10)
+export function ScoreRow({ score }) {
+  if (!score) return null
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted">Relevance</span>
+      <span className="flex gap-1" aria-hidden="true">
+        {Array.from({ length: 10 }, (_, i) => (
+          <span key={i} className={`w-1.5 h-4 rounded-[1px] ${i < score ? 'bg-accent' : 'bg-rule'}`} />
+        ))}
+      </span>
+      <span className="font-sans text-[13px] text-ink-soft">{score}/10</span>
+    </div>
+  )
+}
+
 export function Loader({ label = 'Loading…' }) {
   return (
     <div className="flex items-center justify-center py-24 text-muted gap-2">

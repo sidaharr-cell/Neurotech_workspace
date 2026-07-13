@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
 
 function itemMeta(item) {
@@ -12,7 +13,7 @@ function itemMeta(item) {
 export function LeadStory({ item }) {
   const m = itemMeta(item)
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block pb-8 mb-8 border-b border-rule">
+    <Link to={`/item/${item.id}`} className="group block pb-8 mb-8 border-b border-rule">
       <div className="flex items-center gap-3 mb-3">
         <Kicker>{typeWord(item.entry_type)}</Kicker>
         <DeviceClassLabels entity={item} />
@@ -29,14 +30,14 @@ export function LeadStory({ item }) {
         <Meta {...m} />
         <ArrowUpRight className="w-4 h-4 text-muted group-hover:text-accent transition-colors" />
       </div>
-    </a>
+    </Link>
   )
 }
 
 export function ArticleRow({ item }) {
   const m = itemMeta(item)
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group flex gap-5 py-5">
+    <Link to={`/item/${item.id}`} className="group flex gap-5 py-5">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-3 mb-1.5">
           <Kicker>{typeWord(item.entry_type)}</Kicker>
@@ -52,7 +53,7 @@ export function ArticleRow({ item }) {
         )}
         <div className="mt-2"><Meta {...m} /></div>
       </div>
-    </a>
+    </Link>
   )
 }
 
