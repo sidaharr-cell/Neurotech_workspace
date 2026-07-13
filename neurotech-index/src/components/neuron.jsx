@@ -70,16 +70,25 @@ export function NeuronCover({ seed = '', tint = 'default', className = '' }) {
   )
 }
 
-/** Image with graceful fallback to the neuron cover. */
-export function Cover({ item, tint, className = '' }) {
+/**
+ * Image with graceful fallback to the neuron cover. Stock images (classified by
+ * the ingestion) are never shown. With `requireReal`, only images explicitly
+ * verified as real are used — the homepage lead uses this so the top story is
+ * never a stock photo.
+ */
+export function Cover({ item, tint, requireReal = false, priority = false, className = '' }) {
   const [broken, setBroken] = useState(false)
   const img = item.metadata?.image
-  if (img && !broken) {
+  const kind = item.metadata?.imageKind
+  const usable = img && !broken && kind !== 'stock' && (!requireReal || kind === 'real')
+  if (usable) {
     return (
       <img
         src={img}
         alt=""
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        decoding="async"
         onError={() => setBroken(true)}
         className={`object-cover w-full h-full ${className}`}
       />
@@ -88,20 +97,37 @@ export function Cover({ item, tint, className = '' }) {
   return <NeuronCover seed={item.title || item.id || ''} tint={tint} className={`w-full h-full ${className}`} />
 }
 
-/** Faint, fixed full-page neuron backdrop — atmosphere without distraction. */
+/** Fixed full-page neuron backdrop — a neuroscience atmosphere, kept light
+ *  enough not to compete with the text. Denser network + soft dendrites. */
 export function NeuronBackdrop() {
+  const nodes = [
+    [90, 110], [250, 70], [420, 150], [180, 300], [360, 260], [120, 470], [300, 520],
+    [470, 430], [610, 180], [640, 560], [820, 110], [1000, 200], [900, 360], [1080, 430],
+    [980, 610], [1140, 640], [820, 660], [700, 700], [520, 680], [220, 680],
+  ]
+  const edges = [
+    [0, 1], [1, 2], [0, 3], [1, 4], [2, 4], [3, 5], [4, 6], [3, 4], [5, 6], [6, 7],
+    [4, 7], [2, 8], [8, 9], [7, 9], [10, 11], [11, 12], [12, 13], [11, 13], [12, 14],
+    [13, 15], [14, 16], [14, 15], [16, 17], [9, 16], [17, 18], [18, 19], [6, 19], [8, 11],
+  ]
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
-      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 800">
-        <g stroke="#0B2540" strokeOpacity="0.035" strokeWidth="1.2" fill="none">
-          <path d="M60,120 Q180,60 300,140 T560,120 M300,140 Q360,260 300,360" />
-          <path d="M980,80 Q1080,180 1000,300 T1120,520 M1000,300 Q900,340 860,240" />
-          <path d="M120,640 Q260,560 380,660 T640,640 M380,660 Q420,540 520,560" />
-          <path d="M760,700 Q880,620 1000,700 T1160,660" />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 90% at 50% -10%, rgba(11,95,166,0.04), transparent 60%)' }} />
+      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 760">
+        <g stroke="#0B2540" strokeOpacity="0.06" strokeWidth="1.15" fill="none" strokeLinecap="round">
+          {edges.map(([a, b], i) => {
+            const n = nodes[a], m = nodes[b]
+            const mx = (n[0] + m[0]) / 2 + (i % 2 ? 26 : -26)
+            const my = (n[1] + m[1]) / 2 + (i % 3 ? -22 : 22)
+            return <path key={i} d={`M${n[0]},${n[1]} Q${mx},${my} ${m[0]},${m[1]}`} />
+          })}
         </g>
-        <g fill="#0B2540" fillOpacity="0.045">
-          {[[300, 140], [560, 120], [300, 360], [1000, 300], [1120, 520], [860, 240], [380, 660], [640, 640], [520, 560], [1000, 700]].map(([x, y], i) => (
-            <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 6 : 4} />
+        <g fill="#0B2540">
+          {nodes.map(([x, y], i) => (
+            <g key={i}>
+              <circle cx={x} cy={y} r={i % 4 === 0 ? 6.5 : 4.5} fillOpacity="0.07" />
+              <circle cx={x} cy={y} r={(i % 4 === 0 ? 6.5 : 4.5) + 4} fill="none" stroke="#0B2540" strokeOpacity="0.045" />
+            </g>
           ))}
         </g>
       </svg>

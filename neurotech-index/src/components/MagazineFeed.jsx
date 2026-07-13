@@ -14,7 +14,7 @@ function LeadCard({ item }) {
   return (
     <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block">
       <div className="aspect-[16/9] overflow-hidden bg-canvas mb-4">
-        <Cover item={item} tint={tintOf(item)} className="group-hover:scale-[1.02] transition-transform duration-500" />
+        <Cover item={item} tint={tintOf(item)} requireReal priority className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
       <div className="flex items-center gap-3 mb-2">
         <Kicker>{typeWord(item.entry_type)}</Kicker>
@@ -87,11 +87,13 @@ export default function MagazineFeed() {
   // image-bearing stories pulled from the full ranked feed; the remaining
   // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
-    const imgs = shown.filter(i => i.metadata?.image)
-    const lead = imgs[0] || shown[0]
+    // Lead must have a verified-real image (never stock). Featured prefer real
+    // images too; everything else falls back to the neuron motif.
+    const realImgs = shown.filter(i => i.metadata?.image && i.metadata?.imageKind === 'real')
+    const lead = realImgs[0] || shown[0]
     const used = new Set(lead ? [lead] : [])
     const featured = []
-    for (const it of [...imgs, ...shown]) {
+    for (const it of [...realImgs, ...shown]) {
       if (featured.length >= 3) break
       if (used.has(it)) continue
       featured.push(it); used.add(it)

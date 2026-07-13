@@ -340,6 +340,39 @@ async function getOgImage(url) {
   } catch { return null }
 }
 
+/**
+ * Classify each item's image as a REAL photograph/microscopy/scientific figure
+ * vs a generic STOCK illustration/3D render, using Claude vision. Sets
+ * item.imageKind = 'real' | 'stock' (null on error). Bounded concurrency.
+ * This lets the homepage guarantee the top story never uses stock art.
+ */
+async function classifyImages(items) {
+  const withImg = items.filter(i => i.image)
+  for (let i = 0; i < withImg.length; i += 4) {
+    await Promise.all(withImg.slice(i, i + 4).map(async it => {
+      try {
+        const resp = await anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 5,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'url', url: it.image } },
+              { type: 'text', text: 'Is this a REAL photograph, microscopy image, medical scan, or scientific data figure of actual subject matter — or a generic STOCK illustration, 3D render, or decorative graphic? Reply with exactly one word: REAL or STOCK.' },
+            ],
+          }],
+        })
+        const ans = (resp.content?.[0]?.text || '').toUpperCase()
+        it.imageKind = ans.includes('REAL') ? 'real' : ans.includes('STOCK') ? 'stock' : null
+      } catch {
+        it.imageKind = null
+      }
+    }))
+  }
+  const real = withImg.filter(i => i.imageKind === 'real').length
+  console.log(`      image check: ${real} real / ${withImg.length} classified`)
+}
+
 /** Parse an RSS 2.0 or Atom feed into normalized items. */
 async function parseFeed(xml) {
   const doc = await parseStringPromise(xml, { explicitArray: true })
@@ -420,6 +453,7 @@ async function fetchMedia() {
   }
   const withImg = capped.filter(i => i.image).length
   console.log(`      ${withImg}/${capped.length} media items have an image`)
+  await classifyImages(capped)
   return capped
 }
 
@@ -628,7 +662,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       topics: n.topics || [],
       relevance_score: n.relevanceScore || 5,
       entry_type: 'news',
-      metadata: { image: n.image || null },
+      metadata: { image: n.image || null, imageKind: n.imageKind || null },
     })),
   ].sort((a, b) => b.metadata.rankScore - a.metadata.rankScore)
 
