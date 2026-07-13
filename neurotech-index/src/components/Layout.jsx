@@ -1,15 +1,28 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { ChevronDown, Search, Menu, X } from 'lucide-react'
+import { ChevronDown, Search, Menu, X, Brain, Cog } from 'lucide-react'
 import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
-  { to: '/media', label: 'Media', desc: 'News & press coverage' },
-  { to: '/research', label: 'Research', desc: 'Published papers & preprints' },
-  { to: '/trials', label: 'Clinical Trials', desc: 'Trials & studies' },
-  { to: '/companies', label: 'Companies', desc: 'Labs, companies & institutes' },
-  { to: '/devices', label: 'Devices', desc: 'Hardware & platforms' },
+  { to: '/media', label: 'Media' },
+  { to: '/research', label: 'Research' },
+  { to: '/trials', label: 'Clinical Trials' },
+  { to: '/companies', label: 'Companies' },
+  { to: '/devices', label: 'Devices' },
 ]
+
+// Wordmark: a brain mark (neuro) + a gear replacing the "o" (technology).
+function Wordmark({ size = 'lg' }) {
+  const text = size === 'sm' ? 'text-xl' : 'text-3xl sm:text-[2.1rem]'
+  const gear = size === 'sm' ? 'w-[0.68em] h-[0.68em]' : 'w-[0.72em] h-[0.72em]'
+  const brain = size === 'sm' ? 'w-4 h-4' : 'w-6 h-6 sm:w-[1.7rem] sm:h-[1.7rem]'
+  return (
+    <span className={`inline-flex items-center gap-2 font-serif ${text} font-semibold tracking-[-0.02em] text-ink`}>
+      <Brain className={`${brain} text-accent shrink-0`} strokeWidth={1.5} aria-hidden="true" />
+      <span className="inline-flex items-center">Neur<Cog className={`${gear} mx-[0.02em] text-ink`} strokeWidth={2} aria-hidden="true" />Base</span>
+    </span>
+  )
+}
 
 function useOutsideClose(ref, onClose) {
   useEffect(() => {
@@ -43,10 +56,9 @@ function TopicsDropdown() {
             <NavLink
               key={t.to}
               to={t.to}
-              className={({ isActive }) => `block px-4 py-2.5 hover:bg-canvas transition-colors ${isActive ? 'bg-canvas' : ''}`}
+              className={({ isActive }) => `block px-4 py-2 font-serif text-[15px] text-ink hover:bg-canvas transition-colors ${isActive ? 'bg-canvas' : ''}`}
             >
-              <span className="block font-serif text-[15px] text-ink">{t.label}</span>
-              <span className="block text-[12px] text-muted font-sans mt-0.5">{t.desc}</span>
+              {t.label}
             </NavLink>
           ))}
         </div>
@@ -69,8 +81,8 @@ function Masthead() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-3 items-center py-4">
           <div className="hidden sm:block text-[12px] text-muted font-sans">{today}</div>
-          <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center text-center">
-            <span className="font-serif text-3xl sm:text-[2.1rem] font-semibold tracking-[-0.02em] text-ink">NeuroBase</span>
+          <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center">
+            <Wordmark />
           </Link>
           <div className="justify-self-end hidden sm:flex">
             <Link to="/search" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors">
@@ -121,7 +133,7 @@ function Footer() {
     <footer className="border-t border-ink mt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-serif text-xl font-semibold text-ink">NeuroBase</span>
+          <Wordmark size="sm" />
           <p className="text-[12px] text-muted font-sans text-center">
             An open, AI-curated index of neurotechnology · Not affiliated with any institution
           </p>
