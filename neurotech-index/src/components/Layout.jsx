@@ -17,7 +17,7 @@ function Wordmark({ size = 'lg' }) {
   const gear = size === 'sm' ? 'w-[0.68em] h-[0.68em]' : 'w-[0.72em] h-[0.72em]'
   return (
     <span className={`inline-flex items-center font-serif ${text} font-semibold tracking-[-0.02em] text-ink`}>
-      Neur<Cog className={`${gear} mx-[0.02em] text-accent`} strokeWidth={2} aria-hidden="true" />Base
+      Neur<Cog className={`${gear} mx-[0.02em] text-ink`} strokeWidth={2} aria-hidden="true" />Base
     </span>
   )
 }

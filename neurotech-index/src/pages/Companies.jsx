@@ -67,13 +67,16 @@ export default function Companies() {
 
       <FundingChart companies={companiesJson} />
 
-      <div className="flex flex-wrap items-center gap-2 mb-5">
-        {KINDS.map(k => (
-          <button key={k.id} onClick={() => setKind(k.id)}
-            className={`text-[13px] font-sans px-3.5 py-1.5 rounded-full border transition-colors ${kind === k.id ? 'bg-ink text-paper border-ink' : 'bg-paper text-ink-soft border-rule hover:border-ink'}`}>
-            {k.label}
-          </button>
-        ))}
+      <div className="mb-6">
+        <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Filter by organization type</div>
+        <div className="flex flex-wrap items-center gap-2">
+          {KINDS.map(k => (
+            <button key={k.id} onClick={() => setKind(k.id)}
+              className={`text-[13px] font-sans px-3.5 py-1.5 rounded-full border transition-colors ${kind === k.id ? 'bg-ink text-paper border-ink' : 'bg-paper text-ink-soft border-rule hover:border-ink'}`}>
+              {k.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <DeviceClassFilter value={cls} onChange={setCls} />
