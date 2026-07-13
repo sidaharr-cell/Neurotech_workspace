@@ -75,7 +75,9 @@ export default function MagazineFeed() {
 
   useEffect(() => {
     let alive = true
-    getNewsFeed({ limit: 60 }).then(d => { if (alive) { setItems(d); setLoading(false) } })
+    // Fetch a wide set so real-image stories (which rank below papers) are
+    // available to feature; the display below still caps at ~20 entries.
+    getNewsFeed({ limit: 120 }).then(d => { if (alive) { setItems(d); setLoading(false) } })
     return () => { alive = false }
   }, [])
 
