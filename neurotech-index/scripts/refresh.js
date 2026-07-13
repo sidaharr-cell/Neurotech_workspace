@@ -295,6 +295,7 @@ const CURATED_FEEDS = [
   ['https://www.thetransmitter.org/feed/', 'The Transmitter'],
   ['https://www.medgadget.com/category/neurology/feed', 'Medgadget'],
   ['https://www.nature.com/subjects/neuroscience.rss', 'Nature'],
+  ['https://elifesciences.org/rss/recent.xml', 'eLife'],
 ]
 
 // Free social media: Mastodon publishes public per-hashtag RSS with no auth.
@@ -346,31 +347,100 @@ async function getOgImage(url) {
  * item.imageKind = 'real' | 'stock' (null on error). Bounded concurrency.
  * This lets the homepage guarantee the top story never uses stock art.
  */
+async function classifyImageUrl(url) {
+  try {
+    const resp = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 5,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'url', url } },
+          { type: 'text', text: 'Is this a REAL photograph, microscopy image, medical scan, or scientific data figure of actual subject matter — or a generic STOCK illustration, 3D render, publisher logo, or decorative graphic? Reply with exactly one word: REAL or STOCK.' },
+        ],
+      }],
+    })
+    const ans = (resp.content?.[0]?.text || '').toUpperCase()
+    return ans.includes('REAL') ? 'real' : ans.includes('STOCK') ? 'stock' : null
+  } catch {
+    return null
+  }
+}
+
 async function classifyImages(items) {
   const withImg = items.filter(i => i.image)
   for (let i = 0; i < withImg.length; i += 4) {
-    await Promise.all(withImg.slice(i, i + 4).map(async it => {
-      try {
-        const resp = await anthropic.messages.create({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 5,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'url', url: it.image } },
-              { type: 'text', text: 'Is this a REAL photograph, microscopy image, medical scan, or scientific data figure of actual subject matter — or a generic STOCK illustration, 3D render, or decorative graphic? Reply with exactly one word: REAL or STOCK.' },
-            ],
-          }],
-        })
-        const ans = (resp.content?.[0]?.text || '').toUpperCase()
-        it.imageKind = ans.includes('REAL') ? 'real' : ans.includes('STOCK') ? 'stock' : null
-      } catch {
-        it.imageKind = null
-      }
-    }))
+    await Promise.all(withImg.slice(i, i + 4).map(async it => { it.imageKind = await classifyImageUrl(it.image) }))
   }
   const real = withImg.filter(i => i.imageKind === 'real').length
   console.log(`      image check: ${real} real / ${withImg.length} classified`)
+}
+
+/** Confirm a URL returns a real image (so the browser will render it). */
+async function isReachableImage(url) {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(6000) })
+    if (!res.ok) return false
+    return (res.headers.get('content-type') || '').startsWith('image/')
+  } catch { return false }
+}
+
+/**
+ * Find a real figure for a paper via Europe PMC: resolve the article to its PMC
+ * id, and if it is open-access, pull the first figure's image from the PMC
+ * full-text. Returns a reachable image URL or null.
+ */
+async function europePmcFigure(item) {
+  const q = item.doi ? `DOI:"${item.doi}"` : item.pmid ? `EXT_ID:${item.pmid} AND SRC:MED` : null
+  if (!q) return null
+  try {
+    const searchUrl = `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${encodeURIComponent(q)}&format=json&resultType=core&pageSize=1`
+    const sres = await fetch(searchUrl, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(7000) })
+    if (!sres.ok) return null
+    const res = (await sres.json())?.resultList?.result?.[0]
+    const pmcid = res?.pmcid
+    if (!pmcid || (res.inEPMC !== 'Y' && res.isOpenAccess !== 'Y')) return null
+
+    const xres = await fetch(`https://www.ebi.ac.uk/europepmc/webservices/rest/PMC/${pmcid}/fullTextXML`,
+      { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(9000) })
+    if (!xres.ok) return null
+    const xml = await xres.text()
+    // Prefer a figure (<fig>) graphic; fall back to any graphic.
+    const figBlock = xml.match(/<fig[\s>][\s\S]*?<\/fig>/i)?.[0] || xml
+    let href = figBlock.match(/<graphic[^>]*xlink:href="([^"]+)"/i)?.[1]
+    if (!href) return null
+    if (!/\.(jpe?g|png|gif|webp)$/i.test(href)) href += '.jpg'
+    const imgUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/${pmcid}/bin/${href}`
+    return (await isReachableImage(imgUrl)) ? imgUrl : null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Populate real figures for the top-ranked papers/preprints. Primary source:
+ * Europe PMC open-access figures (authentic scientific figures). Fallback:
+ * the DOI page's og:image, vision-filtered to reject logos/stock. Bounded to
+ * the top `limit` items. Mutates metadata.
+ */
+async function enrichWithFigures(sortedItems, limit = 40) {
+  const targets = sortedItems.slice(0, limit).filter(it =>
+    (it.entry_type === 'paper' || it.entry_type === 'preprint') && !it.metadata.image && it.url)
+  let pmc = 0, og = 0
+  for (let i = 0; i < targets.length; i += 5) {
+    await Promise.all(targets.slice(i, i + 5).map(async it => {
+      // 1) Europe PMC open-access figure — authentic, no vision check needed.
+      const fig = await europePmcFigure(it)
+      if (fig) { it.metadata.image = fig; it.metadata.imageKind = 'real'; pmc++; return }
+      // 2) Fallback: publisher og:image, vision-filtered.
+      const img = await getOgImage(it.url)
+      if (!img) return
+      const kind = await classifyImageUrl(img)
+      if (kind !== 'real') return // only keep confirmed-real figures for papers
+      it.metadata.image = img; it.metadata.imageKind = 'real'; og++
+    }))
+  }
+  console.log(`      figures: ${pmc} via Europe PMC + ${og} via publisher (of top ${targets.length} without images)`)
 }
 
 /** Parse an RSS 2.0 or Atom feed into normalized items. */
@@ -666,8 +736,19 @@ async function syncToSupabase(pubmed, arxiv, news) {
     })),
   ].sort((a, b) => b.metadata.rankScore - a.metadata.rankScore)
 
-  // Upsert top 60 into news_feed
-  for (const item of allItems.slice(0, 60)) {
+  // Populate real figures for the top-ranked papers/preprints (graphical
+  // abstracts / hero figures via the DOI page, vision-filtered to real only).
+  console.log('  Fetching paper figures...')
+  await enrichWithFigures(allItems, 40)
+
+  // Store the top 60 by rank, PLUS any real-image stories that ranked below the
+  // cutoff — so the homepage always has real photos to feature, even though
+  // photo-bearing media tends to rank below papers.
+  const top = allItems.slice(0, 60)
+  const extras = allItems.slice(60).filter(i => i.metadata?.imageKind === 'real').slice(0, 30)
+  const toStore = [...top, ...extras]
+
+  for (const item of toStore) {
     const { error } = await supabase.from('news_feed').upsert(item, {
       onConflict: 'url',
       ignoreDuplicates: false,
@@ -679,7 +760,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
 
   console.log(
     `✓ Synced: ${pubmed.length} PubMed | ${arxiv.length} arXiv | ${news.length} news` +
-    ` → ${Math.min(allItems.length, 60)} feed items`
+    ` → ${toStore.length} feed items (${extras.length} extra real-image)`
   )
 }
 
