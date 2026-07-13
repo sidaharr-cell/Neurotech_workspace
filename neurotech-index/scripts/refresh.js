@@ -650,7 +650,7 @@ async function scoreWithClaude(items) {
     try {
       const response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1200,
+        max_tokens: 3000,
         messages: [{
           role: 'user',
           content:
@@ -660,6 +660,7 @@ async function scoreWithClaude(items) {
             `Reserve 9–10 for genuine landmark advances only (rare); 7–8 = strong/notable; 5–6 = solid but incremental; ` +
             `3–4 = routine or narrow; 1–2 = tangential. Most items should NOT be 9. Differentiate items within this batch.\n` +
             `- "summary": one crisp sentence on why it matters to neurotech practitioners\n` +
+            `- "significance": a single paragraph (3–4 sentences) in plain language explaining what this is and why it is important — its overall significance to neurotechnology. Self-contained; do not start with "This paper/article".\n` +
             `- "topics": 1–4 tags chosen ONLY from this list: ${TOPIC_TAGS.join(', ')}\n\n` +
             `Items:\n${prompt}\n\n` +
             `Respond with ONLY a JSON array of ${batch.length} objects, no other text.`,
@@ -681,12 +682,13 @@ async function scoreWithClaude(items) {
           ...item,
           relevanceScore: parsed[idx]?.score ?? 5,
           aiSummary: parsed[idx]?.summary || '',
+          aiSignificance: parsed[idx]?.significance || '',
           topics: parsed[idx]?.topics || [],
         })
       })
     } catch (err) {
       console.warn('Claude scoring error:', err.message)
-      batch.forEach(item => scored.push({ ...item, relevanceScore: 5, aiSummary: '', topics: [] }))
+      batch.forEach(item => scored.push({ ...item, relevanceScore: 5, aiSummary: '', aiSignificance: '', topics: [] }))
     }
 
     await sleep(1200)
@@ -750,6 +752,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       rankScore: computeRank(item),
       citationCount: item.citationCount ?? 0,
       influentialCitationCount: item.influentialCitationCount ?? 0,
+      significance: item.aiSignificance || '',
     },
   })
 

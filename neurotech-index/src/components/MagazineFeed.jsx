@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
 import { getNewsFeed } from '../lib/data'
 import { supabase } from '../lib/supabase'
@@ -12,7 +13,7 @@ const metaOf = item => ({ source: item.source, date: fmtDate(item.published_at),
 
 function LeadCard({ item }) {
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block">
+    <Link to={`/item/${item.id}`} className="group block">
       <div className="aspect-[16/9] overflow-hidden bg-canvas mb-4">
         <Cover item={item} tint={tintOf(item)} requireReal priority className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
@@ -25,23 +26,23 @@ function LeadCard({ item }) {
       </h2>
       {item.summary && <p className="mt-3 text-[1.05rem] leading-relaxed text-ink-soft font-body line-clamp-3">{item.summary}</p>}
       <div className="mt-3"><Meta {...metaOf(item)} /></div>
-    </a>
+    </Link>
   )
 }
 
 function SidebarItem({ item }) {
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block py-4">
+    <Link to={`/item/${item.id}`} className="group block py-4">
       <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
       <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
       <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
-    </a>
+    </Link>
   )
 }
 
 function FeaturedCard({ item }) {
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block">
+    <Link to={`/item/${item.id}`} className="group block">
       <div className="aspect-[4/3] overflow-hidden bg-canvas mb-3">
         <Cover item={item} tint={tintOf(item)} className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
@@ -49,17 +50,17 @@ function FeaturedCard({ item }) {
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
       {item.summary && <p className="mt-1.5 text-[0.9rem] leading-relaxed text-ink-soft font-body line-clamp-2">{item.summary}</p>}
       <div className="mt-2"><Meta {...metaOf(item)} /></div>
-    </a>
+    </Link>
   )
 }
 
 function CompactRow({ item }) {
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block py-4">
+    <Link to={`/item/${item.id}`} className="group block py-4">
       <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
       <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{item.title}</h3>
       <div className="mt-1"><Meta {...metaOf(item)} /></div>
-    </a>
+    </Link>
   )
 }
 
