@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { ChevronDown, Search, Menu, X, Brain, Cog } from 'lucide-react'
+import { ChevronDown, Search, Menu, X, Cog } from 'lucide-react'
 import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
@@ -11,15 +11,13 @@ const TOPICS = [
   { to: '/devices', label: 'Devices' },
 ]
 
-// Wordmark: a brain mark (neuro) + a gear replacing the "o" (technology).
+// Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).
 function Wordmark({ size = 'lg' }) {
   const text = size === 'sm' ? 'text-xl' : 'text-3xl sm:text-[2.1rem]'
   const gear = size === 'sm' ? 'w-[0.68em] h-[0.68em]' : 'w-[0.72em] h-[0.72em]'
-  const brain = size === 'sm' ? 'w-4 h-4' : 'w-6 h-6 sm:w-[1.7rem] sm:h-[1.7rem]'
   return (
-    <span className={`inline-flex items-center gap-2 font-serif ${text} font-semibold tracking-[-0.02em] text-ink`}>
-      <Brain className={`${brain} text-accent shrink-0`} strokeWidth={1.5} aria-hidden="true" />
-      <span className="inline-flex items-center">Neur<Cog className={`${gear} mx-[0.02em] text-ink`} strokeWidth={2} aria-hidden="true" />Base</span>
+    <span className={`inline-flex items-center font-serif ${text} font-semibold tracking-[-0.02em] text-ink`}>
+      Neur<Cog className={`${gear} mx-[0.02em] text-accent`} strokeWidth={2} aria-hidden="true" />Base
     </span>
   )
 }
