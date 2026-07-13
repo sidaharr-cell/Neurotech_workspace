@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, FileQuestion } from 'lucide-react'
 import { getNewsItem } from '../lib/data'
-import { Loader, EmptyState, Kicker, DeviceClassLabels, ScoreRow, fmtDate, typeWord } from '../components/ui'
+import { Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate, typeWord } from '../components/ui'
 
 function authorsOf(item) {
   const a = item.metadata?.authors
@@ -54,7 +54,7 @@ export default function ItemDetail() {
         {cites > 0 && <><span aria-hidden>·</span><span>{cites.toLocaleString()} citations</span></>}
       </div>
 
-      <div className="my-8"><ScoreRow score={item.relevance_score} /></div>
+      <div className="mb-8" />
 
       {significance && (
         <div className="mb-8">
