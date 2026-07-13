@@ -90,6 +90,7 @@ export function Cover({ item, tint, requireReal = false, priority = false, class
         fetchpriority={priority ? 'high' : 'auto'}
         decoding="async"
         onError={() => setBroken(true)}
+        onLoad={e => { if (e.target.naturalWidth && e.target.naturalWidth < 640) setBroken(true) }}
         className={`object-cover w-full h-full ${className}`}
       />
     )
