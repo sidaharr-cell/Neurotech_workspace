@@ -341,6 +341,49 @@ async function getOgImage(url) {
   } catch { return null }
 }
 
+/** Read pixel dimensions from an image buffer's header (JPEG/PNG/GIF/WebP). */
+function getImageSize(buf) {
+  if (!buf || buf.length < 24) return null
+  // PNG
+  if (buf[0] === 0x89 && buf[1] === 0x50) return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) }
+  // GIF
+  if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) return { width: buf.readUInt16LE(6), height: buf.readUInt16LE(8) }
+  // WebP (RIFF….WEBP)
+  if (buf[0] === 0x52 && buf[1] === 0x49 && buf.toString('ascii', 8, 12) === 'WEBP') {
+    const fourcc = buf.toString('ascii', 12, 16)
+    if (fourcc === 'VP8X') return { width: 1 + (buf[24] | (buf[25] << 8) | (buf[26] << 16)), height: 1 + (buf[27] | (buf[28] << 8) | (buf[29] << 16)) }
+    if (fourcc === 'VP8 ') return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff }
+    if (fourcc === 'VP8L') { const b = buf.readUInt32LE(21); return { width: 1 + (b & 0x3fff), height: 1 + ((b >> 14) & 0x3fff) } }
+    return null
+  }
+  // JPEG
+  if (buf[0] === 0xFF && buf[1] === 0xD8) {
+    let o = 2
+    while (o < buf.length - 8) {
+      if (buf[o] !== 0xFF) { o++; continue }
+      const marker = buf[o + 1]
+      if (marker >= 0xC0 && marker <= 0xCF && marker !== 0xC4 && marker !== 0xC8 && marker !== 0xCC) {
+        return { width: buf.readUInt16BE(o + 7), height: buf.readUInt16BE(o + 5) }
+      }
+      o += 2 + buf.readUInt16BE(o + 2)
+    }
+  }
+  return null
+}
+
+/** Fetch an image and return its dimensions, or null. */
+async function measureImage(url) {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(8000) })
+    if (!res.ok) return null
+    const dim = getImageSize(Buffer.from(await res.arrayBuffer()))
+    return dim && dim.width && dim.height ? dim : null
+  } catch { return null }
+}
+
+// High-resolution threshold for images we're willing to feature.
+const HI_RES = d => !!d && Math.max(d.width, d.height) >= 900 && Math.min(d.width, d.height) >= 500
+
 /**
  * Classify each item's image as a REAL photograph/microscopy/scientific figure
  * vs a generic STOCK illustration/3D render, using Claude vision. Sets
@@ -427,17 +470,20 @@ async function enrichWithFigures(sortedItems, limit = 40) {
   const targets = sortedItems.slice(0, limit).filter(it =>
     (it.entry_type === 'paper' || it.entry_type === 'preprint') && !it.metadata.image && it.url)
   let pmc = 0, og = 0
+  const accept = (it, url, d) => { it.metadata.image = url; it.metadata.imageKind = 'real'; it.metadata.imageW = d.width; it.metadata.imageH = d.height }
   for (let i = 0; i < targets.length; i += 5) {
     await Promise.all(targets.slice(i, i + 5).map(async it => {
-      // 1) Europe PMC open-access figure — authentic, no vision check needed.
+      // 1) Europe PMC open-access figure — authentic; keep only if high-res.
       const fig = await europePmcFigure(it)
-      if (fig) { it.metadata.image = fig; it.metadata.imageKind = 'real'; pmc++; return }
-      // 2) Fallback: publisher og:image, vision-filtered.
+      if (fig) { const d = await measureImage(fig); if (HI_RES(d)) { accept(it, fig, d); pmc++; return } }
+      // 2) Fallback: publisher og:image, vision-filtered + high-res only.
       const img = await getOgImage(it.url)
       if (!img) return
       const kind = await classifyImageUrl(img)
       if (kind !== 'real') return // only keep confirmed-real figures for papers
-      it.metadata.image = img; it.metadata.imageKind = 'real'; og++
+      const d = await measureImage(img)
+      if (!HI_RES(d)) return
+      accept(it, img, d); og++
     }))
   }
   console.log(`      figures: ${pmc} via Europe PMC + ${og} via publisher (of top ${targets.length} without images)`)
@@ -521,8 +567,16 @@ async function fetchMedia() {
   for (let i = 0; i < need.length; i += 6) {
     await Promise.all(need.slice(i, i + 6).map(async it => { it.image = await getOgImage(it.url) }))
   }
+  // Keep only high-resolution images (drop small thumbnails); record dimensions.
+  for (let i = 0; i < capped.length; i += 6) {
+    await Promise.all(capped.slice(i, i + 6).map(async it => {
+      if (!it.image) return
+      const d = await measureImage(it.image)
+      if (HI_RES(d)) { it.imageW = d.width; it.imageH = d.height } else { it.image = null }
+    }))
+  }
   const withImg = capped.filter(i => i.image).length
-  console.log(`      ${withImg}/${capped.length} media items have an image`)
+  console.log(`      ${withImg}/${capped.length} media items have a high-res image`)
   await classifyImages(capped)
   return capped
 }
@@ -732,7 +786,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       topics: n.topics || [],
       relevance_score: n.relevanceScore || 5,
       entry_type: 'news',
-      metadata: { image: n.image || null, imageKind: n.imageKind || null },
+      metadata: { image: n.image || null, imageKind: n.imageKind || null, imageW: n.imageW || null, imageH: n.imageH || null },
     })),
   ].sort((a, b) => b.metadata.rankScore - a.metadata.rankScore)
 
