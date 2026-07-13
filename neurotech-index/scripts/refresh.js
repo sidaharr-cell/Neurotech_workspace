@@ -399,7 +399,7 @@ async function classifyImageUrl(url) {
         role: 'user',
         content: [
           { type: 'image', source: { type: 'url', url } },
-          { type: 'text', text: 'Is this a REAL photograph, microscopy image, medical scan, or scientific data figure of actual subject matter — or a generic STOCK illustration, 3D render, publisher logo, or decorative graphic? Reply with exactly one word: REAL or STOCK.' },
+          { type: 'text', text: 'Reply REAL if this image is a photograph, microscopy image, medical/brain scan, or an anatomical or technical diagram of actual subject matter. Reply STOCK if it is a data chart, graph, plot, or table; a generic stock illustration or 3D render; a publisher logo; or decorative art. Exactly one word: REAL or STOCK.' },
         ],
       }],
     })
