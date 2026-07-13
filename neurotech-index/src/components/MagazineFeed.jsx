@@ -55,15 +55,10 @@ function FeaturedCard({ item }) {
 
 function CompactRow({ item }) {
   return (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group flex gap-4 py-4 items-start">
-      <div className="w-24 h-20 shrink-0 overflow-hidden bg-canvas">
-        <Cover item={item} tint={tintOf(item)} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
-        <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{item.title}</h3>
-        <div className="mt-1"><Meta {...metaOf(item)} /></div>
-      </div>
+    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group block py-4">
+      <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
+      <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{item.title}</h3>
+      <div className="mt-1"><Meta {...metaOf(item)} /></div>
     </a>
   )
 }
@@ -89,9 +84,12 @@ export default function MagazineFeed() {
   // image-bearing stories pulled from the full ranked feed; the remaining
   // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
-    // Lead must have a verified-real image (never stock). Featured prefer real
-    // images too; everything else falls back to the neuron motif.
-    const realImgs = shown.filter(i => i.metadata?.image && i.metadata?.imageKind === 'real')
+    // Real (never stock) images only, ordered by resolution so the lead is the
+    // sharpest available; everything else falls back to the neuron motif.
+    const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
+    const realImgs = shown
+      .filter(i => i.metadata?.image && i.metadata?.imageKind === 'real')
+      .sort((a, b) => area(b) - area(a))
     const lead = realImgs[0] || shown[0]
     const used = new Set(lead ? [lead] : [])
     const featured = []
