@@ -56,9 +56,26 @@ export default function ItemDetail() {
 
       <div className="mb-8" />
 
+      {item.entry_type === 'trial' && (
+        <dl className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 border-y border-rule py-5">
+          {[
+            ['Status', (item.metadata?.status || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())],
+            ['Phase', item.metadata?.phase],
+            ['Sponsor', item.metadata?.sponsor],
+            ['Conditions', (item.metadata?.conditions || []).join(', ')],
+            ['Interventions', (item.metadata?.interventions || []).join(', ')],
+          ].filter(([, v]) => v).map(([k, v]) => (
+            <div key={k}>
+              <dt className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-0.5">{k}</dt>
+              <dd className="text-[15px] text-ink font-body leading-snug">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
       {significance && (
         <div className="mb-8">
-          <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2">Why it matters</p>
+          <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2">{item.entry_type === 'trial' ? 'About this trial' : 'Why it matters'}</p>
           <p className="text-[1.15rem] leading-[1.7] text-ink font-body">{significance}</p>
         </div>
       )}

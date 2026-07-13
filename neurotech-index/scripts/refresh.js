@@ -9,6 +9,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { parseStringPromise } from 'xml2js'
+import { syncTrials } from './trials.js'
 
 // ── Clients ────────────────────────────────────────────────────────────────
 
@@ -740,8 +741,10 @@ async function syncToSupabase(pubmed, arxiv, news) {
 
   // Clear feed entries added more than 7 days ago (by when they entered the
   // feed, not the paper's publication date — older high-impact papers stay).
+  // Trials are exempt — they have their own long-lived section.
   await supabase.from('news_feed')
     .delete()
+    .neq('entry_type', 'trial')
     .lt('created_at', new Date(Date.now() - SEVEN_DAYS_MS).toISOString())
 
   // Attach a composite rank (relevance + engagement + recency) to metadata.
@@ -868,6 +871,10 @@ async function main() {
 
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
+
+  console.log('Syncing clinical trials (ClinicalTrials.gov)...')
+  const nTrials = await syncTrials(supabase)
+  console.log(`      ${nTrials} trials`)
 
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }

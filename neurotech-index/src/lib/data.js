@@ -88,12 +88,13 @@ export async function getCounts() {
 export async function getTrials() {
   if (!supabase) return []
   const { data, error } = await supabase
-    .from('clinical_trials')
+    .from('news_feed')
     .select('*')
-    .order('created_at', { ascending: false })
+    .eq('entry_type', 'trial')
     .limit(200)
-  if (error || !data) return [] // table may not exist yet — fail soft
-  return tag('trials')(data)
+  if (error || !data) return []
+  const rank = r => r.metadata?.rankScore ?? 0
+  return data.sort((a, b) => rank(b) - rank(a)).map(r => ({ ...r, _type: 'trials' }))
 }
 
 // ── News feed ───────────────────────────────────────────────────────────────
@@ -103,7 +104,8 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   const { data, error } = await supabase.from('news_feed').select('*').limit(400)
   if (error) { console.warn('news_feed fetch error:', error.message); return [] }
 
-  let rows = data || []
+  // Trials have their own page (getTrials); keep them out of the news feeds.
+  let rows = (data || []).filter(r => r.entry_type !== 'trial')
   if (entryTypes) rows = rows.filter(r => entryTypes.includes(r.entry_type))
 
   // Order by the composite rank (relevance + engagement + recency) written by
