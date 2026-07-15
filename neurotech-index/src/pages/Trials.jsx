@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { FlaskConical } from 'lucide-react'
-import { getTrials } from '../lib/data'
+import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
+import { searchTrials } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
 import DeviceClassFilter from '../components/DeviceClassFilter'
-import { entityMatchesClass } from '../lib/taxonomy'
+
+const PAGE_SIZE = 20
 
 const STATUS_STYLE = {
   RECRUITING: 'text-mint border-mint/40 bg-mint/10',
@@ -39,35 +40,70 @@ function TrialRow({ trial }) {
 }
 
 export default function Trials() {
-  const [items, setItems] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [input, setInput] = useState('')
+  const [query, setQuery] = useState('')
   const [cls, setCls] = useState(null)
+  const [page, setPage] = useState(0)
+  const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
+  const [loading, setLoading] = useState(true)
+  const debounce = useRef(null)
 
   useEffect(() => {
-    let alive = true
-    getTrials().then(d => { if (alive) { setItems(d); setLoading(false) } })
-    return () => { alive = false }
-  }, [])
+    clearTimeout(debounce.current)
+    debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
+    return () => clearTimeout(debounce.current)
+  }, [input])
+  useEffect(() => { setPage(0) }, [cls])
 
-  const shown = useMemo(() => (cls ? items.filter(t => entityMatchesClass(t, cls)) : items), [items, cls])
+  const load = useCallback(async () => {
+    setLoading(true)
+    setResult(await searchTrials({ query, deviceClass: cls, page, pageSize: PAGE_SIZE }))
+    setLoading(false)
+  }, [query, cls, page])
+  useEffect(() => { load() }, [load])
+
+  const pages = Math.ceil(total / PAGE_SIZE)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
         kicker="Clinical Trials"
         title="Trials & Studies"
-        sub="Neurotechnology trials from ClinicalTrials.gov — sponsors, phases, conditions, and interventions."
-        right={<span className="font-sans text-[13px] text-muted">{shown.length} trials</span>}
+        sub="A searchable index of neurotechnology trials from ClinicalTrials.gov."
+        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} trials</span>}
       />
+
+      <div className="relative max-w-2xl mb-6">
+        <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
+        <input value={input} onChange={e => setInput(e.target.value)} placeholder="Search trials…"
+          className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
+      </div>
+
       <DeviceClassFilter value={cls} onChange={setCls} />
+
       {loading ? (
         <Loader />
-      ) : shown.length === 0 ? (
-        <EmptyState icon={FlaskConical} title="No trials match this device class" />
+      ) : rows.length === 0 ? (
+        <EmptyState icon={FlaskConical} title="No trials found">Try different terms or clear the device-class filter.</EmptyState>
       ) : (
-        <div className="max-w-4xl divide-rule">
-          {shown.map((t, i) => <TrialRow key={t.id || i} trial={t} />)}
-        </div>
+        <>
+          <div className="max-w-4xl divide-rule">
+            {rows.map((t, i) => <TrialRow key={t.id || i} trial={t} />)}
+          </div>
+          {pages > 1 && (
+            <div className="max-w-4xl flex items-center justify-between mt-8 pt-5 border-t border-rule">
+              <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
+                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                <ChevronLeft className="w-4 h-4" /> Previous
+              </button>
+              <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
+              <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
+                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                Next <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

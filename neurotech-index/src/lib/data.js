@@ -101,11 +101,12 @@ export async function getTrials() {
 
 export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   if (!supabase) return []
-  const { data, error } = await supabase.from('news_feed').select('*').limit(400)
+  // Exclude trials at the query level — there are thousands of them and they
+  // have their own page; otherwise they'd crowd out the news items.
+  const { data, error } = await supabase.from('news_feed').select('*').neq('entry_type', 'trial').limit(400)
   if (error) { console.warn('news_feed fetch error:', error.message); return [] }
 
-  // Trials have their own page (getTrials); keep them out of the news feeds.
-  let rows = (data || []).filter(r => r.entry_type !== 'trial')
+  let rows = data || []
   if (entryTypes) rows = rows.filter(r => entryTypes.includes(r.entry_type))
 
   // Order by the composite rank (relevance + engagement + recency) written by
@@ -137,6 +138,31 @@ export async function searchPapers({ query = '', deviceClass = null, page = 0, p
   const { data, count, error } = await q
   if (error) { console.warn('searchPapers error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'papers' })), total: count ?? 0 }
+}
+
+/** Server-side paginated search over the full devices table. */
+export async function searchDevices({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let q = supabase.from('devices').select('*', { count: 'exact' })
+  const term = query.trim().replace(/[(),%]/g, ' ')
+  if (term) q = q.or(`name.ilike.%${term}%,manufacturer.ilike.%${term}%`)
+  if (deviceClass) q = q.contains('tags', [deviceClass])
+  q = q.order('year', { ascending: false, nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+  const { data, count, error } = await q
+  if (error) { console.warn('searchDevices error:', error.message); return { rows: [], total: 0 } }
+  return { rows: (data || []).map(r => ({ ...r, _type: 'devices' })), total: count ?? 0 }
+}
+
+/** Server-side paginated search over clinical trials (stored in news_feed). */
+export async function searchTrials({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
+  if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
+  if (deviceClass) q = q.contains('topics', [deviceClass])
+  q = q.order('published_at', { ascending: false, nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+  const { data, count, error } = await q
+  if (error) { console.warn('searchTrials error:', error.message); return { rows: [], total: 0 } }
+  return { rows: (data || []).map(r => ({ ...r, _type: 'trials' })), total: count ?? 0 }
 }
 
 /** A single paper by PubMed id (for its detail page). */
