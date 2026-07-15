@@ -9,6 +9,7 @@ import Devices from './pages/Devices'
 import SearchPage from './pages/SearchPage'
 import PersonProfile from './pages/PersonProfile'
 import ItemDetail from './pages/ItemDetail'
+import PaperDetail from './pages/PaperDetail'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="devices" element={<Devices />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="item/:id" element={<ItemDetail />} />
+          <Route path="paper/:pmid" element={<PaperDetail />} />
           {/* People: reachable by link, intentionally absent from nav + default search */}
           <Route path="people/:slug" element={<PersonProfile />} />
           <Route path="*" element={<Navigate to="/" replace />} />
