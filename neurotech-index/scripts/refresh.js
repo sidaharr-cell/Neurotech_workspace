@@ -297,6 +297,19 @@ const CURATED_FEEDS = [
   ['https://www.medgadget.com/category/neurology/feed', 'Medgadget'],
   ['https://www.nature.com/subjects/neuroscience.rss', 'Nature'],
   ['https://elifesciences.org/rss/recent.xml', 'eLife'],
+  ['https://www.statnews.com/feed/', 'STAT'],
+  ['https://www.fiercebiotech.com/rss/xml', 'Fierce Biotech'],
+  ['https://www.sciencenews.org/feed', 'Science News'],
+  ['https://singularityhub.com/feed/', 'Singularity Hub'],
+  ['https://www.sciencedaily.com/rss/health_medicine/nervous_system.xml', 'ScienceDaily'],
+  ['https://newatlas.com/index.rss', 'New Atlas'],
+  ['https://www.frontiersin.org/journals/neuroscience/rss', 'Frontiers'],
+]
+
+// GDELT — free global news firehose across thousands of outlets.
+const GDELT_QUERIES = [
+  '"brain computer interface"', '"brain machine interface"', '"neural implant"',
+  '"deep brain stimulation"', 'neurotechnology', '"neural interface"', '"brain implant"',
 ]
 
 // Free social media: Mastodon publishes public per-hashtag RSS with no auth.
@@ -539,6 +552,28 @@ async function fetchRssFeed(url, label, cap = 15) {
   }
 }
 
+const gdeltDate = d => (d && d.length >= 8 ? `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T00:00:00Z` : null)
+
+/** GDELT global news firehose (thousands of outlets), one request per query. */
+async function fetchGdelt() {
+  const out = []
+  for (const q of GDELT_QUERIES) {
+    try {
+      const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q)}&mode=artlist&format=json&maxrecords=40&sort=datedesc&timespan=3w`
+      const res = await fetch(url, { headers: { 'User-Agent': UA } })
+      const text = await res.text()
+      let data
+      try { data = JSON.parse(text) } catch { continue }
+      for (const a of data.articles || []) {
+        if (!a.url || !a.title || a.language !== 'English') continue
+        out.push({ title: a.title, url: a.url, summary: '', source: a.domain || 'GDELT', publishedAt: gdeltDate(a.seendate), image: a.socialimage || null, entry_type: 'news' })
+      }
+    } catch { /* skip */ }
+    await sleep(300)
+  }
+  return out
+}
+
 /** Pull every free media/press/social source in parallel, dedupe, cap. */
 async function fetchMedia() {
   const cutoff = Date.now() - CONTENT_WINDOW_MS
@@ -546,6 +581,7 @@ async function fetchMedia() {
     ...GOOGLE_NEWS_QUERIES.map(q => fetchRssFeed(googleNewsUrl(q), 'Google News', 20)),
     ...CURATED_FEEDS.map(([u, l]) => fetchRssFeed(u, l, 12)),
     ...MASTODON_TAGS.map(t => fetchRssFeed(mastodonUrl(t), `#${t} · Mastodon`, 6)),
+    fetchGdelt(),
   ])
 
   let items = batches.flat().filter(i =>
