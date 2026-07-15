@@ -140,6 +140,19 @@ export async function searchPapers({ query = '', deviceClass = null, page = 0, p
   return { rows: (data || []).map(r => ({ ...r, _type: 'papers' })), total: count ?? 0 }
 }
 
+/** Server-side paginated search over research labs (organizations, type='lab'). */
+export async function searchLabs({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let q = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
+  const term = query.trim().replace(/[(),%]/g, ' ')
+  if (term) q = q.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
+  if (deviceClass) q = q.contains('focus_areas', [deviceClass])
+  q = q.order('name').range(page * pageSize, page * pageSize + pageSize - 1)
+  const { data, count, error } = await q
+  if (error) { console.warn('searchLabs error:', error.message); return { rows: [], total: 0 } }
+  return { rows: (data || []).map(r => ({ ...r, _type: 'organizations' })), total: count ?? 0 }
+}
+
 /** Server-side paginated search over the full devices table. */
 export async function searchDevices({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
