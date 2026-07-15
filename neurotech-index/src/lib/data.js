@@ -120,6 +120,33 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   return [...top, ...realExtra]
 }
 
+/**
+ * Server-side paginated + full-text search over the full papers table.
+ * Uses the `fts` tsvector index; filters by derived device-class `tags`.
+ */
+export async function searchPapers({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let q = supabase
+    .from('papers')
+    .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
+  const term = query.trim()
+  if (term) q = q.textSearch('fts', term, { type: 'websearch' })
+  if (deviceClass) q = q.contains('tags', [deviceClass])
+  q = q.order('year', { ascending: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+
+  const { data, count, error } = await q
+  if (error) { console.warn('searchPapers error:', error.message); return { rows: [], total: 0 } }
+  return { rows: (data || []).map(r => ({ ...r, _type: 'papers' })), total: count ?? 0 }
+}
+
+/** A single paper by PubMed id (for its detail page). */
+export async function getPaperByPmid(pmid) {
+  if (!supabase || !pmid) return null
+  const { data, error } = await supabase.from('papers').select('*').eq('pubmed_id', pmid).maybeSingle()
+  if (error) { console.warn('getPaperByPmid error:', error.message); return null }
+  return data || null
+}
+
 /** A single feed item by id (for the internal detail page). */
 export async function getNewsItem(id) {
   if (!supabase || !id) return null
