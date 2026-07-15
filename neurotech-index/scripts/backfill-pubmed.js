@@ -30,15 +30,43 @@ function deriveTags(text) {
   return DEVICE_CLASSES.filter(c => c.match.some(m => h.includes(m))).map(c => c.id)
 }
 
-async function esearchHistory() {
-  const url = `${EUTILS}/esearch.fcgi?db=pubmed&term=${encodeURIComponent(QUERY)}&usehistory=y&retmax=0&retmode=json${keyParam}`
-  const j = await (await fetch(url, { headers: { 'User-Agent': UA } })).json()
-  const e = j.esearchresult
-  return { count: parseInt(e.count, 10), webenv: e.webenv, qk: e.querykey }
+async function fetchJson(url, tries = 4) {
+  for (let i = 0; i < tries; i++) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': UA } })
+      if (!res.ok) { await sleep(1500); continue }
+      return await res.json()
+    } catch { await sleep(1500) }
+  }
+  return null
 }
 
-async function efetchBatch(webenv, qk, retstart) {
-  const url = `${EUTILS}/efetch.fcgi?db=pubmed&query_key=${qk}&WebEnv=${webenv}&retstart=${retstart}&retmax=${BATCH}&retmode=xml${keyParam}`
+// Collect all matching PMIDs, chunked by publication year so each sub-query
+// stays under PubMed's 10k paging limit (and no expiring history session).
+async function esearchAllPmids() {
+  const pmids = new Set()
+  const thisYear = new Date().getFullYear()
+  for (let year = thisYear; year >= 1980; year--) {
+    let retstart = 0
+    for (;;) {
+      const term = `(${QUERY}) AND ${year}[pdat]`
+      const url = `${EUTILS}/esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&retstart=${retstart}&retmax=9999&retmode=json${keyParam}`
+      const j = await fetchJson(url)
+      const ids = j?.esearchresult?.idlist || []
+      ids.forEach(id => pmids.add(id))
+      const count = parseInt(j?.esearchresult?.count || '0', 10)
+      retstart += 9999
+      if (retstart >= count || ids.length === 0) break
+      await sleep(PACE)
+    }
+    if (year % 5 === 0) console.log(`   …${year}: ${pmids.size.toLocaleString()} ids so far`)
+    await sleep(PACE)
+  }
+  return [...pmids]
+}
+
+async function efetchByIds(ids) {
+  const url = `${EUTILS}/efetch.fcgi?db=pubmed&id=${ids.join(',')}&retmode=xml${keyParam}`
   const res = await fetch(url, { headers: { 'User-Agent': UA } })
   if (!res.ok) throw new Error(`efetch ${res.status}`)
   const parsed = await parseStringPromise(await res.text(), { explicitArray: true })
@@ -87,19 +115,21 @@ async function upsertRows(sb, rows) {
 
 async function run() {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
-  const { count, webenv, qk } = await esearchHistory()
-  const target = Math.min(count, LIMIT)
-  console.log(`🧠 PubMed neurotech matches: ${count.toLocaleString()}. Backfilling ${target.toLocaleString()}${API_KEY ? '' : ' (no API key — slower)'}...`)
+  console.log('🧠 Collecting PubMed IDs…')
+  const allPmids = await esearchAllPmids()
+  const pmids = allPmids.slice(0, LIMIT)
+  console.log(`   ${allPmids.length.toLocaleString()} matches; fetching ${pmids.length.toLocaleString()}${API_KEY ? '' : ' (no API key — slower)'}...`)
   let ok = 0
-  for (let start = 0; start < target; start += BATCH) {
+  for (let i = 0; i < pmids.length; i += BATCH) {
+    const chunk = pmids.slice(i, i + BATCH)
     let rows = []
-    try { rows = await efetchBatch(webenv, qk, start) }
-    catch (e) { console.warn(`  batch @${start} error: ${e.message}`); await sleep(1500); continue }
+    try { rows = await efetchByIds(chunk) }
+    catch (e) { console.warn(`  chunk @${i} error: ${e.message}`); await sleep(1500); continue }
     if (rows.length) ok += await upsertRows(sb, rows)
-    if (start % 2000 === 0) console.log(`  ${Math.min(start + BATCH, target).toLocaleString()}/${target.toLocaleString()} · upserted ~${ok.toLocaleString()}`)
+    if (i % 4000 === 0) console.log(`  ${Math.min(i + BATCH, pmids.length).toLocaleString()}/${pmids.length.toLocaleString()} · ~${ok.toLocaleString()} upserted`)
     await sleep(PACE)
   }
-  console.log(`✓ Backfill complete — ~${ok.toLocaleString()} papers in the index`)
+  console.log(`✓ Backfill complete — processed ${ok.toLocaleString()} papers`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })
