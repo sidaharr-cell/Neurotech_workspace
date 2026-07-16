@@ -133,6 +133,30 @@ function computeRank(item) {
   return 0.40 * aiNorm + 0.25 * citeNorm + 0.15 * inflNorm + 0.20 * recNorm
 }
 
+// ── Media-specific ranking (news / press) ────────────────────────────────────
+// News has no citations, so computeRank scored it ~0. Rank instead on outlet
+// authority + relevance + recency (news decays fast: 3-day half-life).
+const MEDIA_TIERS = [
+  [1.00, ['nature', 'science', 'the new york times', 'reuters', 'associated press', 'the washington post',
+          'stat', 'mit technology review', 'ieee spectrum', 'scientific american', 'the economist',
+          'nih', 'the lancet', 'nejm']],
+  [0.75, ['wired', 'ars technica', 'the guardian', 'new atlas', 'sciencedaily', 'science news',
+          'nature news', 'the verge', 'quanta', 'npr', 'bbc', 'financial times']],
+  [0.55, ['techcrunch', 'gizmodo', 'engadget', 'medgadget', 'endpoints', 'fierce']],
+]
+function mediaAuthority(source) {
+  const s = (source || '').toLowerCase()
+  if (!s) return 0.40
+  for (const [score, keys] of MEDIA_TIERS) if (keys.some(k => s.includes(k))) return score
+  return 0.45 // known outlet, untiered
+}
+function mediaScore(item) {
+  const relevance = clamp01((item.relevanceScore ?? item.relevance_score ?? 5) / 10)
+  const recency = Math.exp(-daysOld(item.publishedAt || item.published_at) * Math.LN2 / 3) // 3-day half-life
+  const authority = mediaAuthority(item.source)
+  return 0.40 * relevance + 0.35 * recency + 0.25 * authority
+}
+
 // ── Research-specific ranking (papers / preprints) ───────────────────────────
 // Unlike computeRank (which uses raw, log-scaled citation counts and so buries
 // anything recent), this leans on OpenAlex's FIELD- and AGE-normalized impact
@@ -891,11 +915,14 @@ async function syncToSupabase(pubmed, arxiv, news) {
   // scorer (field-normalized impact); news keeps the recency-led computeRank.
   const withMeta = (item, base) => {
     const isResearch = base.entry_type === 'paper' || base.entry_type === 'preprint'
+    const rankScore = isResearch ? researchScore(item)
+      : base.entry_type === 'news' ? mediaScore(item)
+      : computeRank(item)
     return {
       ...base,
       metadata: {
         ...base.metadata,
-        rankScore: isResearch ? researchScore(item) : computeRank(item),
+        rankScore,
         citationCount: item.citationCount ?? 0,
         influentialCitationCount: item.influentialCitationCount ?? 0,
         pctile: item.pctile ?? null,

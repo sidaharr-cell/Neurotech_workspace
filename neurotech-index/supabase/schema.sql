@@ -67,8 +67,12 @@ create table if not exists organizations (
   focus_areas  jsonb default '[]',
   website      text,
   founders     jsonb default '[]',
+  rank_score   real default 0,
   created_at   timestamptz default now()
 );
+-- If the table predates rank_score, add it:
+--   alter table organizations add column if not exists rank_score real default 0;
+create index if not exists organizations_rank on organizations(rank_score desc);
 
 -- ── Researchers ──────────────────────────────────────────────────────────────
 create table if not exists researchers (
