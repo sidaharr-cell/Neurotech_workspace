@@ -7,8 +7,8 @@ const dateLabel = d => (d ? new Date(d).toLocaleDateString('en-US', { month: 'sh
 
 const SORTS = [
   { id: 'total', label: 'Total raised' },
-  { id: 'latest', label: 'Latest raise' },
-  { id: 'recent', label: 'Most recent' },
+  { id: 'latest', label: 'Latest raise size' },
+  { id: 'recent', label: 'Latest raise date' },
 ]
 
 /** Top companies by funding, with a live "latest raise" column and sorting. */
