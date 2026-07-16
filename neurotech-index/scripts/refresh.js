@@ -144,6 +144,21 @@ const MEDIA_TIERS = [
           'nature news', 'the verge', 'quanta', 'npr', 'bbc', 'financial times']],
   [0.55, ['techcrunch', 'gizmodo', 'engadget', 'medgadget', 'endpoints', 'fierce']],
 ]
+// RSS / Google-News titles often carry the outlet name as a prefix ("STAT+: …")
+// or a trailing " - Publisher". Strip it when it matches the item's own source
+// (high precision — we never touch a headline that merely contains a dash).
+function cleanTitle(title, source) {
+  let t = (title || '').trim()
+  const src = (source || '').trim()
+  if (src) {
+    const esc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    t = t.replace(new RegExp('^' + esc + '\\+?\\s*[:\\-–—]\\s*', 'i'), '') // leading "Source: "
+    t = t.replace(new RegExp('\\s*[-|–—]\\s*' + esc + '\\s*$', 'i'), '')   // trailing " - Source"
+  }
+  t = t.replace(/^[A-Z][\w.&]{0,10}\+:\s*/, '') // catches "STAT+: " even if source label differs
+  return t.trim() || (title || '').trim()
+}
+
 function mediaAuthority(source) {
   const s = (source || '').toLowerCase()
   if (!s) return 0.40
@@ -957,7 +972,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       metadata: { authors: p.authors, arxivId: p.arxivId },
     })),
     ...news.map(n => withMeta(n, {
-      title: n.title,
+      title: cleanTitle(n.title, n.source),
       summary: n.aiSummary || n.summary || '',
       source: n.source,
       url: n.url,
@@ -1109,7 +1124,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, cleanTitle, venuePrestige, clamp01, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).
