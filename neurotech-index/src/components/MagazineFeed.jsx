@@ -5,6 +5,7 @@ import { getNewsFeed } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
 import DeviceClassFilter from './DeviceClassFilter'
+import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesClass, classesForEntity } from '../lib/taxonomy'
 
@@ -145,6 +146,9 @@ export default function MagazineFeed() {
               </div>
             </div>
           )}
+
+          {/* Notable research rail (unfiltered — highest field-normalized impact) */}
+          {!cls && <NotableRail />}
 
           {/* Remaining, compact */}
           {rest.length > 0 && (

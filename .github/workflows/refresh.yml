@@ -40,14 +40,14 @@ jobs:
         working-directory: neurotech-index
         run: node scripts/backfill-funding.js
 
-      - name: Commit updated funding data
+      - name: Commit updated data (funding + notable research)
         run: |
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
-          if ! git diff --quiet -- neurotech-index/src/data/funding.json; then
-            git add neurotech-index/src/data/funding.json
-            git commit -m "chore: auto-update company funding (SEC Form D) [skip ci]"
+          git add neurotech-index/src/data/funding.json neurotech-index/src/data/notable.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-update funding + notable research [skip ci]"
             git push
           else
-            echo "No funding changes."
+            echo "No data changes."
           fi
