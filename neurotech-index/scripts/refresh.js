@@ -159,6 +159,49 @@ function cleanTitle(title, source) {
   return t.trim() || (title || '').trim()
 }
 
+const normTitle = t => (t || '').toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim()
+
+// The same story reaches the feed as separate rows with different URLs: via
+// Google News (aggregator redirect) AND the publisher's own RSS, and a journal
+// article shows up as both a 'news' item (publisher RSS) and a 'paper' (PubMed).
+// url-unique dedup misses all of these. Collapse feed rows sharing a normalized
+// title, keeping the best copy — a real image (the feed's visual slots need
+// one), then the richer research detail page over a generic news link, then a
+// direct URL over a news.google.com redirect, then the higher rank. Trials are
+// exempt. Returns the number of rows removed.
+async function dedupeFeedRows(supabase) {
+  const { data, error } = await supabase.from('news_feed')
+    .select('id,title,url,entry_type,metadata').in('entry_type', ['paper', 'preprint', 'news'])
+  if (error || !data) return 0
+  const groups = new Map()
+  for (const r of data) {
+    const k = normTitle(r.title)
+    if (!k) continue
+    const arr = groups.get(k)
+    if (arr) arr.push(r); else groups.set(k, [r])
+  }
+  const isAgg = u => /news\.google\.com/i.test(u || '')
+  const typeRank = { paper: 2, preprint: 2, news: 1 }
+  const better = (a, b) => {
+    const ai = a.metadata?.imageKind === 'real', bi = b.metadata?.imageKind === 'real'
+    if (ai !== bi) return ai ? a : b                                      // keep the one with a real image
+    if (isAgg(a.url) !== isAgg(b.url)) return isAgg(a.url) ? b : a        // prefer a direct publisher URL
+    const ta = typeRank[a.entry_type] || 0, tb = typeRank[b.entry_type] || 0
+    if (ta !== tb) return ta > tb ? a : b                                // prefer the research detail page
+    return (b.metadata?.rankScore ?? 0) > (a.metadata?.rankScore ?? 0) ? b : a
+  }
+  const toDelete = []
+  for (const rows of groups.values()) {
+    if (rows.length < 2) continue
+    let keep = rows[0]
+    for (const r of rows.slice(1)) keep = better(keep, r)
+    for (const r of rows) if (r.id !== keep.id) toDelete.push(r.id)
+  }
+  for (let i = 0; i < toDelete.length; i += 200)
+    await supabase.from('news_feed').delete().in('id', toDelete.slice(i, i + 200))
+  return toDelete.length
+}
+
 function mediaAuthority(source) {
   const s = (source || '').toLowerCase()
   if (!s) return 0.40
@@ -1114,6 +1157,9 @@ async function main() {
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
 
+  const nDup = await dedupeFeedRows(supabase)
+  if (nDup) console.log(`      removed ${nDup} duplicate feed rows (same story, different source)`)
+
   console.log('Updating notable research rail (OpenAlex impact)...')
   await syncNotable([...scoredPubmed, ...scoredArxiv])
 
@@ -1124,7 +1170,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, cleanTitle, venuePrestige, clamp01, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).
