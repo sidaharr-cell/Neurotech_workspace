@@ -25,6 +25,12 @@ create index if not exists papers_tags_gin on papers using gin(tags);
 create index if not exists papers_year on papers(year);
 create index if not exists papers_created on papers(created_at desc);
 
+-- Field-normalized impact rank (OpenAlex), populated by backfill-paper-impact.js.
+-- If the table predates it, add it:
+--   alter table papers add column if not exists rank_score real default 0;
+alter table papers add column if not exists rank_score real default 0;
+create index if not exists papers_rank on papers(rank_score desc);
+
 -- Full-text search
 alter table papers add column if not exists fts tsvector
   generated always as (

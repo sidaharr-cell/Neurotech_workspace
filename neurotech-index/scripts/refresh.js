@@ -1109,7 +1109,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, venuePrestige, clamp01, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).
