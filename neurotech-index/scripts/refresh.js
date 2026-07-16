@@ -9,7 +9,12 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { parseStringPromise } from 'xml2js'
+import { readFileSync, writeFileSync, existsSync, realpathSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
+
+const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
 // ── Clients ────────────────────────────────────────────────────────────────
 
@@ -126,6 +131,105 @@ function computeRank(item) {
   const days = pub ? Math.max(0, (Date.now() - new Date(pub).getTime()) / 86400000) : 120
   const recNorm = Math.exp(-days / 45)                                                  // ~30–45 day half-life
   return 0.40 * aiNorm + 0.25 * citeNorm + 0.15 * inflNorm + 0.20 * recNorm
+}
+
+// ── Research-specific ranking (papers / preprints) ───────────────────────────
+// Unlike computeRank (which uses raw, log-scaled citation counts and so buries
+// anything recent), this leans on OpenAlex's FIELD- and AGE-normalized impact
+// percentile — a 6-citation paper can be top-1%-for-its-cohort. See NOTABLE_*.
+
+const clamp01 = x => Math.max(0, Math.min(1, x))
+const daysOld = d => (d ? Math.max(0, (Date.now() - new Date(d).getTime()) / 864e5) : 240)
+
+// Curated venue prestige — the key DAY-ONE signal (fresh papers have no
+// citations, so venue is what tells a landmark from a nobody on publication day).
+const VENUE_TIERS = [
+  [1.00, ['nature', 'science', 'cell', 'neuron', 'nature neuroscience', 'nature medicine',
+          'nature biomedical engineering', 'lancet', 'new england journal']],
+  [0.85, ['nature communications', 'science advances', 'pnas', 'brain', 'nature methods',
+          'jama', 'science translational medicine', 'elife']],
+  [0.70, ['journal of neuroscience', 'neuroimage', 'ieee trans', 'journal of neural engineering',
+          'brain stimulation', 'annals of neurology', 'movement disorders']],
+  [0.55, ['frontiers in', 'plos', 'scientific reports', 'journal of neurophysiology']],
+]
+function venuePrestige(venue) {
+  const v = (venue || '').toLowerCase()
+  if (!v) return 0.40
+  for (const [score, keys] of VENUE_TIERS) if (keys.some(k => v.includes(k))) return score
+  return 0.45 // known venue, untiered
+}
+
+const RESEARCH_W = { relevance: 0.28, recency: 0.22, impact: 0.30, velocity: 0.10, prestige: 0.10 }
+
+/**
+ * Impact is only TRUSTWORTHY once a paper has accrued signal: OpenAlex
+ * percentiles are noise when the whole same-age cohort has ~0 citations.
+ * Gate on citedBy≥3 OR age>60d.
+ */
+function impactTrusted(item) {
+  return (item.pctile != null || item.fwci != null) && ((item.citedBy ?? 0) >= 3 || daysOld(item.publishedAt || item.published_at || item.oaDate) > 60)
+}
+
+function researchScore(item) {
+  const relevance = clamp01((item.relevanceScore ?? item.relevance_score ?? 5) / 10)
+  const recency = Math.exp(-daysOld(item.publishedAt || item.published_at) * Math.LN2 / 180) // 180-day half-life
+  const velocity = clamp01(Math.log10(1 + (item.recentCites ?? 0)) / 2) // ~100 recent cites → 1
+  const prest = venuePrestige(item.oaVenue || item.journal)
+
+  let impact = null
+  if (impactTrusted(item)) {
+    impact = item.pctile != null ? clamp01(item.pctile) : clamp01(Math.log10(1 + item.fwci) / 1.5)
+  }
+
+  const W = RESEARCH_W
+  if (impact == null) {
+    // Fresh / uncited / not-yet-indexed: drop impact, redistribute its weight
+    // onto the day-one signals so new papers compete on relevance/recency/venue.
+    const rest = W.relevance + W.recency + W.velocity + W.prestige
+    const k = 1 + W.impact / rest
+    return k * (W.relevance * relevance + W.recency * recency + W.velocity * velocity + W.prestige * prest)
+  }
+  return W.relevance * relevance + W.recency * recency + W.impact * impact + W.velocity * velocity + W.prestige * prest
+}
+
+/**
+ * Enrich items (in place) with OpenAlex field-normalized impact — the signal
+ * computeRank can't see. Batched by DOI (25/req, polite pool). Fails soft.
+ */
+const OA_FIELDS = 'doi,fwci,citation_normalized_percentile,cited_by_count,counts_by_year,primary_location,publication_date'
+async function enrichOpenAlex(items) {
+  const withDoi = items.filter(i => i.doi)
+  if (!withDoi.length) return
+  let matched = 0
+  for (let i = 0; i < withDoi.length; i += 25) {
+    const batch = withDoi.slice(i, i + 25)
+    const filter = 'doi:' + batch.map(b => b.doi.toLowerCase()).join('|')
+    const url = `https://api.openalex.org/works?filter=${encodeURIComponent(filter)}&select=${OA_FIELDS}&per-page=25&mailto=sid.a.harr@gmail.com`
+    try {
+      const res = await fetch(url)
+      if (!res.ok) { console.warn(`  OpenAlex ${res.status}`); await sleep(1000); continue }
+      const { results = [] } = await res.json()
+      const byDoi = new Map()
+      for (const w of results) {
+        const d = (w.doi || '').replace('https://doi.org/', '').toLowerCase()
+        if (d) byDoi.set(d, w)
+      }
+      const yr = new Date().getUTCFullYear()
+      for (const b of batch) {
+        const w = byDoi.get(b.doi.toLowerCase())
+        if (!w) continue
+        b.pctile = w.citation_normalized_percentile?.value ?? null
+        b.fwci = w.fwci ?? null
+        b.citedBy = w.cited_by_count ?? 0
+        b.recentCites = (w.counts_by_year || []).filter(c => c.year >= yr - 1).reduce((s, c) => s + (c.cited_by_count || 0), 0)
+        b.oaVenue = w.primary_location?.source?.display_name || null
+        b.oaDate = w.publication_date || null
+        matched++
+      }
+    } catch (err) { console.warn('  OpenAlex error:', err.message) }
+    await sleep(300)
+  }
+  console.log(`      matched ${matched}/${withDoi.length} papers to OpenAlex impact data`)
 }
 
 // ── PubMed ─────────────────────────────────────────────────────────────────
@@ -783,17 +887,23 @@ async function syncToSupabase(pubmed, arxiv, news) {
     .neq('entry_type', 'trial')
     .lt('created_at', new Date(Date.now() - SEVEN_DAYS_MS).toISOString())
 
-  // Attach a composite rank (relevance + engagement + recency) to metadata.
-  const withMeta = (item, base) => ({
-    ...base,
-    metadata: {
-      ...base.metadata,
-      rankScore: computeRank(item),
-      citationCount: item.citationCount ?? 0,
-      influentialCitationCount: item.influentialCitationCount ?? 0,
-      significance: item.aiSignificance || '',
-    },
-  })
+  // Attach a composite rank to metadata. Papers/preprints use the research
+  // scorer (field-normalized impact); news keeps the recency-led computeRank.
+  const withMeta = (item, base) => {
+    const isResearch = base.entry_type === 'paper' || base.entry_type === 'preprint'
+    return {
+      ...base,
+      metadata: {
+        ...base.metadata,
+        rankScore: isResearch ? researchScore(item) : computeRank(item),
+        citationCount: item.citationCount ?? 0,
+        influentialCitationCount: item.influentialCitationCount ?? 0,
+        pctile: item.pctile ?? null,
+        fwci: item.fwci ?? null,
+        significance: item.aiSignificance || '',
+      },
+    }
+  }
 
   // Build combined feed, sorted by the composite rank (not the raw AI score).
   const allItems = [
@@ -860,6 +970,59 @@ async function syncToSupabase(pubmed, arxiv, news) {
   )
 }
 
+// ── Notable research rail ────────────────────────────────────────────────────
+// A rolling ~90-day set of the highest FIELD-normalized-impact neurotech papers,
+// written to src/data/notable.json (committed daily, like funding.json). Papers
+// "graduate" here from the fresh 7-day feed once OpenAlex shows real, top-decile
+// citation impact — giving landmark work a longer runway than the feed allows.
+
+const NOTABLE_MAX = 12
+const NOTABLE_PCTILE_MIN = 0.90
+const NOTABLE_WINDOW_DAYS = 90
+
+// Normalize a raw scored item OR a stored rail entry into one rail record.
+function toNotable(x) {
+  return {
+    title: x.title,
+    authors: x.authors || [],
+    journal: x.oaVenue || x.journal || x.source || '',
+    pmid: x.pmid || null,
+    doi: x.doi || null,
+    url: x.url || (x.doi ? `https://doi.org/${x.doi}` : (x.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${x.pmid}/` : '')),
+    publishedAt: x.publishedAt || x.published_at || x.oaDate || null,
+    pctile: x.pctile ?? null,
+    fwci: x.fwci ?? null,
+    citedBy: x.citedBy ?? 0,
+    significance: x.significance || x.aiSignificance || '',
+  }
+}
+
+async function syncNotable(researchItems) {
+  // Load the existing rail and re-enrich it — citations climb over time, so a
+  // paper's percentile is re-checked every run (and it drops off if it fades).
+  let existing = []
+  try { if (existsSync(NOTABLE_PATH)) existing = JSON.parse(readFileSync(NOTABLE_PATH, 'utf8')) } catch { /* first run */ }
+  await enrichOpenAlex(existing) // mutates in place: refreshes pctile/fwci/citedBy
+
+  // New qualifiers from this run: trusted impact AND top-decile field percentile.
+  const fresh = researchItems.filter(it => it.doi && impactTrusted(it) && (it.pctile ?? 0) >= NOTABLE_PCTILE_MIN)
+
+  // Merge (a fresh reading wins over a stored one), keep only still-qualifying
+  // in-window papers, and take the top N by percentile.
+  const keyOf = x => (x.doi || x.pmid || x.url || '').toLowerCase()
+  const byKey = new Map()
+  for (const e of existing) if (keyOf(e)) byKey.set(keyOf(e), toNotable(e))
+  for (const it of fresh) if (keyOf(it)) byKey.set(keyOf(it), toNotable(it))
+
+  const rail = [...byKey.values()]
+    .filter(x => x.pctile != null && x.pctile >= NOTABLE_PCTILE_MIN && daysOld(x.publishedAt) <= NOTABLE_WINDOW_DAYS)
+    .sort((a, b) => b.pctile - a.pctile)
+    .slice(0, NOTABLE_MAX)
+
+  writeFileSync(NOTABLE_PATH, JSON.stringify(rail, null, 2) + '\n')
+  console.log(`      notable rail: ${rail.length} papers (${existing.length} carried + ${fresh.length} new qualifiers)`)
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -898,8 +1061,9 @@ async function main() {
   const allItems = [...pubmed, ...arxiv, ...news]
   const scored = await scoreWithClaude(allItems)
 
-  console.log('[5/5] Fetching citation counts (Semantic Scholar)...')
+  console.log('[5/5] Fetching engagement signals (Semantic Scholar + OpenAlex)...')
   await fetchCitations(scored)
+  await enrichOpenAlex(scored) // field-normalized impact percentile / FWCI
 
   const scoredPubmed = scored.filter(i => i.source === 'pubmed')
   const scoredArxiv = scored.filter(i => i.source === 'arxiv')
@@ -908,6 +1072,9 @@ async function main() {
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
 
+  console.log('Updating notable research rail (OpenAlex impact)...')
+  await syncNotable([...scoredPubmed, ...scoredArxiv])
+
   console.log('Syncing clinical trials (ClinicalTrials.gov)...')
   const nTrials = await syncTrials(supabase)
   console.log(`      ${nTrials} trials`)
@@ -915,4 +1082,10 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-main().catch(err => { console.error(err); process.exit(1) })
+export { enrichOpenAlex, impactTrusted, researchScore, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+
+// Only run the daily refresh when executed directly (not when imported by a
+// helper such as scripts/seed-notable.js).
+if (process.argv[1] && fileURLToPath(import.meta.url) === realpathSync(process.argv[1])) {
+  main().catch(err => { console.error(err); process.exit(1) })
+}
