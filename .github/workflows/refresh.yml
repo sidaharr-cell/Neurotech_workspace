@@ -9,6 +9,8 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write   # allows committing the refreshed funding.json
 
     steps:
       - name: Checkout repo
@@ -33,3 +35,19 @@ jobs:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWS_API_KEY:         ${{ secrets.NEWS_API_KEY }}
+
+      - name: Refresh company funding (SEC EDGAR)
+        working-directory: neurotech-index
+        run: node scripts/backfill-funding.js
+
+      - name: Commit updated funding data
+        run: |
+          git config user.name "neurobase-bot"
+          git config user.email "bot@users.noreply.github.com"
+          if ! git diff --quiet -- neurotech-index/src/data/funding.json; then
+            git add neurotech-index/src/data/funding.json
+            git commit -m "chore: auto-update company funding (SEC Form D) [skip ci]"
+            git push
+          else
+            echo "No funding changes."
+          fi

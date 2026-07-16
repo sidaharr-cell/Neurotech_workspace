@@ -69,7 +69,11 @@ async function resolve(name) {
 async function run() {
   const out = {}
   for (const c of companies) {
-    const r = await resolve(c.name)
+    let r = await resolve(c.name)
+    // Reject a wrong entity match: SEC filings that predate the company's
+    // founding year mean we matched an unrelated namesake.
+    const founded = parseInt(c.founded, 10)
+    if (r && founded && r.latestDate && new Date(r.latestDate).getUTCFullYear() < founded) r = null
     if (r && r.total > 0) {
       out[c.name] = { total: Math.max(r.total, c.funding || 0), latestAmount: r.latestAmount, latestDate: r.latestDate, source: 'sec' }
       console.log(`  ${c.name}: total ~$${out[c.name].total}M · latest $${r.latestAmount}M (${r.latestDate})`)
