@@ -4,6 +4,7 @@ import { searchDevices } from '../lib/data'
 import { SectionHeading, Loader, EmptyState } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
 import DeviceClassFilter from '../components/DeviceClassFilter'
+import FilterPills, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -11,6 +12,9 @@ export default function Devices() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [cls, setCls] = useState(null)
+  const [recency, setRecency] = useState(null)
+  const [fda, setFda] = useState(null)
+  const [sort, setSort] = useState('newest')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
@@ -22,13 +26,13 @@ export default function Devices() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [cls])
+  useEffect(() => { setPage(0) }, [cls, recency, fda, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    setResult(await searchDevices({ query, deviceClass: cls, page, pageSize: PAGE_SIZE }))
+    setResult(await searchDevices({ query, deviceClass: cls, recency, fda, sort, page, pageSize: PAGE_SIZE }))
     setLoading(false)
-  }, [query, cls, page])
+  }, [query, cls, recency, fda, sort, page])
   useEffect(() => { load() }, [load])
 
   const pages = Math.ceil(total / PAGE_SIZE)
@@ -49,6 +53,11 @@ export default function Devices() {
       </div>
 
       <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
+        <FilterPills label="FDA route" value={fda} onChange={setFda} options={DEVICE_FDA} />
+        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} />
+        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
+      </div>
 
       {loading ? (
         <Loader />

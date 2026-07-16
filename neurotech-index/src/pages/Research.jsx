@@ -4,6 +4,7 @@ import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import DeviceClassFilter from '../components/DeviceClassFilter'
+import FilterPills, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_RANK } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -32,6 +33,9 @@ export default function Research() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [cls, setCls] = useState(null)
+  const [recency, setRecency] = useState(null)
+  const [source, setSource] = useState(null)
+  const [sort, setSort] = useState('relevant')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
@@ -44,13 +48,13 @@ export default function Research() {
     return () => clearTimeout(debounce.current)
   }, [input])
 
-  useEffect(() => { setPage(0) }, [cls])
+  useEffect(() => { setPage(0) }, [cls, recency, source, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    const res = await searchPapers({ query, deviceClass: cls, page, pageSize: PAGE_SIZE })
+    const res = await searchPapers({ query, deviceClass: cls, recency, source, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
-  }, [query, cls, page])
+  }, [query, cls, recency, source, sort, page])
 
   useEffect(() => { load() }, [load])
 
@@ -76,6 +80,11 @@ export default function Research() {
       </div>
 
       <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
+        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} />
+        <FilterPills label="Type" value={source} onChange={setSource} options={RESEARCH_SOURCE} />
+        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      </div>
 
       {loading ? (
         <Loader />

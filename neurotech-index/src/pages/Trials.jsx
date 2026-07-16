@@ -4,6 +4,7 @@ import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
 import { searchTrials } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
 import DeviceClassFilter from '../components/DeviceClassFilter'
+import FilterPills, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_RANK } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -43,6 +44,10 @@ export default function Trials() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [cls, setCls] = useState(null)
+  const [recency, setRecency] = useState(null)
+  const [phase, setPhase] = useState(null)
+  const [status, setStatus] = useState(null)
+  const [sort, setSort] = useState('relevant')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
@@ -53,13 +58,13 @@ export default function Trials() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [cls])
+  useEffect(() => { setPage(0) }, [cls, recency, phase, status, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    setResult(await searchTrials({ query, deviceClass: cls, page, pageSize: PAGE_SIZE }))
+    setResult(await searchTrials({ query, deviceClass: cls, recency, phase, status, sort, page, pageSize: PAGE_SIZE }))
     setLoading(false)
-  }, [query, cls, page])
+  }, [query, cls, recency, phase, status, sort, page])
   useEffect(() => { load() }, [load])
 
   const pages = Math.ceil(total / PAGE_SIZE)
@@ -80,6 +85,12 @@ export default function Trials() {
       </div>
 
       <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
+        <FilterPills label="Phase" value={phase} onChange={setPhase} options={TRIAL_PHASE} />
+        <FilterPills label="Status" value={status} onChange={setStatus} options={TRIAL_STATUS} />
+        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} />
+        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      </div>
 
       {loading ? (
         <Loader />

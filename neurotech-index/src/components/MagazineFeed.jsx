@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
-import { getNewsFeed } from '../lib/data'
+import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
 import DeviceClassFilter from './DeviceClassFilter'
+import FilterPills, { RECENCY_DATE, FEED_TYPE, SORT_RANK } from './Filters'
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesClass, classesForEntity } from '../lib/taxonomy'
@@ -69,6 +70,9 @@ export default function MagazineFeed() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [cls, setCls] = useState(null)
+  const [recency, setRecency] = useState(null)
+  const [type, setType] = useState(null)
+  const [sort, setSort] = useState('relevant')
 
   useEffect(() => {
     let alive = true
@@ -78,7 +82,17 @@ export default function MagazineFeed() {
     return () => { alive = false }
   }, [])
 
-  const shown = useMemo(() => (cls ? items.filter(i => entityMatchesClass(i, cls)) : items), [items, cls])
+  const shown = useMemo(() => {
+    const cutoff = recencyCutoffISO(recency)
+    const isResearch = i => i.entry_type === 'paper' || i.entry_type === 'preprint'
+    let out = items.filter(i =>
+      (!cls || entityMatchesClass(i, cls)) &&
+      (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
+      (!type || (type === 'research' ? isResearch(i) : i.entry_type === 'news'))
+    )
+    if (sort === 'newest') out = [...out].sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0))
+    return out
+  }, [items, cls, recency, type, sort])
 
   // Prefer image-bearing items for the visual slots (lead + featured grid);
   // fill the rest by rank. Papers (no photo) fall back to the neuron motif.
@@ -86,12 +100,13 @@ export default function MagazineFeed() {
   // image-bearing stories pulled from the full ranked feed; the remaining
   // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
-    // Real (never stock) images only, ordered by resolution so the lead is the
-    // sharpest available; everything else falls back to the neuron motif.
+    // Real (never stock) images only. Default: order by resolution so the lead
+    // is the sharpest available. Under "Newest", keep the feed's date order so
+    // the hero is the newest image-bearing story. Others → neuron motif.
     const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
     const realImgs = shown
       .filter(i => i.metadata?.image && i.metadata?.imageKind === 'real')
-      .sort((a, b) => area(b) - area(a))
+      .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
     const lead = realImgs[0] || shown[0]
     const used = new Set(lead ? [lead] : [])
     const featured = []
@@ -102,7 +117,7 @@ export default function MagazineFeed() {
     }
     const remaining = shown.filter(i => !used.has(i)).slice(0, 16)
     return { lead, featured, sidebar: remaining.slice(0, 4), rest: remaining.slice(4) }
-  }, [shown])
+  }, [shown, sort])
 
   // Keys (DOI + normalized title) of everything rendered in the feed above, so
   // the Notable rail can suppress any paper that's already shown on this page.
@@ -122,6 +137,11 @@ export default function MagazineFeed() {
         sub="The most significant neurotechnology — research, devices, and coverage — ranked by relevance, engagement, and recency."
       />
       <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
+        <FilterPills label="Type" value={type} onChange={setType} options={FEED_TYPE} />
+        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} />
+        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      </div>
 
       {!supabase ? (
         <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
@@ -158,7 +178,7 @@ export default function MagazineFeed() {
           )}
 
           {/* Notable research rail (unfiltered — highest field-normalized impact) */}
-          {!cls && <NotableRail exclude={shownKeys} />}
+          {!cls && !recency && !type && <NotableRail exclude={shownKeys} />}
 
           {/* Remaining, compact */}
           {rest.length > 0 && (
