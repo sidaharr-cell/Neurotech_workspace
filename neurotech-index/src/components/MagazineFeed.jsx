@@ -104,6 +104,16 @@ export default function MagazineFeed() {
     return { lead, featured, sidebar: remaining.slice(0, 4), rest: remaining.slice(4) }
   }, [shown])
 
+  // Keys (DOI + normalized title) of everything rendered in the feed above, so
+  // the Notable rail can suppress any paper that's already shown on this page.
+  const shownKeys = useMemo(() => {
+    const norm = t => (t || '').toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim()
+    const keys = new Set()
+    const add = it => { if (!it) return; if (it.metadata?.doi) keys.add(it.metadata.doi.toLowerCase()); if (it.title) keys.add(norm(it.title)) }
+    add(lead); featured.forEach(add); sidebar.forEach(add); rest.forEach(add)
+    return keys
+  }, [lead, featured, sidebar, rest])
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
@@ -148,7 +158,7 @@ export default function MagazineFeed() {
           )}
 
           {/* Notable research rail (unfiltered — highest field-normalized impact) */}
-          {!cls && <NotableRail />}
+          {!cls && <NotableRail exclude={shownKeys} />}
 
           {/* Remaining, compact */}
           {rest.length > 0 && (

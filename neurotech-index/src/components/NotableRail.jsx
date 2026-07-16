@@ -33,8 +33,12 @@ function NotableCard({ p }) {
  * longer runway than the 7-day feed. Data in src/data/notable.json, refreshed
  * daily by scripts/refresh.js → syncNotable().
  */
-export default function NotableRail() {
-  if (!notable?.length) return null
+export default function NotableRail({ exclude }) {
+  // Drop any paper already shown in the feed above, so nothing repeats on the page.
+  const norm = t => (t || '').toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim()
+  const items = (notable || []).filter(p =>
+    !exclude || !((p.doi && exclude.has(p.doi.toLowerCase())) || exclude.has(norm(p.title))))
+  if (!items.length) return null
   return (
     <section className="mt-12 pt-8 border-t-2 border-ink">
       <div className="flex items-baseline justify-between mb-1">
@@ -42,7 +46,7 @@ export default function NotableRail() {
         <span className="text-[12px] font-sans text-muted">Highest field-normalized citation impact · past 90 days</span>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-x-10">
-        {notable.map((p, i) => (
+        {items.map((p, i) => (
           <div key={p.doi || p.pmid || i} className="border-b border-rule"><NotableCard p={p} /></div>
         ))}
       </div>
