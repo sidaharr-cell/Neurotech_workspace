@@ -12,6 +12,32 @@ function tag(type) {
   return items => items.map(i => ({ ...i, _type: type }))
 }
 
+// ── Filter helpers ────────────────────────────────────────────────────────────
+// Recency presets → an ISO cutoff (for date-backed tables: feed, trials) or a
+// minimum year (for tables that only store a year: papers, devices).
+export function recencyCutoffISO(r) {
+  const d = new Date()
+  if (r === 'week') d.setDate(d.getDate() - 7)
+  else if (r === 'month') d.setMonth(d.getMonth() - 1)
+  else if (r === 'year') d.setFullYear(d.getFullYear() - 1)
+  else return null
+  return d.toISOString()
+}
+export function recencyMinYear(r) {
+  const y = new Date().getFullYear()
+  if (r === 'y1') return y
+  if (r === 'y3') return y - 2
+  if (r === 'y10') return y - 9
+  return null
+}
+// Trial UI status → the raw ClinicalTrials.gov status values it covers.
+const TRIAL_STATUS_MAP = {
+  recruiting: ['RECRUITING', 'ENROLLING_BY_INVITATION'],
+  active: ['ACTIVE_NOT_RECRUITING'],
+  completed: ['COMPLETED'],
+  notyet: ['NOT_YET_RECRUITING'],
+}
+
 // ── Database entries ────────────────────────────────────────────────────────
 
 export async function getPapers() {
@@ -125,20 +151,26 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  * Server-side paginated + full-text search over the full papers table.
  * Uses the `fts` tsvector index; filters by derived device-class `tags`.
  */
-export async function searchPapers({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+export async function searchPapers({ query = '', deviceClass = null, recency = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
+  const minYear = recencyMinYear(recency)
   const base = () => {
     let b = supabase
       .from('papers')
       .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
     if (deviceClass) b = b.contains('tags', [deviceClass])
+    if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
+    if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
-  // Order by OpenAlex field-normalized impact (most significant first), then
-  // year. Falls back to year order if rank_score isn't in the table yet.
-  let { data, count, error } = await base().order('rank_score', { ascending: false }).order('year', { ascending: false })
+  // Default: OpenAlex field-normalized impact, then year. 'newest' sorts by year.
+  // Falls back to year order if rank_score isn't in the table yet.
+  const ordered = sort === 'newest'
+    ? base().order('year', { ascending: false })
+    : base().order('rank_score', { ascending: false }).order('year', { ascending: false })
+  let { data, count, error } = await ordered
   if (error && /rank_score/.test(error.message)) {
     ({ data, count, error } = await base().order('year', { ascending: false }))
   }
@@ -167,29 +199,37 @@ export async function searchLabs({ query = '', deviceClass = null, page = 0, pag
 }
 
 /** Server-side paginated search over the full devices table. */
-export async function searchDevices({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+export async function searchDevices({ query = '', deviceClass = null, recency = null, fda = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('devices').select('*', { count: 'exact' })
   const term = query.trim().replace(/[(),%]/g, ' ')
   if (term) q = q.or(`name.ilike.%${term}%,manufacturer.ilike.%${term}%`)
   if (deviceClass) q = q.contains('tags', [deviceClass])
-  q = q.order('year', { ascending: false, nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+  const minYear = recencyMinYear(recency)
+  if (minYear) q = q.gte('year', String(minYear))
+  if (fda === '510k') q = q.ilike('status', '%510%')
+  else if (fda === 'pma') q = q.ilike('status', '%PMA%')
+  q = q.order('year', { ascending: sort === 'oldest', nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
   const { data, count, error } = await q
   if (error) { console.warn('searchDevices error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'devices' })), total: count ?? 0 }
 }
 
 /** Server-side paginated search over clinical trials (stored in news_feed). */
-export async function searchTrials({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+export async function searchTrials({ query = '', deviceClass = null, recency = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
   if (deviceClass) q = q.contains('topics', [deviceClass])
-  // Order by importance (phase/status/enrollment score in relevance_score),
-  // then recency — so the default view surfaces major live trials, not just new.
-  q = q.order('relevance_score', { ascending: false })
-    .order('published_at', { ascending: false, nullsFirst: false })
-    .range(page * pageSize, page * pageSize + pageSize - 1)
+  const iso = recencyCutoffISO(recency)
+  if (iso) q = q.gte('published_at', iso)
+  if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
+  if (status) q = q.in('metadata->>status', TRIAL_STATUS_MAP[status] || [status])
+  // Default: importance score (phase/status/enrollment) then recency. 'newest'
+  // sorts purely by start date.
+  if (sort === 'newest') q = q.order('published_at', { ascending: false, nullsFirst: false })
+  else q = q.order('relevance_score', { ascending: false }).order('published_at', { ascending: false, nullsFirst: false })
+  q = q.range(page * pageSize, page * pageSize + pageSize - 1)
   const { data, count, error } = await q
   if (error) { console.warn('searchTrials error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'trials' })), total: count ?? 0 }
