@@ -21,9 +21,7 @@
   },
   "Merge Labs": {
     "total": 250,
-    "latestAmount": 10,
-    "latestDate": "2016-05-24",
-    "source": "sec"
+    "source": "curated"
   },
   "Blackrock Neurotech": {
     "total": 210,
