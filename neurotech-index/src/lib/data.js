@@ -127,15 +127,21 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  */
 export async function searchPapers({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
-  let q = supabase
-    .from('papers')
-    .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
   const term = query.trim()
-  if (term) q = q.textSearch('fts', term, { type: 'websearch' })
-  if (deviceClass) q = q.contains('tags', [deviceClass])
-  q = q.order('year', { ascending: false }).range(page * pageSize, page * pageSize + pageSize - 1)
-
-  const { data, count, error } = await q
+  const base = () => {
+    let b = supabase
+      .from('papers')
+      .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
+    if (term) b = b.textSearch('fts', term, { type: 'websearch' })
+    if (deviceClass) b = b.contains('tags', [deviceClass])
+    return b.range(page * pageSize, page * pageSize + pageSize - 1)
+  }
+  // Order by OpenAlex field-normalized impact (most significant first), then
+  // year. Falls back to year order if rank_score isn't in the table yet.
+  let { data, count, error } = await base().order('rank_score', { ascending: false }).order('year', { ascending: false })
+  if (error && /rank_score/.test(error.message)) {
+    ({ data, count, error } = await base().order('year', { ascending: false }))
+  }
   if (error) { console.warn('searchPapers error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'papers' })), total: count ?? 0 }
 }

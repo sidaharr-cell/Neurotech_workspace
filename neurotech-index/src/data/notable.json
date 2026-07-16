@@ -52,11 +52,11 @@
     "pmid": "42297978",
     "doi": "10.1038/s41591-026-04414-6",
     "url": "https://doi.org/10.1038/s41591-026-04414-6",
-    "publishedAt": "2026-06-15",
+    "publishedAt": "2026-06-15T00:00:00.000Z",
     "pctile": 0.99596774,
     "fwci": 36.6286,
     "citedBy": 6,
-    "significance": "This demonstrates the first practical, unsupervised long-term BCI enabling paralyzed individuals to communicate naturally from home independently."
+    "significance": "This represents a genuine milestone: moving from lab-constrained BCI sessions to unsupervised, at-home operation—a prerequisite for any real-world therapeutic device. The ability to decode naturalistic speech and movement control with sufficient accuracy and stability that patients can use the system independently on a daily basis demonstrates that intracortical BCIs are approaching practical clinical viability, not merely proof-of-concept. This shifts the conversation from 'can we do it?' to 'how do we deploy it?'"
   },
   {
     "title": "Target-Dependent Postoperative Weight Gain after Pallidothalamic Tractotomy versus Pallidotomy for Dystonia.",
