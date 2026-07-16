@@ -143,12 +143,19 @@ export async function searchPapers({ query = '', deviceClass = null, page = 0, p
 /** Server-side paginated search over research labs (organizations, type='lab'). */
 export async function searchLabs({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
-  let q = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
   const term = query.trim().replace(/[(),%]/g, ' ')
-  if (term) q = q.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
-  if (deviceClass) q = q.contains('focus_areas', [deviceClass])
-  q = q.order('name').range(page * pageSize, page * pageSize + pageSize - 1)
-  const { data, count, error } = await q
+  const base = () => {
+    let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
+    if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
+    if (deviceClass) b = b.contains('focus_areas', [deviceClass])
+    return b.range(page * pageSize, page * pageSize + pageSize - 1)
+  }
+  // Rank by NIH funding/activity score (best-funded, most-active labs first),
+  // then name. Falls back to name order if rank_score isn't in the table yet.
+  let { data, count, error } = await base().order('rank_score', { ascending: false }).order('name')
+  if (error && /rank_score/.test(error.message)) {
+    ({ data, count, error } = await base().order('name'))
+  }
   if (error) { console.warn('searchLabs error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'organizations' })), total: count ?? 0 }
 }
@@ -172,7 +179,11 @@ export async function searchTrials({ query = '', deviceClass = null, page = 0, p
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
   if (deviceClass) q = q.contains('topics', [deviceClass])
-  q = q.order('published_at', { ascending: false, nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+  // Order by importance (phase/status/enrollment score in relevance_score),
+  // then recency — so the default view surfaces major live trials, not just new.
+  q = q.order('relevance_score', { ascending: false })
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .range(page * pageSize, page * pageSize + pageSize - 1)
   const { data, count, error } = await q
   if (error) { console.warn('searchTrials error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'trials' })), total: count ?? 0 }
