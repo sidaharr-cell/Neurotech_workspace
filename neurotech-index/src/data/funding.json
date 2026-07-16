@@ -1,0 +1,114 @@
+{
+  "Neuralink": {
+    "total": 1330,
+    "latestAmount": 649,
+    "latestDate": "2025-06-12",
+    "source": "sec"
+  },
+  "Saluda Medical": {
+    "total": 300,
+    "latestAmount": 30,
+    "latestDate": "2025-11-12",
+    "source": "sec"
+  },
+  "Science Corporation": {
+    "total": 290,
+    "source": "curated"
+  },
+  "Onward Medical": {
+    "total": 250,
+    "source": "curated"
+  },
+  "Merge Labs": {
+    "total": 250,
+    "latestAmount": 10,
+    "latestDate": "2016-05-24",
+    "source": "sec"
+  },
+  "Blackrock Neurotech": {
+    "total": 210,
+    "source": "curated"
+  },
+  "Precision Neuroscience": {
+    "total": 252,
+    "latestAmount": 150,
+    "latestDate": "2024-10-17",
+    "source": "sec"
+  },
+  "Synchron": {
+    "total": 145,
+    "latestAmount": 86,
+    "latestDate": "2022-12-20",
+    "source": "sec"
+  },
+  "Neuros Medical": {
+    "total": 191,
+    "latestAmount": 65,
+    "latestDate": "2025-08-06",
+    "source": "sec"
+  },
+  "Kernel": {
+    "total": 110,
+    "latestAmount": 30,
+    "latestDate": "2025-10-22",
+    "source": "sec"
+  },
+  "Cala Health": {
+    "total": 170,
+    "latestAmount": 51,
+    "latestDate": "2024-12-09",
+    "source": "sec"
+  },
+  "INBRAIN Neuroelectronics": {
+    "total": 100,
+    "source": "curated"
+  },
+  "Paradromics": {
+    "total": 145,
+    "latestAmount": 51,
+    "latestDate": "2023-11-07",
+    "source": "sec"
+  },
+  "Rune Labs": {
+    "total": 61,
+    "latestAmount": 14,
+    "latestDate": "2025-06-30",
+    "source": "sec"
+  },
+  "Axoft": {
+    "total": 44,
+    "latestAmount": 34,
+    "latestDate": "2026-05-07",
+    "source": "sec"
+  },
+  "Motif Neurotech": {
+    "total": 22,
+    "latestAmount": 22,
+    "latestDate": "2024-01-24",
+    "source": "sec"
+  },
+  "Cognixion": {
+    "total": 41,
+    "latestAmount": 4,
+    "latestDate": "2026-02-03",
+    "source": "sec"
+  },
+  "Subsense": {
+    "total": 17,
+    "source": "curated"
+  },
+  "Neurable": {
+    "total": 16,
+    "latestAmount": 6,
+    "latestDate": "2019-12-20",
+    "source": "sec"
+  },
+  "Forest Neurotech": {
+    "total": 10,
+    "source": "curated"
+  },
+  "Cortical Labs": {
+    "total": 12,
+    "source": "curated"
+  }
+}
