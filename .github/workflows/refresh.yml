@@ -45,9 +45,16 @@ jobs:
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
           git add neurotech-index/src/data/funding.json neurotech-index/src/data/notable.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: auto-update funding + notable research [skip ci]"
-            git push
-          else
-            echo "No data changes."
+          if git diff --cached --quiet; then
+            echo "No data changes."; exit 0
           fi
+          git commit -m "chore: auto-update funding + notable research [skip ci]"
+          # Rebase onto any commits pushed while the job ran (deploys, etc.),
+          # then push. Retry so the job never fails a simple race.
+          for i in 1 2 3; do
+            if git pull --rebase --autostash origin main && git push; then
+              echo "pushed on attempt $i"; exit 0
+            fi
+            echo "push attempt $i lost a race, retrying..."; sleep 5
+          done
+          echo "::error::could not push data update after 3 attempts"; exit 1
