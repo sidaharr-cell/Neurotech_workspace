@@ -48,6 +48,11 @@ const ARXIV_QUERIES = [
   'all:neural+prosthetics',
 ]
 
+// Drop media items Claude scored as barely relevant to neurotech — broad RSS
+// feeds (e.g. New Atlas) surface general-interest stories that shouldn't be in
+// a neurotech feed even at low rank.
+const NEWS_RELEVANCE_FLOOR = 4
+
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 // How far back to pull content. Wider than "this week" so papers are old enough
 // to have accrued citations/engagement, which is a ranking input (see computeRank).
@@ -1152,7 +1157,9 @@ async function main() {
 
   const scoredPubmed = scored.filter(i => i.source === 'pubmed')
   const scoredArxiv = scored.filter(i => i.source === 'arxiv')
-  const scoredNews = scored.filter(i => i.entry_type === 'news')
+  const scoredNews = scored.filter(i => i.entry_type === 'news' && (i.relevanceScore ?? 5) >= NEWS_RELEVANCE_FLOOR)
+  const dropped = scored.filter(i => i.entry_type === 'news').length - scoredNews.length
+  if (dropped) console.log(`      dropped ${dropped} off-topic media items (relevance < ${NEWS_RELEVANCE_FLOOR})`)
 
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
