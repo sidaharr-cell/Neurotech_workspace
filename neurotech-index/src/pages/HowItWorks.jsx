@@ -1,4 +1,6 @@
-import { SectionHeading, Kicker } from '../components/ui'
+import { useState, Children } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { SectionHeading } from '../components/ui'
 
 /* A labeled block explaining one content type's ranking signals. */
 function RankCard({ type, lead, signals }) {
@@ -21,7 +23,7 @@ function RankCard({ type, lead, signals }) {
 /* One disclosed data source with what we take from it and a link. */
 function Source({ name, url, note }) {
   return (
-    <li className="py-2.5 border-b border-rule/70 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5">
+    <li className="py-2 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5">
       <a href={url} target="_blank" rel="noopener noreferrer" className="font-sans text-[14px] font-medium text-ink hover:text-accent underline decoration-rule underline-offset-2 shrink-0">
         {name}
       </a>
@@ -30,11 +32,20 @@ function Source({ name, url, note }) {
   )
 }
 
-function SourceGroup({ title, children }) {
+/* A collapsible category of sources — click the header to expand/collapse. */
+function SourceGroup({ title, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen)
+  const n = Children.count(children)
   return (
-    <div className="mb-7">
-      <h3 className="font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-accent mb-1.5">{title}</h3>
-      <ul>{children}</ul>
+    <div className="border-b border-rule">
+      <button onClick={() => setOpen(o => !o)} aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 py-3.5 text-left group">
+        <span className="font-sans text-[12.5px] font-semibold uppercase tracking-[0.1em] text-accent group-hover:text-ink transition-colors">
+          {title} <span className="text-muted font-normal normal-case tracking-normal">· {n} source{n === 1 ? '' : 's'}</span>
+        </span>
+        <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && <ul className="pb-3 -mt-0.5">{children}</ul>}
     </div>
   )
 }
@@ -134,7 +145,8 @@ export default function HowItWorks() {
           original source.
         </p>
 
-        <SourceGroup title="Research papers & preprints">
+        <div className="border-t border-rule">
+        <SourceGroup title="Research papers & preprints" defaultOpen>
           <Source name="PubMed (NCBI)" url="https://pubmed.ncbi.nlm.nih.gov" note="peer-reviewed biomedical literature" />
           <Source name="arXiv" url="https://arxiv.org" note="preprints in physics, CS, and quantitative biology" />
         </SourceGroup>
@@ -180,6 +192,7 @@ export default function HowItWorks() {
         <SourceGroup title="AI">
           <Source name="Anthropic Claude" url="https://www.anthropic.com" note="relevance rating, plain-language summaries, and tagging" />
         </SourceGroup>
+        </div>
       </section>
 
       {/* ── Limitations ─────────────────────────────────────── */}
