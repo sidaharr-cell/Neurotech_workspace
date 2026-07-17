@@ -64,7 +64,7 @@
     "pctile": 0.99591207,
     "fwci": 36.4792,
     "citedBy": 6,
-    "significance": "This represents one of the first proven cases where a person with severe paralysis could use an intracortical BCI independently at home without constant clinical supervision or specialized setup. Decoding speech intent and cursor control is significant, but the real breakthrough is demonstrating durability, reliability, and user autonomy—the prerequisites for a medical device. This work moves BCIs from impressive lab demonstrations toward genuine clinical utility and has major implications for future regulatory approval and commercialization timelines."
+    "significance": "This represents one of the first proven cases where a person with severe paralysis could use an intracortical BCI independently at home without constant clinical supervision or specialized setup. Decoding speech intent and cursor control is significant, but the real breakthrough is demonstrating durability, reliability, and user autonomy, the prerequisites for a medical device. This work moves BCIs from impressive lab demonstrations toward genuine clinical utility and has major implications for future regulatory approval and commercialization timelines."
   },
   {
     "title": "Safeguarding Neural Data.",

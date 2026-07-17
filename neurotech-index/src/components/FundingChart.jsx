@@ -40,7 +40,7 @@ export default function FundingChart({ companies, limit = 20 }) {
         <div>
           <p className="kicker mb-1">Investment</p>
           <h2 className="font-serif text-xl sm:text-2xl font-semibold text-ink">Top {data.length} neurotech companies by funding raised</h2>
-          <p className="text-[13px] text-muted font-sans mt-1">Total capital and most-recent round — auto-updated from SEC Form D filings where available.</p>
+          <p className="text-[13px] text-muted font-sans mt-1">Total capital and most-recent round, auto-updated from SEC Form D filings where available.</p>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-[11px] font-sans uppercase tracking-[0.08em] text-muted/70 mr-1">Sort</span>
@@ -77,7 +77,7 @@ export default function FundingChart({ companies, limit = 20 }) {
                     <span className="text-ink-soft">{fmtMoney(c.latestAmount)}</span>
                     <span className="text-muted hidden sm:inline">· {dateLabel(c.latestDate)}</span>
                   </>
-                ) : <span className="text-muted/40">—</span>}
+                ) : <span className="text-muted/40">n/a</span>}
               </span>
             </div>
           )
