@@ -4,9 +4,15 @@
     "affiliation": "Brown University / Massachusetts General Hospital",
     "role": "Professor of Engineering & Neurology; BrainGate PI",
     "bio": "Leigh Hochberg leads the BrainGate clinical trial program, the longest-running series of implanted BCI studies in humans. His team has enabled people with tetraplegia and ALS to control robotic arms, computer cursors, and synthesizers using intracortical neural signals recorded from motor cortex.",
-    "expertise": ["BCI", "Clinical trials", "Motor cortex", "ALS", "Tetraplegia"],
+    "expertise": [
+      "BCI",
+      "Clinical trials",
+      "Motor cortex",
+      "ALS",
+      "Tetraplegia"
+    ],
     "notableWork": [
-      "BrainGate2 clinical trial (2006–present)",
+      "BrainGate2 clinical trial (2006-present)",
       "First demonstration of BrainGate cursor control (Nature 2006)",
       "Highest-performance intracortical speech BCI (Nature 2021, with Shenoy/Willett)"
     ]
@@ -15,11 +21,17 @@
     "name": "Krishna V. Shenoy",
     "affiliation": "Stanford University (deceased 2023)",
     "role": "Professor of Electrical Engineering, Neurobiology, Neurosurgery; Howard Hughes Medical Institute Investigator",
-    "bio": "Krishna Shenoy was one of the foremost figures in systems neuroscience and BMI research. His lab developed foundational insights into motor cortex neural dynamics — preparatory activity, rotational dynamics — and translated them into high-performance BCIs including the handwriting decoder achieving 90 characters per minute.",
-    "expertise": ["Motor cortex", "Neural dynamics", "BCI", "Decoding algorithms", "Preparatory activity"],
+    "bio": "Krishna Shenoy was one of the foremost figures in systems neuroscience and BMI research. His lab developed foundational insights into motor cortex neural dynamics, preparatory activity, rotational dynamics, and translated them into high-performance BCIs including the handwriting decoder achieving 90 characters per minute.",
+    "expertise": [
+      "Motor cortex",
+      "Neural dynamics",
+      "BCI",
+      "Decoding algorithms",
+      "Preparatory activity"
+    ],
     "notableWork": [
       "Rotational dynamics in motor cortex (Nature 2012)",
-      "Handwriting BCI — 90 char/min (Nature 2021)",
+      "Handwriting BCI, 90 char/min (Nature 2021)",
       "Co-founder of BrainGate consortium"
     ]
   },
@@ -28,7 +40,13 @@
     "affiliation": "Duke University",
     "role": "Professor of Neurobiology; Co-director, Duke Center for Neuroengineering",
     "bio": "A pioneer of brain-machine interfaces, Nicolelis demonstrated the first real-time control of a robotic arm from multi-electrode cortical recordings in non-human primates. He later directed the Walk Again Project, which enabled a paralyzed patient to kick a soccer ball at the 2014 FIFA World Cup using an EEG-controlled exoskeleton.",
-    "expertise": ["BMI", "Motor cortex", "Multi-electrode arrays", "Primate neuroscience", "Exoskeletons"],
+    "expertise": [
+      "BMI",
+      "Motor cortex",
+      "Multi-electrode arrays",
+      "Primate neuroscience",
+      "Exoskeletons"
+    ],
     "notableWork": [
       "First real-time robotic arm control from cortex in primates (Nature 1999)",
       "Walk Again Project exoskeleton (2014 FIFA World Cup)",
@@ -40,9 +58,15 @@
     "affiliation": "Brown University / École Polytechnique Fédérale de Lausanne",
     "role": "Professor Emeritus; Founder, BrainGate",
     "bio": "John Donoghue founded the BrainGate program in 2001, creating the first FDA-approved intracortical BCI research device. His work on motor cortex population coding and neural decoding algorithms laid the foundation for modern clinical BCIs. He later directed the Wyss Center for Bio and Neuroengineering in Geneva.",
-    "expertise": ["BCI", "Motor cortex", "Neural decoding", "Population coding", "Clinical translation"],
+    "expertise": [
+      "BCI",
+      "Motor cortex",
+      "Neural decoding",
+      "Population coding",
+      "Clinical translation"
+    ],
     "notableWork": [
-      "BrainGate — first human implanted BCI (2004)",
+      "BrainGate, first human implanted BCI (2004)",
       "Instant neural decoding of intended movement (Nature Neuroscience 2002)",
       "Co-inventor of the Utah Array clinical implant"
     ]
@@ -52,7 +76,13 @@
     "affiliation": "University of California, San Francisco",
     "role": "Professor of Neurological Surgery; Vice Chair of Research",
     "bio": "Edward Chang leads a lab at UCSF studying the neural basis of speech and developing ECoG-based speech BCIs. His group pioneered direct speech synthesis from cortical activity and demonstrated that entire sentences could be decoded from sensorimotor cortex signals, providing a pathway to speech restoration for locked-in patients.",
-    "expertise": ["ECoG", "Speech BCI", "Speech synthesis", "Sensorimotor cortex", "Locked-in syndrome"],
+    "expertise": [
+      "ECoG",
+      "Speech BCI",
+      "Speech synthesis",
+      "Sensorimotor cortex",
+      "Locked-in syndrome"
+    ],
     "notableWork": [
       "Speech synthesis from ECoG (Nature 2019)",
       "Sentence decoding from sensorimotor cortex (NEJM 2021)",
@@ -64,7 +94,13 @@
     "affiliation": "University of Pittsburgh / VA Pittsburgh Healthcare System",
     "role": "Associate Professor of Physical Medicine & Rehabilitation",
     "bio": "Jennifer Collinger conducts clinical BCI research focused on upper-limb neuroprosthetics. Her team achieved 7-dimensional robotic arm control using intracortical recordings, and later demonstrated bidirectional BCIs combining motor output with somatosensory feedback to restore touch sensation to the hand.",
-    "expertise": ["BCI", "Upper-limb neuroprosthetics", "Somatosensory feedback", "Motor cortex", "Clinical"],
+    "expertise": [
+      "BCI",
+      "Upper-limb neuroprosthetics",
+      "Somatosensory feedback",
+      "Motor cortex",
+      "Clinical"
+    ],
     "notableWork": [
       "7-DOF robotic arm control from motor cortex (Lancet 2013)",
       "Bidirectional BCI with tactile feedback (Science Translational Medicine 2016)",
@@ -76,7 +112,13 @@
     "affiliation": "University of Chicago (deceased 2023)",
     "role": "Professor of Organismal Biology and Anatomy",
     "bio": "Sliman Bensmaia was the leading expert on the neural basis of somatosensation and how to restore tactile feedback to BCI users. His lab decoded the neural codes of touch in primary somatosensory cortex and designed microstimulation patterns that elicit naturalistic tactile percepts without causing adaptation or discomfort.",
-    "expertise": ["Somatosensory cortex", "Sensory feedback", "Microstimulation", "Touch", "Neuroprosthetics"],
+    "expertise": [
+      "Somatosensory cortex",
+      "Sensory feedback",
+      "Microstimulation",
+      "Touch",
+      "Neuroprosthetics"
+    ],
     "notableWork": [
       "Tactile feedback restores robotic arm control (Science Translational Medicine 2014)",
       "Neural code of somatosensory cortex for texture (PNAS 2009)",
@@ -88,7 +130,13 @@
     "affiliation": "University of Pittsburgh",
     "role": "Professor of Neurobiology; Director, Motor Control Lab",
     "bio": "Andrew Schwartz is known for fundamental discoveries in motor cortex population coding and pioneering demonstrations of dexterous neuroprosthetic limb control. His lab recorded the first coordinated multi-joint arm movement controlled by cortical signals in primates, and later translated this to human participants achieving 7-DOF control.",
-    "expertise": ["Motor cortex", "Population coding", "Neuroprosthetics", "Primate BMI", "Decoding"],
+    "expertise": [
+      "Motor cortex",
+      "Population coding",
+      "Neuroprosthetics",
+      "Primate BMI",
+      "Decoding"
+    ],
     "notableWork": [
       "Population vector coding of movement direction (Science 1988)",
       "Cortically controlled prosthetic arm (Neuron 2008)",
@@ -99,11 +147,16 @@
     "name": "Thomas Oxley",
     "affiliation": "Synchron / University of Melbourne",
     "role": "CEO, Synchron; Adjunct Professor of Medicine",
-    "bio": "Thomas Oxley is the neurovascular surgeon and neuroscientist who invented and commercializes the Stentrode — an endovascular BCI that accesses motor cortex through blood vessels, avoiding craniotomy. He completed the first-in-human Stentrode implant in Australia (2019) and subsequently launched the SWITCH trial in the US (2021).",
-    "expertise": ["Endovascular BCI", "Neurovascular surgery", "Minimally invasive BCI", "Clinical translation"],
+    "bio": "Thomas Oxley is the neurovascular surgeon and neuroscientist who invented and commercializes the Stentrode, an endovascular BCI that accesses motor cortex through blood vessels, avoiding craniotomy. He completed the first-in-human Stentrode implant in Australia (2019) and subsequently launched the SWITCH trial in the US (2021).",
+    "expertise": [
+      "Endovascular BCI",
+      "Neurovascular surgery",
+      "Minimally invasive BCI",
+      "Clinical translation"
+    ],
     "notableWork": [
       "Stentrode concept and first human implant (Nature Biotechnology 2016)",
-      "SWITCH trial — first US endovascular BCI (2021)",
+      "SWITCH trial, first US endovascular BCI (2021)",
       "Human endovascular neural recording and stimulation (Lancet 2022)"
     ]
   },
@@ -112,7 +165,14 @@
     "affiliation": "University of Tübingen / Wyss Center Geneva",
     "role": "Professor of Medical Psychology and Behavioral Neurobiology",
     "bio": "Niels Birbaumer is a pioneer of non-invasive BCI for completely locked-in patients. His lab developed slow cortical potential (SCP) neurofeedback as a communication channel for ALS patients and later extended this to fNIRS and invasive approaches for individuals in whom even eye movement is lost.",
-    "expertise": ["EEG", "SCP", "fNIRS", "ALS", "Locked-in", "Neurofeedback"],
+    "expertise": [
+      "EEG",
+      "SCP",
+      "fNIRS",
+      "ALS",
+      "Locked-in",
+      "Neurofeedback"
+    ],
     "notableWork": [
       "First BCI for completely locked-in ALS patients (Nature 1999)",
       "fNIRS BCI for completely locked-in syndrome (PLOS Biology 2017)",
@@ -123,10 +183,16 @@
     "name": "Rafael Yuste",
     "affiliation": "Columbia University",
     "role": "Professor of Biological Sciences and Neuroscience; NeuroRights Foundation Director",
-    "bio": "Rafael Yuste is a neuroscientist who pioneered two-photon calcium imaging of neural circuits and co-founded the US BRAIN Initiative. Beyond his lab work, he is the leading advocate for neurorights — legal protections for mental privacy in the era of BCIs — and helped write the world's first neurorights legislation (Chile, 2021).",
-    "expertise": ["Calcium imaging", "Neural circuits", "BRAIN Initiative", "Neurorights", "Ethics"],
+    "bio": "Rafael Yuste is a neuroscientist who pioneered two-photon calcium imaging of neural circuits and co-founded the US BRAIN Initiative. Beyond his lab work, he is the leading advocate for neurorights, legal protections for mental privacy in the era of BCIs, and helped write the world's first neurorights legislation (Chile, 2021).",
+    "expertise": [
+      "Calcium imaging",
+      "Neural circuits",
+      "BRAIN Initiative",
+      "Neurorights",
+      "Ethics"
+    ],
     "notableWork": [
-      "Two-photon calcium imaging of cortical circuits (1992–)",
+      "Two-photon calcium imaging of cortical circuits (1992-)",
       "Co-founder and early co-author of the BRAIN Initiative (2013)",
       "Neurorights framework and Chilean neurorights law (2021)"
     ]
@@ -135,8 +201,14 @@
     "name": "Vikash Gilja",
     "affiliation": "University of California, San Diego",
     "role": "Associate Professor of Electrical and Computer Engineering",
-    "bio": "Vikash Gilja develops high-performance real-time neural decoding algorithms for BCI systems. He created the ReFIT-Kalman filter — which substantially improved cursor control performance in the BrainGate trial — and now works on expanding BCI access through low-power, implantable electronics and improved decoder generalization.",
-    "expertise": ["BCI", "Neural decoding", "Kalman filter", "Real-time algorithms", "Implantable electronics"],
+    "bio": "Vikash Gilja develops high-performance real-time neural decoding algorithms for BCI systems. He created the ReFIT-Kalman filter, which substantially improved cursor control performance in the BrainGate trial, and now works on expanding BCI access through low-power, implantable electronics and improved decoder generalization.",
+    "expertise": [
+      "BCI",
+      "Neural decoding",
+      "Kalman filter",
+      "Real-time algorithms",
+      "Implantable electronics"
+    ],
     "notableWork": [
       "ReFIT Kalman decoder (Nature Neuroscience 2012)",
       "High-performance BCI clinical demonstration (Nature Medicine 2015)",

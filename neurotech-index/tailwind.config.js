@@ -4,45 +4,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#4A6CE8',
-        'primary-dark': '#3555D4',
-        'primary-light': '#7A97F0',
-        accent: '#8B5CF6',
-        background: '#F5F6FA',
-        surface: '#FFFFFF',
-        ink: '#1A1D2E',
-        muted: '#64748B',
-        divider: '#E2E8F0',
-        deep: '#0F1419',
+        // ── Light editorial palette (Nature / Science News feel) ──────────
+        paper: '#FFFFFF',
+        canvas: '#F7F6F2',      // warm off-white section background
+        ink: '#16181D',         // near-black headline / body
+        'ink-soft': '#3D424D',  // secondary body
+        muted: '#6B7280',       // metadata / captions
+        rule: '#E4E2DC',        // hairline borders
+        'rule-soft': '#EEEDE8',
+        accent: '#0B5FA6',      // editorial blue (links, category, kicker)
+        'accent-dark': '#08477D',
+        'accent-soft': '#EAF2FA',
+        highlight: '#B3241E',   // reserved red (breaking / lead kicker)
       },
       fontFamily: {
-        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        serif: ['"Cormorant Garamond"', 'serif'],
-        body: ['"Inter"', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        // Serif for headlines (news), sans for UI/body
+        serif: ['Newsreader', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
+        display: ['Newsreader', 'Georgia', 'serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
-      borderRadius: {
-        '2.5xl': '1.25rem',
-        '4xl': '2rem',
+      maxWidth: {
+        prose: '46rem',
       },
       animation: {
-        'pulse-slow': 'pulse 3s ease-in-out infinite',
-        'fade-in': 'fade-in 0.35s ease-out both',
-        'slide-up': 'slide-up 0.35s ease-out both',
-        'slide-in-right': 'slide-in-right 0.35s ease-out both',
+        'fade-in': 'fade-in 0.3s ease-out both',
+        'slide-down': 'slide-down 0.18s ease-out both',
       },
       keyframes: {
-        'fade-in': {
-          from: { opacity: '0' },
-          to: { opacity: '1' },
-        },
-        'slide-up': {
-          from: { opacity: '0', transform: 'translateY(16px)' },
+        'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
+        'slide-down': {
+          from: { opacity: '0', transform: 'translateY(-6px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
-        },
-        'slide-in-right': {
-          from: { opacity: '0', transform: 'translateX(24px)' },
-          to: { opacity: '1', transform: 'translateX(0)' },
         },
       },
     },
