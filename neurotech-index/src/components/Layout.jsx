@@ -145,6 +145,11 @@ function Footer() {
 }
 
 export default function Shell() {
+  // Reset scroll to the top on every route change (otherwise navigating from
+  // the bottom of one page lands partway down the next).
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+
   return (
     <div className="min-h-screen flex flex-col">
       <NeuronBackdrop />
