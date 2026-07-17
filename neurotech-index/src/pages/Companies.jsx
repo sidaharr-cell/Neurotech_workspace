@@ -83,7 +83,7 @@ export default function Companies() {
       <SectionHeading
         kicker="Companies & Labs"
         title="Companies"
-        sub="Neurotechnology companies and NIH-funded research labs — funding, focus, and location."
+        sub="Neurotechnology companies and NIH-funded research labs, with funding, focus, and location."
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>}
       />
 

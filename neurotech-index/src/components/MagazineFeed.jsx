@@ -141,7 +141,7 @@ export default function MagazineFeed() {
       <SectionHeading
         kicker="Updated daily"
         title="Top Stories"
-        sub="The most significant neurotechnology — research, devices, and coverage — ranked by relevance, engagement, and recency."
+        sub="The most significant neurotechnology research, devices, and coverage, ranked by relevance, engagement, and recency."
       />
       <div className="flex flex-wrap items-center gap-2 mb-8">
         <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />

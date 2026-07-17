@@ -53,7 +53,7 @@ export default function PaperDetail() {
           <p className="text-[1.12rem] leading-[1.7] text-ink font-body">{paper.abstract}</p>
         </div>
       ) : (
-        <p className="mb-8 text-[15px] text-muted font-body italic">No abstract available — read the full paper at the source.</p>
+        <p className="mb-8 text-[15px] text-muted font-body italic">No abstract available. Read the full paper at the source.</p>
       )}
 
       {paper.url && (
