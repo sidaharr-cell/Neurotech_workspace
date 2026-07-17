@@ -884,7 +884,10 @@ async function scoreWithClaude(items) {
           content:
             `You are an expert in neurotechnology. Rate each item for its significance to the field.\n\n` +
             `For each numbered item, respond with a JSON array element containing:\n` +
-            `- "score": integer 1–10. USE THE FULL RANGE and spread scores — do not cluster. ` +
+            `- "score": integer 1–10. FIRST decide whether the item is actually about neurotechnology, ` +
+            `neuroscience, or the nervous system. If it is unrelated to the brain/nervous system ` +
+            `(e.g. consumer gadgets, vehicles, lifestyle, diet, general business or politics with no neuro angle), score 1. ` +
+            `Otherwise USE THE FULL RANGE and spread scores — do not cluster. ` +
             `Reserve 9–10 for genuine landmark advances only (rare); 7–8 = strong/notable; 5–6 = solid but incremental; ` +
             `3–4 = routine or narrow; 1–2 = tangential. Most items should NOT be 9. Differentiate items within this batch.\n` +
             `- "summary": one crisp sentence on why it matters to neurotech practitioners\n` +
@@ -1177,7 +1180,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, NEWS_RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).
