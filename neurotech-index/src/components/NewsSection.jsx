@@ -3,8 +3,7 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState } from './ui'
-import DeviceClassFilter from './DeviceClassFilter'
-import FilterPills, { RECENCY_DATE, SORT_RANK } from './Filters'
+import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, SORT_SIGNIF } from './Filters'
 import NewsList from './NewsList'
 import { entityMatchesClass } from '../lib/taxonomy'
 
@@ -51,11 +50,11 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading kicker={kicker} title={title} sub={sub} />
-      <DeviceClassFilter value={cls} onChange={setCls} />
-      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
-        {outletOptions.length > 1 && <FilterPills label="Outlet" value={outlet} onChange={setOutlet} options={outletOptions} />}
-        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} />
-        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        {outletOptions.length > 1 && <FilterSelect label="Outlet" value={outlet} onChange={setOutlet} options={outletOptions} allLabel="All outlets" />}
+        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
+        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
       </div>
       {!supabase ? (
         <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>

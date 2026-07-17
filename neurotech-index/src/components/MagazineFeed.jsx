@@ -4,8 +4,7 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
-import DeviceClassFilter from './DeviceClassFilter'
-import FilterPills, { RECENCY_DATE, FEED_TYPE, SORT_RANK } from './Filters'
+import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesClass, classesForEntity } from '../lib/taxonomy'
@@ -136,11 +135,11 @@ export default function MagazineFeed() {
         title="Top Stories"
         sub="The most significant neurotechnology — research, devices, and coverage — ranked by relevance, engagement, and recency."
       />
-      <DeviceClassFilter value={cls} onChange={setCls} />
-      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
-        <FilterPills label="Type" value={type} onChange={setType} options={FEED_TYPE} />
-        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} />
-        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FilterSelect label="Type" value={type} onChange={setType} options={FEED_TYPE} allLabel="All types" />
+        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
+        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
       </div>
 
       {!supabase ? (

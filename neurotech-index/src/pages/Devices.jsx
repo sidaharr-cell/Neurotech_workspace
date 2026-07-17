@@ -3,8 +3,7 @@ import { Search, Cpu, ChevronLeft, ChevronRight } from 'lucide-react'
 import { searchDevices } from '../lib/data'
 import { SectionHeading, Loader, EmptyState } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
-import DeviceClassFilter from '../components/DeviceClassFilter'
-import FilterPills, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
+import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -52,11 +51,11 @@ export default function Devices() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <DeviceClassFilter value={cls} onChange={setCls} />
-      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
-        <FilterPills label="FDA route" value={fda} onChange={setFda} options={DEVICE_FDA} />
-        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} />
-        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FilterSelect label="FDA route" value={fda} onChange={setFda} options={DEVICE_FDA} allLabel="Any route" />
+        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
+        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
       </div>
 
       {loading ? (

@@ -1,10 +1,16 @@
+import { useState, useRef, useEffect } from 'react'
+import { ChevronDown, Check } from 'lucide-react'
+import { DEVICE_CLASSES } from '../lib/taxonomy'
+
 /**
- * Filters.jsx — reusable editorial pill-group filter, plus the option sets each
- * page uses. Matches the DeviceClassFilter aesthetic (hairline pills, ink/accent
- * active states) so the whole filter area reads as one system.
+ * Filters.jsx — compact dropdown filter control, plus the option sets each page
+ * uses. One horizontal row of dropdowns keeps the filter area to a single line
+ * instead of stacked pill rows.
  */
 
 // ── Option sets ───────────────────────────────────────────────────────────────
+export const DEVICE_CLASS_OPTIONS = DEVICE_CLASSES.map(c => ({ id: c.id, label: c.short }))
+
 export const RECENCY_DATE = [ // date-backed pages (feed, trials)
   { id: 'week', label: 'Past week' },
   { id: 'month', label: 'Past month' },
@@ -15,11 +21,17 @@ export const RECENCY_YEAR = [ // year-only pages (research, devices)
   { id: 'y3', label: 'Last 3 years' },
   { id: 'y10', label: 'Last 10 years' },
 ]
-export const SORT_RANK = [
-  { id: 'relevant', label: 'Most relevant' },
+// The default "ranked" sort orders by our composite score — named per section
+// for what it actually measures (not personalized "relevance").
+export const SORT_IMPACT = [ // research: OpenAlex field-normalized citation impact
+  { id: 'relevant', label: 'Highest impact' },
   { id: 'newest', label: 'Newest' },
 ]
-export const SORT_DATE = [
+export const SORT_SIGNIF = [ // trials / feed: composite significance score
+  { id: 'relevant', label: 'Most significant' },
+  { id: 'newest', label: 'Newest' },
+]
+export const SORT_DATE = [ // devices: no ranking score, date only
   { id: 'newest', label: 'Newest' },
   { id: 'oldest', label: 'Oldest' },
 ]
@@ -49,34 +61,61 @@ export const FEED_TYPE = [
 ]
 
 /**
- * A labeled pill group. `value` is the selected id (or null). Clicking the
- * active pill clears it (unless `required`, in which case one is always on and
- * there's no "All").
- * Props: label, value, onChange(id|null), options [{id,label}], required, allLabel
+ * A compact dropdown filter. `value` is the selected id (or null → shows
+ * `allLabel`). `required` drops the "All" option (used for sort, which always
+ * has a value). The trigger highlights in accent only when a real filter is set.
+ * Props: label, value, onChange(id|null), options [{id,label}], allLabel, required
  */
-export default function FilterPills({ label, value, onChange, options, required = false, allLabel = 'All' }) {
-  const pill = (active, on, key, text) => (
+export default function FilterSelect({ label, value, onChange, options, allLabel = 'All', required = false }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDoc = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    const onEsc = e => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onEsc)
+    return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onEsc) }
+  }, [open])
+
+  const current = options.find(o => o.id === value)
+  const display = current ? current.label : allLabel
+  const active = !required && value != null
+
+  const item = (selected, onClick, key, text) => (
     <button
       key={key}
-      onClick={on}
-      className={`text-[13px] font-sans px-3 py-1.5 rounded-full border transition-colors ${
-        active
-          ? 'bg-accent text-paper border-accent'
-          : 'bg-paper text-ink-soft border-rule hover:border-accent hover:text-accent'
+      onClick={onClick}
+      className={`w-full flex items-center gap-2 text-left text-[13px] font-sans px-3 py-1.5 transition-colors hover:bg-canvas ${
+        selected ? 'text-accent font-medium' : 'text-ink-soft'
       }`}
     >
+      <Check className={`w-3.5 h-3.5 shrink-0 ${selected ? 'opacity-100' : 'opacity-0'}`} />
       {text}
     </button>
   )
+
   return (
-    <div className="mb-3">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted">{label}</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {!required && pill(value == null, () => onChange(null), '__all', allLabel)}
-        {options.map(o => pill(value === o.id, () => onChange(value === o.id && !required ? null : o.id), o.id, o.label))}
-      </div>
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`inline-flex items-center gap-1.5 text-[13px] font-sans pl-3 pr-2 py-1.5 rounded-full border transition-colors ${
+          active
+            ? 'bg-accent text-paper border-accent'
+            : 'bg-paper text-ink-soft border-rule hover:border-ink'
+        }`}
+      >
+        <span className={`text-[10px] uppercase tracking-[0.08em] ${active ? 'text-paper/75' : 'text-muted'}`}>{label}</span>
+        <span className="font-medium max-w-[11rem] truncate">{display}</span>
+        <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform ${open ? 'rotate-180' : ''} ${active ? 'text-paper/80' : 'text-muted'}`} />
+      </button>
+      {open && (
+        <div className="absolute left-0 z-30 mt-1.5 min-w-[12rem] max-h-72 overflow-auto bg-paper border border-rule rounded-md shadow-lg py-1">
+          {!required && item(value == null, () => { onChange(null); setOpen(false) }, '__all', allLabel)}
+          {options.map(o => item(value === o.id, () => { onChange(o.id); setOpen(false) }, o.id, o.label))}
+        </div>
+      )}
     </div>
   )
 }
