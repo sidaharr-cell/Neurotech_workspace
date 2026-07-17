@@ -33,7 +33,7 @@ function TrialRow({ trial }) {
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 text-[13px] text-muted font-sans">
         {m.sponsor && <span className="truncate max-w-[22rem]">{m.sponsor}</span>}
         {m.conditions?.[0] && <><span aria-hidden>·</span><span>{m.conditions.slice(0, 2).join(', ')}</span></>}
-        {trial.published_at && <><span aria-hidden>·</span><span>Started {fmtDate(trial.published_at)}</span></>}
+        {trial.published_at && <><span aria-hidden>·</span><span>{new Date(trial.published_at) > new Date() ? 'Starts' : 'Started'} {fmtDate(trial.published_at)}</span></>}
       </div>
     </Link>
   )
