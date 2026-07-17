@@ -134,6 +134,25 @@ export async function syncTrials(supabase) {
     const { error } = await supabase.from('news_feed').upsert(rows.slice(i, i + 500), { onConflict: 'url', ignoreDuplicates: false })
     if (error && !error.message.includes('duplicate')) console.warn('trial upsert error:', error.message)
   }
+
+  // Prune trials no longer in the current fetch so the table (and the displayed
+  // count) reflects ClinicalTrials.gov's live results instead of accumulating
+  // every trial ever seen. Guarded: only prune when the fetch looks healthy, so
+  // a partial/failed pull never wipes the table.
+  if (rows.length > 3000) {
+    const fetched = new Set(rows.map(r => r.url))
+    const existing = []
+    for (let from = 0; ; from += 1000) {
+      const { data } = await supabase.from('news_feed').select('id,url').eq('entry_type', 'trial').order('id').range(from, from + 999)
+      if (!data?.length) break
+      existing.push(...data)
+      if (data.length < 1000) break
+    }
+    const staleIds = existing.filter(e => !fetched.has(e.url)).map(e => e.id)
+    for (let i = 0; i < staleIds.length; i += 200)
+      await supabase.from('news_feed').delete().in('id', staleIds.slice(i, i + 200))
+    if (staleIds.length) console.log(`      pruned ${staleIds.length} stale trials no longer in results`)
+  }
   return rows.length
 }
 
