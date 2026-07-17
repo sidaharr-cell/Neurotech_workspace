@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
 import { searchTrials } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
-import DeviceClassFilter from '../components/DeviceClassFilter'
-import FilterPills, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_RANK } from '../components/Filters'
+import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -84,12 +83,12 @@ export default function Trials() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <DeviceClassFilter value={cls} onChange={setCls} />
-      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
-        <FilterPills label="Phase" value={phase} onChange={setPhase} options={TRIAL_PHASE} />
-        <FilterPills label="Status" value={status} onChange={setStatus} options={TRIAL_STATUS} />
-        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} />
-        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FilterSelect label="Phase" value={phase} onChange={setPhase} options={TRIAL_PHASE} allLabel="All phases" />
+        <FilterSelect label="Status" value={status} onChange={setStatus} options={TRIAL_STATUS} allLabel="Any status" />
+        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
+        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
       </div>
 
       {loading ? (

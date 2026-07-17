@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
-import DeviceClassFilter from '../components/DeviceClassFilter'
-import FilterPills, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_RANK } from '../components/Filters'
+import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -79,11 +78,11 @@ export default function Research() {
         />
       </div>
 
-      <DeviceClassFilter value={cls} onChange={setCls} />
-      <div className="flex flex-wrap gap-x-10 gap-y-1 mb-8">
-        <FilterPills label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} />
-        <FilterPills label="Type" value={source} onChange={setSource} options={RESEARCH_SOURCE} />
-        <FilterPills label="Sort" value={sort} onChange={setSort} options={SORT_RANK} required />
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FilterSelect label="Type" value={source} onChange={setSource} options={RESEARCH_SOURCE} allLabel="All types" />
+        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
+        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
       </div>
 
       {loading ? (
