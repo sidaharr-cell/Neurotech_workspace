@@ -8,6 +8,7 @@ import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, FEED_TYPE, SORT_SIGNI
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesClass, classesForEntity } from '../lib/taxonomy'
+import { isReputableSource, neurotechCentrality } from '../lib/sources'
 
 const tintOf = item => classesForEntity(item)[0]?.id || 'default'
 const metaOf = item => ({ source: item.source, date: fmtDate(item.published_at), cites: item.metadata?.citationCount ?? 0 })
@@ -99,14 +100,21 @@ export default function MagazineFeed() {
   // image-bearing stories pulled from the full ranked feed; the remaining
   // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
-    // Real (never stock) images only. Default: order by resolution so the lead
-    // is the sharpest available. Under "Newest", keep the feed's date order so
-    // the hero is the newest image-bearing story. Others → neuron motif.
     const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
+    const realImg = i => i.metadata?.image && i.metadata?.imageKind === 'real'
     const realImgs = shown
-      .filter(i => i.metadata?.image && i.metadata?.imageKind === 'real')
+      .filter(realImg)
       .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
-    const lead = realImgs[0] || shown[0]
+
+    // The lead story must come from a reputable source (peer-reviewed journal or
+    // quality outlet — not a press-release aggregator) and sit squarely in
+    // neurotech. Among reputable items, prefer neurotech-central stories, then a
+    // real image, then overall rank. Fall back to the old logic only if nothing
+    // reputable is available.
+    const reputable = shown.filter(isReputableSource)
+    const pool = reputable.length ? reputable : shown
+    const leadScore = i => neurotechCentrality(i) * 3 + (realImg(i) ? 2 : 0) + (i.metadata?.rankScore ?? 0)
+    const lead = [...pool].sort((a, b) => leadScore(b) - leadScore(a))[0] || realImgs[0] || shown[0]
     const used = new Set(lead ? [lead] : [])
     const featured = []
     for (const it of [...realImgs, ...shown]) {
