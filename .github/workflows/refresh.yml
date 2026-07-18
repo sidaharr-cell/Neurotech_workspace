@@ -48,7 +48,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No data changes."; exit 0
           fi
-          git commit -m "chore: auto-update funding + notable research [skip ci]"
+          git commit -m "chore: auto-update funding + notable research"
           # Rebase onto any commits pushed while the job ran (deploys, etc.),
           # then push. Retry so the job never fails a simple race.
           for i in 1 2 3; do
