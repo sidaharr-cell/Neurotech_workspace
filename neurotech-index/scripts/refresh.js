@@ -48,10 +48,10 @@ const ARXIV_QUERIES = [
   'all:neural+prosthetics',
 ]
 
-// Drop media items Claude scored as barely relevant to neurotech — broad RSS
-// feeds (e.g. New Atlas) surface general-interest stories that shouldn't be in
-// a neurotech feed even at low rank.
-const NEWS_RELEVANCE_FLOOR = 4
+// Keep only news the model scored as neurotech-CENTRAL (5+). General
+// neuroscience, neuroimaging findings, genetics, drugs, and medical news score
+// 1 to 4 and are dropped, so the feed stays about neurotechnology specifically.
+const NEWS_RELEVANCE_FLOOR = 5
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 // How far back to pull content. Wider than "this week" so papers are old enough
@@ -217,7 +217,9 @@ function mediaScore(item) {
   const relevance = clamp01((item.relevanceScore ?? item.relevance_score ?? 5) / 10)
   const recency = Math.exp(-daysOld(item.publishedAt || item.published_at) * Math.LN2 / 3) // 3-day half-life
   const authority = mediaAuthority(item.source)
-  return 0.40 * relevance + 0.35 * recency + 0.25 * authority
+  // Relevance-dominant: neurotech relevance should drive what surfaces, above
+  // freshness or outlet prestige.
+  return 0.50 * relevance + 0.30 * recency + 0.20 * authority
 }
 
 // ── Research-specific ranking (papers / preprints) ───────────────────────────
@@ -884,12 +886,28 @@ async function scoreWithClaude(items) {
           content:
             `You are an expert in neurotechnology. Rate each item for its significance to the field.\n\n` +
             `For each numbered item, respond with a JSON array element containing:\n` +
-            `- "score": integer 1–10. FIRST decide whether the item is actually about neurotechnology, ` +
-            `neuroscience, or the nervous system. If it is unrelated to the brain/nervous system ` +
-            `(e.g. consumer gadgets, vehicles, lifestyle, diet, general business or politics with no neuro angle), score 1. ` +
-            `Otherwise USE THE FULL RANGE and spread scores — do not cluster. ` +
-            `Reserve 9–10 for genuine landmark advances only (rare); 7–8 = strong/notable; 5–6 = solid but incremental; ` +
-            `3–4 = routine or narrow; 1–2 = tangential. Most items should NOT be 9. Differentiate items within this batch.\n` +
+            `- "score": integer 1 to 10, measuring relevance to NEUROTECHNOLOGY SPECIFICALLY. ` +
+            `Neurotechnology means devices and methods that interface with the nervous system: ` +
+            `brain-computer interfaces, neural implants and electrode arrays, neurostimulation and ` +
+            `neuromodulation (DBS, TMS, tES, VNS, spinal cord stimulation), neuroprosthetics, cochlear ` +
+            `and retinal implants, neural recording and decoding, closed-loop and adaptive neural systems, ` +
+            `optogenetics and ultrasound neuromodulation, and the hardware, software, companies, and clinical ` +
+            `trials behind them. ` +
+            `Score 5 to 10 ONLY when such neurotechnology is CENTRAL to the item: 5 to 6 incremental, ` +
+            `7 to 8 strong or notable, 9 to 10 a landmark advance (rare). ` +
+            `Score 1 to 4 for EVERYTHING ELSE, even when it concerns the brain or nervous system: ` +
+            `general neuroscience, neuroimaging or brain-scan findings with no device, genetics, basic ` +
+            `biology, psychology, drugs and pharmacology, diagnostics and biomarkers and blood tests, ` +
+            `surgery, epidemiology, and general medical news. ` +
+            `Consumer gadgets, vehicles, lifestyle, diet, business, or politics score 1. ` +
+            `CRUCIAL: an item that merely USES neural recording, electrophysiology, stimulation, or brain ` +
+            `imaging as a tool to study brain function, circuits, cells, or a disease is NOT neurotechnology; ` +
+            `score it 1 to 4. To score 5 or higher the item must be primarily ABOUT the technology itself: ` +
+            `building, improving, validating, deploying, or commercializing a device, interface, implant, ` +
+            `electrode array, stimulator, prosthesis, or neural decoding system. Example: developing a new ` +
+            `brain-computer interface scores high; a neuroscience study that uses electrodes to map dopamine ` +
+            `circuits scores low. ` +
+            `Differentiate items within this batch.\n` +
             `- "summary": one crisp sentence on why it matters to neurotech practitioners\n` +
             `- "significance": a single paragraph (3 to 4 sentences) in plain language explaining what this is and why it matters to neurotechnology. Self-contained; do not start with "This paper/article".\n` +
             `Write summary and significance in clear, punchy prose. Do NOT use em dashes or en dashes (— or –); use commas, periods, colons, or parentheses instead.\n` +
