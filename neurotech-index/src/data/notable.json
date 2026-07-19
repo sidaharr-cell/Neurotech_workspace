@@ -64,7 +64,7 @@
     "pctile": 0.99588214,
     "fwci": 36.2615,
     "citedBy": 6,
-    "significance": "This is a major clinical milestone for neurotechnology: it shows that an intracortical BCI can not only decode speech and movement intent accurately in a lab but also function reliably when a patient uses it independently at home without constant researcher oversight. This addresses the critical real-world requirement of robustness and user autonomy, moving BCIs from supervised clinical studies toward genuine assistive technology. The achievement validates the path toward practical, life-changing applications for people with severe paralysis."
+    "significance": "Most BCI studies require supervised, lab-based sessions with technical staff present; this work proves that a person with paralysis can operate a high-performance intracortical speech and cursor BCI independently at home over extended periods. This closes a critical gap between academic demonstrations and practical clinical utility, showing that BCIs can transition from experimental devices to tools patients use autonomously. It represents a rare neurotechnology milestone because it validates both the engineering reliability and the usability needed for real-world deployment."
   },
   {
     "title": "Safeguarding Neural Data.",
@@ -174,21 +174,6 @@
     "fwci": 26.4855,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
-  },
-  {
-    "title": "From Selective Listening to Brain-Controlled Hearing: A Perspective on the Future of Auditory Technology.",
-    "authors": [
-      "Nima Mesgarani"
-    ],
-    "journal": "Journal of the Association for Research in Otolaryngology",
-    "pmid": "42010188",
-    "doi": "10.1007/s10162-026-01048-w",
-    "url": "https://doi.org/10.1007/s10162-026-01048-w",
-    "publishedAt": "2026-04-20",
-    "pctile": 0.99268662,
-    "fwci": 19.1251,
-    "citedBy": 1,
-    "significance": "AAD technology could enable hearing aids that use brain signals to automatically amplify only the speech you're trying to listen to, dramatically improving hearing in noisy environments."
   },
   {
     "title": "Postapproval Study for Brain-Responsive Neurostimulation for Drug-Resistant Focal Epilepsy: Three-Year Efficacy and Interim Safety Results.",
