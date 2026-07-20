@@ -50,7 +50,21 @@ function OrgRow({ org }) {
         {!isLab && org.founded && <><span aria-hidden>·</span>Founded {org.founded}</>}
         {!isLab && org.latestRound && <><span aria-hidden>·</span>{org.latestRound} {org.roundYear}</>}
       </p>
-      {org.description && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{org.description}</p>}
+      {org.description && (
+        isLab && org.description.includes('Focus:')
+          ? (() => {
+              const i = org.description.indexOf('Focus:')
+              const head = org.description.slice(0, i).replace(/\s*$/, '')
+              const focus = org.description.slice(i)
+              return (
+                <div className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body">
+                  <div className="line-clamp-1">{head}</div>
+                  <div className="line-clamp-1">{focus}</div>
+                </div>
+              )
+            })()
+          : <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{org.description}</p>
+      )}
     </div>
   )
   // Companies still link the whole row to their site; labs link only the name
