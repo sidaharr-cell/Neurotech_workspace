@@ -16,8 +16,18 @@ const KINDS = [
   { id: 'lab', label: 'Labs' },
 ]
 
+// NIH RePORTER doesn't give lab website URLs, so link the lab name to a
+// targeted search (PI + institution) whose top result is the lab's homepage.
+function labSearchUrl(org) {
+  const pi = (org.founders?.[0] || org.name.replace(/\s*Lab\s*$/i, '')).replace(/\s+/g, ' ').trim()
+  const inst = (org.description || '').split(' · ')[0].trim()
+  const q = `${pi} ${inst} lab`.replace(/\s+/g, ' ').trim()
+  return `https://www.google.com/search?q=${encodeURIComponent(q)}`
+}
+
 function OrgRow({ org }) {
   const isLab = org.type === 'lab'
+  const nameHref = isLab ? labSearchUrl(org) : org.website
   const inner = (
     <div className="min-w-0 flex-1">
       <div className="flex items-center gap-3 mb-1.5 flex-wrap">
@@ -25,8 +35,15 @@ function OrgRow({ org }) {
         <DeviceClassLabels entity={org} max={1} />
         {!isLab && org.funding > 0 && <span className="text-[11px] font-mono text-accent">{fmtMoney(org.funding)} raised</span>}
       </div>
-      <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link inline-flex items-center gap-1.5">
-        {org.name}{org.website && <ExternalLink className="w-3.5 h-3.5 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />}
+      <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em]">
+        {nameHref ? (
+          <a href={nameHref} target="_blank" rel="noopener noreferrer"
+            className="headline-link inline-flex items-center gap-1.5 hover:text-accent transition-colors">
+            {org.name}<ExternalLink className="w-3.5 h-3.5 text-muted opacity-60 group-hover:opacity-100 transition-opacity" />
+          </a>
+        ) : (
+          <span className="headline-link inline-flex items-center gap-1.5">{org.name}</span>
+        )}
       </h3>
       <p className="mt-1 flex items-center gap-1 text-[13px] text-muted font-sans">
         {org.location && <><MapPin className="w-3.5 h-3.5" />{org.location}</>}
@@ -36,7 +53,9 @@ function OrgRow({ org }) {
       {org.description && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{org.description}</p>}
     </div>
   )
-  return org.website
+  // Companies still link the whole row to their site; labs link only the name
+  // (so the row itself isn't a dead link).
+  return (!isLab && org.website)
     ? <a href={org.website} target="_blank" rel="noopener noreferrer" className="group block py-5">{inner}</a>
     : <div className="group py-5">{inner}</div>
 }
