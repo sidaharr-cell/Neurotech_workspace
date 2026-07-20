@@ -64,7 +64,7 @@
     "pctile": 0.99588214,
     "fwci": 36.2615,
     "citedBy": 6,
-    "significance": "Most BCI studies require supervised, lab-based sessions with technical staff present; this work proves that a person with paralysis can operate a high-performance intracortical speech and cursor BCI independently at home over extended periods. This closes a critical gap between academic demonstrations and practical clinical utility, showing that BCIs can transition from experimental devices to tools patients use autonomously. It represents a rare neurotechnology milestone because it validates both the engineering reliability and the usability needed for real-world deployment."
+    "significance": "Prior BCIs achieved high accuracy in controlled lab settings but required caregiver or technician supervision, limiting practical value for severely paralyzed patients. This work demonstrates a patient independently operating an intracortical BCI for naturalistic speech and cursor control at home without technician support, validating the clinical viability of neural interfaces for daily life. This is a landmark achievement bridging the gap between experimental capability and patient autonomy, fundamental to neurotechnology's ultimate goal of restoring function outside the clinic."
   },
   {
     "title": "Safeguarding Neural Data.",
