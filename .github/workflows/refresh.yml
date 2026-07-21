@@ -40,6 +40,18 @@ jobs:
         working-directory: neurotech-index
         run: node scripts/backfill-funding.js
 
+      - name: Refresh recent patents (PatentsView)
+        working-directory: neurotech-index
+        continue-on-error: true
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          PATENTSVIEW_API_KEY:  ${{ secrets.PATENTSVIEW_API_KEY }}
+        run: |
+          if [ -z "$PATENTSVIEW_API_KEY" ]; then echo "No PatentsView key set, skipping patents."; exit 0; fi
+          export PATENTS_SINCE=$(date -u -d '35 days ago' +%Y-%m-%d 2>/dev/null || date -u -v-35d +%Y-%m-%d)
+          node scripts/backfill-patents.js
+
       - name: Commit updated data (funding + notable research)
         run: |
           git config user.name "neurobase-bot"

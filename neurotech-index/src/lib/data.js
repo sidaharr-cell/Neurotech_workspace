@@ -215,6 +215,21 @@ export async function searchDevices({ query = '', deviceClass = null, recency = 
   return { rows: (data || []).map(r => ({ ...r, _type: 'devices' })), total: count ?? 0 }
 }
 
+/** Server-side paginated + full-text search over the neurotech patents table. */
+export async function searchPatents({ query = '', deviceClass = null, recency = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let q = supabase.from('patents').select('patent_number,title,abstract,assignee,grant_date,cpc_codes,tags,url', { count: 'exact' })
+  const term = query.trim()
+  if (term) q = q.textSearch('fts', term, { type: 'websearch' })
+  if (deviceClass) q = q.contains('tags', [deviceClass])
+  const minYear = recencyMinYear(recency)
+  if (minYear) q = q.gte('grant_date', `${minYear}-01-01`)
+  q = q.order('grant_date', { ascending: sort === 'oldest', nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
+  const { data, count, error } = await q
+  if (error) { console.warn('searchPatents error:', error.message); return { rows: [], total: 0 } }
+  return { rows: (data || []).map(r => ({ ...r, _type: 'patents' })), total: count ?? 0 }
+}
+
 /** Server-side paginated search over clinical trials (stored in news_feed). */
 export async function searchTrials({ query = '', deviceClass = null, recency = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }

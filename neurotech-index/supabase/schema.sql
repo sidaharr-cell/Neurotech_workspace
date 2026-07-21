@@ -111,16 +111,46 @@ create index if not exists news_feed_score on news_feed(relevance_score desc);
 create index if not exists news_feed_published on news_feed(published_at desc);
 create index if not exists news_feed_topics_gin on news_feed using gin(topics);
 
+-- ── Patents (neurotech, sourced by CPC classification) ───────────────────────
+create table if not exists patents (
+  id            uuid primary key default gen_random_uuid(),
+  patent_number text unique not null,     -- e.g. US10123456B2
+  title         text not null,
+  abstract      text,
+  assignee      text,
+  inventors     jsonb default '[]',
+  grant_date    text,                      -- YYYY-MM-DD
+  cpc_codes     jsonb default '[]',        -- e.g. ["A61N1/36","G06F3/015"]
+  tags          jsonb default '[]',        -- derived device-class tags
+  url           text,                      -- Google Patents link
+  source        text default 'patentsview',
+  created_at    timestamptz default now()
+);
+create index if not exists patents_created on patents(created_at desc);
+create index if not exists patents_grant on patents(grant_date desc);
+create index if not exists patents_tags_gin on patents using gin(tags);
+alter table patents add column if not exists fts tsvector
+  generated always as (
+    to_tsvector('english',
+      coalesce(title, '') || ' ' ||
+      coalesce(abstract, '') || ' ' ||
+      coalesce(assignee, '')
+    )
+  ) stored;
+create index if not exists patents_fts on patents using gin(fts);
+
 -- ── Row-level security (read-only for anon key) ───────────────────────────────
 alter table papers        enable row level security;
 alter table devices       enable row level security;
 alter table organizations enable row level security;
 alter table researchers   enable row level security;
 alter table news_feed     enable row level security;
+alter table patents       enable row level security;
 
 -- Anyone can read; only service-role key can write (used by refresh.js)
 create policy "public read papers"        on papers        for select using (true);
 create policy "public read devices"       on devices       for select using (true);
 create policy "public read organizations" on organizations for select using (true);
 create policy "public read researchers"   on researchers   for select using (true);
+create policy "public read patents"       on patents       for select using (true);
 create policy "public read news_feed"     on news_feed     for select using (true);
