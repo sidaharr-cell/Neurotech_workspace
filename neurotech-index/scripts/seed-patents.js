@@ -21,7 +21,12 @@ const TERMS = [
   'closed-loop neurostimulation', 'intracortical electrode',
 ]
 
-const stripTags = s => (s || '').replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim()
+const decodeEntities = s => (s || '')
+  .replace(/&hellip;/g, '…').replace(/&mdash;/g, ',').replace(/&ndash;/g, '-')
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+  .replace(/&#0?39;/g, "'").replace(/&apos;/g, "'").replace(/&nbsp;/g, ' ')
+  .replace(/&#(\d+);/g, (m, n) => String.fromCharCode(+n)).replace(/&amp;/g, '&')
+const stripTags = s => decodeEntities((s || '').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim()
 const deriveTags = text => {
   const h = (text || '').toLowerCase()
   return DEVICE_CLASSES.filter(c => c.match.some(m => h.includes(m))).map(c => c.id)
