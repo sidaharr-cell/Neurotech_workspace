@@ -61,8 +61,8 @@
     "doi": "10.1038/s41591-026-04414-6",
     "url": "https://doi.org/10.1038/s41591-026-04414-6",
     "publishedAt": "2026-06-15T00:00:00.000Z",
-    "pctile": 0.99588214,
-    "fwci": 36.2615,
+    "pctile": 0.99580045,
+    "fwci": 35.9436,
     "citedBy": 6,
     "significance": "Prior BCIs achieved high accuracy in controlled lab settings but required caregiver or technician supervision, limiting practical value for severely paralyzed patients. This work demonstrates a patient independently operating an intracortical BCI for naturalistic speech and cursor control at home without technician support, validating the clinical viability of neural interfaces for daily life. This is a landmark achievement bridging the gap between experimental capability and patient autonomy, fundamental to neurotechnology's ultimate goal of restoring function outside the clinic."
   },
@@ -123,8 +123,8 @@
     "doi": "10.1016/j.cell.2026.04.030",
     "url": "https://doi.org/10.1016/j.cell.2026.04.030",
     "publishedAt": "2026-05-01",
-    "pctile": 0.99566854,
-    "fwci": 24.5973,
+    "pctile": 0.99551864,
+    "fwci": 24.1987,
     "citedBy": 3,
     "significance": "This paper identifies the specific brain circuits and cellular mechanisms through which accelerated TMS produces rapid antidepressant effects, enabling optimization of depression treatment parameters."
   },
@@ -170,8 +170,8 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99284124,
-    "fwci": 26.4855,
+    "pctile": 0.99264801,
+    "fwci": 26.0405,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
   },
