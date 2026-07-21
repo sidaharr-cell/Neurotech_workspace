@@ -131,4 +131,8 @@ async function main() {
   console.log(`✓ Patents backfill complete — ${rows.length} patents.`)
 }
 
-main().catch(e => { console.error(e); process.exit(1) })
+import { realpathSync } from 'fs'
+import { fileURLToPath } from 'url'
+if (process.argv[1] && fileURLToPath(import.meta.url) === realpathSync(process.argv[1])) {
+  main().catch(e => { console.error(e); process.exit(1) })
+}
