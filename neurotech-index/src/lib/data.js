@@ -160,7 +160,7 @@ export async function searchPapers({ query = '', deviceClass = null, recency = n
       .from('papers')
       .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
-    if (deviceClass) b = b.contains('tags', [deviceClass])
+    if (deviceClass) b = b.contains('tags', JSON.stringify([deviceClass]))
     if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
@@ -185,7 +185,7 @@ export async function searchLabs({ query = '', deviceClass = null, page = 0, pag
   const base = () => {
     let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
     if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
-    if (deviceClass) b = b.contains('focus_areas', [deviceClass])
+    if (deviceClass) b = b.contains('focus_areas', JSON.stringify([deviceClass]))
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
   // Rank by NIH funding/activity score (best-funded, most-active labs first),
@@ -204,7 +204,7 @@ export async function searchDevices({ query = '', deviceClass = null, recency = 
   let q = supabase.from('devices').select('*', { count: 'exact' })
   const term = query.trim().replace(/[(),%]/g, ' ')
   if (term) q = q.or(`name.ilike.%${term}%,manufacturer.ilike.%${term}%`)
-  if (deviceClass) q = q.contains('tags', [deviceClass])
+  if (deviceClass) q = q.contains('tags', JSON.stringify([deviceClass]))
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('year', String(minYear))
   if (fda === '510k') q = q.ilike('status', '%510%')
@@ -221,7 +221,7 @@ export async function searchPatents({ query = '', deviceClass = null, recency = 
   let q = supabase.from('patents').select('patent_number,title,abstract,assignee,grant_date,cpc_codes,tags,url', { count: 'exact' })
   const term = query.trim()
   if (term) q = q.textSearch('fts', term, { type: 'websearch' })
-  if (deviceClass) q = q.contains('tags', [deviceClass])
+  if (deviceClass) q = q.contains('tags', JSON.stringify([deviceClass]))
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('grant_date', `${minYear}-01-01`)
   q = q.order('grant_date', { ascending: sort === 'oldest', nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
@@ -235,7 +235,7 @@ export async function searchTrials({ query = '', deviceClass = null, recency = n
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
-  if (deviceClass) q = q.contains('topics', [deviceClass])
+  if (deviceClass) q = q.contains('topics', JSON.stringify([deviceClass]))
   const iso = recencyCutoffISO(recency)
   if (iso) q = q.gte('published_at', iso)
   if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
