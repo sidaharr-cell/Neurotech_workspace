@@ -37,10 +37,32 @@ export const NEUROTECH_CPC = [
   'A61F2/72',   // bioelectrically controlled prostheses (neuroprosthetics)
 ]
 
-const deriveTags = text => {
+// Each neurotech CPC prefix maps to a device class, so every patent gets a
+// principled tag even when the abstract isn't available.
+export const CPC_CLASS = [
+  ['A61N1/05', 'stimulation'], ['A61N1/36', 'stimulation'], ['A61N1/372', 'stimulation'],
+  ['A61N1/375', 'stimulation'], ['A61N1/378', 'stimulation'], ['A61N2/00', 'stimulation'],
+  ['A61B5/369', 'recording'], ['A61B5/372', 'imaging'], ['A61B5/377', 'recording'],
+  ['A61B5/378', 'recording'], ['A61B5/388', 'recording'], ['A61B5/389', 'recording'],
+  ['A61B5/291', 'recording'], ['A61B5/293', 'recording'],
+  ['G06F3/015', 'interface'], ['A61F2/72', 'motor'],
+]
+export const cpcTags = codes => {
+  const out = new Set()
+  for (const code of codes || []) {
+    const c = String(code).replace(/\s+/g, '')
+    for (const [prefix, cls] of CPC_CLASS) if (c.startsWith(prefix)) out.add(cls)
+  }
+  return [...out]
+}
+
+const textTags = text => {
   const h = (text || '').toLowerCase()
   return DEVICE_CLASSES.filter(c => c.match.some(m => h.includes(m))).map(c => c.id)
 }
+// Union of text-derived and CPC-derived device-class tags.
+export const patentTags = (text, codes) => [...new Set([...textTags(text), ...cpcTags(codes)])]
+const deriveTags = text => textTags(text)
 
 const FIELDS = [
   'patent_id', 'patent_title', 'patent_abstract', 'patent_date',
@@ -98,7 +120,7 @@ function toRow(p) {
     assignee,
     grant_date: p.patent_date || null,
     cpc_codes: [...new Set(cpc)],
-    tags: deriveTags(`${p.patent_title} ${p.patent_abstract}`),
+    tags: patentTags(`${p.patent_title} ${p.patent_abstract}`, cpc),
     url: `https://patents.google.com/patent/${num}`,
     source: 'patentsview',
   }
