@@ -17,14 +17,9 @@
  */
 import { BigQuery } from '@google-cloud/bigquery'
 import { createClient } from '@supabase/supabase-js'
-import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
-import { NEUROTECH_CPC } from './backfill-patents.js'
+import { NEUROTECH_CPC, patentTags } from './backfill-patents.js'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
-const deriveTags = text => {
-  const h = (text || '').toLowerCase()
-  return DEVICE_CLASSES.filter(c => c.match.some(m => h.includes(m))).map(c => c.id)
-}
 const fmtDate = n => {
   const s = String(n || '')
   return s.length === 8 ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : null
@@ -63,7 +58,7 @@ async function main() {
       assignee: r.assignee || null,
       grant_date: fmtDate(r.grant_date),
       cpc_codes: r.cpc_codes || [],
-      tags: deriveTags(r.title),
+      tags: patentTags(r.title, r.cpc_codes || []),
       url: `https://patents.google.com/patent/${r.publication_number}`,
       source: 'bigquery',
     }))
