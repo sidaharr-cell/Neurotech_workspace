@@ -1,30 +1,5 @@
 [
   {
-    "title": "Target-Dependent Postoperative Weight Gain after Pallidothalamic Tractotomy versus Pallidotomy for Dystonia.",
-    "authors": [
-      "Ryosuke Jozuka",
-      "Masahiko Nishitani",
-      "Eriko Kamijo",
-      "Kilsoo Kim",
-      "Satoru Miyao",
-      "Mika Fujiwara",
-      "Taku Nonaka",
-      "Bohui Qian",
-      "Takakazu Kawamata",
-      "Takaomi Taira",
-      "Shiro Horisawa"
-    ],
-    "journal": "Movement Disorders",
-    "pmid": "42026702",
-    "doi": "10.1002/mds.70323",
-    "url": "https://doi.org/10.1002/mds.70323",
-    "publishedAt": "2026-04-23",
-    "pctile": 0.99662162,
-    "fwci": 26.8363,
-    "citedBy": 3,
-    "significance": "This study reveals that different surgical targets for dystonia treatment produce distinct weight gain effects, identifying specific brain regions responsible for postoperative metabolic complications."
-  },
-  {
     "title": "Technologies in clinical neurophysiology for brain-body interfacing: IFCN handbook chapter.",
     "authors": [
       "Andrea Cimolato",
@@ -64,7 +39,7 @@
     "pctile": 0.99580045,
     "fwci": 35.9436,
     "citedBy": 6,
-    "significance": "Prior BCIs achieved high accuracy in controlled lab settings but required caregiver or technician supervision, limiting practical value for severely paralyzed patients. This work demonstrates a patient independently operating an intracortical BCI for naturalistic speech and cursor control at home without technician support, validating the clinical viability of neural interfaces for daily life. This is a landmark achievement bridging the gap between experimental capability and patient autonomy, fundamental to neurotechnology's ultimate goal of restoring function outside the clinic."
+    "significance": "This work demonstrates that an intracortical BCI can achieve two critical milestones for real-world deployment: sustained performance over extended periods and independent, at-home operation without laboratory support. The system decoded neural signals associated with attempted speech and movement to enable naturalistic communication and digital control for a person with severe paralysis. By proving that users can safely and effectively operate an implanted brain-computer interface without continuous clinician oversight, this result represents a landmark advance validating the clinical viability of intracortical BCIs and accelerating their path to widespread accessibility."
   },
   {
     "title": "Safeguarding Neural Data.",
