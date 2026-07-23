@@ -5,6 +5,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
+import { classify } from '../src/lib/classify.js'
 
 const UA = 'Mozilla/5.0 (compatible; NeuroBaseBot/1.0; +https://neurobase.app)'
 
@@ -107,7 +108,7 @@ function trialScore(t) {
 
 export function trialToRow(t) {
   const score = trialScore(t)
-  return {
+  const row = {
     title: t.title,
     summary: t.summary ? t.summary.slice(0, 500) : '',
     source: t.sponsor || 'ClinicalTrials.gov',
@@ -125,6 +126,7 @@ export function trialToRow(t) {
       rankScore: score,
     },
   }
+  return { ...row, ...classify(row, 'trials') }   // facet_* + in_scope + classifier_version
 }
 
 export async function syncTrials(supabase) {

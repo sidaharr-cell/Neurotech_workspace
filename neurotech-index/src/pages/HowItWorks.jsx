@@ -181,7 +181,7 @@ export default function HowItWorks() {
             ['status', 'is highest for recruiting trials, lowest for withdrawn or terminated ones.'],
             ['recency', 'is 0.5^(age in days / 730), a 2-year half-life.'],
             ['size', 'is enrollment, log-scaled.'],
-            ['topical', 'is 1 if the trial maps to a device class, otherwise 0.4.'],
+            ['topical', 'is 1 if the trial maps to a neurotech facet, otherwise 0.4.'],
             ['sponsor', 'is 0.85 for industry, 0.8 for NIH, 0.55 otherwise.'],
             ['results', 'is 1 if results are posted, otherwise 0.'],
           ]}

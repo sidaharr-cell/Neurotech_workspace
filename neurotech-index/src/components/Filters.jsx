@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, Check } from 'lucide-react'
-import { DEVICE_CLASSES } from '../lib/taxonomy'
+import {
+  FUNCTION, ACCESS, APPLICATION,
+  FUNCTION_LABEL, ACCESS_LABEL, APPLICATION_LABEL,
+} from '../lib/facets'
 
 /**
  * Filters.jsx — compact dropdown filter control, plus the option sets each page
@@ -8,8 +11,15 @@ import { DEVICE_CLASSES } from '../lib/taxonomy'
  * instead of stacked pill rows.
  */
 
-// ── Option sets ───────────────────────────────────────────────────────────────
-export const DEVICE_CLASS_OPTIONS = DEVICE_CLASSES.map(c => ({ id: c.id, label: c.short }))
+// ── Facet option sets ─────────────────────────────────────────────────────────
+// The exclusive sentinels (none / not_applicable) are never offered as filters.
+const opts = (values, labels) => values
+  .filter(v => v !== 'none' && v !== 'not_applicable')
+  .map(v => ({ id: v, label: labels[v] }))
+
+export const FUNCTION_OPTIONS = opts(FUNCTION, FUNCTION_LABEL)
+export const ACCESS_OPTIONS = opts(ACCESS, ACCESS_LABEL)
+export const APPLICATION_OPTIONS = opts(APPLICATION, APPLICATION_LABEL)
 
 export const RECENCY_DATE = [ // date-backed pages (feed, trials)
   { id: 'week', label: 'Past week' },
@@ -119,3 +129,35 @@ export default function FilterSelect({ label, value, onChange, options, allLabel
     </div>
   )
 }
+
+/**
+ * FacetFilters — the three-question filter row that replaces the single
+ * Device Class dropdown. `facets` is { function, access, application }; each
+ * change calls `onChange` with the next facets object. A "Clear" affordance
+ * appears once any facet is set.
+ */
+export function FacetFilters({ facets = {}, onChange }) {
+  const set = (key, value) => onChange({ ...facets, [key]: value })
+  const any = facets.function || facets.access || facets.application
+  return (
+    <>
+      <FilterSelect label="Function" value={facets.function ?? null}
+        onChange={v => set('function', v)} options={FUNCTION_OPTIONS} allLabel="Any function" />
+      <FilterSelect label="Access" value={facets.access ?? null}
+        onChange={v => set('access', v)} options={ACCESS_OPTIONS} allLabel="Any invasiveness" />
+      <FilterSelect label="Application" value={facets.application ?? null}
+        onChange={v => set('application', v)} options={APPLICATION_OPTIONS} allLabel="Any application" />
+      {any && (
+        <button
+          onClick={() => onChange({ function: null, access: null, application: null })}
+          className="text-[13px] font-sans text-muted hover:text-accent underline underline-offset-2 transition-colors"
+        >
+          Clear
+        </button>
+      )}
+    </>
+  )
+}
+
+/** Empty facet state, for initializing page filters. */
+export const NO_FACETS = { function: null, access: null, application: null }

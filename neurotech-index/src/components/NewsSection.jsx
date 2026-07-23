@@ -3,9 +3,9 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState } from './ui'
-import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, SORT_SIGNIF } from './Filters'
+import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, SORT_SIGNIF } from './Filters'
 import NewsList from './NewsList'
-import { entityMatchesClass } from '../lib/taxonomy'
+import { entityMatchesFacets } from '../lib/facets'
 
 /**
  * A content-typed editorial news section (home feed, Media, Research).
@@ -14,7 +14,7 @@ import { entityMatchesClass } from '../lib/taxonomy'
 export default function NewsSection({ kicker, title, sub, entryTypes = null, lead = true, emptyHint }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [outlet, setOutlet] = useState(null)
   const [sort, setSort] = useState('relevant')
@@ -37,7 +37,7 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
     const cutoff = recencyCutoffISO(recency)
     const rank = r => r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10
     let out = items.filter(i =>
-      (!cls || entityMatchesClass(i, cls)) &&
+      entityMatchesFacets(i, facets) &&
       (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
       (!outlet || i.source === outlet)
     )
@@ -45,13 +45,13 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
       ? new Date(b.published_at || 0) - new Date(a.published_at || 0)
       : rank(b) - rank(a))
     return out
-  }, [items, cls, recency, outlet, sort])
+  }, [items, facets, recency, outlet, sort])
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading kicker={kicker} title={title} sub={sub} />
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FacetFilters facets={facets} onChange={setFacets} />
         {outletOptions.length > 1 && <FilterSelect label="Outlet" value={outlet} onChange={setOutlet} options={outletOptions} allLabel="All outlets" />}
         <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
         <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
@@ -62,7 +62,7 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
         <Loader label="Loading…" />
       ) : shown.length === 0 ? (
         <EmptyState icon={Newspaper} title="Nothing here yet">
-          {cls ? 'No items match this device class right now.' : (emptyHint || 'The feed populates after the daily refresh.')}
+          {(facets.function || facets.access || facets.application) ? 'No items match these filters right now.' : (emptyHint || 'The feed populates after the daily refresh.')}
         </EmptyState>
       ) : (
         <div className="max-w-4xl">

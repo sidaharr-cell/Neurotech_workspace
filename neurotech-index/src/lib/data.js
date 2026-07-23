@@ -38,6 +38,24 @@ const TRIAL_STATUS_MAP = {
   notyet: ['NOT_YET_RECRUITING'],
 }
 
+/**
+ * Apply the three-facet filter and the scope gate to a query.
+ * `facets` is { function, access, application }, each a single value or null.
+ * Out-of-scope rows are hidden unless `includeOutOfScope` is set. The facet
+ * columns are Postgres text[], so `.contains` takes a JS array (not a JSON
+ * string, which is how the old jsonb `tags` filter worked).
+ */
+function applyFacets(q, facets = {}, includeOutOfScope = false) {
+  if (!includeOutOfScope) q = q.eq('in_scope', true)
+  if (facets.function) q = q.contains('facet_function', [facets.function])
+  if (facets.access) q = q.contains('facet_access', [facets.access])
+  if (facets.application) q = q.contains('facet_application', [facets.application])
+  return q
+}
+
+// Facet columns every card needs to render its badges.
+const FACET_COLS = 'facet_function,facet_access,facet_application,in_scope'
+
 // ── Database entries ────────────────────────────────────────────────────────
 
 export async function getPapers() {
@@ -151,16 +169,19 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  * Server-side paginated + full-text search over the full papers table.
  * Uses the `fts` tsvector index; filters by derived device-class `tags`.
  */
-export async function searchPapers({ query = '', deviceClass = null, recency = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchPapers({ query = '', facets = {}, recency = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
   const minYear = recencyMinYear(recency)
   const base = () => {
+    // `estimated` count, not `exact`: an exact count over the ~55k in-scope
+    // papers exceeds the statement timeout. The planner estimate is instant and
+    // fine for a browse-index header and pagination.
     let b = supabase
       .from('papers')
-      .select('title,authors,journal,year,doi,url,abstract,tags,pubmed_id', { count: 'exact' })
+      .select(`title,authors,journal,year,doi,url,abstract,pubmed_id,${FACET_COLS}`, { count: 'estimated' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
-    if (deviceClass) b = b.contains('tags', JSON.stringify([deviceClass]))
+    b = applyFacets(b, facets)
     if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
@@ -179,13 +200,15 @@ export async function searchPapers({ query = '', deviceClass = null, recency = n
 }
 
 /** Server-side paginated search over research labs (organizations, type='lab'). */
-export async function searchLabs({ query = '', deviceClass = null, page = 0, pageSize = 20 } = {}) {
+export async function searchLabs({ query = '', facets = {}, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim().replace(/[(),%]/g, ' ')
   const base = () => {
     let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
     if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
-    if (deviceClass) b = b.contains('focus_areas', JSON.stringify([deviceClass]))
+    // Labs abstain (no facets) rather than being marked out of scope, so don't
+    // apply the scope gate here — it would hide every unclassified lab.
+    b = applyFacets(b, facets, true)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
   // Rank by NIH funding/activity score (best-funded, most-active labs first),
@@ -199,12 +222,12 @@ export async function searchLabs({ query = '', deviceClass = null, page = 0, pag
 }
 
 /** Server-side paginated search over the full devices table. */
-export async function searchDevices({ query = '', deviceClass = null, recency = null, fda = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
+export async function searchDevices({ query = '', facets = {}, recency = null, fda = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('devices').select('*', { count: 'exact' })
   const term = query.trim().replace(/[(),%]/g, ' ')
   if (term) q = q.or(`name.ilike.%${term}%,manufacturer.ilike.%${term}%`)
-  if (deviceClass) q = q.contains('tags', JSON.stringify([deviceClass]))
+  q = applyFacets(q, facets)
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('year', String(minYear))
   if (fda === '510k') q = q.ilike('status', '%510%')
@@ -216,12 +239,13 @@ export async function searchDevices({ query = '', deviceClass = null, recency = 
 }
 
 /** Server-side paginated + full-text search over the neurotech patents table. */
-export async function searchPatents({ query = '', deviceClass = null, recency = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
+export async function searchPatents({ query = '', facets = {}, recency = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
-  let q = supabase.from('patents').select('patent_number,title,abstract,assignee,grant_date,cpc_codes,tags,url', { count: 'exact' })
+  // `estimated` count for the same reason as papers — the patents table is 47k rows.
+  let q = supabase.from('patents').select(`patent_number,title,abstract,assignee,grant_date,cpc_codes,url,${FACET_COLS}`, { count: 'estimated' })
   const term = query.trim()
   if (term) q = q.textSearch('fts', term, { type: 'websearch' })
-  if (deviceClass) q = q.contains('tags', JSON.stringify([deviceClass]))
+  q = applyFacets(q, facets)
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('grant_date', `${minYear}-01-01`)
   q = q.order('grant_date', { ascending: sort === 'oldest', nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
@@ -231,11 +255,11 @@ export async function searchPatents({ query = '', deviceClass = null, recency = 
 }
 
 /** Server-side paginated search over clinical trials (stored in news_feed). */
-export async function searchTrials({ query = '', deviceClass = null, recency = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchTrials({ query = '', facets = {}, recency = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
-  if (deviceClass) q = q.contains('topics', JSON.stringify([deviceClass]))
+  q = applyFacets(q, facets)
   const iso = recencyCutoffISO(recency)
   if (iso) q = q.gte('published_at', iso)
   if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
@@ -268,6 +292,15 @@ export async function getNewsItem(id) {
 
 // ── Normalizers (snake_case DB → camelCase app) ─────────────────────────────
 
+// Every normalizer passes the stored facets through unchanged, so cards read
+// them straight off the row instead of recomputing anything in the browser.
+const facetsOf = r => ({
+  facet_function: r.facet_function || [],
+  facet_access: r.facet_access || [],
+  facet_application: r.facet_application || [],
+  in_scope: r.in_scope,
+})
+
 function normalizeSupabasePaper(p) {
   return {
     title: p.title,
@@ -281,6 +314,7 @@ function normalizeSupabasePaper(p) {
     pubmedId: p.pubmed_id,
     arxivId: p.arxiv_id,
     source: p.source,
+    ...facetsOf(p),
   }
 }
 
@@ -297,6 +331,7 @@ function normalizeSupabaseDevice(d) {
     modality: d.modality || [],
     tags: d.tags || [],
     url: d.url,
+    ...facetsOf(d),
   }
 }
 
@@ -310,6 +345,7 @@ function normalizeSupabaseOrg(o) {
     focusAreas: o.focus_areas || [],
     website: o.website,
     founders: o.founders || [],
+    ...facetsOf(o),
   }
 }
 
@@ -321,5 +357,6 @@ function normalizeSupabaseResearcher(r) {
     bio: r.bio,
     expertise: r.expertise || [],
     notableWork: r.notable_work || [],
+    ...facetsOf(r),
   }
 }
