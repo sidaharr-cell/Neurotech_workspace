@@ -156,7 +156,7 @@ export default function MagazineFeed() {
         <Loader label="Loading…" />
       ) : !lead ? (
         <EmptyState icon={Newspaper} title="Nothing here yet">
-          {cls ? 'No items match this device class right now.' : 'The feed populates after the daily refresh.'}
+          {(facets.function || facets.access || facets.application) ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
         </EmptyState>
       ) : (
         <>
@@ -185,7 +185,7 @@ export default function MagazineFeed() {
           )}
 
           {/* Notable research rail (unfiltered — highest field-normalized impact) */}
-          {!cls && !recency && !type && <NotableRail exclude={shownKeys} />}
+          {!facets.function && !facets.access && !facets.application && !recency && !type && <NotableRail exclude={shownKeys} />}
 
           {/* Remaining, compact */}
           {rest.length > 0 && (
