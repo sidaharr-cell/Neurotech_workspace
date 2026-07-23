@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
-import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
+import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -31,7 +31,7 @@ function PaperRow({ paper }) {
 export default function Research() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [source, setSource] = useState(null)
   const [sort, setSort] = useState('relevant')
@@ -47,13 +47,13 @@ export default function Research() {
     return () => clearTimeout(debounce.current)
   }, [input])
 
-  useEffect(() => { setPage(0) }, [cls, recency, source, sort])
+  useEffect(() => { setPage(0) }, [facets, recency, source, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    const res = await searchPapers({ query, deviceClass: cls, recency, source, sort, page, pageSize: PAGE_SIZE })
+    const res = await searchPapers({ query, facets, recency, source, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
-  }, [query, cls, recency, source, sort, page])
+  }, [query, facets, recency, source, sort, page])
 
   useEffect(() => { load() }, [load])
 
@@ -79,7 +79,7 @@ export default function Research() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FacetFilters facets={facets} onChange={setFacets} />
         <FilterSelect label="Type" value={source} onChange={setSource} options={RESEARCH_SOURCE} allLabel="All types" />
         <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
         <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
@@ -88,7 +88,7 @@ export default function Research() {
       {loading ? (
         <Loader />
       ) : rows.length === 0 ? (
-        <EmptyState icon={SearchX} title="No papers found">Try different terms or clear the device-class filter.</EmptyState>
+        <EmptyState icon={SearchX} title="No papers found">Try different terms or clear the filters.</EmptyState>
       ) : (
         <>
           <div className="max-w-4xl divide-rule">

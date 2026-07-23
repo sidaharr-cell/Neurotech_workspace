@@ -4,8 +4,8 @@ import { Search, SearchX } from 'lucide-react'
 import { getPapers, getDevices, getOrganizations, getResearchers } from '../lib/data'
 import { Loader, EmptyState, Kicker, typeWord } from '../components/ui'
 import { DetailPanel } from '../components/Directory'
-import DeviceClassFilter from '../components/DeviceClassFilter'
-import { entityMatchesClass } from '../lib/taxonomy'
+import { FacetFilters, NO_FACETS } from '../components/Filters'
+import { entityMatchesFacets } from '../lib/facets'
 import { slugify } from '../lib/links'
 
 // People excluded from default scope (opt-in only).
@@ -46,7 +46,7 @@ export default function SearchPage() {
   const [all, setAll] = useState([])
   const [loading, setLoading] = useState(true)
   const [scope, setScope] = useState('all')
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [selected, setSelected] = useState(null)
 
   useEffect(() => { setInput(query) }, [query])
@@ -63,9 +63,9 @@ export default function SearchPage() {
     let list = all.filter(e => types.includes(e._type))
     const q = query.toLowerCase().trim()
     if (q) list = list.filter(e => JSON.stringify(e).toLowerCase().includes(q))
-    if (cls) list = list.filter(e => entityMatchesClass(e, cls))
+    list = list.filter(e => entityMatchesFacets(e, facets))
     return list.slice(0, 100)
-  }, [all, scope, query, cls])
+  }, [all, scope, query, facets])
 
   const submit = e => { e.preventDefault(); setParams(input.trim() ? { q: input.trim() } : {}) }
 
@@ -94,7 +94,7 @@ export default function SearchPage() {
         ))}
       </div>
 
-      <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap items-center gap-2 mb-5"><FacetFilters facets={facets} onChange={setFacets} /></div>
 
       <p className="text-[13px] text-muted font-sans mb-4">
         {results.length}{results.length === 100 ? '+' : ''} {results.length === 1 ? 'result' : 'results'}
@@ -104,7 +104,7 @@ export default function SearchPage() {
       {loading ? (
         <Loader />
       ) : results.length === 0 ? (
-        <EmptyState icon={SearchX} title="No results">Try different terms, a broader scope, or clear the device-class filter.</EmptyState>
+        <EmptyState icon={SearchX} title="No results">Try different terms, a broader scope, or clear the filters.</EmptyState>
       ) : (
         <div className="max-w-4xl divide-rule">
           {results.map((e, i) => <ResultRow key={`${e._type}-${i}`} entity={e} onOpen={() => setSelected(e)} />)}

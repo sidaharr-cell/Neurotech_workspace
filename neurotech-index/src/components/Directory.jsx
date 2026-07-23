@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { X, ExternalLink, MapPin } from 'lucide-react'
 import { Kicker, DeviceClassLabels, typeWord } from './ui'
-import { classesForEntity } from '../lib/taxonomy'
+import { cardBadges } from '../lib/facets'
 
 // ── List row for a reference entity (device / company / researcher) ──────────
 export function EntityRow({ entity, onClick }) {
@@ -43,14 +43,14 @@ function Field({ label, value }) {
 }
 
 function ClassRow({ entity }) {
-  const classes = classesForEntity(entity)
-  if (!classes.length) return null
+  const badges = cardBadges(entity, 6)
+  if (!badges.length) return null
   return (
     <div className="mb-4">
-      <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-1.5">Device class</p>
+      <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-1.5">Classification</p>
       <div className="flex flex-wrap gap-1.5">
-        {classes.map(c => (
-          <span key={c.id} className="text-[12px] font-sans text-accent bg-accent-soft border border-accent/20 px-2.5 py-1 rounded-sm">{c.label}</span>
+        {badges.map(b => (
+          <span key={b} className="text-[12px] font-sans text-accent bg-accent-soft border border-accent/20 px-2.5 py-1 rounded-sm">{b}</span>
         ))}
       </div>
     </div>

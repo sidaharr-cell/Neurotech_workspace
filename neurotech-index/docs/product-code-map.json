@@ -1,0 +1,2992 @@
+{
+  "GWE": {
+    "devices": 49,
+    "name": "Stimulator, Photic, Evoked Response",
+    "specialty": "Neurology",
+    "regulation": "882.1890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates",
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWF": {
+    "devices": 139,
+    "name": "Stimulator, Electrical, Evoked Response",
+    "specialty": "Neurology",
+    "regulation": "882.1870",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates",
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWG": {
+    "devices": 92,
+    "name": "Endoscope, Neurological",
+    "specialty": "Neurology",
+    "regulation": "882.1480",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWI": {
+    "devices": 2,
+    "name": "Discriminator, Two-Point",
+    "specialty": "Neurology",
+    "regulation": "882.1200",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWJ": {
+    "devices": 75,
+    "name": "Stimulator, Auditory, Evoked Response",
+    "specialty": "Neurology",
+    "regulation": "882.1900",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates",
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "sensory_restoration",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWK": {
+    "devices": 23,
+    "name": "Conditioner, Signal, Physiological",
+    "specialty": "Neurology",
+    "regulation": "882.1845",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWL": {
+    "devices": 53,
+    "name": "Amplifier, Physiological Signal",
+    "specialty": "Neurology",
+    "regulation": "882.1835",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWM": {
+    "devices": 105,
+    "name": "Device, Monitoring, Intracranial Pressure",
+    "specialty": "Neurology",
+    "regulation": "882.1620",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWN": {
+    "devices": 59,
+    "name": "Nystagmograph",
+    "specialty": "Neurology",
+    "regulation": "882.1460",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWO": {
+    "devices": 42,
+    "name": "Plate, Cranioplasty, Preformed, Alterable",
+    "specialty": "Neurology",
+    "regulation": "882.5320",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWQ": {
+    "devices": 189,
+    "name": "Full-Montage Standard Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWS": {
+    "devices": 15,
+    "name": "Analyzer, Spectrum, Electroencephalogram Signal",
+    "specialty": "Neurology",
+    "regulation": "882.1420",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWX": {
+    "devices": 4,
+    "name": "Fork, Tuning",
+    "specialty": "Neurology",
+    "regulation": "882.1525",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWY": {
+    "devices": 5,
+    "name": "Pinwheel",
+    "specialty": "Neurology",
+    "regulation": "882.1750",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GWZ": {
+    "devices": 11,
+    "name": "Percussor",
+    "specialty": "Neurology",
+    "regulation": "882.1700",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXB": {
+    "devices": 7,
+    "name": "Esthesiometer",
+    "specialty": "Neurology",
+    "regulation": "882.1500",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXD": {
+    "devices": 37,
+    "name": "Generator, Lesion, Radiofrequency",
+    "specialty": "Neurology",
+    "regulation": "882.4400",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXE": {
+    "devices": 1,
+    "name": "Leukotome",
+    "specialty": "Neurology",
+    "regulation": "882.4600",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXH": {
+    "devices": 23,
+    "name": "Device, Surgical, Cryogenic",
+    "specialty": "Neurology",
+    "regulation": "882.4250",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXI": {
+    "devices": 65,
+    "name": "Probe, Radiofrequency Lesion",
+    "specialty": "Neurology",
+    "regulation": "882.4725",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXN": {
+    "devices": 55,
+    "name": "Plate, Cranioplasty, Preformed, Non-Alterable",
+    "specialty": "Neurology",
+    "regulation": "882.5330",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXO": {
+    "devices": 2,
+    "name": "Strip, Craniosynostosis, Preformed",
+    "specialty": "Neurology",
+    "regulation": "882.5900",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXP": {
+    "devices": 44,
+    "name": "Methyl Methacrylate For Cranioplasty",
+    "specialty": "Neurology",
+    "regulation": "882.5300",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXQ": {
+    "devices": 42,
+    "name": "Dura Substitute",
+    "specialty": "Neurology",
+    "regulation": "882.5910",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXR": {
+    "devices": 29,
+    "name": "Cover, Burr Hole",
+    "specialty": "Neurology",
+    "regulation": "882.5250",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXW": {
+    "devices": 7,
+    "name": "Echoencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1240",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXX": {
+    "devices": 3,
+    "name": "Block, Test, Ultrasonic Scanner Calibration",
+    "specialty": "Neurology",
+    "regulation": "882.1925",
+    "fdaClass": "1",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "images"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXY": {
+    "devices": 434,
+    "name": "Electrode, Cutaneous",
+    "specialty": "Neurology",
+    "regulation": "882.1320",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GXZ": {
+    "devices": 53,
+    "name": "Electrode, Needle",
+    "specialty": "Neurology",
+    "regulation": "882.1350",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYA": {
+    "devices": 5,
+    "name": "Tester, Electrode/Lead, Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1410",
+    "fdaClass": "1",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYB": {
+    "devices": 67,
+    "name": "Media, Electroconductive",
+    "specialty": "Neurology",
+    "regulation": "882.1275",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYC": {
+    "devices": 32,
+    "name": "Electrode, Cortical",
+    "specialty": "Neurology",
+    "regulation": "882.1310",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYD": {
+    "devices": 13,
+    "name": "Transducer, Tremor",
+    "specialty": "Neurology",
+    "regulation": "882.1950",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "movement_disorders"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYE": {
+    "devices": 20,
+    "name": "Encephalogram Telemetry System",
+    "specialty": "Neurology",
+    "regulation": "882.1855",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GYK": {
+    "devices": 13,
+    "name": "Instrument, Shunt System Implantation",
+    "specialty": "Neurology",
+    "regulation": "882.4545",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZB": {
+    "devices": 137,
+    "name": "Stimulator, Spinal-Cord, Implanted (Pain Relief)",
+    "specialty": "Neurology",
+    "regulation": "882.5880",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZC": {
+    "devices": 6,
+    "name": "Stimulator, Neuromuscular, Implanted",
+    "specialty": "Neurology",
+    "regulation": "882.5860",
+    "fdaClass": "3",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZE": {
+    "devices": 10,
+    "name": "Implanted Diaphragmatic/Phrenic Nerve Stimulator",
+    "specialty": "Neurology",
+    "regulation": "882.5830",
+    "fdaClass": "3",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": [
+        "autonomic_organ"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZF": {
+    "devices": 24,
+    "name": "Stimulator, Peripheral Nerve, Implanted (Pain Relief)",
+    "specialty": "Neurology",
+    "regulation": "882.5870",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZI": {
+    "devices": 60,
+    "name": "Stimulator, Neuromuscular, External Functional",
+    "specialty": "Neurology",
+    "regulation": "882.5810",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZJ": {
+    "devices": 603,
+    "name": "Stimulator, Nerve, Transcutaneous, For Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZK": {
+    "devices": 2,
+    "name": "Electrode, Nasopharyngeal",
+    "specialty": "Neurology",
+    "regulation": "882.1340",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZL": {
+    "devices": 58,
+    "name": "Electrode, Depth",
+    "specialty": "Neurology",
+    "regulation": "882.1330",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZO": {
+    "devices": 26,
+    "name": "Device, Galvanic Skin Response Measurement",
+    "specialty": "Neurology",
+    "regulation": "882.1540",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZP": {
+    "devices": 2,
+    "name": "Stimulator, Mechanical, Evoked Response",
+    "specialty": "Neurology",
+    "regulation": "882.1880",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates",
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZQ": {
+    "devices": 1,
+    "name": "Instrument, Dowel Cutting",
+    "specialty": "Neurology",
+    "regulation": "882.4275",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZT": {
+    "devices": 42,
+    "name": "Retractor, Self-Retaining, For Neurosurgery",
+    "specialty": "Neurology",
+    "regulation": "882.4800",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "GZX": {
+    "devices": 13,
+    "name": "Instrument, Microsurgical",
+    "specialty": "Neurology",
+    "regulation": "882.4525",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HAD": {
+    "devices": 3,
+    "name": "Rongeur, Powered",
+    "specialty": "Neurology",
+    "regulation": "882.4845",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HAE": {
+    "devices": 36,
+    "name": "Rongeur, Manual",
+    "specialty": "Neurology",
+    "regulation": "882.4840",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HAO": {
+    "devices": 34,
+    "name": "Instrument, Surgical, Non-Powered",
+    "specialty": "Neurology",
+    "regulation": "882.4535",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HAW": {
+    "devices": 415,
+    "name": "Neurological Stereotaxic Instrument",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HAX": {
+    "devices": 20,
+    "name": "Tong, Skull For Traction",
+    "specialty": "Neurology",
+    "regulation": "882.5960",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBA": {
+    "devices": 23,
+    "name": "Neurosurgical Paddie",
+    "specialty": "Neurology",
+    "regulation": "882.4700",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBB": {
+    "devices": 27,
+    "name": "Motor, Drill, Pneumatic",
+    "specialty": "Neurology",
+    "regulation": "882.4370",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBC": {
+    "devices": 26,
+    "name": "Motor, Drill, Electric",
+    "specialty": "Neurology",
+    "regulation": "882.4360",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBE": {
+    "devices": 63,
+    "name": "Drills, Burrs, Trephines & Accessories (Simple, Powered)",
+    "specialty": "Neurology",
+    "regulation": "882.4310",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBF": {
+    "devices": 17,
+    "name": "Drills, Burrs, Trephines & Accessories (Compound, Powered)",
+    "specialty": "Neurology",
+    "regulation": "882.4305",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBG": {
+    "devices": 17,
+    "name": "Drills, Burrs, Trephines & Accessories (Manual)",
+    "specialty": "Neurology",
+    "regulation": "882.4300",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBL": {
+    "devices": 48,
+    "name": "Holder, Head, Neurosurgical (Skull Clamp)",
+    "specialty": "Neurology",
+    "regulation": "882.4460",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBM": {
+    "devices": 3,
+    "name": "Headrest, Neurosurgical",
+    "specialty": "Neurology",
+    "regulation": "882.4440",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBN": {
+    "devices": 4,
+    "name": "Chair, Neurosurgical",
+    "specialty": "Neurology",
+    "regulation": "882.4125",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBO": {
+    "devices": 10,
+    "name": "Clip, Scalp",
+    "specialty": "Neurology",
+    "regulation": "882.4150",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBR": {
+    "devices": 1,
+    "name": "Rack, Clip",
+    "specialty": "Neurology",
+    "regulation": "882.4215",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HBW": {
+    "devices": 7,
+    "name": "Fastener, Plate, Cranioplasty",
+    "specialty": "Neurology",
+    "regulation": "882.5360",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCA": {
+    "devices": 10,
+    "name": "Catheter, Ventricular",
+    "specialty": "Neurology",
+    "regulation": "882.4100",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "minimally_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCB": {
+    "devices": 6,
+    "name": "Device, Aversive Conditioning",
+    "specialty": "Neurology",
+    "regulation": "882.5235",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCC": {
+    "devices": 172,
+    "name": "Device, Biofeedback",
+    "specialty": "Neurology",
+    "regulation": "882.5050",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCD": {
+    "devices": 3,
+    "name": "Cannula, Ventricular",
+    "specialty": "Neurology",
+    "regulation": "882.4060",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCE": {
+    "devices": 2,
+    "name": "Clamp, Carotid Artery",
+    "specialty": "Neurology",
+    "regulation": "882.5175",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCG": {
+    "devices": 176,
+    "name": "Device, Neurovascular Embolization",
+    "specialty": "Neurology",
+    "regulation": "882.5950",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCH": {
+    "devices": 36,
+    "name": "Clip, Aneurysm",
+    "specialty": "Neurology",
+    "regulation": "882.5200",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCI": {
+    "devices": 14,
+    "name": "Applier, Aneurysm Clip",
+    "specialty": "Neurology",
+    "regulation": "882.4175",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCJ": {
+    "devices": 2,
+    "name": "Device, Skin Potential Measurement",
+    "specialty": "Neurology",
+    "regulation": "882.1560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "HCS": {
+    "devices": 8,
+    "name": "Device, Temperature Measurement, Direct Contact, Powered",
+    "specialty": "Neurology",
+    "regulation": "882.1570",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXE": {
+    "devices": 27,
+    "name": "Device, Nerve Conduction Velocity Measurement",
+    "specialty": "Neurology",
+    "regulation": "882.1550",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXG": {
+    "devices": 258,
+    "name": "Shunt, Central Nervous System And Components",
+    "specialty": "Neurology",
+    "regulation": "882.5550",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXH": {
+    "devices": 3,
+    "name": "Methyl Methacrylate For Aneurysmorrhaphy",
+    "specialty": "Neurology",
+    "regulation": "882.5030",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXI": {
+    "devices": 39,
+    "name": "Cuff, Nerve",
+    "specialty": "Neurology",
+    "regulation": "882.5275",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXK": {
+    "devices": 2,
+    "name": "Cranial Electrotherapy Stimulator To Treat Depression",
+    "specialty": "Neurology",
+    "regulation": "882.5800",
+    "fdaClass": "3",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "JXL": {
+    "devices": 28,
+    "name": "Block, Bite",
+    "specialty": "Neurology",
+    "regulation": "882.5070",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LEL": {
+    "devices": 19,
+    "name": "Device, Sleep Assessment",
+    "specialty": "Neurology",
+    "regulation": "882.5050",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LEM": {
+    "devices": 2,
+    "name": "Human Lyophilized Dura Mater",
+    "specialty": "Neurology",
+    "regulation": "882.5975",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LHG": {
+    "devices": 1,
+    "name": "Electrode, Spinal Epidural",
+    "specialty": "Neurology",
+    "regulation": "882.5880",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LIH": {
+    "devices": 73,
+    "name": "Interferential Current Therapy",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LKG": {
+    "devices": 8,
+    "name": "Port & Catheter, Implanted, Subcutaneous, Intraventricular",
+    "specialty": "Neurology",
+    "regulation": "882.5550",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "implanted_non_penetrating",
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LLN": {
+    "devices": 13,
+    "name": "Device, Vibration Threshold Measurement",
+    "specialty": "Neurology",
+    "regulation": "882.1200",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "LQW": {
+    "devices": 3,
+    "name": "Test, Temperature Discrimination",
+    "specialty": "Neurology",
+    "regulation": "882.1200",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "MVA": {
+    "devices": 43,
+    "name": "Orthosis, Cranial",
+    "specialty": "Neurology",
+    "regulation": "882.5970",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "MYU": {
+    "devices": 6,
+    "name": "Accessory, Barium Sulfate, Methyl Methacrylate For Cranioplasty",
+    "specialty": "Neurology",
+    "regulation": "882.5300",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "MZQ": {
+    "devices": 2,
+    "name": "Balloon, Detachable, For Neurovascular Occlusion",
+    "specialty": "Neurology",
+    "regulation": "882.5950",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NCG": {
+    "devices": 3,
+    "name": "Neuropsychiatric Interpretative Electroencephalograph Assessment Aid",
+    "specialty": "Neurology",
+    "regulation": "882.1440",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics",
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NFO": {
+    "devices": 78,
+    "name": "Stimulator, Transcutaneous Electrical, Aesthetic Purposes",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NHC": {
+    "devices": 3,
+    "name": "Catheter, Ventricular (Containing Antibiotic Or Antimicrobial Agents)",
+    "specialty": "Neurology",
+    "regulation": "882.4100",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "minimally_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NHI": {
+    "devices": 11,
+    "name": "Stimulator, Nerve, Electrical, Percutaneous (Pens), For Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NLN": {
+    "devices": 1,
+    "name": "Drills, Burrs, Trephines And Accessories (Simple Powered), Reprocessed",
+    "specialty": "Neurology",
+    "regulation": "882.4310",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NTU": {
+    "devices": 3,
+    "name": "Evoked Potential Stimulator, Thermal",
+    "specialty": "Neurology",
+    "regulation": "882.1870",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "pain",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NUH": {
+    "devices": 224,
+    "name": "Stimulator, Nerve, Transcutaneous, Over-The-Counter",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "NYN": {
+    "devices": 8,
+    "name": "Stimulator, Electrical, Transcutaneous, For Arthritis",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OAN": {
+    "devices": 20,
+    "name": "Orthosis, Cranial, Laser Scan",
+    "specialty": "Neurology",
+    "regulation": "882.5970",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OBP": {
+    "devices": 58,
+    "name": "Transcranial Magnetic Stimulator",
+    "specialty": "Neurology",
+    "regulation": "882.5805",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OBV": {
+    "devices": 1,
+    "name": "Eating Disorder Conditioning Tool",
+    "specialty": "Neurology",
+    "regulation": "882.5060",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OCF": {
+    "devices": 1,
+    "name": "Stimulator, Nerve, Electrical, Transcutaneous, Limited Output, Arthritis Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OEW": {
+    "devices": 4,
+    "name": "Tracking, Soft Tissue, Intraoperative",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OJP": {
+    "devices": 4,
+    "name": "Orthopedic Computer Controlled Surgical System",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OKP": {
+    "devices": 6,
+    "name": "Transcranial Magnetic Stimulator For The Treatment Of Migraine Headache",
+    "specialty": "Neurology",
+    "regulation": "882.5808",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLO": {
+    "devices": 407,
+    "name": "Orthopedic Stereotaxic Instrument",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLT": {
+    "devices": 54,
+    "name": "Non-Normalizing Quantitative Electroencephalograph Software",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLU": {
+    "devices": 13,
+    "name": "Normalizing Quantitative Electroencephalograph Software",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records",
+        "decodes"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLV": {
+    "devices": 64,
+    "name": "Standard Polysomnograph With Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLW": {
+    "devices": 38,
+    "name": "Index-Generating Electroencephalograph Software",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records",
+        "decodes"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLX": {
+    "devices": 24,
+    "name": "Source Localization Software For Electroencephalograph Or Magnetoencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records",
+        "images"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLY": {
+    "devices": 6,
+    "name": "Magnetoencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OLZ": {
+    "devices": 36,
+    "name": "Automatic Event Detection Software For Polysomnograph With Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OMA": {
+    "devices": 16,
+    "name": "Amplitude-Integrated Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OMB": {
+    "devices": 41,
+    "name": "Automatic Event Detection Software For Full-Montage Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "epilepsy",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OMC": {
+    "devices": 29,
+    "name": "Reduced- Montage Standard Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "ONA": {
+    "devices": 4,
+    "name": "Computer Assisted Hair Harvesting System",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "ONN": {
+    "devices": 17,
+    "name": "Intraoperative Orthopedic Joint Assessment Aid",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "ORR": {
+    "devices": 4,
+    "name": "Neurological Stereotaxic Instrument, Real-Time Intraoperative Mri",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "ORT": {
+    "devices": 1,
+    "name": "Burst Suppression Detection Software For Electroencephalograph",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OSF": {
+    "devices": 3,
+    "name": "Patient Specific Manual Orthopedic Stereotaxic System",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "OSG": {
+    "devices": 2,
+    "name": "Piezo-Electric Stimulator For Relief Of Mosquito Bite Itch",
+    "specialty": "Neurology",
+    "regulation": "882.5894",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PBJ": {
+    "devices": 6,
+    "name": "Cranial Distraction System",
+    "specialty": "Neurology",
+    "regulation": "882.5330",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PCB": {
+    "devices": 2,
+    "name": "External Cerebrospinal Fluid (Csf) Diversion",
+    "specialty": "Neurology",
+    "regulation": "882.5560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PCC": {
+    "devices": 17,
+    "name": "Stimulator, Nerve, Electrical, Transcutaneous, For Migraine",
+    "specialty": "Neurology",
+    "regulation": "882.5891",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PGW": {
+    "devices": 37,
+    "name": "Ear, Nose, And Throat Stereotaxic Instrument",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PIW": {
+    "devices": 9,
+    "name": "Brain Injury Adjunctive Interpretive Electroencephalograph Assessment Aid",
+    "specialty": "Neurology",
+    "regulation": "882.1450",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PJN": {
+    "devices": 2,
+    "name": "Filler, Bone Void, Non-Alterable Compound For Cranioplasty",
+    "specialty": "Neurology",
+    "regulation": "882.5330",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "images"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PKQ": {
+    "devices": 3,
+    "name": "Computerized Cognitive Assessment Aid",
+    "specialty": "Neurology",
+    "regulation": "882.1470",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PKR": {
+    "devices": 7,
+    "name": "Non-Invasive Vagus Nerve Stimulator - Headache",
+    "specialty": "Neurology",
+    "regulation": "882.5892",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "autonomic_organ"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PLU": {
+    "devices": 1,
+    "name": "Thermal System For Insomnia",
+    "specialty": "Neurology",
+    "regulation": "882.5700",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PNA": {
+    "devices": 1,
+    "name": "Evoked Photon Image Capture Device",
+    "specialty": "Neurology",
+    "regulation": "882.1561",
+    "fdaClass": "1",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "POL": {
+    "devices": 18,
+    "name": "Neurovascular Mechanical Thrombectomy Device For Acute Ischemic Stroke Treatment",
+    "specialty": "Neurology",
+    "regulation": "882.5600",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "minimally_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "POM": {
+    "devices": 8,
+    "name": "Computerized Cognitive Assessment Aid For Concussion",
+    "specialty": "Neurology",
+    "regulation": "882.1471",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "POP": {
+    "devices": 2,
+    "name": "Cranial Motion Measurement Device",
+    "specialty": "Neurology",
+    "regulation": "882.1630",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "POS": {
+    "devices": 9,
+    "name": "Physiological Signal Based Seizure Monitoring System",
+    "specialty": "Neurology",
+    "regulation": "882.1580",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "epilepsy",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PPT": {
+    "devices": 4,
+    "name": "Cranial Surgical Planning And Instrument Guides",
+    "specialty": "Neurology",
+    "regulation": "882.4310",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PUU": {
+    "devices": 1,
+    "name": "Temporary Coil Embolization Assist Device",
+    "specialty": "Neurology",
+    "regulation": "882.5955",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "implanted_non_penetrating",
+        "minimally_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PWE": {
+    "devices": 2,
+    "name": "Computerized Behavioral Therapy Device For Substance Use Disorders",
+    "specialty": "Neurology",
+    "regulation": "882.5801",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "PZR": {
+    "devices": 8,
+    "name": "Percutaneous Nerve Stimulator For Opioid Withdrawal",
+    "specialty": "Neurology",
+    "regulation": "882.5896",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QAR": {
+    "devices": 1,
+    "name": "Thermal Vestibular Stimulator For Headache",
+    "specialty": "Neurology",
+    "regulation": "882.5893",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QBC": {
+    "devices": 9,
+    "name": "External Upper Limb Tremor Stimulator",
+    "specialty": "Neurology",
+    "regulation": "882.5897",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "movement_disorders",
+        "movement_restoration"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QCF": {
+    "devices": 2,
+    "name": "Electrical Tongue Stimulator To Treat Motor Deficits",
+    "specialty": "Neurology",
+    "regulation": "882.5889",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QCI": {
+    "devices": 9,
+    "name": "Transcranial Magnetic Stimulation System For Obsessive-Compulsive Disorder",
+    "specialty": "Neurology",
+    "regulation": "882.5802",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QEA": {
+    "devices": 7,
+    "name": "Brain Injury Adjunctive Interpretive Oculomotor Assessment Aid",
+    "specialty": "Neurology",
+    "regulation": "882.1455",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QFF": {
+    "devices": 1,
+    "name": "Electromechanical Arm For A Transcranial Magnetic Stimulation System",
+    "specialty": "Neurology",
+    "regulation": "882.5805",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QFX": {
+    "devices": 5,
+    "name": "Diagnostic Neurosurgical Microscope Filter",
+    "specialty": "Neurology",
+    "regulation": "882.4950",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QGH": {
+    "devices": 9,
+    "name": "Electroconvulsive Therapy Device For Catatonia, Major Depressive Disorder, And Bipolar Disorder",
+    "specialty": "Neurology",
+    "regulation": "882.5940",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QGL": {
+    "devices": 5,
+    "name": "Transcutaneous Nerve Stimulator For Adhd",
+    "specialty": "Neurology",
+    "regulation": "882.5898",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QGT": {
+    "devices": 7,
+    "name": "Distal Transcutaneous Electrical Stimulator For Treatment Of Acute Migraine",
+    "specialty": "Neurology",
+    "regulation": "882.5899",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": [
+        "movement_restoration"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QJQ": {
+    "devices": 19,
+    "name": "Cranial Electrotherapy Stimulator To Treat Insomnia And/Or Anxiety",
+    "specialty": "Neurology",
+    "regulation": "882.5800",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QMD": {
+    "devices": 2,
+    "name": "Transcranial Magnetic Stimulation System For Smoking Cessation",
+    "specialty": "Neurology",
+    "regulation": "882.5802",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QMZ": {
+    "devices": 1,
+    "name": "Digital Therapy Device To Reduce Sleep Disturbance For Psychiatric Conditions",
+    "specialty": "Neurology",
+    "regulation": "882.5705",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QNX": {
+    "devices": 1,
+    "name": "External Compression Device For Internal Jugular Vein Compression",
+    "specialty": "Neurology",
+    "regulation": "890.3050",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QOL": {
+    "devices": 1,
+    "name": "Electroencephalography (Eeg)-Driven Upper Extremity Powered Exerciser",
+    "specialty": "Neurology",
+    "regulation": "890.5420",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "rehabilitation",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QPF": {
+    "devices": 6,
+    "name": "Pediatric Autism Spectrum Disorder Diagnosis Aid",
+    "specialty": "Neurology",
+    "regulation": "882.1491",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QPL": {
+    "devices": 6,
+    "name": "Electromagnetic Stimulator, Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "882.5890",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QQC": {
+    "devices": 3,
+    "name": "Brain Stimulation Programming Planning Software.",
+    "specialty": "Neurology",
+    "regulation": "882.5855",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QRA": {
+    "devices": 6,
+    "name": "Virtual Reality Behavioral Therapy Device For Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "890.5800",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QRI": {
+    "devices": 1,
+    "name": "Surgical Planning Software For Neurological Stereotaxic Instruments",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QSL": {
+    "devices": 1,
+    "name": "Brain Temperature Measurement System",
+    "specialty": "Neurology",
+    "regulation": "882.1565",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QSQ": {
+    "devices": 1,
+    "name": "Transcutaneous Electrical Nerve Stimulator To Treat Fibromyalgia Symptoms",
+    "specialty": "Neurology",
+    "regulation": "882.5888",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QVO": {
+    "devices": 2,
+    "name": "Computerized Behavioral Therapy Device For Insomnia",
+    "specialty": "Neurology",
+    "regulation": "882.5801",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QWD": {
+    "devices": 1,
+    "name": "Stimulator, Nerve, For Restless Legs Syndrome",
+    "specialty": "Neurology",
+    "regulation": "882.5887",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QWI": {
+    "devices": 1,
+    "name": "Computerized Behavioral Therapy Device For The Treatment Of Fibromyalgia Symptoms",
+    "specialty": "Neurology",
+    "regulation": "882.5804",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "QWT": {
+    "devices": 1,
+    "name": "Prognostic Assessment Software Of Mild Cognitive Impairment",
+    "specialty": "Neurology",
+    "regulation": "882.1454",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SAP": {
+    "devices": 2,
+    "name": "Computerized Behavioral Therapy Device For Depressive Disorders.",
+    "specialty": "Neurology",
+    "regulation": "882.5801",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SBF": {
+    "devices": 38,
+    "name": "Orthopedic Augmented Reality",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SBG": {
+    "devices": 2,
+    "name": "In Situ Polymerizing Peripheral Nerve Cap",
+    "specialty": "Neurology",
+    "regulation": "882.5260",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SCN": {
+    "devices": 1,
+    "name": "Temporarily Implanted Peripheral Nerve Stimulation System For Sustained Pain Relief",
+    "specialty": "Neurology",
+    "regulation": "882.5870",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "implanted_non_penetrating",
+        "minimally_invasive",
+        "non_invasive"
+      ],
+      "application": [
+        "pain"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SCP": {
+    "devices": 1,
+    "name": "Computerized Behavioral Therapy Device For Anxiety Disorders",
+    "specialty": "Neurology",
+    "regulation": "882.5801",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SDG": {
+    "devices": 1,
+    "name": "Brain Intraparenchymal Infusion Cannula",
+    "specialty": "Neurology",
+    "regulation": "882.4110",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SDX": {
+    "devices": 1,
+    "name": "Neuromuscular Stimulator And Exercise Evaluation System",
+    "specialty": "Neurology",
+    "regulation": "882.1871",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SEE": {
+    "devices": 1,
+    "name": "Computerized Behavioral Therapy Device For Migraine",
+    "specialty": "Neurology",
+    "regulation": "882.5806",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SEM": {
+    "devices": 2,
+    "name": "Sub-Scalp Implanted Electroencephalogram System For Remote Patient Monitoring",
+    "specialty": "Neurology",
+    "regulation": "882.1360",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [
+        "implanted_non_penetrating",
+        "non_invasive"
+      ],
+      "application": [
+        "epilepsy",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SEN": {
+    "devices": 1,
+    "name": "Biofeedback For Adjunctive Treatment Of Symptoms Associated With Stress And Anxiety",
+    "specialty": "Neurology",
+    "regulation": "882.5050",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SFD": {
+    "devices": 1,
+    "name": "In Situ Polymerizing Peripheral Nerve Repair Device",
+    "specialty": "Neurology",
+    "regulation": "882.5270",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SFK": {
+    "devices": 1,
+    "name": "Respiratory Effort Belt For Polysomnography",
+    "specialty": "Neurology",
+    "regulation": "882.1400",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "records"
+      ],
+      "access": [],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SFN": {
+    "devices": 1,
+    "name": "Non-Invasive Evoked Response Brain Stimulator",
+    "specialty": "Neurology",
+    "regulation": "882.1860",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates",
+        "records"
+      ],
+      "access": [
+        "implanted_penetrating",
+        "non_invasive"
+      ],
+      "application": [
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SGB": {
+    "devices": 1,
+    "name": "Pain Assessment Software In Non-Communicative Adults",
+    "specialty": "Neurology",
+    "regulation": "882.1472",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "pain",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SGE": {
+    "devices": 1,
+    "name": "Extracranial Positional System For A Transcranial Magnetic Stimulation System",
+    "specialty": "Neurology",
+    "regulation": "882.4560",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SGN": {
+    "devices": 1,
+    "name": "High Intensity Focused Ultrasound System For Peripheral Neural Tissue Ablation",
+    "specialty": "Neurology",
+    "regulation": "882.4420",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SHO": {
+    "devices": 1,
+    "name": "Parkinsonian Syndrome Diagnostic Aid",
+    "specialty": "Neurology",
+    "regulation": "882.2000",
+    "fdaClass": "2",
+    "inScope": false,
+    "facets": {
+      "function": [],
+      "access": [],
+      "application": [
+        "movement_disorders",
+        "diagnostics"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SHX": {
+    "devices": 1,
+    "name": "Transcranial Nerve Stimulation Device For The Treatment Of Post-Traumatic Stress Disorder Associated Symptoms",
+    "specialty": "Neurology",
+    "regulation": "882.5807",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": []
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  },
+  "SIG": {
+    "devices": 1,
+    "name": "Transcranial Magnetic Stimulation System For Post Traumatic Stress Disorder (Ptsd)",
+    "specialty": "Neurology",
+    "regulation": "882.5802",
+    "fdaClass": "2",
+    "inScope": true,
+    "facets": {
+      "function": [
+        "stimulates"
+      ],
+      "access": [
+        "non_invasive"
+      ],
+      "application": [
+        "psychiatric"
+      ]
+    },
+    "review": "DRAFT — confirm once, then authoritative"
+  }
+}

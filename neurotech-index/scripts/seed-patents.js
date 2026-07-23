@@ -8,6 +8,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
+import { classify } from '../src/lib/classify.js'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 const sleep = ms => new Promise(r => setTimeout(r, ms))
@@ -48,7 +49,7 @@ function toRow(item) {
   const num = p.publication_number
   if (!num) return null
   const title = stripTags(p.title)
-  return {
+  const row = {
     patent_number: num,
     title: title || '(untitled)',
     abstract: stripTags(p.snippet) || null,
@@ -59,6 +60,7 @@ function toRow(item) {
     url: `https://patents.google.com/patent/${num}`,
     source: 'google-patents',
   }
+  return { ...row, ...classify(row, 'patents') }
 }
 
 const seen = new Set()

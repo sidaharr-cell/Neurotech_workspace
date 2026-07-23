@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, existsSync, realpathSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
+import { classify } from '../src/lib/classify.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -1003,7 +1004,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
     const rankScore = isResearch ? researchScore(item)
       : base.entry_type === 'news' ? mediaScore(item)
       : computeRank(item)
-    return {
+    const row = {
       ...base,
       metadata: {
         ...base.metadata,
@@ -1015,6 +1016,11 @@ async function syncToSupabase(pubmed, arxiv, news) {
         significance: item.aiSignificance || '',
       },
     }
+    // Facet columns so feed items are filterable like every other content type.
+    // Papers/preprints classify from title+summary here; the fuller papers-table
+    // rows get MeSH-refined facets separately.
+    const kind = base.entry_type === 'news' ? 'news' : 'papers'
+    return { ...row, ...classify(row, kind) }
   }
 
   // Build combined feed, sorted by the composite rank (not the raw AI score).

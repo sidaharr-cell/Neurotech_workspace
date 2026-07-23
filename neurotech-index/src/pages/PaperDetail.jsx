@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, FileQuestion } from 'lucide-react'
 import { getPaperByPmid } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
-import { classesForEntity } from '../lib/taxonomy'
+import { cardBadges } from '../lib/facets'
 
 export default function PaperDetail() {
   const { pmid } = useParams()
@@ -21,7 +21,7 @@ export default function PaperDetail() {
   if (!paper) return <div className="max-w-prose mx-auto px-4 py-16"><EmptyState icon={FileQuestion} title="Paper not found">This paper isn’t in the index.</EmptyState></div>
 
   const authors = Array.isArray(paper.authors) ? paper.authors.join(', ') : paper.authors
-  const classes = classesForEntity(paper)
+  const badges = cardBadges(paper, 4)
 
   return (
     <article className="max-w-prose mx-auto px-4 sm:px-6 py-10">
@@ -31,8 +31,8 @@ export default function PaperDetail() {
 
       <div className="flex items-center gap-3 mb-3 flex-wrap">
         <Kicker>Research</Kicker>
-        {classes.map(c => (
-          <span key={c.id} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{c.short}</span>
+        {badges.map(b => (
+          <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
         ))}
       </div>
 
