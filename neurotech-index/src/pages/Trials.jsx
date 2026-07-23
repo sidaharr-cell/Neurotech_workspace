@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
 import { searchTrials } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
-import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
+import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
 
 const PAGE_SIZE = 20
 
@@ -42,7 +42,7 @@ function TrialRow({ trial }) {
 export default function Trials() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [phase, setPhase] = useState(null)
   const [status, setStatus] = useState(null)
@@ -57,13 +57,13 @@ export default function Trials() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [cls, recency, phase, status, sort])
+  useEffect(() => { setPage(0) }, [facets, recency, phase, status, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    setResult(await searchTrials({ query, deviceClass: cls, recency, phase, status, sort, page, pageSize: PAGE_SIZE }))
+    setResult(await searchTrials({ query, facets, recency, phase, status, sort, page, pageSize: PAGE_SIZE }))
     setLoading(false)
-  }, [query, cls, recency, phase, status, sort, page])
+  }, [query, facets, recency, phase, status, sort, page])
   useEffect(() => { load() }, [load])
 
   const pages = Math.ceil(total / PAGE_SIZE)
@@ -84,7 +84,7 @@ export default function Trials() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FacetFilters facets={facets} onChange={setFacets} />
         <FilterSelect label="Phase" value={phase} onChange={setPhase} options={TRIAL_PHASE} allLabel="All phases" />
         <FilterSelect label="Status" value={status} onChange={setStatus} options={TRIAL_STATUS} allLabel="Any status" />
         <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
@@ -94,7 +94,7 @@ export default function Trials() {
       {loading ? (
         <Loader />
       ) : rows.length === 0 ? (
-        <EmptyState icon={FlaskConical} title="No trials found">Try different terms or clear the device-class filter.</EmptyState>
+        <EmptyState icon={FlaskConical} title="No trials found">Try different terms or clear the filters.</EmptyState>
       ) : (
         <>
           <div className="max-w-4xl divide-rule">

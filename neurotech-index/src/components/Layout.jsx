@@ -135,9 +135,6 @@ function Footer() {
           <p className="text-[12px] text-muted font-sans text-center">
             An open, AI-curated index of neurotechnology · Not affiliated with any institution
           </p>
-          <div className="flex items-center gap-5 text-[12px] font-sans text-muted">
-            <Link to="/how-it-works" className="hover:text-accent">How NeuroBase works</Link>
-          </div>
         </div>
       </div>
     </footer>

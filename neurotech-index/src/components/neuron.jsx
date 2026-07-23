@@ -16,16 +16,12 @@ function rng(seedStr = '') {
   }
 }
 
-// Device-class → soft tint (kept muted/editorial)
+// Facet function → soft tint (kept muted/editorial)
 const TINTS = {
-  recording: ['#EAF2FA', '#0B5FA6'],
-  stimulation: ['#F3EEF9', '#6D4AA6'],
-  interface: ['#EAF4F1', '#0E7C66'],
-  sensory: ['#FBF0EA', '#B45A2B'],
-  motor: ['#FBEFF2', '#B0325A'],
-  'closed-loop': ['#EEF3EC', '#4B7A3A'],
-  cognitive: ['#F4F1E9', '#8A6D2F'],
-  imaging: ['#ECF0F6', '#3A5687'],
+  records: ['#EAF2FA', '#0B5FA6'],
+  stimulates: ['#F3EEF9', '#6D4AA6'],
+  decodes: ['#EAF4F1', '#0E7C66'],
+  images: ['#ECF0F6', '#3A5687'],
   default: ['#EEF1F5', '#3D5A80'],
 }
 

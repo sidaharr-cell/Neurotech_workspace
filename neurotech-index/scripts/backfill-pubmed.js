@@ -11,6 +11,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { parseStringPromise } from 'xml2js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
+import { classify } from '../src/lib/classify.js'
 
 const EUTILS = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils'
 const UA = 'Mozilla/5.0 (compatible; NeuroBaseBot/1.0)'
@@ -89,13 +90,16 @@ async function efetchByIds(ids) {
       const year = art?.Journal?.[0]?.JournalIssue?.[0]?.PubDate?.[0]?.Year?.[0]
         || ml?.DateCompleted?.[0]?.Year?.[0] || ''
       const doi = (art?.ELocationID || []).find(e => e.$?.EIdType === 'doi')?._ || null
-      rows.push({
+      const row = {
         title, authors, journal, year: String(year), doi, pubmed_id: pmid,
         url: doi ? `https://doi.org/${doi}` : `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`,
         abstract: abstract || null,
         tags: deriveTags(`${title} ${abstract}`),
         source: 'pubmed',
-      })
+      }
+      // Classify at ingest (keyword-based; MeSH enrichment via backfill-mesh.js
+      // then apply-facets.js refines these once headings are fetched).
+      rows.push({ ...row, ...classify(row, 'papers') })
     } catch { /* skip malformed */ }
   }
   return rows

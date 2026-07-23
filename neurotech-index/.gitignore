@@ -27,3 +27,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# NeuroBase — local data artifacts (regenerable / recoverable, not source)
+mesh-cache.ndjson
+purged-devices-*.json
+pipeline.log
+pipeline-*.log

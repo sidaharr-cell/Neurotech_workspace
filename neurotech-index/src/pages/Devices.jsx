@@ -3,7 +3,7 @@ import { Search, Cpu, ScrollText, ExternalLink, ChevronLeft, ChevronRight } from
 import { searchDevices, searchPatents } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
-import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
+import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
 
 const PAGE_SIZE = 20
 const KINDS = [
@@ -35,7 +35,7 @@ export default function Devices() {
   const [kind, setKind] = useState('device')
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [fda, setFda] = useState(null)
   const [sort, setSort] = useState('newest')
@@ -51,15 +51,15 @@ export default function Devices() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [cls, recency, fda, sort, kind])
+  useEffect(() => { setPage(0) }, [facets, recency, fda, sort, kind])
 
   const load = useCallback(async () => {
     setLoading(true)
     const res = isPatent
-      ? await searchPatents({ query, deviceClass: cls, recency, sort, page, pageSize: PAGE_SIZE })
-      : await searchDevices({ query, deviceClass: cls, recency, fda, sort, page, pageSize: PAGE_SIZE })
+      ? await searchPatents({ query, facets, recency, sort, page, pageSize: PAGE_SIZE })
+      : await searchDevices({ query, facets, recency, fda, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
-  }, [isPatent, query, cls, recency, fda, sort, page])
+  }, [isPatent, query, facets, recency, fda, sort, page])
   useEffect(() => { load() }, [load])
 
   const pages = Math.ceil(total / PAGE_SIZE)
@@ -93,7 +93,7 @@ export default function Devices() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FacetFilters facets={facets} onChange={setFacets} />
         {!isPatent && <FilterSelect label="FDA route" value={fda} onChange={setFda} options={DEVICE_FDA} allLabel="Any route" />}
         <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
         <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
@@ -103,7 +103,7 @@ export default function Devices() {
         <Loader />
       ) : rows.length === 0 ? (
         <EmptyState icon={isPatent ? ScrollText : Cpu} title={`No ${isPatent ? 'patents' : 'devices'} found`}>
-          {isPatent ? 'Patents populate after the backfill runs.' : 'Try different terms or clear the device-class filter.'}
+          {isPatent ? 'Patents populate after the backfill runs.' : 'Try different terms or clear the filters.'}
         </EmptyState>
       ) : (
         <>
