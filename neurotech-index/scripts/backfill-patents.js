@@ -11,6 +11,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
+import { classify } from '../src/lib/classify.js'
 
 const API = 'https://search.patentsview.org/api/v1/patent/'
 const KEY = process.env.PATENTSVIEW_API_KEY
@@ -113,7 +114,7 @@ function toRow(p) {
   const num = p.patent_id
   const assignee = p.assignees?.[0]?.assignee_organization || null
   const cpc = (p.cpc_current || []).map(c => c.cpc_subgroup_id).filter(Boolean)
-  return {
+  const row = {
     patent_number: num,
     title: p.patent_title || '(untitled)',
     abstract: p.patent_abstract || null,
@@ -124,6 +125,7 @@ function toRow(p) {
     url: `https://patents.google.com/patent/${num}`,
     source: 'patentsview',
   }
+  return { ...row, ...classify(row, 'patents') }   // facet_* + in_scope + classifier_version
 }
 
 async function main() {

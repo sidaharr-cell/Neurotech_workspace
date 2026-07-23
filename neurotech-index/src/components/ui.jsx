@@ -1,25 +1,28 @@
 import { Loader2 } from 'lucide-react'
-import { classesForEntity, classShort } from '../lib/taxonomy'
+import { cardBadges } from '../lib/facets'
 
 // Kicker / eyebrow label above a headline
 export function Kicker({ children, className = '' }) {
   return <span className={`kicker ${className}`}>{children}</span>
 }
 
-// Small device-class label(s) derived from an entity
+// Facet badges for an entity, read straight from its stored facet columns.
+// (Kept the old name so callers don't all need touching; it now renders
+// function + application + derived BCI/closed-loop badges.)
 export function DeviceClassLabels({ entity, max = 2 }) {
-  const classes = classesForEntity(entity).slice(0, max)
-  if (!classes.length) return null
+  const badges = cardBadges(entity, max)
+  if (!badges.length) return null
   return (
     <span className="inline-flex flex-wrap gap-x-2 gap-y-0.5">
-      {classes.map(c => (
-        <span key={c.id} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">
-          {c.short}
+      {badges.map(b => (
+        <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">
+          {b}
         </span>
       ))}
     </span>
   )
 }
+export { DeviceClassLabels as FacetLabels }
 
 // Entry-type kicker word (Research / Preprint / News / Device / Company)
 const TYPE_WORD = {
@@ -96,4 +99,3 @@ export function SectionHeading({ kicker, title, sub, right }) {
   )
 }
 
-export { classShort }

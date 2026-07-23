@@ -4,7 +4,7 @@ import { ArrowLeft, Users } from 'lucide-react'
 import { getResearchers, getPapers } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { slugify, buildGraph, papersByAuthor } from '../lib/links'
-import { classesForEntity } from '../lib/taxonomy'
+import { cardBadges } from '../lib/facets'
 
 export default function PersonProfile() {
   const { slug } = useParams()
@@ -27,7 +27,7 @@ export default function PersonProfile() {
   if (loading) return <div className="max-w-prose mx-auto px-4 py-8"><Loader label="Loading profile…" /></div>
   if (!person) return <div className="max-w-prose mx-auto px-4 py-16"><EmptyState icon={Users} title="Profile not found">This person isn’t in the index yet.</EmptyState></div>
 
-  const classes = classesForEntity(person)
+  const badges = cardBadges(person, 6)
 
   return (
     <div className="max-w-prose mx-auto px-4 sm:px-6 py-10">
@@ -42,11 +42,11 @@ export default function PersonProfile() {
 
       {person.bio && <p className="mt-6 text-[1.05rem] leading-relaxed text-ink-soft font-body">{person.bio}</p>}
 
-      {classes.length > 0 && (
+      {badges.length > 0 && (
         <div className="mt-8">
           <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2">Focus</p>
           <div className="flex flex-wrap gap-1.5">
-            {classes.map(c => <span key={c.id} className="text-[12px] font-sans text-accent bg-accent-soft border border-accent/20 px-2.5 py-1 rounded-sm">{c.label}</span>)}
+            {badges.map(b => <span key={b} className="text-[12px] font-sans text-accent bg-accent-soft border border-accent/20 px-2.5 py-1 rounded-sm">{b}</span>)}
           </div>
         </div>
       )}

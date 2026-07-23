@@ -1,15 +1,21 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { MapPin, ExternalLink, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
-import DeviceClassFilter from '../components/DeviceClassFilter'
+import { FacetFilters, NO_FACETS } from '../components/Filters'
 import FundingChart from '../components/FundingChart'
 import { searchLabs } from '../lib/data'
-import { entityMatchesClass } from '../lib/taxonomy'
+import { entityMatchesFacets } from '../lib/facets'
+import { classify } from '../lib/classify'
 import companiesJson from '../data/companies.json'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
-const CURATED_COMPANIES = companiesJson.filter(o => o.type === 'company')
+// Curated companies are static JSON with no facet columns, so classify them
+// once here (the classifier is pure browser-safe ES modules) — the same
+// deterministic classifier the database rows went through.
+const CURATED_COMPANIES = companiesJson
+  .filter(o => o.type === 'company')
+  .map(c => ({ ...c, ...classify(c, 'organizations') }))
 
 const KINDS = [
   { id: 'company', label: 'Companies' },
@@ -76,7 +82,7 @@ function OrgRow({ org }) {
 
 export default function Companies() {
   const [kind, setKind] = useState('company')
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
@@ -89,14 +95,14 @@ export default function Companies() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [cls, kind])
+  useEffect(() => { setPage(0) }, [facets, kind])
 
   const loadLabs = useCallback(async () => {
     if (kind !== 'lab') return
     setLoading(true)
-    setLabs(await searchLabs({ query, deviceClass: cls, page, pageSize: PAGE_SIZE }))
+    setLabs(await searchLabs({ query, facets, page, pageSize: PAGE_SIZE }))
     setLoading(false)
-  }, [kind, query, cls, page])
+  }, [kind, query, facets, page])
   useEffect(() => { loadLabs() }, [loadLabs])
 
   // Companies are curated + static; filter client-side.
@@ -104,9 +110,9 @@ export default function Companies() {
     let list = CURATED_COMPANIES
     const t = query.trim().toLowerCase()
     if (t) list = list.filter(c => c.name.toLowerCase().includes(t))
-    if (cls) list = list.filter(c => entityMatchesClass(c, cls))
+    list = list.filter(c => entityMatchesFacets(c, facets))
     return [...list].sort((a, b) => (b.funding || 0) - (a.funding || 0))
-  }, [query, cls])
+  }, [query, facets])
 
   const pages = Math.ceil(labs.total / PAGE_SIZE)
   const total = kind === 'company' ? companies.length : labs.total
@@ -140,7 +146,7 @@ export default function Companies() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <DeviceClassFilter value={cls} onChange={setCls} />
+      <div className="flex flex-wrap items-center gap-2 mb-8"><FacetFilters facets={facets} onChange={setFacets} /></div>
 
       {kind === 'company' ? (
         companies.length === 0

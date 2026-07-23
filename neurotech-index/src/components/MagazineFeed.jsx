@@ -4,13 +4,13 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
-import FilterSelect, { DEVICE_CLASS_OPTIONS, RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
+import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
-import { entityMatchesClass, classesForEntity } from '../lib/taxonomy'
+import { entityMatchesFacets, facetsOfEntity } from '../lib/facets'
 import { isReputableSource, neurotechCentrality } from '../lib/sources'
 
-const tintOf = item => classesForEntity(item)[0]?.id || 'default'
+const tintOf = item => facetsOfEntity(item).function[0] || 'default'
 const metaOf = item => ({ source: item.source, date: fmtDate(item.published_at), cites: item.metadata?.citationCount ?? 0 })
 
 function LeadCard({ item }) {
@@ -69,7 +69,7 @@ function CompactRow({ item }) {
 export default function MagazineFeed() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [cls, setCls] = useState(null)
+  const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [type, setType] = useState(null)
   const [sort, setSort] = useState('relevant')
@@ -86,13 +86,13 @@ export default function MagazineFeed() {
     const cutoff = recencyCutoffISO(recency)
     const isResearch = i => i.entry_type === 'paper' || i.entry_type === 'preprint'
     let out = items.filter(i =>
-      (!cls || entityMatchesClass(i, cls)) &&
+      entityMatchesFacets(i, facets) &&
       (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
       (!type || (type === 'research' ? isResearch(i) : i.entry_type === 'news'))
     )
     if (sort === 'newest') out = [...out].sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0))
     return out
-  }, [items, cls, recency, type, sort])
+  }, [items, facets, recency, type, sort])
 
   // Prefer image-bearing items for the visual slots (lead + featured grid);
   // fill the rest by rank. Papers (no photo) fall back to the neuron motif.
@@ -144,7 +144,7 @@ export default function MagazineFeed() {
         sub="The most significant neurotechnology research, devices, and coverage, ranked by relevance, engagement, and recency."
       />
       <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FilterSelect label="Class" value={cls} onChange={setCls} options={DEVICE_CLASS_OPTIONS} allLabel="All classes" />
+        <FacetFilters facets={facets} onChange={setFacets} />
         <FilterSelect label="Type" value={type} onChange={setType} options={FEED_TYPE} allLabel="All types" />
         <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
         <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />

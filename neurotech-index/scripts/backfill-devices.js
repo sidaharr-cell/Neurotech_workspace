@@ -5,6 +5,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
+import { classify } from '../src/lib/classify.js'
 
 const UA = 'Mozilla/5.0 (compatible; NeuroBaseBot/1.0)'
 const sleep = ms => new Promise(r => setTimeout(r, ms))
@@ -34,28 +35,33 @@ async function fetchAll(endpoint, mapFn) {
   return rows
 }
 
+// Attach product_code (its own column now) and the classifier's facet columns.
+const withFacets = row => ({ ...row, ...classify(row, 'devices') })
+
 const map510k = r => {
   const name = r.device_name
   if (!name) return null
-  const desc = `${r.decision_description || 'Cleared'} · 510(k) ${r.k_number || ''} · product code ${r.product_code || '—'}`
-  return {
+  const code = r.product_code || null
+  const desc = `${r.decision_description || 'Cleared'} · 510(k) ${r.k_number || ''} · product code ${code || '—'}`
+  return withFacets({
     name, manufacturer: r.applicant || '', type: `Class ${r.openfda?.device_class || '—'}`,
-    year: yearOf(r.decision_date), status: 'FDA-cleared (510k)',
+    year: yearOf(r.decision_date), status: 'FDA-cleared (510k)', product_code: code,
     description: desc, modality: [], tags: deriveTags(`${name} ${desc}`),
     url: r.k_number ? `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfPMN/pmn.cfm?ID=${r.k_number}` : null,
-  }
+  })
 }
 
 const mapPma = r => {
   const name = r.trade_name || r.device_name
   if (!name) return null
-  const desc = `PMA ${r.pma_number || ''} · ${r.advisory_committee_description || 'Neurology'} · product code ${r.product_code || '—'}`
-  return {
+  const code = r.product_code || null
+  const desc = `PMA ${r.pma_number || ''} · ${r.advisory_committee_description || 'Neurology'} · product code ${code || '—'}`
+  return withFacets({
     name, manufacturer: r.applicant || '', type: 'PMA (Class III)',
-    year: yearOf(r.decision_date), status: 'FDA-approved (PMA)',
+    year: yearOf(r.decision_date), status: 'FDA-approved (PMA)', product_code: code,
     description: desc, modality: [], tags: deriveTags(`${name} ${desc}`),
     url: r.pma_number ? `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfPMA/pma.cfm?id=${r.pma_number}` : null,
-  }
+  })
 }
 
 async function run() {
@@ -65,8 +71,12 @@ async function run() {
   const pma = await fetchAll('pma', mapPma)
   // Dedupe by name+year, prefer keeping first.
   const seen = new Set()
-  const all = [...pma, ...k].filter(d => { const key = `${d.name}|${d.year}`.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true })
-  console.log(`   ${k.length} 510(k) + ${pma.length} PMA -> ${all.length} unique devices`)
+  const deduped = [...pma, ...k].filter(d => { const key = `${d.name}|${d.year}`.toLowerCase(); if (seen.has(key)) return false; seen.add(key); return true })
+  // Scope gate: only keep devices the classifier judges in-scope neurotech
+  // (by FDA product code). openFDA's medical_specialty=Neurology sweeps in
+  // surgical instruments, gel, coils, etc.; the product code filters them out.
+  const all = deduped.filter(d => d.in_scope)
+  console.log(`   ${k.length} 510(k) + ${pma.length} PMA -> ${deduped.length} unique -> ${all.length} in-scope neurotech`)
 
   // Clear previously-ingested FDA devices (keeps hand-curated seed devices).
   await sb.from('devices').delete().or('status.ilike.FDA-cleared%,status.ilike.FDA-approved%')
