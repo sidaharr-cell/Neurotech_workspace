@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { MapPin, ExternalLink, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
-import { FacetFilters, NO_FACETS } from '../components/Filters'
+import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
 import { searchLabs } from '../lib/data'
 import { entityMatchesFacets } from '../lib/facets'
@@ -140,40 +140,47 @@ export default function Companies() {
         </div>
       </div>
 
-      <div className="relative max-w-2xl mb-6">
+      <div className="relative max-w-2xl mb-8">
         <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
         <input value={input} onChange={e => setInput(e.target.value)} placeholder={kind === 'lab' ? 'Search labs…' : 'Search companies…'}
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-8"><FacetFilters facets={facets} onChange={setFacets} /></div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar facets={facets} onChange={setFacets} />
 
-      {kind === 'company' ? (
-        companies.length === 0
-          ? <EmptyState icon={MapPin} title="No companies match these filters" />
-          : <div className="max-w-4xl divide-rule">{companies.map((o, i) => <OrgRow key={i} org={o} />)}</div>
-      ) : loading ? (
-        <Loader />
-      ) : labs.rows.length === 0 ? (
-        <EmptyState icon={MapPin} title="No labs match these filters" />
-      ) : (
-        <>
-          <div className="max-w-4xl divide-rule">{labs.rows.map((o, i) => <OrgRow key={o.id || i} org={o} />)}</div>
-          {pages > 1 && (
-            <div className="max-w-4xl flex items-center justify-between mt-8 pt-5 border-t border-rule">
-              <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                <ChevronLeft className="w-4 h-4" /> Previous
-              </button>
-              <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
-              <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                Next <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] font-sans text-muted">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>
+          </div>
+          {kind === 'company' ? (
+            companies.length === 0
+              ? <EmptyState icon={MapPin} title="No companies match these filters" />
+              : <div className="divide-rule">{companies.map((o, i) => <OrgRow key={i} org={o} />)}</div>
+          ) : loading ? (
+            <Loader />
+          ) : labs.rows.length === 0 ? (
+            <EmptyState icon={MapPin} title="No labs match these filters" />
+          ) : (
+            <>
+              <div className="divide-rule">{labs.rows.map((o, i) => <OrgRow key={o.id || i} org={o} />)}</div>
+              {pages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
+                  <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    <ChevronLeft className="w-4 h-4" /> Previous
+                  </button>
+                  <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
+                  <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    Next <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   )
 }

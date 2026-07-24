@@ -4,7 +4,7 @@ import { Search, SearchX } from 'lucide-react'
 import { getPapers, getDevices, getOrganizations, getResearchers } from '../lib/data'
 import { Loader, EmptyState, Kicker, typeWord } from '../components/ui'
 import { DetailPanel } from '../components/Directory'
-import { FacetFilters, NO_FACETS } from '../components/Filters'
+import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 import { entityMatchesFacets } from '../lib/facets'
 import { slugify } from '../lib/links'
 
@@ -85,7 +85,7 @@ export default function SearchPage() {
         </form>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-5">
+      <div className="flex flex-wrap items-center gap-2 mb-6">
         {SCOPES.map(s => (
           <button key={s.id} onClick={() => setScope(s.id)}
             className={`text-[13px] font-sans px-3 py-1.5 rounded-full border transition-colors ${scope === s.id ? 'bg-ink text-paper border-ink' : 'bg-paper text-ink-soft border-rule hover:border-ink'}`}>
@@ -94,22 +94,28 @@ export default function SearchPage() {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-5"><FacetFilters facets={facets} onChange={setFacets} /></div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar facets={facets} onChange={setFacets} />
 
-      <p className="text-[13px] text-muted font-sans mb-4">
-        {results.length}{results.length === 100 ? '+' : ''} {results.length === 1 ? 'result' : 'results'}
-        {query && <> for <span className="text-ink font-medium">“{query}”</span></>}
-      </p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] text-muted font-sans">
+              {results.length}{results.length === 100 ? '+' : ''} {results.length === 1 ? 'result' : 'results'}
+              {query && <> for <span className="text-ink font-medium">“{query}”</span></>}
+            </span>
+          </div>
 
-      {loading ? (
-        <Loader />
-      ) : results.length === 0 ? (
-        <EmptyState icon={SearchX} title="No results">Try different terms, a broader scope, or clear the filters.</EmptyState>
-      ) : (
-        <div className="max-w-4xl divide-rule">
-          {results.map((e, i) => <ResultRow key={`${e._type}-${i}`} entity={e} onOpen={() => setSelected(e)} />)}
+          {loading ? (
+            <Loader />
+          ) : results.length === 0 ? (
+            <EmptyState icon={SearchX} title="No results">Try different terms, a broader scope, or clear the filters.</EmptyState>
+          ) : (
+            <div className="divide-rule">
+              {results.map((e, i) => <ResultRow key={`${e._type}-${i}`} entity={e} onOpen={() => setSelected(e)} />)}
+            </div>
+          )}
         </div>
-      )}
+      </div>
       {selected && <DetailPanel entity={selected} onClose={() => setSelected(null)} />}
     </div>
   )
