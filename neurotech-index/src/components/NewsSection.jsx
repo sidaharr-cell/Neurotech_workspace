@@ -3,7 +3,8 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState } from './ui'
-import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, SORT_SIGNIF } from './Filters'
+import FilterSelect, { RECENCY_DATE, SORT_SIGNIF } from './Filters'
+import FacetSidebar, { NO_FACETS } from './FacetSidebar'
 import NewsList from './NewsList'
 import { entityMatchesFacets } from '../lib/facets'
 
@@ -50,25 +51,36 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading kicker={kicker} title={title} sub={sub} />
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FacetFilters facets={facets} onChange={setFacets} />
-        {outletOptions.length > 1 && <FilterSelect label="Outlet" value={outlet} onChange={setOutlet} options={outletOptions} allLabel="All outlets" />}
-        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
-        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
-      </div>
-      {!supabase ? (
-        <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
-      ) : loading ? (
-        <Loader label="Loading…" />
-      ) : shown.length === 0 ? (
-        <EmptyState icon={Newspaper} title="Nothing here yet">
-          {(facets.function || facets.access || facets.application) ? 'No items match these filters right now.' : (emptyHint || 'The feed populates after the daily refresh.')}
-        </EmptyState>
-      ) : (
-        <div className="max-w-4xl">
-          <NewsList items={shown} lead={lead} />
+
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar
+          facets={facets}
+          onChange={setFacets}
+          extras={[
+            ...(outletOptions.length > 1 ? [{ label: 'Outlet', value: outlet, onChange: setOutlet, options: outletOptions, allLabel: 'All outlets' }] : []),
+            { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
+          ]}
+        />
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] font-sans text-muted">{shown.length.toLocaleString()} {shown.length === 1 ? 'story' : 'stories'}</span>
+            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
+          </div>
+
+          {!supabase ? (
+            <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
+          ) : loading ? (
+            <Loader label="Loading…" />
+          ) : shown.length === 0 ? (
+            <EmptyState icon={Newspaper} title="Nothing here yet">
+              {(facets.function?.length || facets.access?.length || facets.application?.length) ? 'No items match these filters right now.' : (emptyHint || 'The feed populates after the daily refresh.')}
+            </EmptyState>
+          ) : (
+            <NewsList items={shown} lead={lead} />
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

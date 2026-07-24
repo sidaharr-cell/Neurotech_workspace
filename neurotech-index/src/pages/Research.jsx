@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { searchPapers } from '../lib/data'
+import { searchPapers, yearHistogram } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
-import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
+import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
+import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 
 const PAGE_SIZE = 20
 
@@ -33,11 +34,13 @@ export default function Research() {
   const [query, setQuery] = useState('')
   const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
+  const [year, setYear] = useState(null)          // histogram year selection { label, lo, hi }
   const [source, setSource] = useState(null)
   const [sort, setSort] = useState('relevant')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
+  const [histogram, setHistogram] = useState(null)
   const debounce = useRef(null)
 
   // Debounce the search box → query
@@ -47,17 +50,32 @@ export default function Research() {
     return () => clearTimeout(debounce.current)
   }, [input])
 
-  useEffect(() => { setPage(0) }, [facets, recency, source, sort])
+  useEffect(() => { setPage(0) }, [facets, recency, year, source, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    const res = await searchPapers({ query, facets, recency, source, sort, page, pageSize: PAGE_SIZE })
+    const res = await searchPapers({ query, facets, recency, yearRange: year, source, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
-  }, [query, facets, recency, source, sort, page])
+  }, [query, facets, recency, year, source, sort, page])
 
   useEffect(() => { load() }, [load])
 
-  const pages = Math.ceil(total / PAGE_SIZE)
+  // Year histogram reflects the facet filters and scope, but not the search box —
+  // so hide it during a text search, where its bars would not match the results.
+  useEffect(() => {
+    let alive = true
+    if (query.trim()) { setHistogram(null); return }
+    yearHistogram({ table: 'papers', facets }).then(h => { if (alive) setHistogram(h) })
+    return () => { alive = false }
+  }, [facets, query])
+
+  // The histogram reflects facets + scope only. When no other filter narrows the
+  // results (no search term, year click, recency, or source), its exact bucket
+  // sum IS the result total — so show that, and the bars reconcile with the
+  // count exactly. Otherwise show the actual search result count.
+  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !source
+  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -65,10 +83,10 @@ export default function Research() {
         kicker="Research"
         title="Research"
         sub="A searchable index of neurotechnology papers and preprints from PubMed."
-        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} papers</span>}
+        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{shownTotal.toLocaleString()} papers</span>}
       />
 
-      <div className="relative max-w-2xl mb-6">
+      <div className="relative max-w-2xl mb-8">
         <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
         <input
           value={input}
@@ -78,38 +96,52 @@ export default function Research() {
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FacetFilters facets={facets} onChange={setFacets} />
-        <FilterSelect label="Type" value={source} onChange={setSource} options={RESEARCH_SOURCE} allLabel="All types" />
-        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
-        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
-      </div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar
+          facets={facets}
+          onChange={setFacets}
+          histogram={histogram}
+          year={year}
+          onYear={setYear}
+          extras={[
+            { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
+            { label: 'Publication date', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
+          ]}
+        />
 
-      {loading ? (
-        <Loader />
-      ) : rows.length === 0 ? (
-        <EmptyState icon={SearchX} title="No papers found">Try different terms or clear the filters.</EmptyState>
-      ) : (
-        <>
-          <div className="max-w-4xl divide-rule">
-            {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} />)}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
+            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
           </div>
 
-          {pages > 1 && (
-            <div className="max-w-4xl flex items-center justify-between mt-8 pt-5 border-t border-rule">
-              <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                <ChevronLeft className="w-4 h-4" /> Previous
-              </button>
-              <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
-              <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                Next <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+          {loading ? (
+            <Loader />
+          ) : rows.length === 0 ? (
+            <EmptyState icon={SearchX} title="No papers found">Try different terms or clear the filters.</EmptyState>
+          ) : (
+            <>
+              <div className="divide-rule">
+                {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} />)}
+              </div>
+
+              {pages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
+                  <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    <ChevronLeft className="w-4 h-4" /> Previous
+                  </button>
+                  <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
+                  <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    Next <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   )
 }
