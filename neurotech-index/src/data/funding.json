@@ -1,11 +1,15 @@
 {
   "Neuralink": {
-    "total": 1300,
-    "source": "curated"
+    "total": 1330,
+    "latestAmount": 649,
+    "latestDate": "2025-06-12",
+    "source": "sec"
   },
   "Saluda Medical": {
     "total": 300,
-    "source": "curated"
+    "latestAmount": 30,
+    "latestDate": "2025-11-12",
+    "source": "sec"
   },
   "Science Corporation": {
     "total": 290,
@@ -48,8 +52,10 @@
     "source": "sec"
   },
   "Cala Health": {
-    "total": 100,
-    "source": "curated"
+    "total": 170,
+    "latestAmount": 51,
+    "latestDate": "2024-12-09",
+    "source": "sec"
   },
   "INBRAIN Neuroelectronics": {
     "total": 100,

@@ -17,6 +17,23 @@
     "significance": "This handbook establishes clinical neurophysiology as the foundational discipline for developing brain-body interfaces to restore movement and sensation after neurological injury."
   },
   {
+    "title": "Safeguarding Neural Data.",
+    "authors": [
+      "Michael J Young",
+      "David Simon",
+      "Barbara J Evans"
+    ],
+    "journal": "Neurology",
+    "pmid": "42060878",
+    "doi": "10.1212/WNL.0000000000214942",
+    "url": "https://doi.org/10.1212/WNL.0000000000214942",
+    "publishedAt": "2026-04-30",
+    "pctile": 0.99570639,
+    "fwci": 27.3594,
+    "citedBy": 3,
+    "significance": "Neural data privacy legislation is crucial because brain-derived information reveals uniquely sensitive cognitive and identity details requiring specialized legal protections beyond standard healthcare privacy."
+  },
+  {
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -36,27 +53,10 @@
     "doi": "10.1038/s41591-026-04414-6",
     "url": "https://doi.org/10.1038/s41591-026-04414-6",
     "publishedAt": "2026-06-15T00:00:00.000Z",
-    "pctile": 0.99577539,
-    "fwci": 35.7465,
+    "pctile": 0.99569817,
+    "fwci": 35.4625,
     "citedBy": 6,
-    "significance": "This work advances intracortical BCIs from laboratory settings to real-world independent use, a critical threshold for clinical viability. The system decodes both speech and movement from motor cortex activity, allowing users with severe paralysis to communicate and control digital devices without constant supervision or technical support. Long-term stable performance at home validates the core promise of BCIs: restoring functional communication and control to people who have lost it."
-  },
-  {
-    "title": "Safeguarding Neural Data.",
-    "authors": [
-      "Michael J Young",
-      "David Simon",
-      "Barbara J Evans"
-    ],
-    "journal": "Neurology",
-    "pmid": "42060878",
-    "doi": "10.1212/WNL.0000000000214942",
-    "url": "https://doi.org/10.1212/WNL.0000000000214942",
-    "publishedAt": "2026-04-30",
-    "pctile": 0.99570639,
-    "fwci": 27.3594,
-    "citedBy": 3,
-    "significance": "Neural data privacy legislation is crucial because brain-derived information reveals uniquely sensitive cognitive and identity details requiring specialized legal protections beyond standard healthcare privacy."
+    "significance": "This work represents a major milestone in translating brain-computer interfaces from laboratory to real-world use. The achievement of long-term independent operation without technician supervision directly addresses a core requirement for clinical viability and commercial adoption. For neurotechnology practitioners, this validates the pathway toward fully autonomous BCIs that restore communication and control for severely paralyzed patients, setting a new standard for what practical neural interface systems must accomplish."
   },
   {
     "title": "Fronto-insular circuit mechanisms of accelerated intermittent theta burst stimulation.",
@@ -126,10 +126,46 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99248023,
-    "fwci": 25.9454,
+    "pctile": 0.99243169,
+    "fwci": 25.7011,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
+  },
+  {
+    "title": "Circuit-Targeted TMS for PTSD: Where, When, How, and for Whom?",
+    "authors": [
+      "Ryan D Webler",
+      "Joshua C Brown",
+      "Shan H Siddiqi"
+    ],
+    "journal": "American Journal of Psychiatry",
+    "pmid": "42062813",
+    "doi": "10.1176/appi.ajp.20260231",
+    "url": "https://doi.org/10.1176/appi.ajp.20260231",
+    "publishedAt": "2026-05-01",
+    "pctile": 0.99161135,
+    "fwci": 20.0588,
+    "citedBy": 1,
+    "significance": "I don't have access to the abstract, but based on the title: this paper advances personalized PTSD treatment by defining optimal transcranial magnetic stimulation targeting strategies for specific neural circuits."
+  },
+  {
+    "title": "Multi-omics analysis of deep brain stimulation associated with brain-gut axis modulation and symptom amelioration in a Parkinson's disease mouse model.",
+    "authors": [
+      "Ye Song",
+      "Changxin Yang",
+      "Jie Tu",
+      "Jiaojiao Dong",
+      "Xiao Zhang"
+    ],
+    "journal": "Biology Direct",
+    "pmid": "42092952",
+    "doi": "10.1186/s13062-026-00778-4",
+    "url": "https://doi.org/10.1186/s13062-026-00778-4",
+    "publishedAt": "2026-05-06",
+    "pctile": 0.99144824,
+    "fwci": 17.1341,
+    "citedBy": 2,
+    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
   },
   {
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
@@ -169,46 +205,10 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99167682,
-    "fwci": 19.5302,
+    "pctile": 0.99121833,
+    "fwci": 19.1459,
     "citedBy": 15,
     "significance": "This paper enables simultaneous high-resolution recording and precise optogenetic manipulation of thousands of neurons across brain regions, advancing our ability to map neural circuits and causality."
-  },
-  {
-    "title": "Circuit-Targeted TMS for PTSD: Where, When, How, and for Whom?",
-    "authors": [
-      "Ryan D Webler",
-      "Joshua C Brown",
-      "Shan H Siddiqi"
-    ],
-    "journal": "American Journal of Psychiatry",
-    "pmid": "42062813",
-    "doi": "10.1176/appi.ajp.20260231",
-    "url": "https://doi.org/10.1176/appi.ajp.20260231",
-    "publishedAt": "2026-05-01",
-    "pctile": 0.99161135,
-    "fwci": 20.0588,
-    "citedBy": 1,
-    "significance": "I don't have access to the abstract, but based on the title: this paper advances personalized PTSD treatment by defining optimal transcranial magnetic stimulation targeting strategies for specific neural circuits."
-  },
-  {
-    "title": "Multi-omics analysis of deep brain stimulation associated with brain-gut axis modulation and symptom amelioration in a Parkinson's disease mouse model.",
-    "authors": [
-      "Ye Song",
-      "Changxin Yang",
-      "Jie Tu",
-      "Jiaojiao Dong",
-      "Xiao Zhang"
-    ],
-    "journal": "Biology Direct",
-    "pmid": "42092952",
-    "doi": "10.1186/s13062-026-00778-4",
-    "url": "https://doi.org/10.1186/s13062-026-00778-4",
-    "publishedAt": "2026-05-06",
-    "pctile": 0.99149192,
-    "fwci": 17.2969,
-    "citedBy": 2,
-    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
   },
   {
     "title": "Tissue rigidity phase transition shapes morphogen gradients.",
@@ -230,8 +230,8 @@
     "doi": "10.1038/s41556-026-01954-4",
     "url": "https://doi.org/10.1038/s41556-026-01954-4",
     "publishedAt": "2026-05-14",
-    "pctile": 0.98505208,
-    "fwci": 11.4554,
+    "pctile": 0.98454015,
+    "fwci": 11.3509,
     "citedBy": 2,
     "significance": "Tissue rigidity transitions physically reshape morphogen gradients during development, revealing how mechanical properties actively control cell fate decisions beyond chemical signaling alone."
   }
