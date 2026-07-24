@@ -4,7 +4,8 @@ import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
-import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
+import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
+import FacetSidebar, { NO_FACETS } from './FacetSidebar'
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesFacets, facetsOfEntity } from '../lib/facets'
@@ -143,61 +144,71 @@ export default function MagazineFeed() {
         title="Top Stories"
         sub="The most significant neurotechnology research, devices, and coverage, ranked by relevance, engagement, and recency."
       />
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FacetFilters facets={facets} onChange={setFacets} />
-        <FilterSelect label="Type" value={type} onChange={setType} options={FEED_TYPE} allLabel="All types" />
-        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
-        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
-      </div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar
+          facets={facets}
+          onChange={setFacets}
+          extras={[
+            { label: 'Type', value: type, onChange: setType, options: FEED_TYPE, allLabel: 'All types' },
+            { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
+          ]}
+        />
 
-      {!supabase ? (
-        <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
-      ) : loading ? (
-        <Loader label="Loading…" />
-      ) : !lead ? (
-        <EmptyState icon={Newspaper} title="Nothing here yet">
-          {(facets.function || facets.access || facets.application) ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
-        </EmptyState>
-      ) : (
-        <>
-          {/* Lead + sidebar */}
-          <div className="grid lg:grid-cols-3 gap-8 lg:gap-10">
-            <div className="lg:col-span-2"><LeadCard item={lead} /></div>
-            {sidebar.length > 0 && (
-              <div className="lg:border-l lg:border-rule lg:pl-8">
-                <div className="border-b-2 border-ink pb-1.5 mb-1">
-                  <Kicker>More stories</Kicker>
-                </div>
-                <div className="divide-rule">
-                  {sidebar.map((it, i) => <SidebarItem key={it.id || i} item={it} />)}
-                </div>
-              </div>
-            )}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-end h-9 mb-6 border-b border-rule">
+            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
           </div>
 
-          {/* Featured grid */}
-          {featured.length > 0 && (
-            <div className="mt-12 pt-8 border-t-2 border-ink">
-              <div className="grid sm:grid-cols-3 gap-8">
-                {featured.map((it, i) => <FeaturedCard key={it.id || i} item={it} />)}
+          {!supabase ? (
+            <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
+          ) : loading ? (
+            <Loader label="Loading…" />
+          ) : !lead ? (
+            <EmptyState icon={Newspaper} title="Nothing here yet">
+              {(facets.function.length || facets.access.length || facets.application.length) ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
+            </EmptyState>
+          ) : (
+            <>
+              {/* Lead + more-stories rail */}
+              <div className="grid lg:grid-cols-3 gap-8 lg:gap-10">
+                <div className="lg:col-span-2"><LeadCard item={lead} /></div>
+                {sidebar.length > 0 && (
+                  <div className="lg:border-l lg:border-rule lg:pl-8">
+                    <div className="border-b-2 border-ink pb-1.5 mb-1">
+                      <Kicker>More stories</Kicker>
+                    </div>
+                    <div className="divide-rule">
+                      {sidebar.map((it, i) => <SidebarItem key={it.id || i} item={it} />)}
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
 
-          {/* Notable research rail (unfiltered — highest field-normalized impact) */}
-          {!facets.function && !facets.access && !facets.application && !recency && !type && <NotableRail exclude={shownKeys} />}
+              {/* Featured grid */}
+              {featured.length > 0 && (
+                <div className="mt-12 pt-8 border-t-2 border-ink">
+                  <div className="grid sm:grid-cols-3 gap-8">
+                    {featured.map((it, i) => <FeaturedCard key={it.id || i} item={it} />)}
+                  </div>
+                </div>
+              )}
 
-          {/* Remaining, compact */}
-          {rest.length > 0 && (
-            <div className="mt-12 pt-6 border-t border-rule">
-              <div className="mb-2"><Kicker>Latest</Kicker></div>
-              <div className="grid md:grid-cols-2 md:gap-x-10">
-                {rest.map((it, i) => <div key={it.id || i} className="border-b border-rule"><CompactRow item={it} /></div>)}
-              </div>
-            </div>
+              {/* Notable research rail (unfiltered — highest field-normalized impact) */}
+              {!facets.function.length && !facets.access.length && !facets.application.length && !recency && !type && <NotableRail exclude={shownKeys} />}
+
+              {/* Remaining, compact */}
+              {rest.length > 0 && (
+                <div className="mt-12 pt-6 border-t border-rule">
+                  <div className="mb-2"><Kicker>Latest</Kicker></div>
+                  <div className="grid md:grid-cols-2 md:gap-x-10">
+                    {rest.map((it, i) => <div key={it.id || i} className="border-b border-rule"><CompactRow item={it} /></div>)}
+                  </div>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   )
 }
