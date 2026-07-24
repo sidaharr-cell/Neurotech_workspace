@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
-import { searchTrials } from '../lib/data'
+import { searchTrials, yearHistogram } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
-import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
+import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
+import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 
 const PAGE_SIZE = 20
 
@@ -50,6 +51,8 @@ export default function Trials() {
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
+  const [histogram, setHistogram] = useState(null)
+  const [year, setYear] = useState(null)
   const debounce = useRef(null)
 
   useEffect(() => {
@@ -57,16 +60,26 @@ export default function Trials() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [facets, recency, phase, status, sort])
+  useEffect(() => { setPage(0) }, [facets, recency, year, phase, status, sort])
 
   const load = useCallback(async () => {
     setLoading(true)
-    setResult(await searchTrials({ query, facets, recency, phase, status, sort, page, pageSize: PAGE_SIZE }))
+    setResult(await searchTrials({ query, facets, recency, yearRange: year, phase, status, sort, page, pageSize: PAGE_SIZE }))
     setLoading(false)
-  }, [query, facets, recency, phase, status, sort, page])
+  }, [query, facets, recency, year, phase, status, sort, page])
   useEffect(() => { load() }, [load])
 
-  const pages = Math.ceil(total / PAGE_SIZE)
+  // Histogram reflects facets + scope only; hide it during a text search.
+  useEffect(() => {
+    let alive = true
+    if (query.trim()) { setHistogram(null); return }
+    yearHistogram({ table: 'news_feed', from: 2010, facets }).then(h => { if (alive) setHistogram(h) })
+    return () => { alive = false }
+  }, [facets, query])
+
+  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !phase && !status
+  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -74,47 +87,61 @@ export default function Trials() {
         kicker="Clinical Trials"
         title="Trials & Studies"
         sub="A searchable index of neurotechnology trials from ClinicalTrials.gov."
-        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} trials</span>}
+        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{shownTotal.toLocaleString()} trials</span>}
       />
 
-      <div className="relative max-w-2xl mb-6">
+      <div className="relative max-w-2xl mb-8">
         <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
         <input value={input} onChange={e => setInput(e.target.value)} placeholder="Search trials…"
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FacetFilters facets={facets} onChange={setFacets} />
-        <FilterSelect label="Phase" value={phase} onChange={setPhase} options={TRIAL_PHASE} allLabel="All phases" />
-        <FilterSelect label="Status" value={status} onChange={setStatus} options={TRIAL_STATUS} allLabel="Any status" />
-        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_DATE} allLabel="Any time" />
-        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
-      </div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar
+          facets={facets}
+          onChange={setFacets}
+          histogram={histogram}
+          year={year}
+          onYear={setYear}
+          extras={[
+            { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },
+            { label: 'Status', value: status, onChange: setStatus, options: TRIAL_STATUS, allLabel: 'Any status' },
+            { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
+          ]}
+        />
 
-      {loading ? (
-        <Loader />
-      ) : rows.length === 0 ? (
-        <EmptyState icon={FlaskConical} title="No trials found">Try different terms or clear the filters.</EmptyState>
-      ) : (
-        <>
-          <div className="max-w-4xl divide-rule">
-            {rows.map((t, i) => <TrialRow key={t.id || i} trial={t} />)}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
+            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
           </div>
-          {pages > 1 && (
-            <div className="max-w-4xl flex items-center justify-between mt-8 pt-5 border-t border-rule">
-              <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                <ChevronLeft className="w-4 h-4" /> Previous
-              </button>
-              <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
-              <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                Next <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+
+          {loading ? (
+            <Loader />
+          ) : rows.length === 0 ? (
+            <EmptyState icon={FlaskConical} title="No trials found">Try different terms or clear the filters.</EmptyState>
+          ) : (
+            <>
+              <div className="divide-rule">
+                {rows.map((t, i) => <TrialRow key={t.id || i} trial={t} />)}
+              </div>
+              {pages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
+                  <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    <ChevronLeft className="w-4 h-4" /> Previous
+                  </button>
+                  <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
+                  <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    Next <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   )
 }

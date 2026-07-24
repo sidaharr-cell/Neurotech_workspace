@@ -218,10 +218,11 @@ export function facetsOfEntity(e) {
  */
 export function entityMatchesFacets(e, facets = {}) {
   const f = facetsOfEntity(e)
-  if (facets.function && !f.function.includes(facets.function)) return false
-  if (facets.access && !f.access.includes(facets.access)) return false
-  if (facets.application && !f.application.includes(facets.application)) return false
-  return true
+  const arr = v => (Array.isArray(v) ? v : v ? [v] : [])
+  const ok = (sel, have) => !sel.length || sel.some(v => have.includes(v))  // OR within facet
+  return ok(arr(facets.function), f.function)
+    && ok(arr(facets.access), f.access)
+    && ok(arr(facets.application), f.application)
 }
 
 /**

@@ -40,21 +40,84 @@ const TRIAL_STATUS_MAP = {
 
 /**
  * Apply the three-facet filter and the scope gate to a query.
- * `facets` is { function, access, application }, each a single value or null.
- * Out-of-scope rows are hidden unless `includeOutOfScope` is set. The facet
- * columns are Postgres text[], so `.contains` takes a JS array (not a JSON
- * string, which is how the old jsonb `tags` filter worked).
+ * `facets` is { function, access, application }, each an ARRAY of selected
+ * values (empty = no filter). Semantics match a checkbox panel: OR within a
+ * facet (any selected value), AND across facets. The columns are Postgres
+ * text[], so `.overlaps` takes a JS array and tests set intersection.
+ * Out-of-scope rows are hidden unless `includeOutOfScope` is set.
  */
+const arr = v => (Array.isArray(v) ? v : v ? [v] : [])
 function applyFacets(q, facets = {}, includeOutOfScope = false) {
   if (!includeOutOfScope) q = q.eq('in_scope', true)
-  if (facets.function) q = q.contains('facet_function', [facets.function])
-  if (facets.access) q = q.contains('facet_access', [facets.access])
-  if (facets.application) q = q.contains('facet_application', [facets.application])
+  const fn = arr(facets.function), ax = arr(facets.access), ap = arr(facets.application)
+  if (fn.length) q = q.overlaps('facet_function', fn)
+  if (ax.length) q = q.overlaps('facet_access', ax)
+  if (ap.length) q = q.overlaps('facet_application', ap)
   return q
 }
 
 // Facet columns every card needs to render its badges.
 const FACET_COLS = 'facet_function,facet_access,facet_application,in_scope'
+
+/**
+ * Apply a histogram year selection to a query. `range` is { lo, hi } (a click
+ * on a year bar; lo null = the "before N" bucket). `dateCol` is the 4-digit
+ * text 'year' column, or a date/timestamp column compared against Jan-1 bounds.
+ */
+function applyYear(q, range, dateCol = 'year') {
+  if (!range) return q
+  const { lo, hi } = range
+  if (dateCol === 'year') {
+    if (lo != null) q = q.gte('year', String(lo))
+    q = q.lt('year', String(hi))
+  } else {
+    if (lo != null) q = q.gte(dateCol, `${lo}-01-01`)
+    q = q.lt(dateCol, `${hi}-01-01`)
+  }
+  return q
+}
+
+/**
+ * "Results by year" histogram for the sidebar. One grouped query via the
+ * `year_histogram` RPC — fast and exact thanks to the (in_scope, <year>)
+ * covering index (migration 002). Reflects the scope gate and facet filters,
+ * but not the free-text search box.
+ *
+ * `table` is papers | devices | patents | news_feed; the RPC reads the right
+ * date column for each. Returns [{ label, n }] oldest→newest with a leading
+ * "before N" bucket, or [] on error — e.g. a facet-filtered query over the fat
+ * papers table can still exceed the timeout, in which case the histogram hides.
+ */
+const asArr = v => (Array.isArray(v) ? v : v ? [v] : [])
+
+export async function yearHistogram({ table = 'papers', facets = {}, from = 2010 } = {}) {
+  if (!supabase) return []
+  const { data, error } = await supabase.rpc('year_histogram', {
+    p_table: table,
+    p_fn: asArr(facets.function),
+    p_ax: asArr(facets.access),
+    p_ap: asArr(facets.application),
+  })
+  if (error || !data) return []
+
+  // The RPC returns the year as text (some rows are dirty/empty) — parse to a
+  // 4-digit int and drop anything that isn't one.
+  const now = new Date().getFullYear()
+  const byYear = new Map()
+  for (const r of data) {
+    const m = /\d{4}/.exec(r.yr || '')
+    if (!m) continue
+    const y = +m[0]
+    if (y < 1900 || y > now + 1) continue
+    byYear.set(y, (byYear.get(y) || 0) + Number(r.n))
+  }
+  // Each bucket carries its [lo, hi) year range so a click can filter results.
+  let before = 0
+  for (const [yr, n] of byYear) if (yr < from) before += n
+  const out = [{ label: `<${from}`, n: before, lo: null, hi: from }]
+  for (let y = from; y <= now; y++) out.push({ label: String(y), n: byYear.get(y) || 0, lo: y, hi: y + 1 })
+  return out
+}
 
 // ── Database entries ────────────────────────────────────────────────────────
 
@@ -169,7 +232,7 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  * Server-side paginated + full-text search over the full papers table.
  * Uses the `fts` tsvector index; filters by derived device-class `tags`.
  */
-export async function searchPapers({ query = '', facets = {}, recency = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
   const minYear = recencyMinYear(recency)
@@ -182,6 +245,7 @@ export async function searchPapers({ query = '', facets = {}, recency = null, so
       .select(`title,authors,journal,year,doi,url,abstract,pubmed_id,${FACET_COLS}`, { count: 'estimated' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
     b = applyFacets(b, facets)
+    b = applyYear(b, yearRange, 'year')
     if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
@@ -222,12 +286,13 @@ export async function searchLabs({ query = '', facets = {}, page = 0, pageSize =
 }
 
 /** Server-side paginated search over the full devices table. */
-export async function searchDevices({ query = '', facets = {}, recency = null, fda = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
+export async function searchDevices({ query = '', facets = {}, recency = null, yearRange = null, fda = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('devices').select('*', { count: 'exact' })
   const term = query.trim().replace(/[(),%]/g, ' ')
   if (term) q = q.or(`name.ilike.%${term}%,manufacturer.ilike.%${term}%`)
   q = applyFacets(q, facets)
+  q = applyYear(q, yearRange, 'year')
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('year', String(minYear))
   if (fda === '510k') q = q.ilike('status', '%510%')
@@ -239,13 +304,14 @@ export async function searchDevices({ query = '', facets = {}, recency = null, f
 }
 
 /** Server-side paginated + full-text search over the neurotech patents table. */
-export async function searchPatents({ query = '', facets = {}, recency = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
+export async function searchPatents({ query = '', facets = {}, recency = null, yearRange = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   // `estimated` count for the same reason as papers — the patents table is 47k rows.
   let q = supabase.from('patents').select(`patent_number,title,abstract,assignee,grant_date,cpc_codes,url,${FACET_COLS}`, { count: 'estimated' })
   const term = query.trim()
   if (term) q = q.textSearch('fts', term, { type: 'websearch' })
   q = applyFacets(q, facets)
+  q = applyYear(q, yearRange, 'grant_date')
   const minYear = recencyMinYear(recency)
   if (minYear) q = q.gte('grant_date', `${minYear}-01-01`)
   q = q.order('grant_date', { ascending: sort === 'oldest', nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1)
@@ -255,11 +321,12 @@ export async function searchPatents({ query = '', facets = {}, recency = null, s
 }
 
 /** Server-side paginated search over clinical trials (stored in news_feed). */
-export async function searchTrials({ query = '', facets = {}, recency = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchTrials({ query = '', facets = {}, recency = null, yearRange = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
   q = applyFacets(q, facets)
+  q = applyYear(q, yearRange, 'published_at')
   const iso = recencyCutoffISO(recency)
   if (iso) q = q.gte('published_at', iso)
   if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
