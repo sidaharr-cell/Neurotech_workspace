@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Search, Cpu, ScrollText, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
-import { searchDevices, searchPatents } from '../lib/data'
+import { searchDevices, searchPatents, yearHistogram } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
-import FilterSelect, { FacetFilters, NO_FACETS, RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
+import FilterSelect, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
+import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 
 const PAGE_SIZE = 20
 const KINDS = [
@@ -43,6 +44,8 @@ export default function Devices() {
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState(null)
+  const [histogram, setHistogram] = useState(null)
+  const [year, setYear] = useState(null)
   const debounce = useRef(null)
   const isPatent = kind === 'patent'
 
@@ -51,18 +54,30 @@ export default function Devices() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [facets, recency, fda, sort, kind])
+  useEffect(() => { setPage(0) }, [facets, recency, year, fda, sort, kind])
+  useEffect(() => { setYear(null) }, [kind])          // year buckets differ between devices/patents
 
   const load = useCallback(async () => {
     setLoading(true)
     const res = isPatent
-      ? await searchPatents({ query, facets, recency, sort, page, pageSize: PAGE_SIZE })
-      : await searchDevices({ query, facets, recency, fda, sort, page, pageSize: PAGE_SIZE })
+      ? await searchPatents({ query, facets, recency, yearRange: year, sort, page, pageSize: PAGE_SIZE })
+      : await searchDevices({ query, facets, recency, yearRange: year, fda, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
-  }, [isPatent, query, facets, recency, fda, sort, page])
+  }, [isPatent, query, facets, recency, year, fda, sort, page])
   useEffect(() => { load() }, [load])
 
-  const pages = Math.ceil(total / PAGE_SIZE)
+  // Histogram reflects facets + scope only; hide it during a text search.
+  useEffect(() => {
+    let alive = true
+    if (query.trim()) { setHistogram(null); return }
+    yearHistogram({ table: isPatent ? 'patents' : 'devices', from: isPatent ? 2000 : 2010, facets })
+      .then(h => { if (alive) setHistogram(h) })
+    return () => { alive = false }
+  }, [facets, isPatent, query])
+
+  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !fda
+  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -70,7 +85,7 @@ export default function Devices() {
         kicker="Devices & Patents"
         title="Devices & Patents"
         sub="FDA-cleared and approved neurotechnology devices, plus a classification-defined index of neurotech patents."
-        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {isPatent ? 'patents' : 'devices'}</span>}
+        right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{shownTotal.toLocaleString()} {isPatent ? 'patents' : 'devices'}</span>}
       />
 
       <div className="mb-6">
@@ -85,48 +100,62 @@ export default function Devices() {
         </div>
       </div>
 
-      <div className="relative max-w-2xl mb-6">
+      <div className="relative max-w-2xl mb-8">
         <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none" />
         <input value={input} onChange={e => setInput(e.target.value)}
           placeholder={isPatent ? 'Search patents, assignees…' : 'Search devices and manufacturers…'}
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-8">
-        <FacetFilters facets={facets} onChange={setFacets} />
-        {!isPatent && <FilterSelect label="FDA route" value={fda} onChange={setFda} options={DEVICE_FDA} allLabel="Any route" />}
-        <FilterSelect label="Recency" value={recency} onChange={setRecency} options={RECENCY_YEAR} allLabel="Any time" />
-        <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
-      </div>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <FacetSidebar
+          facets={facets}
+          onChange={setFacets}
+          histogram={histogram}
+          year={year}
+          onYear={setYear}
+          extras={[
+            ...(!isPatent ? [{ label: 'FDA route', value: fda, onChange: setFda, options: DEVICE_FDA, allLabel: 'Any route' }] : []),
+            { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
+          ]}
+        />
 
-      {loading ? (
-        <Loader />
-      ) : rows.length === 0 ? (
-        <EmptyState icon={isPatent ? ScrollText : Cpu} title={`No ${isPatent ? 'patents' : 'devices'} found`}>
-          {isPatent ? 'Patents populate after the backfill runs.' : 'Try different terms or clear the filters.'}
-        </EmptyState>
-      ) : (
-        <>
-          <div className="max-w-4xl divide-rule">
-            {isPatent
-              ? rows.map((p, i) => <PatentRow key={p.patent_number || i} p={p} />)
-              : rows.map((d, i) => <EntityRow key={d.id || i} entity={d} onClick={() => setSelected(d)} />)}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+            <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
+            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
           </div>
-          {pages > 1 && (
-            <div className="max-w-4xl flex items-center justify-between mt-8 pt-5 border-t border-rule">
-              <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                <ChevronLeft className="w-4 h-4" /> Previous
-              </button>
-              <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
-              <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
-                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
-                Next <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+
+          {loading ? (
+            <Loader />
+          ) : rows.length === 0 ? (
+            <EmptyState icon={isPatent ? ScrollText : Cpu} title={`No ${isPatent ? 'patents' : 'devices'} found`}>
+              {isPatent ? 'Patents populate after the backfill runs.' : 'Try different terms or clear the filters.'}
+            </EmptyState>
+          ) : (
+            <>
+              <div className="divide-rule">
+                {isPatent
+                  ? rows.map((p, i) => <PatentRow key={p.patent_number || i} p={p} />)
+                  : rows.map((d, i) => <EntityRow key={d.id || i} entity={d} onClick={() => setSelected(d)} />)}
+              </div>
+              {pages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
+                  <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    <ChevronLeft className="w-4 h-4" /> Previous
+                  </button>
+                  <span className="text-[13px] font-sans text-muted">Page {page + 1} of {pages.toLocaleString()}</span>
+                  <button disabled={page + 1 >= pages} onClick={() => setPage(p => p + 1)}
+                    className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors">
+                    Next <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </div>
       {selected && !isPatent && <DetailPanel entity={selected} onClose={() => setSelected(null)} />}
     </div>
   )
