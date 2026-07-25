@@ -56,7 +56,7 @@
     "pctile": 0.99569817,
     "fwci": 35.4625,
     "citedBy": 6,
-    "significance": "This work represents a major milestone in translating brain-computer interfaces from laboratory to real-world use. The achievement of long-term independent operation without technician supervision directly addresses a core requirement for clinical viability and commercial adoption. For neurotechnology practitioners, this validates the pathway toward fully autonomous BCIs that restore communication and control for severely paralyzed patients, setting a new standard for what practical neural interface systems must accomplish."
+    "significance": "This work represents a critical step toward real-world deployment of brain-computer interfaces by showing that users can operate intracortical BCIs independently outside laboratory settings for both speech decoding and cursor control. Independent at-home use is essential for clinical translation and daily-life utility of BCI systems. This addresses a major gap between high-accuracy lab demonstrations and practical viability for severely paralyzed patients seeking communication and digital access."
   },
   {
     "title": "Fronto-insular circuit mechanisms of accelerated intermittent theta burst stimulation.",
