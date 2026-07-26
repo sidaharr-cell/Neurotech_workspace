@@ -1,5 +1,24 @@
 [
   {
+    "title": "Multi-omics analysis of deep brain stimulation associated with brain-gut axis modulation and symptom amelioration in a Parkinson's disease mouse model.",
+    "authors": [
+      "Ye Song",
+      "Changxin Yang",
+      "Jie Tu",
+      "Jiaojiao Dong",
+      "Xiao Zhang"
+    ],
+    "journal": "Biology Direct",
+    "pmid": "42092952",
+    "doi": "10.1186/s13062-026-00778-4",
+    "url": "https://doi.org/10.1186/s13062-026-00778-4",
+    "publishedAt": "2026-05-06",
+    "pctile": 0.99623933,
+    "fwci": 25.2403,
+    "citedBy": 3,
+    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
+  },
+  {
     "title": "Technologies in clinical neurophysiology for brain-body interfacing: IFCN handbook chapter.",
     "authors": [
       "Andrea Cimolato",
@@ -56,7 +75,7 @@
     "pctile": 0.99569817,
     "fwci": 35.4625,
     "citedBy": 6,
-    "significance": "This work represents a critical step toward real-world deployment of brain-computer interfaces by showing that users can operate intracortical BCIs independently outside laboratory settings for both speech decoding and cursor control. Independent at-home use is essential for clinical translation and daily-life utility of BCI systems. This addresses a major gap between high-accuracy lab demonstrations and practical viability for severely paralyzed patients seeking communication and digital access."
+    "significance": "This work represents a major milestone in clinical neurotechnology by demonstrating that intracortical BCIs can move beyond laboratory settings into practical independent use. The achievement of naturalistic speech decoding and reliable cursor control with at-home operation and minimal supervision addresses the most critical barrier to clinical adoption: sustained, unsupervised performance in real-world conditions. For neurotech practitioners, this validates the pathway toward implantable BCI systems that genuinely restore communication and digital access for people with severe paralysis."
   },
   {
     "title": "Fronto-insular circuit mechanisms of accelerated intermittent theta burst stimulation.",
@@ -126,8 +145,8 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99243169,
-    "fwci": 25.7011,
+    "pctile": 0.99205611,
+    "fwci": 25.2403,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
   },
@@ -147,25 +166,6 @@
     "fwci": 20.0588,
     "citedBy": 1,
     "significance": "I don't have access to the abstract, but based on the title: this paper advances personalized PTSD treatment by defining optimal transcranial magnetic stimulation targeting strategies for specific neural circuits."
-  },
-  {
-    "title": "Multi-omics analysis of deep brain stimulation associated with brain-gut axis modulation and symptom amelioration in a Parkinson's disease mouse model.",
-    "authors": [
-      "Ye Song",
-      "Changxin Yang",
-      "Jie Tu",
-      "Jiaojiao Dong",
-      "Xiao Zhang"
-    ],
-    "journal": "Biology Direct",
-    "pmid": "42092952",
-    "doi": "10.1186/s13062-026-00778-4",
-    "url": "https://doi.org/10.1186/s13062-026-00778-4",
-    "publishedAt": "2026-05-06",
-    "pctile": 0.99144824,
-    "fwci": 17.1341,
-    "citedBy": 2,
-    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
   },
   {
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
