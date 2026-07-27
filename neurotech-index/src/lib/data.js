@@ -609,14 +609,56 @@ export async function searchTrials({ query = '', facets = {}, recency = null, ye
   if (iso) q = q.gte('published_at', iso)
   if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
   if (status) q = q.in('metadata->>status', TRIAL_STATUS_MAP[status] || [status])
-  // Default: importance score (phase/status/enrollment) then recency. 'newest'
-  // sorts purely by start date.
+  // 'changed' surfaces trials whose status/phase/enrollment moved most recently
+  // (metadata.lastChanged, written by scripts/trials.js). 'newest' sorts by
+  // start date. Default: importance score then recency.
   if (sort === 'newest') q = q.order('published_at', { ascending: false, nullsFirst: false })
+  else if (sort === 'changed') q = q.order('metadata->>lastChanged', { ascending: false, nullsFirst: false }).order('relevance_score', { ascending: false })
   else q = q.order('relevance_score', { ascending: false }).order('published_at', { ascending: false, nullsFirst: false })
   q = q.range(page * pageSize, page * pageSize + pageSize - 1)
   const { data, count, error } = await q
   if (error) { console.warn('searchTrials error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'trials' })), total: count ?? 0 }
+}
+
+/**
+ * Recent trial status/phase/enrollment changes (Phase 7), newest first, each
+ * with its trial title and link. Reads the trial_changes log written by
+ * scripts/trials.js on each sync. Empty until a sync detects a change.
+ */
+export async function getRecentTrialChanges(limit = 20) {
+  if (!supabase) return []
+  const { data, error } = await supabase.from('trial_changes')
+    .select('id,nct_id,trial_id,field,old_value,new_value,changed_at')
+    .order('changed_at', { ascending: false }).limit(limit)
+  if (error || !data?.length) return []
+  const ids = [...new Set(data.map(c => c.trial_id).filter(Boolean))]
+  const byId = {}
+  if (ids.length) {
+    const { data: trials } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
+    for (const t of trials || []) byId[t.id] = t
+  }
+  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+}
+
+/**
+ * For a page of trials (news_feed ids), resolve each one's sponsor organization
+ * via the sponsored_by edge, so a trial row can link its sponsor to the company
+ * page. Returns { [trialId]: { id, name } }.
+ */
+export async function getTrialSponsors(trialIds = []) {
+  const out = {}
+  if (!supabase || !trialIds.length) return out
+  const { data } = await supabase.from('relationships').select('subject_id,object_id')
+    .eq('subject_type', 'news_feed').eq('predicate', 'sponsored_by').in('subject_id', trialIds)
+  const orgByTrial = {}
+  for (const e of data || []) orgByTrial[e.subject_id] = e.object_id
+  const orgIds = [...new Set(Object.values(orgByTrial))]
+  if (!orgIds.length) return out
+  const { data: orgs } = await supabase.from('organizations').select('id,name').in('id', orgIds)
+  const nameById = Object.fromEntries((orgs || []).map(o => [o.id, o.name]))
+  for (const [tid, oid] of Object.entries(orgByTrial)) out[tid] = { id: oid, name: nameById[oid] }
+  return out
 }
 
 /** A single paper by PubMed id (for its detail page). */
