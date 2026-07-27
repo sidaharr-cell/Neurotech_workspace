@@ -353,6 +353,96 @@ export async function getCompanyRelated(name) {
   }
 }
 
+// ── The entity graph (Phase 1 relationships) ────────────────────────────────
+// These read the typed `relationships` edge table built by scripts/backfill-
+// graph.js, not name matching. An edge is (subject_type, subject_id) --predicate
+// --> (object_type, object_id) with a confidence and its own provenance.
+
+const TRIAL_ACTIVE = new Set(['RECRUITING', 'ENROLLING_BY_INVITATION', 'ACTIVE_NOT_RECRUITING', 'NOT_YET_RECRUITING'])
+const oldest = ts => ts.filter(Boolean).sort()[0] || null
+
+/**
+ * Everything linked to one organization THROUGH THE GRAPH: devices it makes
+ * (made_by), trials it sponsors (sponsored_by), the regulatory records on those
+ * devices (cleared_via), and affiliated people (affiliated_with, empty until
+ * that edge is derived). Each section carries the oldest last_updated of its
+ * rows so the page can show per-section provenance. Sparse by design: only
+ * confidently-matched edges exist, so an org with no edges yields empty sections.
+ */
+export async function getOrgGraph(orgId) {
+  const empty = { devices: [], trials: { active: [], completed: [] }, regulatory: [], people: [],
+    provenance: { devices: null, trials: null, regulatory: null } }
+  if (!supabase || !orgId) return empty
+
+  // Edges pointing AT this org.
+  const { data: edges, error } = await supabase.from('relationships')
+    .select('subject_type,subject_id,predicate,confidence')
+    .eq('object_type', 'organizations').eq('object_id', orgId)
+    .in('predicate', ['made_by', 'sponsored_by', 'affiliated_with'])
+  if (error || !edges) return empty
+
+  const deviceIds = edges.filter(e => e.predicate === 'made_by').map(e => e.subject_id)
+  const trialIds = edges.filter(e => e.predicate === 'sponsored_by').map(e => e.subject_id)
+  const personIds = edges.filter(e => e.predicate === 'affiliated_with').map(e => e.subject_id)
+
+  const [devRes, trialRes, personRes] = await Promise.all([
+    deviceIds.length ? supabase.from('devices')
+      .select(`id,name,manufacturer,type,status,year,url,description,product_code,last_updated,source_url,${FACET_COLS}`)
+      .in('id', deviceIds).order('year', { ascending: false, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    trialIds.length ? supabase.from('news_feed')
+      .select('id,title,url,metadata,published_at,last_updated,source_url')
+      .in('id', trialIds).order('published_at', { ascending: false, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    personIds.length ? supabase.from('researchers')
+      .select('id,name,role,affiliation').in('id', personIds) : Promise.resolve({ data: [] }),
+  ])
+  const devices = devRes.data || []
+  const trials = trialRes.data || []
+  const people = personRes.data || []
+
+  // Regulatory records hang off this org's devices (device cleared_via record).
+  let regulatory = []
+  if (devices.length) {
+    const { data: regs } = await supabase.from('regulatory_records')
+      .select('id,device_id,pathway,decision_date,number,source_url,last_updated')
+      .in('device_id', devices.map(d => d.id)).order('decision_date', { ascending: false, nullsFirst: false })
+    const nameById = Object.fromEntries(devices.map(d => [d.id, d.name]))
+    regulatory = (regs || []).map(r => ({ ...r, device_name: nameById[r.device_id] }))
+  }
+
+  const active = [], completed = []
+  for (const t of trials) (TRIAL_ACTIVE.has(t.metadata?.status) ? active : completed).push(t)
+
+  return {
+    devices, trials: { active, completed }, regulatory, people,
+    provenance: {
+      devices: oldest(devices.map(d => d.last_updated)),
+      trials: oldest(trials.map(t => t.last_updated)),
+      regulatory: oldest(regulatory.map(r => r.last_updated)),
+    },
+  }
+}
+
+/**
+ * Graph-derived device and trial counts for a page of orgs, in two queries.
+ * Returns { [orgId]: { devices, trials } }. Used by the /companies index so each
+ * row's counts come from real edges, not a name match.
+ */
+export async function getOrgCounts(orgIds = []) {
+  const out = {}
+  if (!supabase || !orgIds.length) return out
+  for (const id of orgIds) out[id] = { devices: 0, trials: 0 }
+  const { data } = await supabase.from('relationships')
+    .select('predicate,object_id')
+    .eq('object_type', 'organizations').in('object_id', orgIds)
+    .in('predicate', ['made_by', 'sponsored_by'])
+  for (const e of data || []) {
+    if (!out[e.object_id]) continue
+    if (e.predicate === 'made_by') out[e.object_id].devices++
+    else if (e.predicate === 'sponsored_by') out[e.object_id].trials++
+  }
+  return out
+}
+
 /** Precomputed analytics (publications) served as a static file; null if none. */
 export async function getCompanyAnalytics(id) {
   try {

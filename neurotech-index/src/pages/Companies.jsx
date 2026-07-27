@@ -4,7 +4,7 @@ import { MapPin, ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight }
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
 import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
-import { searchLabs, searchCompanies } from '../lib/data'
+import { searchLabs, searchCompanies, getOrgCounts } from '../lib/data'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -23,8 +23,9 @@ function labSearchUrl(org) {
   return `https://www.google.com/search?q=${encodeURIComponent(q)}`
 }
 
-function OrgRow({ org }) {
+function OrgRow({ org, counts }) {
   const isLab = org.type === 'lab'
+  const c = counts?.[org.id]
   // Companies route to their own NeuroBase analytics page (internal). Labs link
   // out: to their homepage when they have one (academic labs), else a targeted
   // search (NIH labs). Never nest an <a> inside the row's link.
@@ -59,6 +60,13 @@ function OrgRow({ org }) {
         {!isLab && org.founded && <><span aria-hidden>·</span>Founded {org.founded}</>}
         {!isLab && org.latestRound && <><span aria-hidden>·</span>{org.latestRound} {org.roundYear}</>}
       </p>
+      {!isLab && c && (c.devices > 0 || c.trials > 0) && (
+        <p className="mt-1 text-[12px] font-sans text-accent">
+          {c.devices > 0 && <>{c.devices} linked device{c.devices === 1 ? '' : 's'}</>}
+          {c.devices > 0 && c.trials > 0 && <span className="text-muted"> · </span>}
+          {c.trials > 0 && <>{c.trials} linked trial{c.trials === 1 ? '' : 's'}</>}
+        </p>
+      )}
       {org.description && (
         isLab && org.description.includes('Focus:')
           ? (() => {
@@ -90,6 +98,7 @@ export default function Companies() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
   const [result, setResult] = useState({ rows: [], total: 0 })
+  const [counts, setCounts] = useState({})
   const [loading, setLoading] = useState(false)
   const debounce = useRef(null)
 
@@ -104,9 +113,15 @@ export default function Companies() {
   // organizations table (type='company' | 'lab').
   const load = useCallback(async () => {
     setLoading(true)
+    setCounts({})
     const search = kind === 'lab' ? searchLabs : searchCompanies
-    setResult(await search({ query, facets, page, pageSize: PAGE_SIZE }))
+    const res = await search({ query, facets, page, pageSize: PAGE_SIZE })
+    setResult(res)
     setLoading(false)
+    // Companies show graph-derived device/trial counts; labs do not.
+    if (kind === 'company' && res.rows.length) {
+      getOrgCounts(res.rows.map(r => r.id)).then(setCounts)
+    }
   }, [kind, query, facets, page])
   useEffect(() => { load() }, [load])
 
@@ -155,7 +170,7 @@ export default function Companies() {
             <EmptyState icon={MapPin} title={`No ${kind === 'company' ? 'companies' : 'labs'} match these filters`} />
           ) : (
             <>
-              <div className="divide-rule">{result.rows.map((o, i) => <OrgRow key={o.id || i} org={o} />)}</div>
+              <div className="divide-rule">{result.rows.map((o, i) => <OrgRow key={o.id || i} org={o} counts={counts} />)}</div>
               {pages > 1 && (
                 <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
                   <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
