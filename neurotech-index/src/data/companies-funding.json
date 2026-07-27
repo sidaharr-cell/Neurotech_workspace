@@ -1,0 +1,208 @@
+{
+  "Neuralink": {
+    "total": 1300,
+    "source": "sec",
+    "latestRound": "Series E",
+    "roundYear": 2025,
+    "latestAmount": 649,
+    "latestDate": "2025-06-12"
+  },
+  "Saluda Medical": {
+    "total": 300,
+    "source": "sec",
+    "latestRound": "Series F",
+    "roundYear": 2023,
+    "latestAmount": 30,
+    "latestDate": "2025-11-12"
+  },
+  "Science Corporation": {
+    "total": 290,
+    "source": "curated",
+    "latestRound": "Series C",
+    "roundYear": 2024
+  },
+  "Onward Medical": {
+    "total": 250,
+    "source": "curated",
+    "latestRound": "Public (Euronext)",
+    "roundYear": 2024
+  },
+  "Merge Labs": {
+    "total": 250,
+    "source": "curated",
+    "latestRound": "Seed",
+    "roundYear": 2025
+  },
+  "Blackrock Neurotech": {
+    "total": 210,
+    "source": "curated",
+    "latestRound": "Strategic (Tether)",
+    "roundYear": 2024
+  },
+  "Precision Neuroscience": {
+    "total": 155,
+    "source": "sec",
+    "latestRound": "Series C",
+    "roundYear": 2024,
+    "latestAmount": 150,
+    "latestDate": "2024-10-17"
+  },
+  "Synchron": {
+    "total": 145,
+    "source": "sec",
+    "latestRound": "Series C",
+    "roundYear": 2022,
+    "latestAmount": 86,
+    "latestDate": "2022-12-20"
+  },
+  "Neuros Medical": {
+    "total": 130,
+    "source": "sec",
+    "latestRound": "Series D",
+    "roundYear": 2023,
+    "latestAmount": 65,
+    "latestDate": "2025-08-06"
+  },
+  "Kernel": {
+    "total": 110,
+    "source": "sec",
+    "latestRound": "Series C",
+    "roundYear": 2020,
+    "latestAmount": 30,
+    "latestDate": "2025-10-22"
+  },
+  "Cala Health": {
+    "total": 100,
+    "source": "sec",
+    "latestRound": "Series D",
+    "roundYear": 2023,
+    "latestAmount": 51,
+    "latestDate": "2024-12-09"
+  },
+  "INBRAIN Neuroelectronics": {
+    "total": 100,
+    "source": "curated",
+    "latestRound": "Series B",
+    "roundYear": 2024
+  },
+  "Paradromics": {
+    "total": 100,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2023,
+    "latestAmount": 51,
+    "latestDate": "2023-11-07"
+  },
+  "Rune Labs": {
+    "total": 50,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2022,
+    "latestAmount": 14,
+    "latestDate": "2025-06-30"
+  },
+  "Axoft": {
+    "total": 25,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2024,
+    "latestAmount": 34,
+    "latestDate": "2026-05-07"
+  },
+  "Motif Neurotech": {
+    "total": 20,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2024,
+    "latestAmount": 22,
+    "latestDate": "2024-01-24"
+  },
+  "Cognixion": {
+    "total": 18,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2024,
+    "latestAmount": 4,
+    "latestDate": "2026-02-03"
+  },
+  "Subsense": {
+    "total": 17,
+    "source": "curated",
+    "latestRound": "Seed",
+    "roundYear": 2024
+  },
+  "Neurable": {
+    "total": 16,
+    "source": "sec",
+    "latestRound": "Series A",
+    "roundYear": 2024,
+    "latestAmount": 6,
+    "latestDate": "2019-12-20"
+  },
+  "Forest Neurotech": {
+    "total": 10,
+    "source": "curated",
+    "latestRound": "Seed",
+    "roundYear": 2024
+  },
+  "Cortical Labs": {
+    "total": 12,
+    "source": "curated",
+    "latestRound": "Series A",
+    "roundYear": 2023
+  },
+  "Setpoint Medical": {
+    "total": 581,
+    "latestRound": "Series D",
+    "roundYear": 2025,
+    "latestAmount": 140,
+    "latestDate": "2025-08-12",
+    "source": "curated"
+  },
+  "Ceribell": {
+    "total": 334,
+    "latestRound": "IPO",
+    "roundYear": 2024,
+    "latestAmount": 180,
+    "latestDate": "2024-10-11",
+    "source": "curated"
+  },
+  "Nalu Medical": {
+    "total": 231,
+    "latestRound": "Series E",
+    "roundYear": 2024,
+    "latestAmount": 85,
+    "latestDate": "2024-03-05",
+    "source": "curated"
+  },
+  "Cognito Therapeutics": {
+    "total": 228,
+    "latestRound": "Series C",
+    "roundYear": 2026,
+    "latestAmount": 105,
+    "latestDate": "2026-03-05",
+    "source": "curated"
+  },
+  "Salvia BioElectronics": {
+    "total": 90,
+    "latestRound": "Series B",
+    "roundYear": 2025,
+    "latestAmount": 60,
+    "latestDate": "2025-05-27",
+    "source": "curated"
+  },
+  "NeuroPace": {
+    "total": 340,
+    "latestRound": "IPO",
+    "roundYear": 2021,
+    "latestAmount": 85,
+    "latestDate": "2021-04-22",
+    "source": "curated"
+  },
+  "Axonics Modulation Technologies": {
+    "total": 163,
+    "latestRound": "Acquired (Boston Scientific)",
+    "roundYear": 2024,
+    "source": "curated"
+  }
+}
