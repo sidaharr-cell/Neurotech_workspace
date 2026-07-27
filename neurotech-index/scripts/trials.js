@@ -111,7 +111,10 @@ export function trialToRow(t) {
   const row = {
     title: t.title,
     summary: t.summary ? t.summary.slice(0, 500) : '',
-    source: t.sponsor || 'ClinicalTrials.gov',
+    source: 'clinicaltrials',
+    source_id: t.nctId,
+    source_url: t.url,
+    pipeline_version: 'trials-2026-07',
     url: t.url,
     published_at: t.startDate,
     topics: t.tags || [],

@@ -54,6 +54,10 @@ const ARXIV_QUERIES = [
 // 1 to 4 and are dropped, so the feed stays about neurotechnology specifically.
 const NEWS_RELEVANCE_FLOOR = 5
 
+// Provenance stamp: written to source_url / last_updated / pipeline_version on
+// every row this run touches, so a record is traceable to its ingestion.
+const PIPELINE_VERSION = 'refresh-2026-07'
+
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 // How far back to pull content. Wider than "this week" so papers are old enough
 // to have accrued citations/engagement, which is a ranking input (see computeRank).
@@ -965,6 +969,9 @@ async function syncToSupabase(pubmed, arxiv, news) {
         abstract: p.abstract || null,
         tags: p.topics || [],
         source: 'pubmed',
+        source_id: p.pmid,
+        source_url: p.url,
+        pipeline_version: PIPELINE_VERSION,
       })),
       { onConflict: 'pubmed_id', ignoreDuplicates: true }
     )
@@ -983,6 +990,9 @@ async function syncToSupabase(pubmed, arxiv, news) {
         abstract: p.abstract || null,
         tags: p.topics || [],
         source: 'arxiv',
+        source_id: p.arxivId,
+        source_url: p.url,
+        pipeline_version: PIPELINE_VERSION,
       })),
       { onConflict: 'arxiv_id', ignoreDuplicates: true }
     )
@@ -1020,6 +1030,11 @@ async function syncToSupabase(pubmed, arxiv, news) {
     // Papers/preprints classify from title+summary here; the fuller papers-table
     // rows get MeSH-refined facets separately.
     const kind = base.entry_type === 'news' ? 'news' : 'papers'
+    // Provenance block: canonical link, freshness stamp, and the version that
+    // wrote the row (source is already set on `base`).
+    row.source_url = base.url || null
+    row.last_updated = new Date().toISOString()
+    row.pipeline_version = PIPELINE_VERSION
     return { ...row, ...classify(row, kind) }
   }
 
