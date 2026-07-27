@@ -39,7 +39,9 @@ create extension if not exists "pgcrypto";
 --
 -- Some of these already exist on some tables (papers.source, patents.source,
 -- news_feed.source). `add column if not exists` is a no-op for those, so this is
--- safe to run as-is.
+-- safe to run as-is. Adding a column with a `default now()` is metadata-only in
+-- Postgres 11+ (no table rewrite), so this is fast even on the fat papers and
+-- patents tables. Existing rows get the migration-time now() for the timestamps.
 
 do $$
 declare t text;
@@ -55,65 +57,14 @@ begin
   end loop;
 end $$;
 
--- Backfill the provenance block from columns that already hold the information.
--- All of these are idempotent (they only fill nulls), so the migration is
--- safe to re-run.
-
--- Papers: native id is the PMID, else the arXiv id, else the DOI. Canonical link
--- is the stored url. first_seen/last_updated seed from created_at.
-update papers set
-  source_id  = coalesce(source_id, pubmed_id, arxiv_id, doi),
-  source_url = coalesce(source_url, url),
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where source_id is null or source_url is null or pipeline_version is null;
-
--- Devices came from openFDA (backfill-devices.js). The FDA product code is the
--- closest thing to a native id; the accessdata.fda.gov link is canonical.
-update devices set
-  source     = coalesce(source, 'openfda'),
-  source_id  = coalesce(source_id, product_code),
-  source_url = coalesce(source_url, url),
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where source is null or source_url is null or pipeline_version is null;
-
--- Patents: patent number is the native id, source already set to 'patentsview'.
-update patents set
-  source_id  = coalesce(source_id, patent_number),
-  source_url = coalesce(source_url, url),
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where source_id is null or source_url is null or pipeline_version is null;
-
--- news_feed: trials carry an NCT id in metadata; everything else keys on its url.
-update news_feed set
-  source_id  = coalesce(source_id, metadata->>'nctId', url),
-  source_url = coalesce(source_url, url),
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where source_id is null or source_url is null or pipeline_version is null;
-
--- Organizations: the website is the canonical link. `source` is left null on
--- purpose where it is not certain (orgs come from a mix of Airtable and seeds);
--- backfill-graph.js does not assert a source it cannot prove.
-update organizations set
-  source_url = coalesce(source_url, website),
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where source_url is null or pipeline_version is null;
-
--- Researchers: no external link column exists, so only the timestamps seed.
-update researchers set
-  first_seen = coalesce(first_seen, created_at),
-  last_updated = coalesce(last_updated, created_at),
-  pipeline_version = coalesce(pipeline_version, 'phase1-backfill')
-where pipeline_version is null;
+-- NOTE: filling source_url / source_id / etc. from the columns that already hold
+-- that information (url, pubmed_id, product_code, ...) is a per-row backfill.
+-- On papers (~84k) and patents (~47k) a single full-table UPDATE rewrites every
+-- row and exceeds the SQL editor's upstream timeout, so it is deliberately NOT
+-- done here. Run it from the terminal instead, batched and idempotent:
+--     node --env-file=.env scripts/backfill-provenance.js
+-- Until then existing rows carry the migration-time first_seen/last_updated and
+-- null source_url; new rows written by refresh.js/trials.js are fully stamped.
 
 -- ── 2. RegulatoryRecord ─────────────────────────────────────────────────────
 -- A cleared/approved regulatory decision for a device. Sourced from openFDA.
