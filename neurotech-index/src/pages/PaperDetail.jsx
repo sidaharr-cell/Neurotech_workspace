@@ -6,6 +6,29 @@ import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { KindBadge } from '../components/PaperSignals'
 import { StarButton } from '../components/Watch'
+import { CiteButton } from '../components/Cite'
+
+// Highwire Press + Dublin Core tags so the Zotero connector detects the page as
+// one item. React 19 hoists <title>/<meta> rendered here into <head>.
+function CitationMeta({ paper }) {
+  const authors = Array.isArray(paper.authors) ? paper.authors : []
+  const pdf = paper.source === 'arxiv' && paper.arxiv_id ? `https://arxiv.org/pdf/${paper.arxiv_id}` : null
+  return (
+    <>
+      <title>{`${paper.title} — NeuroBase`}</title>
+      <meta name="citation_title" content={paper.title} />
+      {authors.map((a, i) => <meta key={i} name="citation_author" content={a} />)}
+      {paper.year && <meta name="citation_publication_date" content={String(paper.year)} />}
+      {paper.journal && <meta name="citation_journal_title" content={paper.journal} />}
+      {paper.doi && <meta name="citation_doi" content={paper.doi} />}
+      {pdf && <meta name="citation_pdf_url" content={pdf} />}
+      <meta name="DC.title" content={paper.title} />
+      {authors.length > 0 && <meta name="DC.creator" content={authors.join('; ')} />}
+      {paper.year && <meta name="DC.date" content={String(paper.year)} />}
+      {paper.doi && <meta name="DC.identifier" content={`doi:${paper.doi}`} />}
+    </>
+  )
+}
 
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 
@@ -49,9 +72,13 @@ export default function PaperDetail() {
         ))}
       </div>
 
+      <CitationMeta paper={paper} />
       <div className="flex items-start justify-between gap-4">
         <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{paper.title}</h1>
-        {paper.pubmed_id && <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'papers', id: paper.pubmed_id, label: paper.title, to: `/paper/${paper.pubmed_id}` }} /></div>}
+        <div className="pt-1.5 shrink-0 flex items-center gap-2">
+          <CiteButton paper={paper} />
+          {paper.pubmed_id && <StarButton item={{ type: 'papers', id: paper.pubmed_id, label: paper.title, to: `/paper/${paper.pubmed_id}` }} />}
+        </div>
       </div>
 
       {authors && <p className="mt-4 text-[15px] text-ink-soft font-body leading-relaxed">{authors}</p>}
