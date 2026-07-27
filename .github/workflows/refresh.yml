@@ -60,13 +60,14 @@ jobs:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      - name: Refresh company publications (PubMed — incremental)
+      - name: Refresh company publications (PubMed + Claude judge — incremental)
         working-directory: neurotech-index
         continue-on-error: true
         run: node scripts/backfill-company-analytics.js
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Refresh recent patents (PatentsView)
         working-directory: neurotech-index
