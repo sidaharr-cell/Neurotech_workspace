@@ -192,11 +192,11 @@ export default function CompanyPage() {
       </Section>
 
       {/* Publications */}
-      <Section icon={FileText} title="Publications" note={pubs?.total ? `${pubs.total} affiliation-verified` : null}>
+      <Section icon={FileText} title="Publications" note={pubs?.total ? `${pubs.total} official` : null}>
         {analytics === undefined ? <Loader />
           : !pubs || pubs.items.length === 0
             ? <div>
-                <p className="text-[14px] text-muted font-body mb-3">No company-affiliated publications matched on PubMed.</p>
+                <p className="text-[14px] text-muted font-body mb-3">No official company publications identified on PubMed.</p>
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(`"${company.name}"[Affiliation]`)}`} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-[13px] font-sans text-accent hover:underline">Search PubMed <ExternalLink className="w-3.5 h-3.5" /></a>
               </div>
