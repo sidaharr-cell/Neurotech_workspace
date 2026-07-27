@@ -8,6 +8,7 @@ import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
 import researchersJson from '../data/researchers.json'
 import { getFunding } from './companyFunding'
+import { FUNCTION, ACCESS, APPLICATION } from './facets'
 
 function tag(type) {
   return items => items.map(i => ({ ...i, _type: type }))
@@ -59,6 +60,50 @@ function applyFacets(q, facets = {}, includeOutOfScope = false) {
 
 // Facet columns every card needs to render its badges.
 const FACET_COLS = 'facet_function,facet_access,facet_application,in_scope'
+
+// ── Per-facet-value result counts (Phase 4) ─────────────────────────────────
+const FACET_DIMS = { function: FUNCTION, access: ACCESS, application: APPLICATION }
+const FACET_COL = { function: 'facet_function', access: 'facet_access', application: 'facet_application' }
+// Only the lean tables get live per-value counts. The papers and patents tables
+// are fat (a facet-filtered count already times out on them, see the year
+// histogram note), so counting ~23 values would be slow and flaky there; the
+// sidebar simply shows no counts and hides nothing in that case.
+const COUNTABLE_TABLES = new Set(['devices', 'organizations'])
+
+/**
+ * For each value of each facet dimension, count in-scope rows that would match
+ * if that value were selected, holding the OTHER dimensions' current selections
+ * fixed (standard faceted counts, so a user sees what adding a value yields).
+ * Returns { function:{value:n}, access:{...}, application:{...} } or null when
+ * the table is not countable or any count fails (the UI then hides counts).
+ * `extraFilter(q)` applies a page-specific constraint (for example org type).
+ */
+export async function facetCounts({ table = 'devices', facets = {}, extraFilter = null } = {}) {
+  if (!supabase || !COUNTABLE_TABLES.has(table)) return null
+  const sel = k => arr(facets[k])
+  const out = { function: {}, access: {}, application: {} }
+  const tasks = []
+  for (const dim of Object.keys(FACET_DIMS)) {
+    for (const val of FACET_DIMS[dim]) {
+      if (val === 'none' || val === 'not_applicable') continue
+      tasks.push((async () => {
+        let q = supabase.from(table).select('*', { count: 'exact', head: true }).eq('in_scope', true)
+        for (const other of Object.keys(FACET_COL)) {
+          if (other === dim) continue        // count this dimension's values freely
+          const s = sel(other)
+          if (s.length) q = q.overlaps(FACET_COL[other], s)
+        }
+        if (extraFilter) q = extraFilter(q)
+        q = q.overlaps(FACET_COL[dim], [val])
+        const { count, error } = await q
+        if (error) throw error
+        out[dim][val] = count ?? 0
+      })())
+    }
+  }
+  try { await Promise.all(tasks) } catch { return null }
+  return out
+}
 
 /**
  * Apply a histogram year selection to a query. `range` is { lo, hi } (a click

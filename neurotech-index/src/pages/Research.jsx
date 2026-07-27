@@ -4,7 +4,8 @@ import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers, yearHistogram } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
+import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
 
@@ -32,7 +33,7 @@ function PaperRow({ paper }) {
 export default function Research() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [year, setYear] = useState(null)          // histogram year selection { label, lo, hi }
   const [source, setSource] = useState(null)

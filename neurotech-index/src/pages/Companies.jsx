@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
-import { searchLabs, searchCompanies, getOrgCounts } from '../lib/data'
+import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
+import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -93,14 +94,23 @@ function OrgRow({ org, counts }) {
 
 export default function Companies() {
   const [kind, setKind] = useState('company')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
   const [result, setResult] = useState({ rows: [], total: 0 })
-  const [counts, setCounts] = useState({})
+  const [counts, setCounts] = useState({})          // per-org device/trial counts
+  const [facetCts, setFacetCts] = useState(null)    // per-facet-value result counts
   const [loading, setLoading] = useState(false)
   const debounce = useRef(null)
+
+  // Per-facet-value counts, scoped to the current organization type.
+  useEffect(() => {
+    let alive = true
+    facetCounts({ table: 'organizations', facets, extraFilter: q => q.eq('type', kind) })
+      .then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, kind])
 
   useEffect(() => {
     clearTimeout(debounce.current)
@@ -158,7 +168,7 @@ export default function Companies() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar facets={facets} onChange={setFacets} />
+        <FacetSidebar facets={facets} onChange={setFacets} counts={facetCts} />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center h-9 mb-6 border-b border-rule">
