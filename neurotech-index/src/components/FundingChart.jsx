@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import funding from '../data/funding.json'
+import { topFunded } from '../lib/companyFunding'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const monthsSince = d => (d ? (Date.now() - new Date(d).getTime()) / (30 * 864e5) : Infinity)
@@ -11,17 +11,16 @@ const SORTS = [
   { id: 'recent', label: 'Latest raise date' },
 ]
 
-/** Top companies by funding, with a live "latest raise" column and sorting. */
-export default function FundingChart({ companies, limit = 20 }) {
+/** Top neurotech companies by funding raised — sourced from the whole-landscape
+ *  funding overlay, with a live "latest raise" column and sorting. */
+export default function FundingChart({ limit = 20 }) {
   const [sort, setSort] = useState('total')
 
-  const rows = companies
-    .filter(c => c.type === 'company')
-    .map(c => {
-      const f = funding[c.name] || {}
-      return { name: c.name, total: f.total ?? c.funding ?? 0, latestAmount: f.latestAmount || 0, latestDate: f.latestDate || null }
-    })
-    .filter(c => c.total > 0)
+  // Pull a generous slice so a re-sort by latest-raise can still surface
+  // companies that aren't in the top `limit` by total.
+  const rows = topFunded(limit * 3).map(f => ({
+    name: f.name, total: f.total || 0, latestAmount: f.latestAmount || 0, latestDate: f.latestDate || null,
+  }))
 
   const cmp = {
     total: (a, b) => b.total - a.total,
