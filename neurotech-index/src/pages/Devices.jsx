@@ -93,8 +93,8 @@ export default function Devices() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
-        kicker="Devices & Patents"
-        title="Devices & Patents"
+        kicker="Devices and Patents"
+        title="Devices and Patents"
         sub="FDA-cleared and approved neurotechnology devices, plus a classification-defined index of neurotech patents."
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{shownTotal.toLocaleString()} {isPatent ? 'patents' : 'devices'}</span>}
       />

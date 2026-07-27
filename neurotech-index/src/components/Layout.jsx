@@ -7,8 +7,8 @@ const TOPICS = [
   { to: '/media', label: 'Media' },
   { to: '/research', label: 'Research' },
   { to: '/trials', label: 'Clinical Trials' },
-  { to: '/companies', label: 'Companies & Labs' },
-  { to: '/devices', label: 'Devices & Patents' },
+  { to: '/companies', label: 'Companies and Labs' },
+  { to: '/devices', label: 'Devices and Patents' },
 ]
 
 // Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).

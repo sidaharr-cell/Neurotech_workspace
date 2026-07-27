@@ -141,7 +141,7 @@ export default function Companies() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
-        kicker="Companies & Labs"
+        kicker="Companies and Labs"
         title="Companies"
         sub="Neurotechnology companies and NIH-funded research labs, with funding, focus, and location."
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>}
