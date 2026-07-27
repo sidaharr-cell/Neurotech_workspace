@@ -23,6 +23,26 @@ import { createClient } from '@supabase/supabase-js'
 const STAMP = 'phase1-backfill'
 const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 const orNull = v => (v == null || v === '' ? null : v)
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+// The papers/patents tables are fat (a generated fts tsvector recomputes on
+// every update) and have a short statement_timeout, so writes go in small
+// chunks. A chunk that times out is retried a few times before giving up.
+const WRITE_CHUNK = 50
+const READ_LIMIT = 1000
+
+async function upsertChunk(table, chunk) {
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const { error } = await sb.from(table).upsert(chunk, { onConflict: 'id' })
+    if (!error) return true
+    if (!/timeout/i.test(error.message) || attempt === 4) {
+      console.warn(`\n  ${table} upsert error:`, error.message)
+      return false
+    }
+    await sleep(500 * attempt)
+  }
+  return false
+}
 
 // One config per table. `required` lists NOT NULL columns to echo. `derive`
 // returns the provenance fields to fill (coalesced against existing values).
@@ -81,18 +101,26 @@ const TABLES = [
 ]
 
 async function backfillTable(cfg) {
-  let total = 0
+  // Keyset-paginate over the primary key (always a fast index scan) and filter
+  // in JS to rows still needing a stamp. This avoids scanning the fat table for
+  // `pipeline_version IS NULL`, which times out once the null rows go sparse and
+  // there is no index on that column. Every row is read once (light columns);
+  // only unstamped rows are written, so re-runs read fast and write nothing.
+  // id is a uuid; seed the keyset cursor below the minimum possible value.
+  let total = 0, seen = 0, failed = 0, last = '00000000-0000-0000-0000-000000000000'
   for (;;) {
     const { data, error } = await sb
       .from(cfg.name)
-      .select(cfg.read)
-      .is('pipeline_version', null)
+      .select(`${cfg.read},pipeline_version`)
+      .gt('id', last)
       .order('id')
-      .limit(1000)
-    if (error) { console.warn(`  ${cfg.name} read error:`, error.message); break }
+      .limit(READ_LIMIT)
+    if (error) { console.warn(`\n  ${cfg.name} read error:`, error.message); break }
     if (!data?.length) break
+    last = data[data.length - 1].id
+    seen += data.length
 
-    const rows = data.map(r => {
+    const rows = data.filter(r => r.pipeline_version == null).map(r => {
       const echo = {}
       for (const col of cfg.required) echo[col] = r[col]
       return {
@@ -105,19 +133,21 @@ async function backfillTable(cfg) {
       }
     })
 
-    let wrote = 0
-    for (let i = 0; i < rows.length; i += 500) {
-      const { error: upErr } = await sb.from(cfg.name)
-        .upsert(rows.slice(i, i + 500), { onConflict: 'id' })
-      if (upErr) { console.warn(`  ${cfg.name} upsert error:`, upErr.message); return total }
-      wrote += Math.min(500, rows.length - i)
+    for (let i = 0; i < rows.length; i += WRITE_CHUNK) {
+      const chunk = rows.slice(i, i + WRITE_CHUNK)
+      // Keyset cursor advances by id regardless of write success, so a chunk
+      // that times out even after retries is skipped, not fatal: those rows stay
+      // null and a re-run (which rescans by id and writes remaining nulls) mops
+      // them up. This lets one pass get through the whole table under DB load.
+      if (await upsertChunk(cfg.name, chunk)) total += chunk.length
+      else failed += chunk.length
     }
-    total += wrote
-    process.stdout.write(`\r  ${cfg.name}: ${total} stamped`)
-    if (wrote === 0) break // safety: no progress, avoid an infinite loop
+    process.stdout.write(`\r  ${cfg.name}: ${total} stamped (${seen} scanned${failed ? `, ${failed} deferred` : ''})`)
+    if (data.length < READ_LIMIT) break // reached the end of the table
   }
-  if (total) process.stdout.write('\n')
-  else console.log(`  ${cfg.name}: nothing to do (already stamped)`)
+  if (total || failed) process.stdout.write('\n')
+  if (failed) console.warn(`  ${cfg.name}: ${failed} rows deferred by timeout; re-run to finish them.`)
+  if (!total && !failed) console.log(`  ${cfg.name}: nothing to do (already stamped)`)
   return total
 }
 
