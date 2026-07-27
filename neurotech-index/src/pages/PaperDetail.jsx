@@ -1,19 +1,27 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, FileQuestion } from 'lucide-react'
-import { getPaperByPmid } from '../lib/data'
+import { ArrowLeft, ExternalLink, FileQuestion, Code2, Database, AlertTriangle, CopyCheck } from 'lucide-react'
+import { getPaperByPmid, getPaperSignals } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
+import { KindBadge } from '../components/PaperSignals'
+
+const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 
 export default function PaperDetail() {
   const { pmid } = useParams()
   const [paper, setPaper] = useState(null)
+  const [signals, setSignals] = useState({ contradictedBy: [], replicatedBy: [] })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let alive = true
-    setLoading(true)
-    getPaperByPmid(pmid).then(d => { if (alive) { setPaper(d); setLoading(false) } })
+    setLoading(true); setSignals({ contradictedBy: [], replicatedBy: [] })
+    getPaperByPmid(pmid).then(d => {
+      if (!alive) return
+      setPaper(d); setLoading(false)
+      if (d?.id) getPaperSignals(d.id).then(s => alive && setSignals(s))
+    })
     return () => { alive = false }
   }, [pmid])
 
@@ -22,6 +30,8 @@ export default function PaperDetail() {
 
   const authors = Array.isArray(paper.authors) ? paper.authors.join(', ') : paper.authors
   const badges = cardBadges(paper, 4)
+  const codeUrls = Array.isArray(paper.code_urls) ? paper.code_urls : []
+  const dataUrls = Array.isArray(paper.data_urls) ? paper.data_urls : []
 
   return (
     <article className="max-w-prose mx-auto px-4 sm:px-6 py-10">
@@ -31,6 +41,7 @@ export default function PaperDetail() {
 
       <div className="flex items-center gap-3 mb-3 flex-wrap">
         <Kicker>Research</Kicker>
+        <KindBadge source={paper.source} />
         {badges.map(b => (
           <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
         ))}
@@ -54,6 +65,45 @@ export default function PaperDetail() {
         </div>
       ) : (
         <p className="mb-8 text-[15px] text-muted font-body italic">No abstract available. Read the full paper at the source.</p>
+      )}
+
+      {/* Reproducibility and provenance signals. Each appears only when present;
+          absence of a code/data link is not evidence of absence, so nothing is
+          shown in that case, and no reproducibility score is synthesized. */}
+      {(signals.contradictedBy.length > 0 || signals.replicatedBy.length > 0) && (
+        <div className="mb-8 border-t border-rule pt-6">
+          {signals.contradictedBy.map(p => (
+            <div key={p.id} className="mb-3">
+              <span className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold uppercase tracking-[0.07em] text-highlight mb-1"><AlertTriangle className="w-3.5 h-3.5" /> Contradicted by a later record</span>
+              {p.pubmed_id
+                ? <Link to={`/paper/${p.pubmed_id}`} className="block font-serif text-[1.05rem] text-ink hover:text-accent">{p.title}</Link>
+                : <span className="block font-serif text-[1.05rem] text-ink">{p.title}</span>}
+            </div>
+          ))}
+          {signals.replicatedBy.map(p => (
+            <div key={p.id} className="mb-3">
+              <span className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold uppercase tracking-[0.07em] text-accent mb-1"><CopyCheck className="w-3.5 h-3.5" /> Replicated by a later record</span>
+              {p.pubmed_id
+                ? <Link to={`/paper/${p.pubmed_id}`} className="block font-serif text-[1.05rem] text-ink hover:text-accent">{p.title}</Link>
+                : <span className="block font-serif text-[1.05rem] text-ink">{p.title}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {(codeUrls.length > 0 || dataUrls.length > 0) && (
+        <div className="mb-8 flex flex-wrap gap-3">
+          {codeUrls.map(u => (
+            <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3 py-1.5 rounded-full border border-rule text-ink-soft hover:border-accent hover:text-accent transition-colors">
+              <Code2 className="w-3.5 h-3.5" /> Code available · {host(u)}
+            </a>
+          ))}
+          {dataUrls.map(u => (
+            <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3 py-1.5 rounded-full border border-rule text-ink-soft hover:border-accent hover:text-accent transition-colors">
+              <Database className="w-3.5 h-3.5" /> Data available · {host(u)}
+            </a>
+          ))}
+        </div>
       )}
 
       {paper.url && (
