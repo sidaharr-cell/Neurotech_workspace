@@ -74,7 +74,7 @@ function RecentChanges({ changes }) {
           <li key={c.id} className="py-2 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3">
             <span className="min-w-0 text-[13.5px] font-sans text-ink">
               <span className="text-muted">{c.field}:</span>{' '}
-              {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || '—')} → <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || '—')}</span>
+              {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
               {c.title && <span className="text-muted"> · {c.url ? <a href={c.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent">{c.nct_id}</a> : c.nct_id}</span>}
             </span>
             <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(c.changed_at)}</span>
