@@ -13,8 +13,8 @@
     "doi": "10.1186/s13062-026-00778-4",
     "url": "https://doi.org/10.1186/s13062-026-00778-4",
     "publishedAt": "2026-05-06",
-    "pctile": 0.99623933,
-    "fwci": 25.2403,
+    "pctile": 0.99617406,
+    "fwci": 24.994,
     "citedBy": 3,
     "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
   },
@@ -36,23 +36,6 @@
     "significance": "This handbook establishes clinical neurophysiology as the foundational discipline for developing brain-body interfaces to restore movement and sensation after neurological injury."
   },
   {
-    "title": "Safeguarding Neural Data.",
-    "authors": [
-      "Michael J Young",
-      "David Simon",
-      "Barbara J Evans"
-    ],
-    "journal": "Neurology",
-    "pmid": "42060878",
-    "doi": "10.1212/WNL.0000000000214942",
-    "url": "https://doi.org/10.1212/WNL.0000000000214942",
-    "publishedAt": "2026-04-30",
-    "pctile": 0.99570639,
-    "fwci": 27.3594,
-    "citedBy": 3,
-    "significance": "Neural data privacy legislation is crucial because brain-derived information reveals uniquely sensitive cognitive and identity details requiring specialized legal protections beyond standard healthcare privacy."
-  },
-  {
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -72,10 +55,27 @@
     "doi": "10.1038/s41591-026-04414-6",
     "url": "https://doi.org/10.1038/s41591-026-04414-6",
     "publishedAt": "2026-06-15T00:00:00.000Z",
-    "pctile": 0.99569817,
-    "fwci": 35.4625,
+    "pctile": 0.99569294,
+    "fwci": 35.0578,
     "citedBy": 6,
     "significance": "This work represents a major milestone in clinical neurotechnology by demonstrating that intracortical BCIs can move beyond laboratory settings into practical independent use. The achievement of naturalistic speech decoding and reliable cursor control with at-home operation and minimal supervision addresses the most critical barrier to clinical adoption: sustained, unsupervised performance in real-world conditions. For neurotech practitioners, this validates the pathway toward implantable BCI systems that genuinely restore communication and digital access for people with severe paralysis."
+  },
+  {
+    "title": "Safeguarding Neural Data.",
+    "authors": [
+      "Michael J Young",
+      "David Simon",
+      "Barbara J Evans"
+    ],
+    "journal": "Neurology",
+    "pmid": "42060878",
+    "doi": "10.1212/WNL.0000000000214942",
+    "url": "https://doi.org/10.1212/WNL.0000000000214942",
+    "publishedAt": "2026-04-30",
+    "pctile": 0.99542221,
+    "fwci": 26.2934,
+    "citedBy": 3,
+    "significance": "Neural data privacy legislation is crucial because brain-derived information reveals uniquely sensitive cognitive and identity details requiring specialized legal protections beyond standard healthcare privacy."
   },
   {
     "title": "Fronto-insular circuit mechanisms of accelerated intermittent theta burst stimulation.",
@@ -145,8 +145,8 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99205611,
-    "fwci": 25.2403,
+    "pctile": 0.99205382,
+    "fwci": 24.994,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
   },
@@ -205,8 +205,8 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99121833,
-    "fwci": 19.1459,
+    "pctile": 0.99055102,
+    "fwci": 18.7418,
     "citedBy": 15,
     "significance": "This paper enables simultaneous high-resolution recording and precise optogenetic manipulation of thousands of neurons across brain regions, advancing our ability to map neural circuits and causality."
   },
@@ -230,8 +230,8 @@
     "doi": "10.1038/s41556-026-01954-4",
     "url": "https://doi.org/10.1038/s41556-026-01954-4",
     "publishedAt": "2026-05-14",
-    "pctile": 0.98454015,
-    "fwci": 11.3509,
+    "pctile": 0.98396095,
+    "fwci": 11.0363,
     "citedBy": 2,
     "significance": "Tissue rigidity transitions physically reshape morphogen gradients during development, revealing how mechanical properties actively control cell fate decisions beyond chemical signaling alone."
   }
