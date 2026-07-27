@@ -14,6 +14,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
 import { classify } from '../src/lib/classify.js'
+import { scanReproLinks } from '../src/lib/repro.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -57,6 +58,12 @@ const NEWS_RELEVANCE_FLOOR = 5
 // Provenance stamp: written to source_url / last_updated / pipeline_version on
 // every row this run touches, so a record is traceable to its ingestion.
 const PIPELINE_VERSION = 'refresh-2026-07'
+
+// Code/data availability links detected in a paper's title + abstract.
+function reproCols(p) {
+  const { code, data } = scanReproLinks(`${p.title || ''} ${p.abstract || ''}`)
+  return { code_urls: code, data_urls: data }
+}
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 // How far back to pull content. Wider than "this week" so papers are old enough
@@ -972,6 +979,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
         source_id: p.pmid,
         source_url: p.url,
         pipeline_version: PIPELINE_VERSION,
+        ...reproCols(p),
       })),
       { onConflict: 'pubmed_id', ignoreDuplicates: true }
     )
@@ -993,6 +1001,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
         source_id: p.arxivId,
         source_url: p.url,
         pipeline_version: PIPELINE_VERSION,
+        ...reproCols(p),
       })),
       { onConflict: 'arxiv_id', ignoreDuplicates: true }
     )

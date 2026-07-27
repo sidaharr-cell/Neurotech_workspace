@@ -1,23 +1,26 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { searchPapers, yearHistogram } from '../lib/data'
+import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
 import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
+import { KindBadge, ReproBadges } from '../components/PaperSignals'
 
 const PAGE_SIZE = 20
 
-function PaperRow({ paper }) {
+function PaperRow({ paper, signals }) {
   const authors = Array.isArray(paper.authors)
     ? paper.authors.slice(0, 4).join(', ') + (paper.authors.length > 4 ? ' et al.' : '')
     : paper.authors
   return (
     <Link to={`/paper/${paper.pubmed_id}`} className="group block py-5">
-      <div className="flex items-center gap-3 mb-1.5">
+      <div className="flex items-center gap-3 gap-y-1.5 mb-1.5 flex-wrap">
         <Kicker>Research</Kicker>
+        <KindBadge source={paper.source} />
         <DeviceClassLabels entity={paper} max={2} />
+        <ReproBadges paper={paper} signals={signals} />
       </div>
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{paper.title}</h3>
       {authors && <p className="mt-1 text-[13px] text-muted font-sans line-clamp-1">{authors}</p>}
@@ -40,6 +43,7 @@ export default function Research() {
   const [sort, setSort] = useState('relevant')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
+  const [signals, setSignals] = useState({})
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
   const debounce = useRef(null)
@@ -54,9 +58,12 @@ export default function Research() {
   useEffect(() => { setPage(0) }, [facets, recency, year, source, sort])
 
   const load = useCallback(async () => {
-    setLoading(true)
+    setLoading(true); setSignals({})
     const res = await searchPapers({ query, facets, recency, yearRange: year, source, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
+    // Contradiction/replication badges for the visible rows, from the graph.
+    const ids = res.rows.map(r => r.id).filter(Boolean)
+    if (ids.length) getPaperSignalsBatch(ids).then(setSignals)
   }, [query, facets, recency, year, source, sort, page])
 
   useEffect(() => { load() }, [load])
@@ -123,7 +130,7 @@ export default function Research() {
           ) : (
             <>
               <div className="divide-rule">
-                {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} />)}
+                {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} signals={signals[p.id]} />)}
               </div>
 
               {pages > 1 && (

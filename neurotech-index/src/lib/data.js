@@ -286,9 +286,13 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     // `estimated` count, not `exact`: an exact count over the ~55k in-scope
     // papers exceeds the statement timeout. The planner estimate is instant and
     // fine for a browse-index header and pagination.
+    // code_urls/data_urls are NOT selected here on purpose: they are a paper-page
+    // feature and, being added by migration 005, selecting them explicitly would
+    // error the whole query until that migration is applied. The detail page uses
+    // select('*'), which safely omits them until the column exists.
     let b = supabase
       .from('papers')
-      .select(`title,authors,journal,year,doi,url,abstract,pubmed_id,${FACET_COLS}`, { count: 'estimated' })
+      .select(`id,title,authors,journal,year,doi,url,abstract,pubmed_id,source,${FACET_COLS}`, { count: 'estimated' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
     b = applyFacets(b, facets)
     b = applyYear(b, yearRange, 'year')
@@ -667,6 +671,49 @@ export async function getPaperByPmid(pmid) {
   const { data, error } = await supabase.from('papers').select('*').eq('pubmed_id', pmid).maybeSingle()
   if (error) { console.warn('getPaperByPmid error:', error.message); return null }
   return data || null
+}
+
+/**
+ * Reproducibility/provenance signals for one paper (Phase 5): the later papers
+ * that contradict or replicate it, read from the relationships table. Empty
+ * until those edges are derived; the badges then link to the related record.
+ */
+export async function getPaperSignals(paperId) {
+  const empty = { contradictedBy: [], replicatedBy: [] }
+  if (!supabase || !paperId) return empty
+  const { data } = await supabase.from('relationships')
+    .select('predicate,subject_id')
+    .eq('object_type', 'papers').eq('object_id', paperId)
+    .in('predicate', ['contradicts', 'replicates'])
+  if (!data?.length) return empty
+  const ids = [...new Set(data.map(e => e.subject_id))]
+  const { data: papers } = await supabase.from('papers').select('id,title,year,pubmed_id,url').in('id', ids)
+  const byId = Object.fromEntries((papers || []).map(p => [p.id, p]))
+  const contradictedBy = [], replicatedBy = []
+  for (const e of data) {
+    const p = byId[e.subject_id]
+    if (p) (e.predicate === 'contradicts' ? contradictedBy : replicatedBy).push(p)
+  }
+  return { contradictedBy, replicatedBy }
+}
+
+/**
+ * Batched contradiction/replication flags for a page of papers, one query.
+ * Returns { [paperId]: { contradicted, replicated } } for the paper rows.
+ */
+export async function getPaperSignalsBatch(paperIds = []) {
+  const out = {}
+  if (!supabase || !paperIds.length) return out
+  const { data } = await supabase.from('relationships')
+    .select('predicate,object_id')
+    .eq('object_type', 'papers').in('object_id', paperIds)
+    .in('predicate', ['contradicts', 'replicates'])
+  for (const e of data || []) {
+    out[e.object_id] = out[e.object_id] || {}
+    if (e.predicate === 'contradicts') out[e.object_id].contradicted = true
+    else out[e.object_id].replicated = true
+  }
+  return out
 }
 
 /** A single feed item by id (for the internal detail page). */
