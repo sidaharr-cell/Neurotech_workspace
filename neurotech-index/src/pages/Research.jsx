@@ -8,6 +8,7 @@ import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { KindBadge, ReproBadges } from '../components/PaperSignals'
 import { StarButton } from '../components/Watch'
+import { CiteButton } from '../components/Cite'
 
 const PAGE_SIZE = 20
 
@@ -16,21 +17,26 @@ function PaperRow({ paper, signals }) {
     ? paper.authors.slice(0, 4).join(', ') + (paper.authors.length > 4 ? ' et al.' : '')
     : paper.authors
   return (
-    <Link to={`/paper/${paper.pubmed_id}`} className="group block py-5">
-      <div className="flex items-center gap-3 gap-y-1.5 mb-1.5 flex-wrap">
-        <Kicker>Research</Kicker>
-        <KindBadge source={paper.source} />
-        <DeviceClassLabels entity={paper} max={2} />
-        <ReproBadges paper={paper} signals={signals} />
+    <div className="group py-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3 gap-y-1.5 mb-1.5 flex-wrap min-w-0">
+          <Kicker>Research</Kicker>
+          <KindBadge source={paper.source} />
+          <DeviceClassLabels entity={paper} max={2} />
+          <ReproBadges paper={paper} signals={signals} />
+        </div>
+        <CiteButton paper={paper} variant="icon" />
       </div>
-      <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{paper.title}</h3>
-      {authors && <p className="mt-1 text-[13px] text-muted font-sans line-clamp-1">{authors}</p>}
-      <div className="mt-1 flex items-center gap-2 text-[13px] text-muted font-sans">
-        {paper.journal && <span className="italic truncate max-w-[24rem]">{paper.journal}</span>}
-        {paper.year && <><span aria-hidden>·</span><span>{paper.year}</span></>}
-      </div>
-      {paper.abstract && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{paper.abstract}</p>}
-    </Link>
+      <Link to={`/paper/${paper.pubmed_id}`} className="block">
+        <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{paper.title}</h3>
+        {authors && <p className="mt-1 text-[13px] text-muted font-sans line-clamp-1">{authors}</p>}
+        <div className="mt-1 flex items-center gap-2 text-[13px] text-muted font-sans">
+          {paper.journal && <span className="italic truncate max-w-[24rem]">{paper.journal}</span>}
+          {paper.year && <><span aria-hidden>·</span><span>{paper.year}</span></>}
+        </div>
+        {paper.abstract && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{paper.abstract}</p>}
+      </Link>
+    </div>
   )
 }
 
