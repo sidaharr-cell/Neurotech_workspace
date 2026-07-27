@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Search, Cpu, ScrollText, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
-import { searchDevices, searchPatents, yearHistogram } from '../lib/data'
+import { searchDevices, searchPatents, yearHistogram, facetCounts } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
 import FilterSelect, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
+import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
 const KINDS = [
@@ -36,7 +37,7 @@ export default function Devices() {
   const [kind, setKind] = useState('device')
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [fda, setFda] = useState(null)
   const [sort, setSort] = useState('newest')
@@ -45,6 +46,7 @@ export default function Devices() {
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState(null)
   const [histogram, setHistogram] = useState(null)
+  const [facetCts, setFacetCts] = useState(null)
   const [year, setYear] = useState(null)
   const debounce = useRef(null)
   const isPatent = kind === 'patent'
@@ -74,6 +76,15 @@ export default function Devices() {
       .then(h => { if (alive) setHistogram(h) })
     return () => { alive = false }
   }, [facets, isPatent, query])
+
+  // Per-facet-value counts (devices only; patents table is fat, facetCounts
+  // returns null there and the sidebar shows no counts).
+  useEffect(() => {
+    let alive = true
+    if (isPatent) { setFacetCts(null); return }
+    facetCounts({ table: 'devices', facets }).then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, isPatent])
 
   const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !fda
   const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
@@ -114,6 +125,7 @@ export default function Devices() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          counts={facetCts}
           extras={[
             ...(!isPatent ? [{ label: 'FDA route', value: fda, onChange: setFda, options: DEVICE_FDA, allLabel: 'Any route' }] : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
