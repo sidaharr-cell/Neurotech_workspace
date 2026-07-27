@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft, ExternalLink, Building2, MapPin, Calendar, Banknote,
-  Cpu, FlaskConical, FileText, ScrollText, Newspaper, Briefcase,
+  Cpu, FlaskConical, FileText, Newspaper, Briefcase,
   ShieldCheck, AlertTriangle, Users,
 } from 'lucide-react'
 import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph } from '../lib/data'
@@ -49,6 +49,28 @@ function Prov({ source, via, updated }) {
   if (updated) bits.push(`updated ${fmtDate(updated)}`)
   if (!bits.length) return null
   return <p className="mt-4 text-[11.5px] font-sans text-muted/90">{bits.join(' · ')}</p>
+}
+
+/** A subsection inside the Business block. */
+function BizSub({ title, note, children }) {
+  return (
+    <div className="border-t border-rule pt-5 mt-5">
+      <div className="flex items-baseline justify-between gap-3 mb-3">
+        <h3 className="font-serif text-[1.15rem] font-semibold text-ink">{title}</h3>
+        {note && <span className="text-[12px] font-sans text-muted whitespace-nowrap">{note}</span>}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+/** Confidence-graded provenance for a business record (EDGAR/USPTO = higher). */
+function BizProv({ confidence, text }) {
+  return (
+    <p className="mt-3 text-[11.5px] font-sans text-muted/90">
+      <span className={`font-semibold ${confidence === 'high' ? 'text-ink-soft' : 'text-muted'}`}>{confidence === 'high' ? 'Higher confidence' : 'Lower confidence'}</span> · {text}
+    </p>
+  )
 }
 
 /** Funding raised per calendar year, from dated rounds. */
@@ -170,28 +192,6 @@ export default function CompanyPage() {
 
       {company.description && <p className="mt-6 text-[1.12rem] leading-[1.7] text-ink font-body">{company.description}</p>}
 
-      {/* Funding */}
-      {(company.funding > 0 || (company.fundingRounds?.length > 0)) && (
-        <Section icon={Banknote} title="Funding" note={company.latestRound ? `Latest: ${company.latestRound} ${company.roundYear || ''}`.trim() : null}>
-          <div className="flex flex-wrap gap-x-10 gap-y-3">
-            <div>
-              <div className="font-serif text-3xl font-semibold text-ink">{company.funding > 0 ? fmtMoney(company.funding) : '—'}</div>
-              <div className="text-[12px] font-sans uppercase tracking-[0.08em] text-muted mt-0.5">Total disclosed</div>
-            </div>
-            {company.fundingRounds?.length > 0 && (
-              <div>
-                <div className="font-serif text-3xl font-semibold text-ink">{company.fundingRounds.length}</div>
-                <div className="text-[12px] font-sans uppercase tracking-[0.08em] text-muted mt-0.5">Rounds on record</div>
-              </div>
-            )}
-          </div>
-          <FundingTimeline rounds={company.fundingRounds} />
-          <p className="mt-4 text-[12px] text-muted font-sans">
-            {company.fundingSource?.includes('sec') ? 'Rounds from SEC EDGAR Form D filings' : 'Curated figures'}
-            {company.fundingSource?.includes('curated') && company.fundingSource?.includes('sec') ? ' + curated' : ''}.
-          </p>
-        </Section>
-      )}
 
       {/* Devices — made_by edge */}
       <Section icon={Cpu} title="Devices" note={g ? `${g.devices.length} linked` : null}>
@@ -321,22 +321,6 @@ export default function CompanyPage() {
             </>}
       </Section>
 
-      {/* Patents */}
-      <Section icon={ScrollText} title="Patents" note={related ? `${related.patentCount.toLocaleString()} assigned` : null}>
-        {!related ? <Loader /> : related.patents.length === 0
-          ? <p className="text-[14px] text-muted font-body">No patents matched to this assignee in the index.</p>
-          : <div className="divide-y divide-rule">
-              {related.patents.map(p => (
-                <RowLink key={p.patent_number} href={p.url}>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-serif text-[1.05rem] text-ink leading-snug group-hover:text-accent">{p.title}</span>
-                    <span className="text-[12px] font-mono text-muted whitespace-nowrap">{yearOf(p.grant_date)}</span>
-                  </div>
-                </RowLink>
-              ))}
-            </div>}
-      </Section>
-
       {/* Press / news */}
       <Section icon={Newspaper} title="In the news">
         {related?.news?.length > 0 && (
@@ -350,23 +334,88 @@ export default function CompanyPage() {
           </div>
         )}
         <a href={newsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-accent hover:underline">
-          Latest press & news on Google News <ExternalLink className="w-3.5 h-3.5" />
+          Latest press and news on Google News <ExternalLink className="w-3.5 h-3.5" />
         </a>
       </Section>
 
-      {/* Jobs */}
-      <Section icon={Briefcase} title="Careers">
-        <div className="flex flex-wrap gap-3">
-          {company.website && (
-            <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
-              Company site <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
-          <a href={jobsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
-            Open roles on LinkedIn <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+      {/* ── Business and market context (Phase 10) ──────────────────────────
+          A separate, plainly-labeled layer. Sourced differently from the
+          research dossier above, at varying confidence, and never used in any
+          ranking, the Feed, or the research facets. No valuations are inferred
+          and no investment guidance is given. */}
+      <section className="mt-14 border-2 border-rule rounded-sm bg-canvas/60 p-5 sm:p-7">
+        <div className="flex items-center gap-2.5">
+          <Briefcase className="w-[18px] h-[18px] text-ink-soft shrink-0" strokeWidth={1.75} />
+          <h2 className="font-serif text-[1.4rem] font-semibold text-ink tracking-[-0.01em]">Business and market context</h2>
         </div>
-      </Section>
+        <p className="mt-2 mb-2 text-[12.5px] text-muted font-sans leading-relaxed max-w-prose">
+          Sourced separately from the research dossier above, from SEC EDGAR, USPTO, and disclosed announcements, at varying confidence. These figures never affect any research ranking, the feed, or the research facets. No valuations are inferred and no investment guidance is given.
+        </p>
+
+        {/* Funding — SEC EDGAR (disclosed filings) or a curated overlay (lower confidence) */}
+        <BizSub title="Funding" note={company.latestRound ? `Latest: ${company.latestRound} ${company.roundYear || ''}`.trim() : null}>
+          {(company.funding > 0 || company.fundingRounds?.length > 0) ? (
+            <>
+              <div className="flex flex-wrap gap-x-10 gap-y-3">
+                <div>
+                  <div className="font-serif text-3xl font-semibold text-ink">{company.funding > 0 ? fmtMoney(company.funding) : 'Undisclosed'}</div>
+                  <div className="text-[12px] font-sans uppercase tracking-[0.08em] text-muted mt-0.5">Total disclosed</div>
+                </div>
+                {company.fundingRounds?.length > 0 && (
+                  <div>
+                    <div className="font-serif text-3xl font-semibold text-ink">{company.fundingRounds.length}</div>
+                    <div className="text-[12px] font-sans uppercase tracking-[0.08em] text-muted mt-0.5">Rounds on record</div>
+                  </div>
+                )}
+              </div>
+              <FundingTimeline rounds={company.fundingRounds} />
+              <BizProv confidence={company.fundingSource?.includes('sec') ? 'high' : 'low'}
+                text={company.fundingSource?.includes('sec')
+                  ? `SEC EDGAR Form D filings${company.fundingSource?.includes('curated') ? ' with a curated overlay' : ''}. Undisclosed amounts are shown as undisclosed; none are estimated.`
+                  : 'Curated figures from public announcements. Lower confidence than an EDGAR filing; no amount is estimated.'} />
+            </>
+          ) : <p className="text-[14px] text-muted font-body">No disclosed funding on record.</p>}
+        </BizSub>
+
+        {/* Mergers and acquisitions — no open structured feed exists; empty by design */}
+        <BizSub title="Mergers and acquisitions">
+          <p className="text-[14px] text-muted font-body">No acquisition or merger events are recorded. There is no open structured feed for deals; each would be modeled as an event tied to a primary announcement, corroborated by an SEC 8-K for public acquirers. Nothing is inferred.</p>
+        </BizSub>
+
+        {/* Patents — USPTO, matched by assignee name */}
+        <BizSub title="Patents" note={related ? `${related.patentCount.toLocaleString()} assigned` : null}>
+          {!related ? <Loader /> : related.patents.length === 0
+            ? <p className="text-[14px] text-muted font-body">No patents matched to this assignee in the index.</p>
+            : <>
+                <div className="divide-y divide-rule">
+                  {related.patents.map(p => (
+                    <RowLink key={p.patent_number} href={p.url}>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="font-serif text-[1.05rem] text-ink leading-snug group-hover:text-accent">{p.title}</span>
+                        <span className="text-[12px] font-mono text-muted whitespace-nowrap">{yearOf(p.grant_date)}</span>
+                      </div>
+                    </RowLink>
+                  ))}
+                </div>
+                <BizProv confidence="high" text="USPTO, matched to this assignee by name. Not linked to specific devices unless the mapping is confident." />
+              </>}
+        </BizSub>
+
+        {/* Talent — disclosed announcements only; never LinkedIn */}
+        <BizSub title="Talent">
+          <p className="text-[14px] text-muted font-body mb-3">No leadership announcements are indexed for this company. Talent signals come only from disclosed press releases and company announcements. NeuroBase does not use LinkedIn or any source that prohibits scraping.</p>
+          <div className="flex flex-wrap gap-3">
+            {company.website && (
+              <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
+                Company site <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            <a href={jobsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
+              Open roles on LinkedIn <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </BizSub>
+      </section>
 
       {/* Page-level provenance: what fed this dossier and how fresh it is. */}
       <footer className="border-t-2 border-ink mt-12 pt-4 text-[12px] font-sans text-muted leading-relaxed">
