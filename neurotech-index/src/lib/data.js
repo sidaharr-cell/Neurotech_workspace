@@ -7,6 +7,7 @@ import papersJson from '../data/papers.json'
 import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
 import researchersJson from '../data/researchers.json'
+import { getFunding } from './companyFunding'
 
 function tag(type) {
   return items => items.map(i => ({ ...i, _type: type }))
@@ -283,6 +284,82 @@ export async function searchLabs({ query = '', facets = {}, page = 0, pageSize =
   }
   if (error) { console.warn('searchLabs error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'organizations' })), total: count ?? 0 }
+}
+
+/** Server-side paginated search over neurotech companies (organizations,
+ *  type='company'). Funding (total + latest round) is overlaid by name from the
+ *  client-side companyFunding map, so funded companies show a raised badge. */
+export async function searchCompanies({ query = '', facets = {}, page = 0, pageSize = 20 } = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  const term = query.trim().replace(/[(),%]/g, ' ')
+  const base = () => {
+    let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'company')
+    if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
+    // Companies abstain (many are unclassified) — don't apply the scope gate, or
+    // it would hide every company the classifier couldn't tag.
+    b = applyFacets(b, facets, true)
+    return b.range(page * pageSize, page * pageSize + pageSize - 1)
+  }
+  // rank_score puts funded companies first, then a stable quality order.
+  let { data, count, error } = await base().order('rank_score', { ascending: false }).order('name')
+  if (error && /rank_score/.test(error.message)) {
+    ({ data, count, error } = await base().order('name'))
+  }
+  if (error) { console.warn('searchCompanies error:', error.message); return { rows: [], total: 0 } }
+  const rows = (data || []).map(r => {
+    const f = getFunding(r.name)
+    return {
+      ...r,
+      _type: 'organizations',
+      funding: f?.total ?? 0,
+      latestRound: f?.latestRound ?? null,
+      roundYear: f?.roundYear ?? null,
+    }
+  })
+  return { rows, total: count ?? 0 }
+}
+
+/** One company by its (deterministic) id, with funding overlaid. */
+export async function getCompanyById(id) {
+  if (!supabase) return null
+  const { data, error } = await supabase.from('organizations').select('*').eq('id', id).eq('type', 'company').maybeSingle()
+  if (error || !data) return null
+  const f = getFunding(data.name)
+  return { ...data, _type: 'organizations', funding: f?.total ?? 0, latestRound: f?.latestRound ?? null, roundYear: f?.roundYear ?? null, fundingRounds: f?.rounds ?? [], fundingSource: f?.source ?? 'none' }
+}
+
+/**
+ * Everything about a company that can be joined live from our own tables:
+ * FDA devices (by manufacturer), patents (by assignee), neurotech clinical
+ * trials (by sponsor) and news mentions. Name-matched with ILIKE; each capped.
+ */
+export async function getCompanyRelated(name) {
+  if (!supabase || !name) return { devices: [], deviceCount: 0, patents: [], patentCount: 0, trials: [], trialCount: 0, news: [] }
+  const like = `%${name.replace(/[%,()]/g, ' ').trim()}%`
+  const [dev, devC, pat, patC, trials, trialC, news] = await Promise.all([
+    supabase.from('devices').select('id,name,manufacturer,type,status,year,url,facet_function,facet_access,facet_application,in_scope').ilike('manufacturer', like).order('year', { ascending: false, nullsFirst: false }).limit(12),
+    supabase.from('devices').select('*', { count: 'exact', head: true }).ilike('manufacturer', like),
+    supabase.from('patents').select('patent_number,title,assignee,grant_date,url').ilike('assignee', like).order('grant_date', { ascending: false, nullsFirst: false }).limit(10),
+    supabase.from('patents').select('*', { count: 'exact', head: true }).ilike('assignee', like),
+    supabase.from('news_feed').select('id,title,url,published_at,metadata,relevance_score').eq('entry_type', 'trial').ilike('metadata->>sponsor', like).order('published_at', { ascending: false, nullsFirst: false }).limit(10),
+    supabase.from('news_feed').select('*', { count: 'exact', head: true }).eq('entry_type', 'trial').ilike('metadata->>sponsor', like),
+    supabase.from('news_feed').select('id,title,url,source,published_at').neq('entry_type', 'trial').or(`title.ilike.${like},summary.ilike.${like}`).order('published_at', { ascending: false, nullsFirst: false }).limit(8),
+  ])
+  return {
+    devices: dev.data || [], deviceCount: devC.count ?? (dev.data?.length || 0),
+    patents: pat.data || [], patentCount: patC.count ?? (pat.data?.length || 0),
+    trials: trials.data || [], trialCount: trialC.count ?? (trials.data?.length || 0),
+    news: news.data || [],
+  }
+}
+
+/** Precomputed analytics (publications) served as a static file; null if none. */
+export async function getCompanyAnalytics(id) {
+  try {
+    const res = await fetch(`/company-analytics/${id}.json`)
+    if (!res.ok) return null
+    return await res.json()
+  } catch { return null }
 }
 
 /** Server-side paginated search over the full devices table. */
