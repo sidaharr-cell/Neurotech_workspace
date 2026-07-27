@@ -32,6 +32,7 @@ export default function PaperDetail() {
   const badges = cardBadges(paper, 4)
   const codeUrls = Array.isArray(paper.code_urls) ? paper.code_urls : []
   const dataUrls = Array.isArray(paper.data_urls) ? paper.data_urls : []
+  const versions = Array.isArray(paper.versions) ? paper.versions : []
 
   return (
     <article className="max-w-prose mx-auto px-4 sm:px-6 py-10">
@@ -57,6 +58,26 @@ export default function PaperDetail() {
       </div>
 
       <div className="mb-8" />
+
+      {/* Version history (Phase 6): the preprint(s) and published version this
+          canonical record collapses. Shown only when more than one version. */}
+      {versions.length > 1 && (
+        <div className="mb-8 border border-rule rounded-sm bg-canvas/50 p-4">
+          <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Versions</p>
+          <ul className="flex flex-col divide-y divide-rule">
+            {versions.map((v, i) => (
+              <li key={i} className="py-2 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3">
+                <span className="text-[13.5px] font-sans text-ink">
+                  <span className={`font-semibold ${v.peer_reviewed ? 'text-accent' : 'text-muted'}`}>{v.peer_reviewed ? 'Peer-reviewed' : 'Preprint'}</span>
+                  {v.source && <span className="text-muted"> · {v.source}</span>}
+                  {v.year && <span className="text-muted"> · {v.year}</span>}
+                </span>
+                {v.url && <a href={v.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-[13px] font-sans text-accent hover:underline">View</a>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {paper.abstract ? (
         <div className="mb-8">

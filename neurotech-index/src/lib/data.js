@@ -278,6 +278,10 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  * Server-side paginated + full-text search over the full papers table.
  * Uses the `fts` tsvector index; filters by derived device-class `tags`.
  */
+// Whether the dedup column (migration 006) exists. Assume yes; if a query fails
+// on it, flip to false so we stop filtering on it until the migration is applied.
+let dedupReady = true
+
 export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
@@ -298,6 +302,7 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     b = applyYear(b, yearRange, 'year')
     if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
+    if (dedupReady) b = b.is('canonical_id', null)         // hide merged duplicate versions (Phase 6)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
   // Default: OpenAlex field-normalized impact, then year. 'newest' sorts by year.
@@ -306,6 +311,11 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     ? base().order('year', { ascending: false })
     : base().order('rank_score', { ascending: false }).order('year', { ascending: false })
   let { data, count, error } = await ordered
+  // Pre-migration fallbacks: retry without whichever column is missing.
+  if (error && /canonical_id/.test(error.message)) {
+    dedupReady = false
+    ;({ data, count, error } = await base().order(sort === 'newest' ? 'year' : 'rank_score', { ascending: false }))
+  }
   if (error && /rank_score/.test(error.message)) {
     ({ data, count, error } = await base().order('year', { ascending: false }))
   }
