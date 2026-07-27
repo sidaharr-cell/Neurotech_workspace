@@ -488,6 +488,72 @@ export async function getOrgCounts(orgIds = []) {
   return out
 }
 
+/** One device row by id, tagged for the device page. */
+export async function getDeviceById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('devices').select('*').eq('id', id).maybeSingle()
+  if (error || !data) return null
+  return { ...data, _type: 'devices' }
+}
+
+/**
+ * Everything linked to one device THROUGH THE GRAPH, for the device page: its
+ * maker (made_by -> org), regulatory records (cleared_via), the papers that
+ * evaluate it (evaluates ->) and trials that study it (studies ->), and the
+ * follow-up work that cites/replicates/contradicts those papers. The paper and
+ * trial edges are not derived yet, so those come back empty (honest, not
+ * fabricated); the schema and this reader are ready for them.
+ */
+export async function getDeviceGraph(deviceId) {
+  const empty = { maker: null, regulatory: [], papers: [], trials: [], relatedWork: [],
+    provenance: { regulatory: null, papers: null, trials: null } }
+  if (!supabase || !deviceId) return empty
+
+  const [subj, obj] = await Promise.all([
+    supabase.from('relationships').select('predicate,object_id')
+      .eq('subject_type', 'devices').eq('subject_id', deviceId).in('predicate', ['made_by', 'cleared_via']),
+    supabase.from('relationships').select('predicate,subject_id')
+      .eq('object_type', 'devices').eq('object_id', deviceId).in('predicate', ['evaluates', 'studies']),
+  ])
+  const makerId = subj.data?.find(e => e.predicate === 'made_by')?.object_id || null
+  const regIds = (subj.data || []).filter(e => e.predicate === 'cleared_via').map(e => e.object_id)
+  const paperIds = (obj.data || []).filter(e => e.predicate === 'evaluates').map(e => e.subject_id)
+  const trialIds = (obj.data || []).filter(e => e.predicate === 'studies').map(e => e.subject_id)
+
+  const [makerRes, regRes, paperRes, trialRes] = await Promise.all([
+    makerId ? supabase.from('organizations').select('id,name,type,location').eq('id', makerId).maybeSingle() : Promise.resolve({ data: null }),
+    regIds.length ? supabase.from('regulatory_records').select('id,pathway,decision_date,number,source_url,last_updated').in('id', regIds).order('decision_date', { ascending: true, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    paperIds.length ? supabase.from('papers').select('id,title,year,journal,pubmed_id,url,rank_score,last_updated').in('id', paperIds) : Promise.resolve({ data: [] }),
+    trialIds.length ? supabase.from('news_feed').select('id,title,url,metadata,published_at,last_updated').in('id', trialIds) : Promise.resolve({ data: [] }),
+  ])
+  const papers = paperRes.data || []
+
+  // Follow-up literature: papers that cite/replicate/contradict the evaluating
+  // papers. Only queried when there are evaluating papers (none yet).
+  let relatedWork = []
+  if (papers.length) {
+    const { data: rel } = await supabase.from('relationships').select('predicate,subject_id,object_id')
+      .in('object_id', papers.map(p => p.id)).in('predicate', ['cites', 'replicates', 'contradicts'])
+    const relIds = [...new Set((rel || []).map(e => e.subject_id))]
+    if (relIds.length) {
+      const { data: relPapers } = await supabase.from('papers').select('id,title,year,journal,pubmed_id,url').in('id', relIds)
+      const kindById = Object.fromEntries((rel || []).map(e => [e.subject_id, e.predicate]))
+      relatedWork = (relPapers || []).map(p => ({ ...p, relation: kindById[p.id] }))
+    }
+  }
+
+  return {
+    maker: makerRes.data || null,
+    regulatory: regRes.data || [],
+    papers, trials: trialRes.data || [], relatedWork,
+    provenance: {
+      regulatory: oldest((regRes.data || []).map(r => r.last_updated)),
+      papers: oldest(papers.map(p => p.last_updated)),
+      trials: oldest((trialRes.data || []).map(t => t.last_updated)),
+    },
+  }
+}
+
 /** Precomputed analytics (publications) served as a static file; null if none. */
 export async function getCompanyAnalytics(id) {
   try {

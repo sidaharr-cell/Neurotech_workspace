@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { X, ExternalLink, MapPin } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { X, ExternalLink, MapPin, GitBranch } from 'lucide-react'
 import { Kicker, DeviceClassLabels, typeWord } from './ui'
 import { cardBadges } from '../lib/facets'
 
@@ -77,7 +78,12 @@ function DeviceDetail({ d }) {
       <Field label="Channels" value={d.channels} />
       {d.description && <div className="mb-4"><p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-1">About</p><p className="text-[15px] text-ink-soft font-body leading-relaxed">{d.description}</p></div>}
       <ClassRow entity={d} />
-      <ExtLink href={d.url}>Learn more</ExtLink>
+      {d.id && (
+        <Link to={`/device/${d.id}`} className="inline-flex items-center gap-1.5 text-[15px] font-sans font-medium text-accent hover:text-accent-dark transition-colors mt-1">
+          <GitBranch className="w-3.5 h-3.5" /> View lineage and facts
+        </Link>
+      )}
+      <div><ExtLink href={d.url}>FDA record</ExtLink></div>
     </>
   )
 }
