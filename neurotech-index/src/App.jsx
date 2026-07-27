@@ -11,6 +11,7 @@ import PersonProfile from './pages/PersonProfile'
 import ItemDetail from './pages/ItemDetail'
 import PaperDetail from './pages/PaperDetail'
 import CompanyPage from './pages/CompanyPage'
+import DevicePage from './pages/DevicePage'
 import HowItWorks from './pages/HowItWorks'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="company/:id" element={<CompanyPage />} />
+          <Route path="device/:id" element={<DevicePage />} />
           <Route path="item/:id" element={<ItemDetail />} />
           <Route path="paper/:pmid" element={<PaperDetail />} />
           {/* People: reachable by link, intentionally absent from nav + default search */}
