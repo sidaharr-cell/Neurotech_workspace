@@ -3,14 +3,23 @@ import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft, ExternalLink, Building2, MapPin, Calendar, Banknote,
   Cpu, FlaskConical, FileText, ScrollText, Newspaper, Briefcase,
+  ShieldCheck, AlertTriangle, Users,
 } from 'lucide-react'
-import { getCompanyById, getCompanyRelated, getCompanyAnalytics } from '../lib/data'
+import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
+const fmtDate = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
+
+// Long linked lists (a big maker can have dozens) are capped for readability
+// and to keep the page light; the section header still shows the true total.
+const LIST_CAP = 15
+const MoreNote = ({ n, of }) => (
+  <p className="pt-3 text-[13px] font-sans text-muted">{n} more {of} linked. Full lists open at the source.</p>
+)
 
 /** Section shell: icon + serif title + optional right-side note, then children. */
 function Section({ icon: Icon, title, note, children }) {
@@ -25,6 +34,20 @@ function Section({ icon: Icon, title, note, children }) {
       {children}
     </section>
   )
+}
+
+/**
+ * Per-section provenance line: where the section's facts come from and how fresh
+ * they are. `via` names the graph edge that linked the records (so a reader can
+ * see a section is assembled from real relationships, not a name match).
+ */
+function Prov({ source, via, updated }) {
+  const bits = []
+  if (source) bits.push(`Source: ${source}`)
+  if (via) bits.push(`linked by ${via}`)
+  if (updated) bits.push(`updated ${fmtDate(updated)}`)
+  if (!bits.length) return null
+  return <p className="mt-4 text-[11.5px] font-sans text-muted/90">{bits.join(' · ')}</p>
 }
 
 /** Funding raised per calendar year, from dated rounds. */
@@ -78,16 +101,18 @@ export default function CompanyPage() {
   const { id } = useParams()
   const [company, setCompany] = useState(null)
   const [related, setRelated] = useState(null)
+  const [graph, setGraph] = useState(null) // null = loading, then the getOrgGraph result
   const [analytics, setAnalytics] = useState(undefined) // undefined = loading, null = indexed/none
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let alive = true
-    setLoading(true); setRelated(null); setAnalytics(undefined)
+    setLoading(true); setRelated(null); setGraph(null); setAnalytics(undefined)
     getCompanyById(id).then(async c => {
       if (!alive) return
       setCompany(c); setLoading(false)
       if (c) {
+        getOrgGraph(id).then(g => alive && setGraph(g))
         getCompanyRelated(c.name).then(r => alive && setRelated(r))
         getCompanyAnalytics(id).then(a => alive && setAnalytics(a))
       }
@@ -102,6 +127,17 @@ export default function CompanyPage() {
   const pubs = analytics?.publications
   const jobsUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`
   const newsUrl = `https://news.google.com/search?q=${encodeURIComponent(company.name + ' neurotech')}`
+  const ctgovUrl = `https://clinicaltrials.gov/search?spons=${encodeURIComponent(company.name)}`
+  const maudeUrl = `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfMAUDE/TextSearch.cfm`
+  // The graph sections (devices / trials / regulatory / people) come from the
+  // relationships edge table. `graph` is null while loading.
+  const g = graph
+  const trialCount = g ? g.trials.active.length + g.trials.completed.length : 0
+  // Sources feeding the whole page, for the page-level provenance footer.
+  const pageSources = ['ClinicalTrials.gov', 'openFDA']
+  if (pubs?.items?.length) pageSources.unshift('PubMed')
+  if (company.fundingRounds?.length) pageSources.push('SEC EDGAR')
+  const pageUpdated = g ? [g.provenance.devices, g.provenance.trials, g.provenance.regulatory].filter(Boolean).sort()[0] : null
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
@@ -124,6 +160,8 @@ export default function CompanyPage() {
         {company.website && <><span aria-hidden>·</span>
           <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">{host(company.website)}<ExternalLink className="w-3 h-3" /></a>
         </>}
+        <span aria-hidden>·</span>
+        <a href={ctgovUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
       </div>
 
       {company.description && <p className="mt-6 text-[1.12rem] leading-[1.7] text-ink font-body">{company.description}</p>}
@@ -151,44 +189,93 @@ export default function CompanyPage() {
         </Section>
       )}
 
-      {/* FDA & products */}
-      <Section icon={Cpu} title="Products & FDA record" note={related ? `${related.deviceCount} device${related.deviceCount === 1 ? '' : 's'}` : null}>
-        {!related ? <Loader /> : related.devices.length === 0
-          ? <p className="text-[14px] text-muted font-body">No FDA-registered devices matched to this company.</p>
-          : <div className="divide-y divide-rule">
-              {related.devices.map(d => (
-                <RowLink key={d.id} href={d.url}>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-serif text-[1.05rem] text-ink group-hover:text-accent">{d.name}</span>
-                    <span className="text-[12px] font-mono text-muted whitespace-nowrap">{d.status || d.type || ''} {d.year ? `· ${d.year}` : ''}</span>
-                  </div>
-                </RowLink>
-              ))}
-              {related.deviceCount > related.devices.length &&
-                <Link to="/devices" className="inline-block pt-3 text-[13px] font-sans text-accent hover:underline">View all {related.deviceCount} devices →</Link>}
-            </div>}
-      </Section>
-
-      {/* Clinical trials */}
-      <Section icon={FlaskConical} title="Clinical trials" note={related ? `${related.trialCount} matched` : null}>
-        {!related ? <Loader /> : related.trials.length === 0
-          ? <p className="text-[14px] text-muted font-body">No neurotech clinical trials matched to this sponsor in the index.</p>
-          : <div className="divide-y divide-rule">
-              {related.trials.map(t => {
-                const m = t.metadata || {}
-                return (
-                  <RowLink key={t.id} href={t.url}>
-                    <div className="font-serif text-[1.05rem] text-ink leading-snug group-hover:text-accent">{t.title}</div>
-                    <div className="mt-1 flex flex-wrap gap-x-2 text-[12px] font-mono text-muted">
-                      {m.phase && <span>{m.phase}</span>}
-                      {m.status && <span>· {m.status}</span>}
-                      {m.enrollment ? <span>· n={m.enrollment}</span> : null}
-                      {m.nctId && <span>· {m.nctId}</span>}
+      {/* Devices — made_by edge */}
+      <Section icon={Cpu} title="Devices" note={g ? `${g.devices.length} linked` : null}>
+        {!g ? <Loader /> : g.devices.length === 0
+          ? <p className="text-[14px] text-muted font-body">No devices are linked to this organization yet. A device links here when its FDA maker name matches this organization.</p>
+          : <>
+              <div className="divide-y divide-rule">
+                {g.devices.slice(0, LIST_CAP).map(d => (
+                  <RowLink key={d.id} href={d.url}>
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="font-serif text-[1.05rem] text-ink group-hover:text-accent">{d.name}</span>
+                      <span className="text-[12px] font-mono text-muted whitespace-nowrap">{d.status || d.type || ''}{d.year ? ` · ${d.year}` : ''}</span>
                     </div>
                   </RowLink>
-                )
-              })}
-            </div>}
+                ))}
+              </div>
+              {g.devices.length > LIST_CAP && <MoreNote n={g.devices.length - LIST_CAP} of="devices" />}
+              <Prov source="openFDA" via="made_by" updated={g.provenance.devices} />
+            </>}
+      </Section>
+
+      {/* Regulatory — cleared_via edge on this org's devices, plus a MAUDE pointer */}
+      <Section icon={ShieldCheck} title="Regulatory" note={g ? `${g.regulatory.length} record${g.regulatory.length === 1 ? '' : 's'}` : null}>
+        {!g ? <Loader /> : (
+          <>
+            {g.regulatory.length === 0
+              ? <p className="text-[14px] text-muted font-body">No FDA clearance or approval records are linked yet.</p>
+              : <>
+                  <div className="divide-y divide-rule">
+                    {g.regulatory.slice(0, LIST_CAP).map(r => (
+                      <RowLink key={r.id} href={r.source_url}>
+                        <div className="flex items-baseline justify-between gap-3">
+                          <span className="font-serif text-[1.05rem] text-ink group-hover:text-accent">{r.pathway || 'FDA record'}{r.number ? ` · ${r.number}` : ''}</span>
+                          <span className="text-[12px] font-mono text-muted whitespace-nowrap">{yearOf(r.decision_date)}</span>
+                        </div>
+                        {r.device_name && <div className="mt-0.5 text-[12px] font-sans text-muted">{r.device_name}</div>}
+                      </RowLink>
+                    ))}
+                  </div>
+                  {g.regulatory.length > LIST_CAP && <MoreNote n={g.regulatory.length - LIST_CAP} of="records" />}
+                  <Prov source="openFDA" via="cleared_via" updated={g.provenance.regulatory} />
+                </>}
+
+            {/* MAUDE — self-reported adverse-event reports. Not yet indexed; a
+                sourced pointer and a count, never a safety judgment. */}
+            <div className="mt-6 border-t border-dashed border-rule pt-4">
+              <div className="flex items-center gap-2 text-[13px] font-sans font-semibold text-ink-soft mb-1.5">
+                <AlertTriangle className="w-4 h-4 text-muted" strokeWidth={1.75} /> Adverse-event reports (MAUDE)
+              </div>
+              <p className="text-[13px] text-muted font-body max-w-prose">
+                MAUDE reports are self-reported and noisy. NeuroBase does not yet index them, and never presents them as an outcome or a safety judgment. Query the FDA MAUDE database directly for this maker's devices.
+              </p>
+              <a href={maudeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-2 text-[13px] font-sans text-accent hover:underline">
+                Search FDA MAUDE <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </>
+        )}
+      </Section>
+
+      {/* Clinical trials — sponsored_by edge, active separated from completed */}
+      <Section icon={FlaskConical} title="Clinical trials" note={g ? `${trialCount} linked` : null}>
+        {!g ? <Loader /> : trialCount === 0
+          ? <p className="text-[14px] text-muted font-body">No clinical trials are linked to this sponsor yet.</p>
+          : <>
+              {['active', 'completed'].map(bucket => g.trials[bucket].length > 0 && (
+                <div key={bucket} className="mb-5 last:mb-0">
+                  <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2">{bucket === 'active' ? 'Active' : 'Completed and other'}</div>
+                  <div className="divide-y divide-rule">
+                    {g.trials[bucket].map(t => {
+                      const m = t.metadata || {}
+                      return (
+                        <RowLink key={t.id} href={t.url}>
+                          <div className="font-serif text-[1.05rem] text-ink leading-snug group-hover:text-accent">{t.title}</div>
+                          <div className="mt-1 flex flex-wrap gap-x-2 text-[12px] font-mono text-muted">
+                            {m.phase && <span>{m.phase}</span>}
+                            {m.status && <span>· {m.status}</span>}
+                            {m.enrollment ? <span>· n={m.enrollment}</span> : null}
+                            {m.nctId && <span>· {m.nctId}</span>}
+                          </div>
+                        </RowLink>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+              <Prov source="ClinicalTrials.gov" via="sponsored_by" updated={g.provenance.trials} />
+            </>}
       </Section>
 
       {/* Publications */}
@@ -210,6 +297,24 @@ export default function CompanyPage() {
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(`"${company.name}"[Affiliation]`)}`} target="_blank" rel="noopener noreferrer"
                   className="inline-block pt-3 text-[13px] font-sans text-accent hover:underline">Search all on PubMed →</a>
               </div>}
+        {pubs?.items?.length ? <Prov source="PubMed" via="author affiliation match" /> : null}
+      </Section>
+
+      {/* People — affiliated_with edge (People has no browse view; inbound only) */}
+      <Section icon={Users} title="People" note={g && g.people.length ? `${g.people.length}` : null}>
+        {!g ? <Loader /> : g.people.length === 0
+          ? <p className="text-[14px] text-muted font-body">No researchers are linked to this organization yet.</p>
+          : <>
+              <div className="divide-y divide-rule">
+                {g.people.map(p => (
+                  <div key={p.id} className="py-2.5 flex items-baseline justify-between gap-3">
+                    <span className="font-serif text-[1.05rem] text-ink">{p.name}</span>
+                    {p.role && <span className="text-[12px] font-sans text-muted whitespace-nowrap">{p.role}</span>}
+                  </div>
+                ))}
+              </div>
+              <Prov source="derived" via="affiliated_with" />
+            </>}
       </Section>
 
       {/* Patents */}
@@ -258,6 +363,12 @@ export default function CompanyPage() {
           </a>
         </div>
       </Section>
+
+      {/* Page-level provenance: what fed this dossier and how fresh it is. */}
+      <footer className="border-t-2 border-ink mt-12 pt-4 text-[12px] font-sans text-muted leading-relaxed">
+        <span className="font-semibold text-ink-soft">Sources: </span>{pageSources.join(', ')}.
+        {pageUpdated && <> Oldest linked record updated {fmtDate(pageUpdated)}.</>} Devices, regulatory records, and trials are assembled from typed relationships in the index, not name guesses. Funding and patents are business context, shown separately and never used in any research ranking.
+      </footer>
     </article>
   )
 }
