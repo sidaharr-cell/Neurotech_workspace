@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
@@ -7,6 +7,7 @@ import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../com
 import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { KindBadge, ReproBadges } from '../components/PaperSignals'
+import { StarButton } from '../components/Watch'
 
 const PAGE_SIZE = 20
 
@@ -47,6 +48,12 @@ export default function Research() {
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
   const debounce = useRef(null)
+  const location = useLocation()
+  // A saveable facet query (Phase 8): only meaningful when a facet is selected.
+  const facetVals = [...facets.function, ...facets.access, ...facets.application]
+  const queryItem = facetVals.length
+    ? { type: 'query', id: `/research${location.search}`, to: `/research${location.search}`, label: `Research: ${facetVals.join(', ')}` }
+    : null
 
   // Debounce the search box → query
   useEffect(() => {
@@ -120,7 +127,10 @@ export default function Research() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
+            <div className="flex items-center gap-3">
+              {queryItem && <StarButton item={queryItem} />}
+              <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
+            </div>
           </div>
 
           {loading ? (

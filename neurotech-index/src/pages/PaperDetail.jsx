@@ -5,6 +5,7 @@ import { getPaperByPmid, getPaperSignals } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { KindBadge } from '../components/PaperSignals'
+import { StarButton } from '../components/Watch'
 
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 
@@ -48,7 +49,10 @@ export default function PaperDetail() {
         ))}
       </div>
 
-      <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{paper.title}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{paper.title}</h1>
+        {paper.pubmed_id && <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'papers', id: paper.pubmed_id, label: paper.title, to: `/paper/${paper.pubmed_id}` }} /></div>}
+      </div>
 
       {authors && <p className="mt-4 text-[15px] text-ink-soft font-body leading-relaxed">{authors}</p>}
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted font-sans">

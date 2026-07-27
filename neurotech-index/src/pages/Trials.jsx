@@ -6,6 +6,7 @@ import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate 
 import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS } from '../components/Filters'
 import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
+import { StarButton } from '../components/Watch'
 
 const PAGE_SIZE = 20
 // Trials lead with recent status changes; that is the point of the view.
@@ -39,9 +40,12 @@ function TrialRow({ trial, sponsor }) {
         {m.nctId && <span className="text-[11px] font-mono text-muted">{m.nctId}</span>}
         <DeviceClassLabels entity={trial} max={1} />
       </div>
-      <Link to={`/item/${trial.id}`} className="group block">
-        <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{trial.title}</h3>
-      </Link>
+      <div className="flex items-start justify-between gap-3">
+        <Link to={`/item/${trial.id}`} className="group block min-w-0">
+          <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{trial.title}</h3>
+        </Link>
+        <StarButton variant="icon" item={{ type: 'trials', id: trial.id, label: trial.title, to: `/item/${trial.id}` }} />
+      </div>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 text-[13px] text-muted font-sans">
         {/* Sponsor links to the company page when the sponsored_by edge resolves it. */}
         {sponsor?.id

@@ -6,6 +6,7 @@ import {
 import { getDeviceById, getDeviceGraph } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges, ACCESS_LABEL, isClosedLoop } from '../lib/facets'
+import { StarButton } from '../components/Watch'
 
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
 const fmtDate = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
@@ -94,7 +95,10 @@ export default function DevicePage() {
           <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
         ))}
       </div>
-      <h1 className="font-serif text-3xl sm:text-[2.3rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{device.name}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="font-serif text-3xl sm:text-[2.3rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{device.name}</h1>
+        <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'devices', id: device.id, label: device.name, to: `/device/${device.id}` }} /></div>
+      </div>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {device.manufacturer && <span>{device.manufacturer}</span>}
         {device.status && <><span aria-hidden>·</span><span>{device.status}</span></>}

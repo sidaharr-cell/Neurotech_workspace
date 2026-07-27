@@ -675,6 +675,36 @@ export async function getTrialSponsors(trialIds = []) {
   return out
 }
 
+/** Trial (news_feed) ids sponsored by any of these orgs, via the graph. */
+export async function getOrgTrialIds(orgIds = []) {
+  if (!supabase || !orgIds.length) return []
+  const { data } = await supabase.from('relationships').select('subject_id')
+    .eq('predicate', 'sponsored_by').eq('object_type', 'organizations').in('object_id', orgIds)
+  return [...new Set((data || []).map(e => e.subject_id))]
+}
+
+/**
+ * Changes to a set of watched trials since a timestamp (Phase 8 "what changed").
+ * Reads the same trial_changes log the trials view uses; empty until a sync logs
+ * a change. Returns newest-first with each trial's title and link.
+ */
+export async function getWatchlistChanges(trialIds = [], sinceISO = null) {
+  if (!supabase || !trialIds.length) return []
+  let q = supabase.from('trial_changes')
+    .select('id,nct_id,trial_id,field,old_value,new_value,changed_at')
+    .in('trial_id', trialIds).order('changed_at', { ascending: false }).limit(100)
+  if (sinceISO) q = q.gt('changed_at', sinceISO)
+  const { data, error } = await q
+  if (error || !data?.length) return []
+  const ids = [...new Set(data.map(c => c.trial_id).filter(Boolean))]
+  const byId = {}
+  if (ids.length) {
+    const { data: tr } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
+    for (const t of tr || []) byId[t.id] = t
+  }
+  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+}
+
 /** A single paper by PubMed id (for its detail page). */
 export async function getPaperByPmid(pmid) {
   if (!supabase || !pmid) return null
