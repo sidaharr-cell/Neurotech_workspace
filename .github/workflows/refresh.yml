@@ -8,7 +8,7 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: write   # allows committing the refreshed funding.json
 
@@ -36,9 +36,37 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWS_API_KEY:         ${{ secrets.NEWS_API_KEY }}
 
-      - name: Refresh company funding (SEC EDGAR)
+      - name: Refresh companies (NeuroTechX Airtable + curated)
         working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-companies.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Refresh labs (NIH RePORTER + NeuroTechX academic labs)
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-labs.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Refresh company funding (SEC EDGAR, all companies — incremental)
+        working-directory: neurotech-index
+        continue-on-error: true
         run: node scripts/backfill-funding.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Refresh company publications (PubMed — incremental)
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-company-analytics.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - name: Refresh recent patents (PatentsView)
         working-directory: neurotech-index
@@ -52,11 +80,15 @@ jobs:
           export PATENTS_SINCE=$(date -u -d '35 days ago' +%Y-%m-%d 2>/dev/null || date -u -v-35d +%Y-%m-%d)
           node scripts/backfill-patents.js
 
-      - name: Commit updated data (funding + notable research)
+      - name: Commit updated data (funding + notable research + Airtable snapshots)
         run: |
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add neurotech-index/src/data/funding.json neurotech-index/src/data/notable.json
+          git add neurotech-index/src/data/funding.json \
+                  neurotech-index/src/data/notable.json \
+                  neurotech-index/scripts/data/neurotechx-industry.json \
+                  neurotech-index/scripts/data/neurotechx-academic-labs.json \
+                  neurotech-index/public/company-analytics
           if git diff --cached --quiet; then
             echo "No data changes."; exit 0
           fi
