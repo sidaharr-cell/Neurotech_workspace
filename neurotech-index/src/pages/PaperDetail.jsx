@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, FileQuestion, Code2, Database, AlertTriangle, CopyCheck } from 'lucide-react'
-import { getPaperByPmid, getPaperSignals } from '../lib/data'
+import { getPaperByPmid, getPaperSignals, getPaperCitations } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { KindBadge } from '../components/PaperSignals'
@@ -15,7 +15,7 @@ function CitationMeta({ paper }) {
   const pdf = paper.source === 'arxiv' && paper.arxiv_id ? `https://arxiv.org/pdf/${paper.arxiv_id}` : null
   return (
     <>
-      <title>{`${paper.title} — NeuroBase`}</title>
+      <title>{`${paper.title} · NeuroBase`}</title>
       <meta name="citation_title" content={paper.title} />
       {authors.map((a, i) => <meta key={i} name="citation_author" content={a} />)}
       {paper.year && <meta name="citation_publication_date" content={String(paper.year)} />}
@@ -32,19 +32,47 @@ function CitationMeta({ paper }) {
 
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 
+// A capped list of linked papers (references / cited-by).
+function CitedList({ title, papers, cap = 8 }) {
+  if (!papers.length) return null
+  return (
+    <div className="mb-8">
+      <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">{title} <span className="text-muted/70">{papers.length}</span></p>
+      <div className="divide-y divide-rule">
+        {papers.slice(0, cap).map(p => {
+          const inner = (
+            <>
+              <span className="font-serif text-[1.02rem] leading-snug text-ink group-hover:text-accent">{p.title}</span>
+              <span className="mt-0.5 block text-[12px] font-sans text-muted italic">{[p.journal, p.year].filter(Boolean).join(' · ')}</span>
+            </>
+          )
+          return p.pubmed_id
+            ? <Link key={p.id} to={`/paper/${p.pubmed_id}`} className="group block py-2.5">{inner}</Link>
+            : <div key={p.id} className="py-2.5">{inner}</div>
+        })}
+      </div>
+      {papers.length > cap && <p className="pt-2.5 text-[13px] font-sans text-muted">{papers.length - cap} more.</p>}
+    </div>
+  )
+}
+
 export default function PaperDetail() {
   const { pmid } = useParams()
   const [paper, setPaper] = useState(null)
   const [signals, setSignals] = useState({ contradictedBy: [], replicatedBy: [] })
+  const [cites, setCites] = useState({ references: [], citedBy: [] })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let alive = true
-    setLoading(true); setSignals({ contradictedBy: [], replicatedBy: [] })
+    setLoading(true); setSignals({ contradictedBy: [], replicatedBy: [] }); setCites({ references: [], citedBy: [] })
     getPaperByPmid(pmid).then(d => {
       if (!alive) return
       setPaper(d); setLoading(false)
-      if (d?.id) getPaperSignals(d.id).then(s => alive && setSignals(s))
+      if (d?.id) {
+        getPaperSignals(d.id).then(s => alive && setSignals(s))
+        getPaperCitations(d.id).then(c => alive && setCites(c))
+      }
     })
     return () => { alive = false }
   }, [pmid])
@@ -155,6 +183,16 @@ export default function PaperDetail() {
               <Database className="w-3.5 h-3.5" /> Data available · {host(u)}
             </a>
           ))}
+        </div>
+      )}
+
+      {/* Intra-database citation graph (Phase 1 `cites` edges from OpenAlex).
+          Shows only indexed papers; empty when this paper has no indexed
+          references or citers. */}
+      {(cites.references.length > 0 || cites.citedBy.length > 0) && (
+        <div className="border-t border-rule pt-6 mb-8">
+          <CitedList title="References in this index" papers={cites.references} />
+          <CitedList title="Cited by, in this index" papers={cites.citedBy} />
         </div>
       )}
 

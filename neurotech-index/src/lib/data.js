@@ -738,6 +738,28 @@ export async function getPaperSignals(paperId) {
 }
 
 /**
+ * The intra-database citation graph for one paper (Phase 1 `cites` edges,
+ * derived from OpenAlex): the papers it references that are also indexed here,
+ * and the indexed papers that cite it. Both link to their paper page.
+ */
+export async function getPaperCitations(paperId) {
+  const empty = { references: [], citedBy: [] }
+  if (!supabase || !paperId) return empty
+  const [refE, citE] = await Promise.all([
+    supabase.from('relationships').select('object_id').eq('subject_type', 'papers').eq('subject_id', paperId).eq('predicate', 'cites'),
+    supabase.from('relationships').select('subject_id').eq('object_type', 'papers').eq('object_id', paperId).eq('predicate', 'cites'),
+  ])
+  const refIds = (refE.data || []).map(e => e.object_id)
+  const citedIds = (citE.data || []).map(e => e.subject_id)
+  const allIds = [...new Set([...refIds, ...citedIds])]
+  if (!allIds.length) return empty
+  const { data } = await supabase.from('papers').select('id,title,year,journal,pubmed_id,url').in('id', allIds)
+  const byId = Object.fromEntries((data || []).map(p => [p.id, p]))
+  const map = ids => ids.map(id => byId[id]).filter(Boolean)
+  return { references: map(refIds), citedBy: map(citedIds) }
+}
+
+/**
  * Batched contradiction/replication flags for a page of papers, one query.
  * Returns { [paperId]: { contradicted, replicated } } for the paper rows.
  */
