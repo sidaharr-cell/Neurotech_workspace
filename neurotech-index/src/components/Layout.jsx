@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { ChevronDown, Search, Menu, X, Cog } from 'lucide-react'
+import { ChevronDown, Search, Menu, X, Cog, Star } from 'lucide-react'
 import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
@@ -82,7 +82,10 @@ function Masthead() {
           <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center">
             <Wordmark />
           </Link>
-          <div className="justify-self-end hidden sm:flex">
+          <div className="justify-self-end hidden sm:flex items-center gap-5">
+            <Link to="/watchlist" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors">
+              <Star className="w-4 h-4" /> Watchlist
+            </Link>
             <Link to="/search" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors">
               <Search className="w-4 h-4" /> Search
             </Link>
@@ -106,6 +109,7 @@ function Masthead() {
         <div className="sm:hidden border-t border-rule px-4 py-3 space-y-1">
           <MobileLink to="/" label="Home" onClick={() => setMobileOpen(false)} />
           {TOPICS.map(t => <MobileLink key={t.to} to={t.to} label={t.label} onClick={() => setMobileOpen(false)} />)}
+          <MobileLink to="/watchlist" label="Watchlist" onClick={() => setMobileOpen(false)} />
           <MobileLink to="/search" label="Search" onClick={() => setMobileOpen(false)} />
         </div>
       )}

@@ -8,6 +8,7 @@ import {
 import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
+import { StarButton } from '../components/Watch'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
@@ -152,7 +153,10 @@ export default function CompanyPage() {
           <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
         ))}
       </div>
-      <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-[1.1] font-semibold text-ink tracking-[-0.015em]">{company.name}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-[1.1] font-semibold text-ink tracking-[-0.015em]">{company.name}</h1>
+        <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'organizations', id: company.id, label: company.name, to: `/company/${company.id}` }} /></div>
+      </div>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {company.location && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{company.location}</span>}
         {company.founded && <><span aria-hidden>·</span><span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Founded {company.founded}</span></>}

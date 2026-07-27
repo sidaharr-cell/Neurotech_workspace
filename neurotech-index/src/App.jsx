@@ -12,6 +12,7 @@ import ItemDetail from './pages/ItemDetail'
 import PaperDetail from './pages/PaperDetail'
 import CompanyPage from './pages/CompanyPage'
 import DevicePage from './pages/DevicePage'
+import Watchlist from './pages/Watchlist'
 import HowItWorks from './pages/HowItWorks'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="devices" element={<Devices />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="how-it-works" element={<HowItWorks />} />
+          <Route path="watchlist" element={<Watchlist />} />
           <Route path="company/:id" element={<CompanyPage />} />
           <Route path="device/:id" element={<DevicePage />} />
           <Route path="item/:id" element={<ItemDetail />} />
