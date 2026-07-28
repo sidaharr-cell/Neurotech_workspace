@@ -5,7 +5,7 @@ import {
   Cpu, FlaskConical, FileText, Newspaper, Briefcase,
   ShieldCheck, AlertTriangle, Users,
 } from 'lucide-react'
-import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph } from '../lib/data'
+import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph, getPatentYears } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { StarButton } from '../components/Watch'
@@ -115,6 +115,46 @@ function FundingTimeline({ rounds }) {
   )
 }
 
+/**
+ * Regulatory-and-patent activity by year, overlaid so the trends are comparable.
+ * Two line series (devices cleared, patents granted) over a shared year axis.
+ * Each series is scaled to its own peak (noted in the legend) because patents and
+ * clearances differ by orders of magnitude; this keeps both trends legible.
+ * Business-layer only; never feeds any research ranking.
+ */
+function BusinessActivityChart({ deviceYears, patentYears }) {
+  const years = [...new Set([...Object.keys(deviceYears), ...Object.keys(patentYears)])].map(Number).filter(y => y >= 1980 && y <= 2100)
+  if (years.length < 2) return null
+  const lo = Math.min(...years), hi = Math.max(...years)
+  const span = []; for (let y = lo; y <= hi; y++) span.push(y)
+  const dMax = Math.max(1, ...Object.values(deviceYears))
+  const pMax = Math.max(1, ...Object.values(patentYears))
+  const hasD = Object.keys(deviceYears).length > 0, hasP = Object.keys(patentYears).length > 0
+  const W = 300, H = 90, PAD = 6
+  const px = y => hi > lo ? PAD + ((y - lo) / (hi - lo)) * (W - 2 * PAD) : W / 2
+  const py = (v, max) => (H - PAD) - (v / max) * (H - 2 * PAD)
+  const pts = (map, max) => span.map(y => `${px(y).toFixed(1)},${py(map[y] || 0, max).toFixed(1)}`).join(' ')
+  const PATENT = '#64748b'
+
+  return (
+    <figure className="mt-5">
+      <figcaption className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Regulatory and patent activity by year</figcaption>
+      <div className="flex flex-wrap gap-x-5 gap-y-1 mb-2 text-[11.5px] font-sans text-ink-soft">
+        {hasD && <span className="inline-flex items-center gap-1.5"><span className="inline-block w-3.5 h-[2px] bg-accent" />Devices cleared <span className="text-muted">(peak {dMax}/yr)</span></span>}
+        {hasP && <span className="inline-flex items-center gap-1.5"><span className="inline-block w-3.5 h-[2px]" style={{ background: PATENT }} />Patents granted <span className="text-muted">(peak {pMax}/yr)</span></span>}
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label="Devices cleared and patents granted per year">
+        {hasP && <polyline fill="none" stroke={PATENT} strokeWidth="1" points={pts(patentYears, pMax)} />}
+        {hasD && <polyline fill="none" stroke="#0B5FA6" strokeWidth="1" points={pts(deviceYears, dMax)} />}
+        {hasP && span.filter(y => patentYears[y]).map(y => <circle key={`p${y}`} cx={px(y)} cy={py(patentYears[y], pMax)} r="1.6" fill={PATENT}><title>{`${y}: ${patentYears[y]} patents`}</title></circle>)}
+        {hasD && span.filter(y => deviceYears[y]).map(y => <circle key={`d${y}`} cx={px(y)} cy={py(deviceYears[y], dMax)} r="1.6" fill="#0B5FA6"><title>{`${y}: ${deviceYears[y]} devices`}</title></circle>)}
+      </svg>
+      <div className="flex justify-between text-[10.5px] font-mono text-muted mt-1"><span>{lo}</span><span>{hi}</span></div>
+      <p className="mt-2 text-[11px] text-muted font-sans">Each series is scaled to its own peak (shown in the legend) so the shapes are comparable across very different magnitudes.</p>
+    </figure>
+  )
+}
+
 const RowLink = ({ href, children }) => (
   href
     ? <a href={href} target="_blank" rel="noopener noreferrer" className="group block py-2.5 hover:text-accent transition-colors">{children}</a>
@@ -127,11 +167,12 @@ export default function CompanyPage() {
   const [related, setRelated] = useState(null)
   const [graph, setGraph] = useState(null) // null = loading, then the getOrgGraph result
   const [analytics, setAnalytics] = useState(undefined) // undefined = loading, null = indexed/none
+  const [patentYears, setPatentYears] = useState({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let alive = true
-    setLoading(true); setRelated(null); setGraph(null); setAnalytics(undefined)
+    setLoading(true); setRelated(null); setGraph(null); setAnalytics(undefined); setPatentYears({})
     getCompanyById(id).then(async c => {
       if (!alive) return
       setCompany(c); setLoading(false)
@@ -139,6 +180,7 @@ export default function CompanyPage() {
         getOrgGraph(id).then(g => alive && setGraph(g))
         getCompanyRelated(c.name).then(r => alive && setRelated(r))
         getCompanyAnalytics(id).then(a => alive && setAnalytics(a))
+        getPatentYears(c.name).then(p => alive && setPatentYears(p))
       }
     })
     return () => { alive = false }
@@ -149,7 +191,7 @@ export default function CompanyPage() {
 
   const labels = cardBadges(company, 6)
   const pubs = analytics?.publications
-  const jobsUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`
+  const careersUrl = `https://www.google.com/search?q=${encodeURIComponent(`${company.name} careers jobs`)}`
   const newsUrl = `https://news.google.com/search?q=${encodeURIComponent(company.name + ' neurotech')}`
   const ctgovUrl = `https://clinicaltrials.gov/search?spons=${encodeURIComponent(company.name)}`
   const maudeUrl = `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfMAUDE/TextSearch.cfm`
@@ -157,6 +199,10 @@ export default function CompanyPage() {
   // relationships edge table. `graph` is null while loading.
   const g = graph
   const trialCount = g ? g.trials.active.length + g.trials.completed.length : 0
+  // FDA devices cleared per year, from the graph, for the Business activity chart.
+  const deviceYears = {}
+  for (const d of g?.devices || []) { const y = yearOf(d.year); if (/^\d{4}$/.test(y)) deviceYears[y] = (deviceYears[y] || 0) + 1 }
+  const founders = Array.isArray(company.founders) ? company.founders.filter(Boolean) : []
   // Sources feeding the whole page, for the page-level provenance footer.
   const pageSources = ['ClinicalTrials.gov', 'openFDA']
   if (pubs?.items?.length) pageSources.unshift('PubMed')
@@ -190,6 +236,15 @@ export default function CompanyPage() {
         <span aria-hidden>·</span>
         <a href={ctgovUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
       </div>
+
+      {/* A real, curated representative photo, shown responsively when one is on
+          record. Populated by curation only; never auto-scraped (see migration 007). */}
+      {company.image_url && (
+        <figure className="mt-6">
+          <img src={company.image_url} alt={`${company.name}`} loading="lazy"
+            className="w-full h-auto max-h-80 object-cover rounded-sm border border-rule" />
+        </figure>
+      )}
 
       {company.description && <p className="mt-6 text-[1.12rem] leading-[1.7] text-ink font-body">{company.description}</p>}
 
@@ -305,21 +360,34 @@ export default function CompanyPage() {
         {pubs?.items?.length ? <Prov source="PubMed" via="matched by author affiliation" /> : null}
       </Section>
 
-      {/* People — affiliated_with edge (People has no browse view; inbound only) */}
-      <Section icon={Users} title="People" note={g && g.people.length ? `${g.people.length}` : null}>
-        {!g ? <Loader /> : g.people.length === 0
-          ? <p className="text-[14px] text-muted font-body">No researchers are linked to this organization yet.</p>
-          : <>
-              <div className="divide-y divide-rule">
-                {g.people.map(p => (
-                  <div key={p.id} className="py-2.5 flex items-baseline justify-between gap-3">
-                    <span className="font-serif text-[1.05rem] text-ink">{p.name}</span>
-                    {p.role && <span className="text-[12px] font-sans text-muted whitespace-nowrap">{p.role}</span>}
-                  </div>
-                ))}
-              </div>
-              <Prov source="disclosed affiliations" />
-            </>}
+      {/* People — leadership (founders on record) and affiliated researchers */}
+      <Section icon={Users} title="People" note={founders.length ? `${founders.length} on record` : null}>
+        {founders.length > 0 && (
+          <div className="mb-4">
+            <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.09em] text-muted mb-1.5">Founders and leadership</div>
+            <div className="divide-y divide-rule">
+              {founders.map((f, i) => (
+                <div key={i} className="py-2.5 font-serif text-[1.05rem] text-ink">{f}</div>
+              ))}
+            </div>
+          </div>
+        )}
+        {g && g.people.length > 0 && (
+          <div className="mb-4">
+            <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.09em] text-muted mb-1.5">Affiliated researchers</div>
+            <div className="divide-y divide-rule">
+              {g.people.map(p => (
+                <div key={p.id} className="py-2.5 flex items-baseline justify-between gap-3">
+                  <span className="font-serif text-[1.05rem] text-ink">{p.name}</span>
+                  {p.role && <span className="text-[12px] font-sans text-muted whitespace-nowrap">{p.role}</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {founders.length === 0 && (!g || g.people.length === 0) && (
+          <p className="text-[14px] text-muted font-body">No people are on record for this organization. A full leadership roster (CEO, COO, and similar) needs a disclosed-announcement source, which NeuroBase does not yet index. It never comes from LinkedIn.</p>
+        )}
       </Section>
 
       {/* Press / news */}
@@ -376,6 +444,7 @@ export default function CompanyPage() {
                   : 'Curated figures from public announcements. Lower confidence than an EDGAR filing; no amount is estimated.'} />
             </>
           ) : <p className="text-[14px] text-muted font-body">No disclosed funding on record.</p>}
+          <BusinessActivityChart deviceYears={deviceYears} patentYears={patentYears} />
         </BizSub>
 
         {/* Mergers and acquisitions — no open structured feed exists; empty by design */}
@@ -402,17 +471,17 @@ export default function CompanyPage() {
               </>}
         </BizSub>
 
-        {/* Talent — disclosed announcements only; never LinkedIn */}
+        {/* Talent — link to the company's own careers page; never LinkedIn */}
         <BizSub title="Talent">
-          <p className="text-[14px] text-muted font-body mb-3">No leadership announcements are indexed for this company. Talent signals come only from disclosed press releases and company announcements. NeuroBase does not use LinkedIn or any source that prohibits scraping.</p>
+          <p className="text-[14px] text-muted font-body mb-3">Open roles are listed on the company's own careers page. NeuroBase does not scrape individual postings or use LinkedIn or any source that prohibits it; it links you to the source instead.</p>
           <div className="flex flex-wrap gap-3">
             {company.website && (
               <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
                 Company site <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
-            <a href={jobsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
-              Open roles on LinkedIn <ExternalLink className="w-3.5 h-3.5" />
+            <a href={careersUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
+              Careers and open roles <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
         </BizSub>

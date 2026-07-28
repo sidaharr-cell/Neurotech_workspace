@@ -568,6 +568,24 @@ export async function getDeviceGraph(deviceId) {
   }
 }
 
+/**
+ * Patents granted per year for an assignee (for the Business activity chart).
+ * Returns { [year]: count }. Fetches only the grant_date column, paginated.
+ */
+export async function getPatentYears(name) {
+  const out = {}
+  if (!supabase || !name) return out
+  const like = `%${name.replace(/[%,()]/g, ' ').trim()}%`
+  for (let from = 0; from < 5000; from += 1000) {
+    const { data, error } = await supabase.from('patents').select('grant_date')
+      .ilike('assignee', like).not('grant_date', 'is', null).order('grant_date').range(from, from + 999)
+    if (error || !data?.length) break
+    for (const p of data) { const y = String(p.grant_date).slice(0, 4); if (/^\d{4}$/.test(y)) out[y] = (out[y] || 0) + 1 }
+    if (data.length < 1000) break
+  }
+  return out
+}
+
 /** Precomputed analytics (publications) served as a static file; null if none. */
 export async function getCompanyAnalytics(id) {
   try {
