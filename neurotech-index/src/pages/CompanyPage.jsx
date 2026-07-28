@@ -14,6 +14,7 @@ const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 const fmtDate = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
+const monthYear = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
 
 // Long linked lists (a big maker can have dozens) are capped for readability
 // and to keep the page light; the section header still shows the true total.
@@ -39,13 +40,13 @@ function Section({ icon: Icon, title, note, children }) {
 
 /**
  * Per-section provenance line: where the section's facts come from and how fresh
- * they are. `via` names the graph edge that linked the records (so a reader can
- * see a section is assembled from real relationships, not a name match).
+ * they are. `via` is an optional plain-language note on how records were linked;
+ * internal edge names (made_by, cleared_via, ...) are never shown to the reader.
  */
 function Prov({ source, via, updated }) {
   const bits = []
   if (source) bits.push(`Source: ${source}`)
-  if (via) bits.push(`linked by ${via}`)
+  if (via) bits.push(via)
   if (updated) bits.push(`updated ${fmtDate(updated)}`)
   if (!bits.length) return null
   return <p className="mt-4 text-[11.5px] font-sans text-muted/90">{bits.join(' · ')}</p>
@@ -98,7 +99,7 @@ function FundingTimeline({ rounds }) {
                 <span className="mb-1.5 text-[10.5px] font-mono font-medium text-ink-soft whitespace-nowrap tabular-nums leading-none">{fmtMoney(v)}</span>
               )}
               {v > 0
-                ? <div className="w-full rounded-t-[3px] bg-gradient-to-t from-accent/55 to-accent transition-[filter] duration-200 group-hover:brightness-110"
+                ? <div className="w-full rounded-t-[3px] bg-accent transition-[filter] duration-200 group-hover:brightness-110"
                     style={{ height: h }} title={`${y}: ${fmtMoney(v)}`} />
                 : <span className="w-1 h-1 rounded-full bg-rule" title={`${y}: no raise on record`} />}
             </div>
@@ -209,7 +210,7 @@ export default function CompanyPage() {
                 ))}
               </div>
               {g.devices.length > LIST_CAP && <MoreNote n={g.devices.length - LIST_CAP} of="devices" />}
-              <Prov source="openFDA" via="made_by" updated={g.provenance.devices} />
+              <Prov source="openFDA" updated={g.provenance.devices} />
             </>}
       </Section>
 
@@ -232,7 +233,7 @@ export default function CompanyPage() {
                     ))}
                   </div>
                   {g.regulatory.length > LIST_CAP && <MoreNote n={g.regulatory.length - LIST_CAP} of="records" />}
-                  <Prov source="openFDA" via="cleared_via" updated={g.provenance.regulatory} />
+                  <Prov source="openFDA" updated={g.provenance.regulatory} />
                 </>}
 
             {/* MAUDE — self-reported adverse-event reports. Not yet indexed; a
@@ -278,7 +279,7 @@ export default function CompanyPage() {
                   </div>
                 </div>
               ))}
-              <Prov source="ClinicalTrials.gov" via="sponsored_by" updated={g.provenance.trials} />
+              <Prov source="ClinicalTrials.gov" updated={g.provenance.trials} />
             </>}
       </Section>
 
@@ -301,7 +302,7 @@ export default function CompanyPage() {
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(`"${company.name}"[Affiliation]`)}`} target="_blank" rel="noopener noreferrer"
                   className="inline-block pt-3 text-[13px] font-sans text-accent hover:underline">Search all on PubMed →</a>
               </div>}
-        {pubs?.items?.length ? <Prov source="PubMed" via="author affiliation match" /> : null}
+        {pubs?.items?.length ? <Prov source="PubMed" via="matched by author affiliation" /> : null}
       </Section>
 
       {/* People — affiliated_with edge (People has no browse view; inbound only) */}
@@ -317,7 +318,7 @@ export default function CompanyPage() {
                   </div>
                 ))}
               </div>
-              <Prov source="derived" via="affiliated_with" />
+              <Prov source="disclosed affiliations" />
             </>}
       </Section>
 
@@ -328,7 +329,7 @@ export default function CompanyPage() {
             {related.news.map(n => (
               <RowLink key={n.id} href={n.url}>
                 <div className="font-serif text-[1.05rem] text-ink leading-snug group-hover:text-accent">{n.title}</div>
-                <div className="mt-1 text-[12px] font-sans text-muted">{[n.source, yearOf(n.published_at)].filter(Boolean).join(' · ')}</div>
+                <div className="mt-1 text-[12px] font-sans text-muted">{[n.source, monthYear(n.published_at)].filter(Boolean).join(' · ')}</div>
               </RowLink>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, FileQuestion, Code2, Database, AlertTriangle, CopyCheck } from 'lucide-react'
+import { ArrowLeft, ExternalLink, FileQuestion, Code2, Database, AlertTriangle, CopyCheck, ChevronDown } from 'lucide-react'
 import { getPaperByPmid, getPaperSignals, getPaperCitations } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
@@ -32,27 +32,33 @@ function CitationMeta({ paper }) {
 
 const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 
-// A capped list of linked papers (references / cited-by).
-function CitedList({ title, papers, cap = 8 }) {
+// A collapsible dropdown of linked papers (references / citations). Closed by
+// default; the full list expands on click. cap guards the DOM on huge lists.
+function CitedList({ title, papers, cap = 200 }) {
   if (!papers.length) return null
   return (
-    <div className="mb-8">
-      <p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">{title} <span className="text-muted/70">{papers.length}</span></p>
-      <div className="divide-y divide-rule">
+    <details className="group border-b border-rule">
+      <summary className="flex items-center justify-between gap-3 py-3 cursor-pointer list-none select-none">
+        <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted">
+          {title} <span className="text-muted/70">{papers.length}</span>
+        </span>
+        <ChevronDown className="w-4 h-4 text-muted transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="divide-y divide-rule pb-2">
         {papers.slice(0, cap).map(p => {
           const inner = (
             <>
-              <span className="font-serif text-[1.02rem] leading-snug text-ink group-hover:text-accent">{p.title}</span>
+              <span className="font-serif text-[1.02rem] leading-snug text-ink group-hover/row:text-accent">{p.title}</span>
               <span className="mt-0.5 block text-[12px] font-sans text-muted italic">{[p.journal, p.year].filter(Boolean).join(' · ')}</span>
             </>
           )
           return p.pubmed_id
-            ? <Link key={p.id} to={`/paper/${p.pubmed_id}`} className="group block py-2.5">{inner}</Link>
+            ? <Link key={p.id} to={`/paper/${p.pubmed_id}`} className="group/row block py-2.5">{inner}</Link>
             : <div key={p.id} className="py-2.5">{inner}</div>
         })}
+        {papers.length > cap && <p className="pt-2.5 text-[13px] font-sans text-muted">{papers.length - cap} more.</p>}
       </div>
-      {papers.length > cap && <p className="pt-2.5 text-[13px] font-sans text-muted">{papers.length - cap} more.</p>}
-    </div>
+    </details>
   )
 }
 
@@ -190,9 +196,9 @@ export default function PaperDetail() {
           Shows only indexed papers; empty when this paper has no indexed
           references or citers. */}
       {(cites.references.length > 0 || cites.citedBy.length > 0) && (
-        <div className="border-t border-rule pt-6 mb-8">
+        <div className="border-t border-rule pt-4 mb-8">
           <CitedList title="References in this index" papers={cites.references} />
-          <CitedList title="Cited by, in this index" papers={cites.citedBy} />
+          <CitedList title="Citations in this index" papers={cites.citedBy} />
         </div>
       )}
 
