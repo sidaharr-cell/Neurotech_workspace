@@ -412,6 +412,20 @@ export async function getCompanyRelated(name) {
   }
 }
 
+/** One research lab (organization type='lab') by id, with its NIH funding
+ * facts parsed out of the description. Returns null if not a lab. */
+export async function getLabById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('organizations').select('*').eq('id', id).eq('type', 'lab').maybeSingle()
+  if (error || !data) return null
+  const d = data.description || ''
+  const institution = d.split(' · ')[0]?.trim() || null
+  const funding = d.match(/\$[\d.]+\s*[MB]?\s*in NIH funding/i)?.[0]?.replace(/\s*in NIH funding/i, '').trim() || null
+  const projects = d.match(/(\d+)\s+NIH-funded/i)?.[1] || null
+  const focus = d.includes('Focus:') ? d.slice(d.indexOf('Focus:') + 6).trim() : null
+  return { ...data, _type: 'organizations', institution, funding, projects, focus }
+}
+
 // ── The entity graph (Phase 1 relationships) ────────────────────────────────
 // These read the typed `relationships` edge table built by scripts/backfill-
 // graph.js, not name matching. An edge is (subject_type, subject_id) --predicate

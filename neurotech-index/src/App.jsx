@@ -12,6 +12,7 @@ import ItemDetail from './pages/ItemDetail'
 import PaperDetail from './pages/PaperDetail'
 import CompanyPage from './pages/CompanyPage'
 import DevicePage from './pages/DevicePage'
+import LabPage from './pages/LabPage'
 import Watchlist from './pages/Watchlist'
 import HowItWorks from './pages/HowItWorks'
 
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="company/:id" element={<CompanyPage />} />
           <Route path="device/:id" element={<DevicePage />} />
+          <Route path="lab/:id" element={<LabPage />} />
           <Route path="item/:id" element={<ItemDetail />} />
           <Route path="paper/:pmid" element={<PaperDetail />} />
           {/* People: reachable by link, intentionally absent from nav + default search */}
