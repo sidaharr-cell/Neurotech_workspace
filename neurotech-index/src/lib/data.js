@@ -705,6 +705,32 @@ export async function getWatchlistChanges(trialIds = [], sinceISO = null) {
   return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
 }
 
+/**
+ * New papers (in our index) that cite the user's watched papers, discovered
+ * since a timestamp (Phase 8 "what changed"). Keyed on when the citation edge was
+ * created, so re-running the citation backfill surfaces genuinely new links.
+ * `pmids` are the watched papers' PubMed ids. Returns [{ citing, watched[] }].
+ */
+export async function getNewCitationsForPapers(pmids = [], sinceISO = null) {
+  if (!supabase || !pmids.length) return []
+  const { data: watched } = await supabase.from('papers').select('id,pubmed_id,title').in('pubmed_id', pmids)
+  if (!watched?.length) return []
+  const byUuid = Object.fromEntries(watched.map(w => [w.id, w]))
+  let q = supabase.from('relationships').select('subject_id,object_id,created_at')
+    .eq('predicate', 'cites').eq('object_type', 'papers').in('object_id', watched.map(w => w.id))
+  if (sinceISO) q = q.gt('created_at', sinceISO)
+  const { data: edges } = await q.limit(200)
+  if (!edges?.length) return []
+  const citingIds = [...new Set(edges.map(e => e.subject_id))]
+  const { data: citing } = await supabase.from('papers').select('id,title,year,journal,pubmed_id').in('id', citingIds)
+  const citingById = Object.fromEntries((citing || []).map(c => [c.id, c]))
+  const cited = {}   // citingId -> Set(watched titles)
+  for (const e of edges) { (cited[e.subject_id] = cited[e.subject_id] || new Set()).add(byUuid[e.object_id]?.title) }
+  return citingIds
+    .map(id => ({ citing: citingById[id], watched: [...(cited[id] || [])].filter(Boolean) }))
+    .filter(x => x.citing)
+}
+
 /** A single paper by PubMed id (for its detail page). */
 export async function getPaperByPmid(pmid) {
   if (!supabase || !pmid) return null

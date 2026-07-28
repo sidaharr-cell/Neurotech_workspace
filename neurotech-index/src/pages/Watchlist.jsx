@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Download, Activity, Building2, Cpu, FlaskConical, FileText, Filter } from 'lucide-react'
+import { Star, Download, Activity, Building2, Cpu, FlaskConical, FileText, Filter, Quote } from 'lucide-react'
 import { useWatchlist, removeWatch, getLastSeen, markSeen } from '../lib/watchlist'
-import { getOrgTrialIds, getWatchlistChanges } from '../lib/data'
+import { getOrgTrialIds, getWatchlistChanges, getNewCitationsForPapers } from '../lib/data'
 import { SectionHeading, EmptyState, fmtDate } from '../components/ui'
 
 const GROUPS = [
@@ -25,20 +25,26 @@ function exportJson(items) {
 export default function Watchlist() {
   const items = useWatchlist()
   const [changes, setChanges] = useState([])
+  const [newCites, setNewCites] = useState([])
   // The "since" boundary is captured once, on mount, so it reflects the PREVIOUS
   // visit even after the user marks things seen this session.
   const [since] = useState(() => getLastSeen())
+  const sinceISO = since ? new Date(since).toISOString() : null
 
   useEffect(() => {
     let alive = true
     const trialIds = items.filter(i => i.type === 'trials').map(i => i.id)
     const orgIds = items.filter(i => i.type === 'organizations').map(i => i.id)
+    const paperPmids = items.filter(i => i.type === 'papers').map(i => i.id)
     getOrgTrialIds(orgIds).then(orgTrials => {
       const all = [...new Set([...trialIds, ...orgTrials])]
-      return getWatchlistChanges(all, since ? new Date(since).toISOString() : null)
+      return getWatchlistChanges(all, sinceISO)
     }).then(c => { if (alive) setChanges(c) })
+    getNewCitationsForPapers(paperPmids, sinceISO).then(c => { if (alive) setNewCites(c) })
     return () => { alive = false }
-  }, [items, since])
+  }, [items, sinceISO])
+
+  const nothingChanged = changes.length === 0 && newCites.length === 0
 
   const byType = Object.fromEntries(GROUPS.map(g => [g.type, items.filter(i => i.type === g.type)]))
 
@@ -69,20 +75,39 @@ export default function Watchlist() {
               </span>
               <button onClick={markSeen} className="text-[12px] font-sans text-muted hover:text-accent transition-colors">Mark as seen</button>
             </div>
-            {changes.length === 0 ? (
-              <p className="text-[13.5px] text-muted font-body">No trial status changes on your watched items yet. Changes appear here as trials you follow move between statuses. Email delivery is not available (it needs a server account, which NeuroBase does not have).</p>
+            {nothingChanged ? (
+              <p className="text-[13.5px] text-muted font-body">Nothing new on your watched items yet. As trials you follow change status, and as new indexed papers cite papers you follow, they appear here. Email delivery is not available (it needs a server account, which NeuroBase does not have).</p>
             ) : (
-              <ul className="flex flex-col divide-y divide-rule">
-                {changes.map(c => (
-                  <li key={c.id} className="py-2 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3">
-                    <span className="min-w-0 text-[13.5px] font-sans text-ink">
-                      <span className="text-muted">{c.field}:</span> {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
-                      {c.title && <span className="text-muted"> · {c.title}</span>}
-                    </span>
-                    <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(c.changed_at)}</span>
-                  </li>
-                ))}
-              </ul>
+              <>
+                {changes.length > 0 && (
+                  <ul className="flex flex-col divide-y divide-rule mb-3">
+                    {changes.map(c => (
+                      <li key={c.id} className="py-2 first:pt-0 flex items-baseline justify-between gap-3">
+                        <span className="min-w-0 text-[13.5px] font-sans text-ink">
+                          <span className="text-muted">{c.field}:</span> {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
+                          {c.title && <span className="text-muted"> · {c.title}</span>}
+                        </span>
+                        <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(c.changed_at)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {newCites.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-1.5 text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-muted mb-1.5"><Quote className="w-3.5 h-3.5 text-accent" /> New work citing papers you follow</div>
+                    <ul className="flex flex-col divide-y divide-rule">
+                      {newCites.map(({ citing, watched }) => (
+                        <li key={citing.id} className="py-2 first:pt-0">
+                          {citing.pubmed_id
+                            ? <Link to={`/paper/${citing.pubmed_id}`} className="text-[13.5px] font-sans text-ink hover:text-accent">{citing.title}</Link>
+                            : <span className="text-[13.5px] font-sans text-ink">{citing.title}</span>}
+                          <span className="block text-[12px] font-sans text-muted">cites {watched.join('; ')}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
           </div>
 

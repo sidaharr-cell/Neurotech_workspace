@@ -28,7 +28,7 @@ function Section({ icon: Icon, title, note, children }) {
 function Prov({ source, via, updated }) {
   const bits = []
   if (source) bits.push(`Source: ${source}`)
-  if (via) bits.push(`linked by ${via}`)
+  if (via) bits.push(via)
   if (updated) bits.push(`updated ${fmtDate(updated)}`)
   if (!bits.length) return null
   return <p className="mt-4 text-[11.5px] font-sans text-muted/90">{bits.join(' · ')}</p>
@@ -156,7 +156,7 @@ export default function DevicePage() {
                   )
                 })}
               </ol>
-              <Prov source="openFDA, ClinicalTrials.gov, PubMed" via="cleared_via / studies / evaluates" updated={g.provenance.regulatory} />
+              <Prov source="openFDA, ClinicalTrials.gov, PubMed" updated={g.provenance.regulatory} />
             </>}
       </Section>
 
