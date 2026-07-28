@@ -168,6 +168,10 @@ const OUT_OF_SCOPE_HEADINGS = new Set([
 ])
 
 const names = mesh => (mesh || []).map(m => (typeof m === 'string' ? m : m?.name)).filter(Boolean)
+// MAJOR headings are the ones NLM indexers flagged as what the article is
+// substantively about; minor headings are incidental (a method used, an animal
+// model). String-form mesh (no flags) is treated as major so old data still works.
+const majorNames = mesh => (mesh || []).filter(m => typeof m === 'string' || m?.major).map(m => (typeof m === 'string' ? m : m?.name)).filter(Boolean)
 
 /** Facets implied by a paper's MeSH headings, or null if none are mapped. */
 export function meshFacets(mesh) {
@@ -188,8 +192,12 @@ export function meshFacets(mesh) {
 export function isMeshInScope(mesh) {
   const ns = names(mesh)
   if (!ns.length) return null
-  if (ns.some(n => MESH_FACETS[n])) return true
+  // A MAJOR neurotech heading means the paper is about the neurotech -> in scope.
+  if (majorNames(mesh).some(n => MESH_FACETS[n])) return true
+  // Basic-science / animal-model markers with no major neurotech topic -> out.
   if (ns.some(n => OUT_OF_SCOPE_HEADINGS.has(n))) return false
+  // A neurotech heading present only as a MINOR topic (a method) is inconclusive:
+  // fall through to the keyword rules, which require a title or corroborating hit.
   return null
 }
 
