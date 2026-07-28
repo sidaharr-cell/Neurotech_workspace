@@ -124,6 +124,7 @@ export default function Research() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />}
           extras={[
             { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
             { label: 'Publication date', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
@@ -131,11 +132,11 @@ export default function Research() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
             <div className="flex items-center gap-3">
               {queryItem && <StarButton item={queryItem} />}
-              <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
+              <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required /></div>
             </div>
           </div>
 

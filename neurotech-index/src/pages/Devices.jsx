@@ -126,6 +126,7 @@ export default function Devices() {
           year={year}
           onYear={setYear}
           counts={facetCts}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />}
           extras={[
             ...(!isPatent ? [{ label: 'FDA route', value: fda, onChange: setFda, options: DEVICE_FDA, allLabel: 'Any route' }] : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
@@ -133,9 +134,9 @@ export default function Devices() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
+            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required /></div>
           </div>
 
           {loading ? (
