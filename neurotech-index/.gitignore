@@ -33,3 +33,6 @@ mesh-cache.ndjson
 purged-devices-*.json
 pipeline.log
 pipeline-*.log
+
+# Dedup reversibility logs (operational artifacts, kept locally)
+dedup-log-*.json

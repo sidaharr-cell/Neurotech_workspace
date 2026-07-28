@@ -112,6 +112,27 @@ export function scopeOf(row, type) {
   }
 }
 
+/**
+ * A paper that reaches scope ONLY through keywords needs a real topical signal,
+ * not an incidental method mention. The hard case is recording/imaging: EEG, EMG,
+ * fMRI and the like are as often a neuroscience METHOD as a neurotechnology
+ * subject, and a disease word in the abstract ("Alzheimer") is the thing being
+ * studied, not evidence of a neurotech application. So:
+ *   - a neurotech term (function OR application) in the TITLE is topical -> in;
+ *   - stimulation or decoding/BCI anywhere is a strong intervention/interface
+ *     signal -> in;
+ *   - a lone recording/imaging modality mentioned only in the abstract is a
+ *     method mention -> out, unless a SECOND distinct function corroborates
+ *     (genuinely multimodal work).
+ */
+function paperKeywordScope(row, facets) {
+  const tf = keywordFacets(row.title || '')
+  if (tf.function.length || tf.application.length) return true
+  if (facets.function.some(f => f === 'stimulates' || f === 'decodes')) return true
+  if (facets.function.length >= 2) return true
+  return false
+}
+
 // ── The classifier ──────────────────────────────────────────────────────────
 
 /**
@@ -152,7 +173,11 @@ export function classify(row, type, opts = {}) {
 
   // 4 — scope, then abstain
   const declared = scopeOf(row, type)
-  const in_scope = declared === null ? !isEmptyFacets(facets) : declared
+  let in_scope
+  if (declared !== null) in_scope = declared
+  else if (isEmptyFacets(facets)) in_scope = false
+  else if (type === 'papers') in_scope = paperKeywordScope(row, facets)  // guard incidental method mentions
+  else in_scope = true
 
   // Out-of-scope rows carry no facets — "not neurotech" and "neurotech we
   // failed to classify" must stay distinguishable.

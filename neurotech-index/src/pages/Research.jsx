@@ -1,47 +1,65 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { searchPapers, yearHistogram } from '../lib/data'
+import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
+import { useUrlFacets } from '../lib/useUrlFacets'
+import { KindBadge, ReproBadges } from '../components/PaperSignals'
+import { StarButton } from '../components/Watch'
+import { CiteButton } from '../components/Cite'
 
 const PAGE_SIZE = 20
 
-function PaperRow({ paper }) {
+function PaperRow({ paper, signals }) {
   const authors = Array.isArray(paper.authors)
     ? paper.authors.slice(0, 4).join(', ') + (paper.authors.length > 4 ? ' et al.' : '')
     : paper.authors
   return (
-    <Link to={`/paper/${paper.pubmed_id}`} className="group block py-5">
-      <div className="flex items-center gap-3 mb-1.5">
-        <Kicker>Research</Kicker>
-        <DeviceClassLabels entity={paper} max={2} />
+    <div className="group py-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3 gap-y-1.5 mb-1.5 flex-wrap min-w-0">
+          <Kicker>Research</Kicker>
+          <KindBadge source={paper.source} />
+          <DeviceClassLabels entity={paper} max={2} />
+          <ReproBadges paper={paper} signals={signals} />
+        </div>
+        <CiteButton paper={paper} variant="icon" />
       </div>
-      <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{paper.title}</h3>
-      {authors && <p className="mt-1 text-[13px] text-muted font-sans line-clamp-1">{authors}</p>}
-      <div className="mt-1 flex items-center gap-2 text-[13px] text-muted font-sans">
-        {paper.journal && <span className="italic truncate max-w-[24rem]">{paper.journal}</span>}
-        {paper.year && <><span aria-hidden>·</span><span>{paper.year}</span></>}
-      </div>
-      {paper.abstract && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{paper.abstract}</p>}
-    </Link>
+      <Link to={`/paper/${paper.pubmed_id}`} className="block">
+        <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{paper.title}</h3>
+        {authors && <p className="mt-1 text-[13px] text-muted font-sans line-clamp-1">{authors}</p>}
+        <div className="mt-1 flex items-center gap-2 text-[13px] text-muted font-sans">
+          {paper.journal && <span className="italic truncate max-w-[24rem]">{paper.journal}</span>}
+          {paper.year && <><span aria-hidden>·</span><span>{paper.year}</span></>}
+        </div>
+        {paper.abstract && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2">{paper.abstract}</p>}
+      </Link>
+    </div>
   )
 }
 
 export default function Research() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [year, setYear] = useState(null)          // histogram year selection { label, lo, hi }
   const [source, setSource] = useState(null)
   const [sort, setSort] = useState('relevant')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
+  const [signals, setSignals] = useState({})
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
   const debounce = useRef(null)
+  const location = useLocation()
+  // A saveable facet query (Phase 8): only meaningful when a facet is selected.
+  const facetVals = [...facets.function, ...facets.access, ...facets.application]
+  const queryItem = facetVals.length
+    ? { type: 'query', id: `/research${location.search}`, to: `/research${location.search}`, label: `Research: ${facetVals.join(', ')}` }
+    : null
 
   // Debounce the search box → query
   useEffect(() => {
@@ -53,9 +71,12 @@ export default function Research() {
   useEffect(() => { setPage(0) }, [facets, recency, year, source, sort])
 
   const load = useCallback(async () => {
-    setLoading(true)
+    setLoading(true); setSignals({})
     const res = await searchPapers({ query, facets, recency, yearRange: year, source, sort, page, pageSize: PAGE_SIZE })
     setResult(res); setLoading(false)
+    // Contradiction/replication badges for the visible rows, from the graph.
+    const ids = res.rows.map(r => r.id).filter(Boolean)
+    if (ids.length) getPaperSignalsBatch(ids).then(setSignals)
   }, [query, facets, recency, year, source, sort, page])
 
   useEffect(() => { load() }, [load])
@@ -103,6 +124,7 @@ export default function Research() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />}
           extras={[
             { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
             { label: 'Publication date', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
@@ -110,9 +132,12 @@ export default function Research() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />
+            <div className="flex items-center gap-3">
+              {queryItem && <StarButton item={queryItem} />}
+              <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required /></div>
+            </div>
           </div>
 
           {loading ? (
@@ -122,7 +147,7 @@ export default function Research() {
           ) : (
             <>
               <div className="divide-rule">
-                {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} />)}
+                {rows.map((p, i) => <PaperRow key={p.pubmed_id || i} paper={p} signals={signals[p.id]} />)}
               </div>
 
               {pages > 1 && (

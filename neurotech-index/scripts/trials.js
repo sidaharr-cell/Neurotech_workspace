@@ -111,7 +111,10 @@ export function trialToRow(t) {
   const row = {
     title: t.title,
     summary: t.summary ? t.summary.slice(0, 500) : '',
-    source: t.sponsor || 'ClinicalTrials.gov',
+    source: 'clinicaltrials',
+    source_id: t.nctId,
+    source_url: t.url,
+    pipeline_version: 'trials-2026-07',
     url: t.url,
     published_at: t.startDate,
     topics: t.tags || [],
@@ -129,12 +132,73 @@ export function trialToRow(t) {
   return { ...row, ...classify(row, 'trials') }   // facet_* + in_scope + classifier_version
 }
 
+// Fields whose change between syncs is worth logging to trial_changes.
+const TRACKED = ['status', 'phase', 'enrollment']
+
+/**
+ * Compare the freshly fetched rows against what is stored, keyed by NCT id, and
+ * record a dated change event for each tracked field that moved. Mutates rows in
+ * place to carry metadata.lastChanged (the change time for changed trials, or
+ * the prior value for unchanged ones, so "sort by recently changed" is stable).
+ * Returns the change events to insert. Fails soft: if the trial_changes table is
+ * absent (migration not yet run) the caller just skips the insert.
+ */
+async function detectTrialChanges(supabase, rows) {
+  // Snapshot the stored trials: nct id -> tracked fields + prior lastChanged.
+  const prevByNct = new Map()
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supabase.from('news_feed')
+      .select('id,metadata').eq('entry_type', 'trial').order('id').range(from, from + 999)
+    if (error || !data?.length) break
+    for (const r of data) {
+      const nct = r.metadata?.nctId
+      if (nct) prevByNct.set(nct, { id: r.id, m: r.metadata || {} })
+    }
+    if (data.length < 1000) break
+  }
+
+  const now = new Date().toISOString()
+  const changes = []
+  for (const row of rows) {
+    const nct = row.metadata?.nctId
+    const prev = nct && prevByNct.get(nct)
+    if (!prev) continue                               // first-seen trial: not a change
+    const diffs = TRACKED.filter(f => String(prev.m[f] ?? '') !== String(row.metadata[f] ?? ''))
+    if (diffs.length) {
+      row.metadata.lastChanged = now
+      for (const f of diffs) {
+        changes.push({ nct_id: nct, trial_id: prev.id, field: f,
+          old_value: prev.m[f] == null ? null : String(prev.m[f]),
+          new_value: row.metadata[f] == null ? null : String(row.metadata[f]),
+          changed_at: now })
+      }
+    } else if (prev.m.lastChanged) {
+      row.metadata.lastChanged = prev.m.lastChanged   // unchanged: keep prior stamp
+    }
+  }
+  return changes
+}
+
 export async function syncTrials(supabase) {
   const trials = await fetchTrials()
   const rows = trials.map(trialToRow)
+
+  // Detect and log status/phase/enrollment changes BEFORE the upsert overwrites
+  // the stored rows. The trials view and Phase 8 read this change log.
+  let changes = []
+  try { changes = await detectTrialChanges(supabase, rows) } catch (e) { console.warn('trial change detection skipped:', e.message) }
+
   for (let i = 0; i < rows.length; i += 500) {
     const { error } = await supabase.from('news_feed').upsert(rows.slice(i, i + 500), { onConflict: 'url', ignoreDuplicates: false })
     if (error && !error.message.includes('duplicate')) console.warn('trial upsert error:', error.message)
+  }
+
+  if (changes.length) {
+    for (let i = 0; i < changes.length; i += 500) {
+      const { error } = await supabase.from('trial_changes').insert(changes.slice(i, i + 500))
+      if (error) { console.warn('trial_changes insert skipped:', error.message); break }
+    }
+    console.log(`      logged ${changes.length} trial status/phase/enrollment changes`)
   }
 
   // Prune trials no longer in the current fetch so the table (and the displayed

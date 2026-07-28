@@ -8,6 +8,7 @@ import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
 import researchersJson from '../data/researchers.json'
 import { getFunding } from './companyFunding'
+import { FUNCTION, ACCESS, APPLICATION } from './facets'
 
 function tag(type) {
   return items => items.map(i => ({ ...i, _type: type }))
@@ -59,6 +60,50 @@ function applyFacets(q, facets = {}, includeOutOfScope = false) {
 
 // Facet columns every card needs to render its badges.
 const FACET_COLS = 'facet_function,facet_access,facet_application,in_scope'
+
+// ── Per-facet-value result counts (Phase 4) ─────────────────────────────────
+const FACET_DIMS = { function: FUNCTION, access: ACCESS, application: APPLICATION }
+const FACET_COL = { function: 'facet_function', access: 'facet_access', application: 'facet_application' }
+// Only the lean tables get live per-value counts. The papers and patents tables
+// are fat (a facet-filtered count already times out on them, see the year
+// histogram note), so counting ~23 values would be slow and flaky there; the
+// sidebar simply shows no counts and hides nothing in that case.
+const COUNTABLE_TABLES = new Set(['devices', 'organizations'])
+
+/**
+ * For each value of each facet dimension, count in-scope rows that would match
+ * if that value were selected, holding the OTHER dimensions' current selections
+ * fixed (standard faceted counts, so a user sees what adding a value yields).
+ * Returns { function:{value:n}, access:{...}, application:{...} } or null when
+ * the table is not countable or any count fails (the UI then hides counts).
+ * `extraFilter(q)` applies a page-specific constraint (for example org type).
+ */
+export async function facetCounts({ table = 'devices', facets = {}, extraFilter = null } = {}) {
+  if (!supabase || !COUNTABLE_TABLES.has(table)) return null
+  const sel = k => arr(facets[k])
+  const out = { function: {}, access: {}, application: {} }
+  const tasks = []
+  for (const dim of Object.keys(FACET_DIMS)) {
+    for (const val of FACET_DIMS[dim]) {
+      if (val === 'none' || val === 'not_applicable') continue
+      tasks.push((async () => {
+        let q = supabase.from(table).select('*', { count: 'exact', head: true }).eq('in_scope', true)
+        for (const other of Object.keys(FACET_COL)) {
+          if (other === dim) continue        // count this dimension's values freely
+          const s = sel(other)
+          if (s.length) q = q.overlaps(FACET_COL[other], s)
+        }
+        if (extraFilter) q = extraFilter(q)
+        q = q.overlaps(FACET_COL[dim], [val])
+        const { count, error } = await q
+        if (error) throw error
+        out[dim][val] = count ?? 0
+      })())
+    }
+  }
+  try { await Promise.all(tasks) } catch { return null }
+  return out
+}
 
 /**
  * Apply a histogram year selection to a query. `range` is { lo, hi } (a click
@@ -233,6 +278,10 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
  * Server-side paginated + full-text search over the full papers table.
  * Uses the `fts` tsvector index; filters by derived device-class `tags`.
  */
+// Whether the dedup column (migration 006) exists. Assume yes; if a query fails
+// on it, flip to false so we stop filtering on it until the migration is applied.
+let dedupReady = true
+
 export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
@@ -241,14 +290,19 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     // `estimated` count, not `exact`: an exact count over the ~55k in-scope
     // papers exceeds the statement timeout. The planner estimate is instant and
     // fine for a browse-index header and pagination.
+    // code_urls/data_urls are NOT selected here on purpose: they are a paper-page
+    // feature and, being added by migration 005, selecting them explicitly would
+    // error the whole query until that migration is applied. The detail page uses
+    // select('*'), which safely omits them until the column exists.
     let b = supabase
       .from('papers')
-      .select(`title,authors,journal,year,doi,url,abstract,pubmed_id,${FACET_COLS}`, { count: 'estimated' })
+      .select(`id,title,authors,journal,year,doi,url,abstract,pubmed_id,source,${FACET_COLS}`, { count: 'estimated' })
     if (term) b = b.textSearch('fts', term, { type: 'websearch' })
     b = applyFacets(b, facets)
     b = applyYear(b, yearRange, 'year')
     if (source) b = b.eq('source', source)                 // 'pubmed' (papers) | 'arxiv' (preprints)
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
+    if (dedupReady) b = b.is('canonical_id', null)         // hide merged duplicate versions (Phase 6)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
   // Default: OpenAlex field-normalized impact, then year. 'newest' sorts by year.
@@ -257,6 +311,11 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     ? base().order('year', { ascending: false })
     : base().order('rank_score', { ascending: false }).order('year', { ascending: false })
   let { data, count, error } = await ordered
+  // Pre-migration fallbacks: retry without whichever column is missing.
+  if (error && /canonical_id/.test(error.message)) {
+    dedupReady = false
+    ;({ data, count, error } = await base().order(sort === 'newest' ? 'year' : 'rank_score', { ascending: false }))
+  }
   if (error && /rank_score/.test(error.message)) {
     ({ data, count, error } = await base().order('year', { ascending: false }))
   }
@@ -353,6 +412,194 @@ export async function getCompanyRelated(name) {
   }
 }
 
+/** One research lab (organization type='lab') by id, with its NIH funding
+ * facts parsed out of the description. Returns null if not a lab. */
+export async function getLabById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('organizations').select('*').eq('id', id).eq('type', 'lab').maybeSingle()
+  if (error || !data) return null
+  const d = data.description || ''
+  const institution = d.split(' · ')[0]?.trim() || null
+  const funding = d.match(/\$[\d.]+\s*[MB]?\s*in NIH funding/i)?.[0]?.replace(/\s*in NIH funding/i, '').trim() || null
+  const projects = d.match(/(\d+)\s+NIH-funded/i)?.[1] || null
+  const focus = d.includes('Focus:') ? d.slice(d.indexOf('Focus:') + 6).trim() : null
+  return { ...data, _type: 'organizations', institution, funding, projects, focus }
+}
+
+// ── The entity graph (Phase 1 relationships) ────────────────────────────────
+// These read the typed `relationships` edge table built by scripts/backfill-
+// graph.js, not name matching. An edge is (subject_type, subject_id) --predicate
+// --> (object_type, object_id) with a confidence and its own provenance.
+
+const TRIAL_ACTIVE = new Set(['RECRUITING', 'ENROLLING_BY_INVITATION', 'ACTIVE_NOT_RECRUITING', 'NOT_YET_RECRUITING'])
+const oldest = ts => ts.filter(Boolean).sort()[0] || null
+
+/**
+ * Everything linked to one organization THROUGH THE GRAPH: devices it makes
+ * (made_by), trials it sponsors (sponsored_by), the regulatory records on those
+ * devices (cleared_via), and affiliated people (affiliated_with, empty until
+ * that edge is derived). Each section carries the oldest last_updated of its
+ * rows so the page can show per-section provenance. Sparse by design: only
+ * confidently-matched edges exist, so an org with no edges yields empty sections.
+ */
+export async function getOrgGraph(orgId) {
+  const empty = { devices: [], trials: { active: [], completed: [] }, regulatory: [], people: [],
+    provenance: { devices: null, trials: null, regulatory: null } }
+  if (!supabase || !orgId) return empty
+
+  // Edges pointing AT this org.
+  const { data: edges, error } = await supabase.from('relationships')
+    .select('subject_type,subject_id,predicate,confidence')
+    .eq('object_type', 'organizations').eq('object_id', orgId)
+    .in('predicate', ['made_by', 'sponsored_by', 'affiliated_with'])
+  if (error || !edges) return empty
+
+  const deviceIds = edges.filter(e => e.predicate === 'made_by').map(e => e.subject_id)
+  const trialIds = edges.filter(e => e.predicate === 'sponsored_by').map(e => e.subject_id)
+  const personIds = edges.filter(e => e.predicate === 'affiliated_with').map(e => e.subject_id)
+
+  const [devRes, trialRes, personRes] = await Promise.all([
+    deviceIds.length ? supabase.from('devices')
+      .select(`id,name,manufacturer,type,status,year,url,description,product_code,last_updated,source_url,${FACET_COLS}`)
+      .in('id', deviceIds).order('year', { ascending: false, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    trialIds.length ? supabase.from('news_feed')
+      .select('id,title,url,metadata,published_at,last_updated,source_url')
+      .in('id', trialIds).order('published_at', { ascending: false, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    personIds.length ? supabase.from('researchers')
+      .select('id,name,role,affiliation').in('id', personIds) : Promise.resolve({ data: [] }),
+  ])
+  const devices = devRes.data || []
+  const trials = trialRes.data || []
+  const people = personRes.data || []
+
+  // Regulatory records hang off this org's devices (device cleared_via record).
+  let regulatory = []
+  if (devices.length) {
+    const { data: regs } = await supabase.from('regulatory_records')
+      .select('id,device_id,pathway,decision_date,number,source_url,last_updated')
+      .in('device_id', devices.map(d => d.id)).order('decision_date', { ascending: false, nullsFirst: false })
+    const nameById = Object.fromEntries(devices.map(d => [d.id, d.name]))
+    regulatory = (regs || []).map(r => ({ ...r, device_name: nameById[r.device_id] }))
+  }
+
+  const active = [], completed = []
+  for (const t of trials) (TRIAL_ACTIVE.has(t.metadata?.status) ? active : completed).push(t)
+
+  return {
+    devices, trials: { active, completed }, regulatory, people,
+    provenance: {
+      devices: oldest(devices.map(d => d.last_updated)),
+      trials: oldest(trials.map(t => t.last_updated)),
+      regulatory: oldest(regulatory.map(r => r.last_updated)),
+    },
+  }
+}
+
+/**
+ * Graph-derived device and trial counts for a page of orgs, in two queries.
+ * Returns { [orgId]: { devices, trials } }. Used by the /companies index so each
+ * row's counts come from real edges, not a name match.
+ */
+export async function getOrgCounts(orgIds = []) {
+  const out = {}
+  if (!supabase || !orgIds.length) return out
+  for (const id of orgIds) out[id] = { devices: 0, trials: 0 }
+  const { data } = await supabase.from('relationships')
+    .select('predicate,object_id')
+    .eq('object_type', 'organizations').in('object_id', orgIds)
+    .in('predicate', ['made_by', 'sponsored_by'])
+  for (const e of data || []) {
+    if (!out[e.object_id]) continue
+    if (e.predicate === 'made_by') out[e.object_id].devices++
+    else if (e.predicate === 'sponsored_by') out[e.object_id].trials++
+  }
+  return out
+}
+
+/** One device row by id, tagged for the device page. */
+export async function getDeviceById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('devices').select('*').eq('id', id).maybeSingle()
+  if (error || !data) return null
+  return { ...data, _type: 'devices' }
+}
+
+/**
+ * Everything linked to one device THROUGH THE GRAPH, for the device page: its
+ * maker (made_by -> org), regulatory records (cleared_via), the papers that
+ * evaluate it (evaluates ->) and trials that study it (studies ->), and the
+ * follow-up work that cites/replicates/contradicts those papers. The paper and
+ * trial edges are not derived yet, so those come back empty (honest, not
+ * fabricated); the schema and this reader are ready for them.
+ */
+export async function getDeviceGraph(deviceId) {
+  const empty = { maker: null, regulatory: [], papers: [], trials: [], relatedWork: [],
+    provenance: { regulatory: null, papers: null, trials: null } }
+  if (!supabase || !deviceId) return empty
+
+  const [subj, obj] = await Promise.all([
+    supabase.from('relationships').select('predicate,object_id')
+      .eq('subject_type', 'devices').eq('subject_id', deviceId).in('predicate', ['made_by', 'cleared_via']),
+    supabase.from('relationships').select('predicate,subject_id')
+      .eq('object_type', 'devices').eq('object_id', deviceId).in('predicate', ['evaluates', 'studies']),
+  ])
+  const makerId = subj.data?.find(e => e.predicate === 'made_by')?.object_id || null
+  const regIds = (subj.data || []).filter(e => e.predicate === 'cleared_via').map(e => e.object_id)
+  const paperIds = (obj.data || []).filter(e => e.predicate === 'evaluates').map(e => e.subject_id)
+  const trialIds = (obj.data || []).filter(e => e.predicate === 'studies').map(e => e.subject_id)
+
+  const [makerRes, regRes, paperRes, trialRes] = await Promise.all([
+    makerId ? supabase.from('organizations').select('id,name,type,location').eq('id', makerId).maybeSingle() : Promise.resolve({ data: null }),
+    regIds.length ? supabase.from('regulatory_records').select('id,pathway,decision_date,number,source_url,last_updated').in('id', regIds).order('decision_date', { ascending: true, nullsFirst: false }) : Promise.resolve({ data: [] }),
+    paperIds.length ? supabase.from('papers').select('id,title,year,journal,pubmed_id,url,rank_score,last_updated').in('id', paperIds) : Promise.resolve({ data: [] }),
+    trialIds.length ? supabase.from('news_feed').select('id,title,url,metadata,published_at,last_updated').in('id', trialIds) : Promise.resolve({ data: [] }),
+  ])
+  const papers = paperRes.data || []
+
+  // Follow-up literature: papers that cite/replicate/contradict the evaluating
+  // papers. Only queried when there are evaluating papers (none yet).
+  let relatedWork = []
+  if (papers.length) {
+    const { data: rel } = await supabase.from('relationships').select('predicate,subject_id,object_id')
+      .in('object_id', papers.map(p => p.id)).in('predicate', ['cites', 'replicates', 'contradicts'])
+    const relIds = [...new Set((rel || []).map(e => e.subject_id))]
+    if (relIds.length) {
+      const { data: relPapers } = await supabase.from('papers').select('id,title,year,journal,pubmed_id,url').in('id', relIds)
+      const kindById = Object.fromEntries((rel || []).map(e => [e.subject_id, e.predicate]))
+      relatedWork = (relPapers || []).map(p => ({ ...p, relation: kindById[p.id] }))
+    }
+  }
+
+  return {
+    maker: makerRes.data || null,
+    regulatory: regRes.data || [],
+    papers, trials: trialRes.data || [], relatedWork,
+    provenance: {
+      regulatory: oldest((regRes.data || []).map(r => r.last_updated)),
+      papers: oldest(papers.map(p => p.last_updated)),
+      trials: oldest((trialRes.data || []).map(t => t.last_updated)),
+    },
+  }
+}
+
+/**
+ * Patents granted per year for an assignee (for the Business activity chart).
+ * Returns { [year]: count }. Fetches only the grant_date column, paginated.
+ */
+export async function getPatentYears(name) {
+  const out = {}
+  if (!supabase || !name) return out
+  const like = `%${name.replace(/[%,()]/g, ' ').trim()}%`
+  for (let from = 0; from < 5000; from += 1000) {
+    const { data, error } = await supabase.from('patents').select('grant_date')
+      .ilike('assignee', like).not('grant_date', 'is', null).order('grant_date').range(from, from + 999)
+    if (error || !data?.length) break
+    for (const p of data) { const y = String(p.grant_date).slice(0, 4); if (/^\d{4}$/.test(y)) out[y] = (out[y] || 0) + 1 }
+    if (data.length < 1000) break
+  }
+  return out
+}
+
 /** Precomputed analytics (publications) served as a static file; null if none. */
 export async function getCompanyAnalytics(id) {
   try {
@@ -408,14 +655,112 @@ export async function searchTrials({ query = '', facets = {}, recency = null, ye
   if (iso) q = q.gte('published_at', iso)
   if (phase) q = q.ilike('metadata->>phase', `%${phase}%`)          // e.g. "Phase 3" also matches "Phase 2 / Phase 3"
   if (status) q = q.in('metadata->>status', TRIAL_STATUS_MAP[status] || [status])
-  // Default: importance score (phase/status/enrollment) then recency. 'newest'
-  // sorts purely by start date.
+  // 'changed' surfaces trials whose status/phase/enrollment moved most recently
+  // (metadata.lastChanged, written by scripts/trials.js). 'newest' sorts by
+  // start date. Default: importance score then recency.
   if (sort === 'newest') q = q.order('published_at', { ascending: false, nullsFirst: false })
+  else if (sort === 'changed') q = q.order('metadata->>lastChanged', { ascending: false, nullsFirst: false }).order('relevance_score', { ascending: false })
   else q = q.order('relevance_score', { ascending: false }).order('published_at', { ascending: false, nullsFirst: false })
   q = q.range(page * pageSize, page * pageSize + pageSize - 1)
   const { data, count, error } = await q
   if (error) { console.warn('searchTrials error:', error.message); return { rows: [], total: 0 } }
   return { rows: (data || []).map(r => ({ ...r, _type: 'trials' })), total: count ?? 0 }
+}
+
+/**
+ * Recent trial status/phase/enrollment changes (Phase 7), newest first, each
+ * with its trial title and link. Reads the trial_changes log written by
+ * scripts/trials.js on each sync. Empty until a sync detects a change.
+ */
+export async function getRecentTrialChanges(limit = 20) {
+  if (!supabase) return []
+  const { data, error } = await supabase.from('trial_changes')
+    .select('id,nct_id,trial_id,field,old_value,new_value,changed_at')
+    .order('changed_at', { ascending: false }).limit(limit)
+  if (error || !data?.length) return []
+  const ids = [...new Set(data.map(c => c.trial_id).filter(Boolean))]
+  const byId = {}
+  if (ids.length) {
+    const { data: trials } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
+    for (const t of trials || []) byId[t.id] = t
+  }
+  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+}
+
+/**
+ * For a page of trials (news_feed ids), resolve each one's sponsor organization
+ * via the sponsored_by edge, so a trial row can link its sponsor to the company
+ * page. Returns { [trialId]: { id, name } }.
+ */
+export async function getTrialSponsors(trialIds = []) {
+  const out = {}
+  if (!supabase || !trialIds.length) return out
+  const { data } = await supabase.from('relationships').select('subject_id,object_id')
+    .eq('subject_type', 'news_feed').eq('predicate', 'sponsored_by').in('subject_id', trialIds)
+  const orgByTrial = {}
+  for (const e of data || []) orgByTrial[e.subject_id] = e.object_id
+  const orgIds = [...new Set(Object.values(orgByTrial))]
+  if (!orgIds.length) return out
+  const { data: orgs } = await supabase.from('organizations').select('id,name').in('id', orgIds)
+  const nameById = Object.fromEntries((orgs || []).map(o => [o.id, o.name]))
+  for (const [tid, oid] of Object.entries(orgByTrial)) out[tid] = { id: oid, name: nameById[oid] }
+  return out
+}
+
+/** Trial (news_feed) ids sponsored by any of these orgs, via the graph. */
+export async function getOrgTrialIds(orgIds = []) {
+  if (!supabase || !orgIds.length) return []
+  const { data } = await supabase.from('relationships').select('subject_id')
+    .eq('predicate', 'sponsored_by').eq('object_type', 'organizations').in('object_id', orgIds)
+  return [...new Set((data || []).map(e => e.subject_id))]
+}
+
+/**
+ * Changes to a set of watched trials since a timestamp (Phase 8 "what changed").
+ * Reads the same trial_changes log the trials view uses; empty until a sync logs
+ * a change. Returns newest-first with each trial's title and link.
+ */
+export async function getWatchlistChanges(trialIds = [], sinceISO = null) {
+  if (!supabase || !trialIds.length) return []
+  let q = supabase.from('trial_changes')
+    .select('id,nct_id,trial_id,field,old_value,new_value,changed_at')
+    .in('trial_id', trialIds).order('changed_at', { ascending: false }).limit(100)
+  if (sinceISO) q = q.gt('changed_at', sinceISO)
+  const { data, error } = await q
+  if (error || !data?.length) return []
+  const ids = [...new Set(data.map(c => c.trial_id).filter(Boolean))]
+  const byId = {}
+  if (ids.length) {
+    const { data: tr } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
+    for (const t of tr || []) byId[t.id] = t
+  }
+  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+}
+
+/**
+ * New papers (in our index) that cite the user's watched papers, discovered
+ * since a timestamp (Phase 8 "what changed"). Keyed on when the citation edge was
+ * created, so re-running the citation backfill surfaces genuinely new links.
+ * `pmids` are the watched papers' PubMed ids. Returns [{ citing, watched[] }].
+ */
+export async function getNewCitationsForPapers(pmids = [], sinceISO = null) {
+  if (!supabase || !pmids.length) return []
+  const { data: watched } = await supabase.from('papers').select('id,pubmed_id,title').in('pubmed_id', pmids)
+  if (!watched?.length) return []
+  const byUuid = Object.fromEntries(watched.map(w => [w.id, w]))
+  let q = supabase.from('relationships').select('subject_id,object_id,created_at')
+    .eq('predicate', 'cites').eq('object_type', 'papers').in('object_id', watched.map(w => w.id))
+  if (sinceISO) q = q.gt('created_at', sinceISO)
+  const { data: edges } = await q.limit(200)
+  if (!edges?.length) return []
+  const citingIds = [...new Set(edges.map(e => e.subject_id))]
+  const { data: citing } = await supabase.from('papers').select('id,title,year,journal,pubmed_id').in('id', citingIds)
+  const citingById = Object.fromEntries((citing || []).map(c => [c.id, c]))
+  const cited = {}   // citingId -> Set(watched titles)
+  for (const e of edges) { (cited[e.subject_id] = cited[e.subject_id] || new Set()).add(byUuid[e.object_id]?.title) }
+  return citingIds
+    .map(id => ({ citing: citingById[id], watched: [...(cited[id] || [])].filter(Boolean) }))
+    .filter(x => x.citing)
 }
 
 /** A single paper by PubMed id (for its detail page). */
@@ -424,6 +769,71 @@ export async function getPaperByPmid(pmid) {
   const { data, error } = await supabase.from('papers').select('*').eq('pubmed_id', pmid).maybeSingle()
   if (error) { console.warn('getPaperByPmid error:', error.message); return null }
   return data || null
+}
+
+/**
+ * Reproducibility/provenance signals for one paper (Phase 5): the later papers
+ * that contradict or replicate it, read from the relationships table. Empty
+ * until those edges are derived; the badges then link to the related record.
+ */
+export async function getPaperSignals(paperId) {
+  const empty = { contradictedBy: [], replicatedBy: [] }
+  if (!supabase || !paperId) return empty
+  const { data } = await supabase.from('relationships')
+    .select('predicate,subject_id')
+    .eq('object_type', 'papers').eq('object_id', paperId)
+    .in('predicate', ['contradicts', 'replicates'])
+  if (!data?.length) return empty
+  const ids = [...new Set(data.map(e => e.subject_id))]
+  const { data: papers } = await supabase.from('papers').select('id,title,year,pubmed_id,url').in('id', ids)
+  const byId = Object.fromEntries((papers || []).map(p => [p.id, p]))
+  const contradictedBy = [], replicatedBy = []
+  for (const e of data) {
+    const p = byId[e.subject_id]
+    if (p) (e.predicate === 'contradicts' ? contradictedBy : replicatedBy).push(p)
+  }
+  return { contradictedBy, replicatedBy }
+}
+
+/**
+ * The intra-database citation graph for one paper (Phase 1 `cites` edges,
+ * derived from OpenAlex): the papers it references that are also indexed here,
+ * and the indexed papers that cite it. Both link to their paper page.
+ */
+export async function getPaperCitations(paperId) {
+  const empty = { references: [], citedBy: [] }
+  if (!supabase || !paperId) return empty
+  const [refE, citE] = await Promise.all([
+    supabase.from('relationships').select('object_id').eq('subject_type', 'papers').eq('subject_id', paperId).eq('predicate', 'cites'),
+    supabase.from('relationships').select('subject_id').eq('object_type', 'papers').eq('object_id', paperId).eq('predicate', 'cites'),
+  ])
+  const refIds = (refE.data || []).map(e => e.object_id)
+  const citedIds = (citE.data || []).map(e => e.subject_id)
+  const allIds = [...new Set([...refIds, ...citedIds])]
+  if (!allIds.length) return empty
+  const { data } = await supabase.from('papers').select('id,title,year,journal,pubmed_id,url').in('id', allIds)
+  const byId = Object.fromEntries((data || []).map(p => [p.id, p]))
+  const map = ids => ids.map(id => byId[id]).filter(Boolean)
+  return { references: map(refIds), citedBy: map(citedIds) }
+}
+
+/**
+ * Batched contradiction/replication flags for a page of papers, one query.
+ * Returns { [paperId]: { contradicted, replicated } } for the paper rows.
+ */
+export async function getPaperSignalsBatch(paperIds = []) {
+  const out = {}
+  if (!supabase || !paperIds.length) return out
+  const { data } = await supabase.from('relationships')
+    .select('predicate,object_id')
+    .eq('object_type', 'papers').in('object_id', paperIds)
+    .in('predicate', ['contradicts', 'replicates'])
+  for (const e of data || []) {
+    out[e.object_id] = out[e.object_id] || {}
+    if (e.predicate === 'contradicts') out[e.object_id].contradicted = true
+    else out[e.object_id].replicated = true
+  }
+  return out
 }
 
 /** A single feed item by id (for the internal detail page). */

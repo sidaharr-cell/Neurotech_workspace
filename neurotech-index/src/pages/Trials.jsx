@@ -1,12 +1,21 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, FlaskConical, ChevronLeft, ChevronRight } from 'lucide-react'
-import { searchTrials, yearHistogram } from '../lib/data'
+import { Search, FlaskConical, ChevronLeft, ChevronRight, ExternalLink, Activity } from 'lucide-react'
+import { searchTrials, yearHistogram, getRecentTrialChanges, getTrialSponsors } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
-import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, SORT_SIGNIF } from '../components/Filters'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS } from '../components/Filters'
+import FacetSidebar from '../components/FacetSidebar'
+import { useUrlFacets } from '../lib/useUrlFacets'
+import { StarButton } from '../components/Watch'
 
 const PAGE_SIZE = 20
+// Trials lead with recent status changes; that is the point of the view.
+const SORT_TRIALS = [
+  { id: 'changed', label: 'Recently changed' },
+  { id: 'relevant', label: 'Most significant' },
+  { id: 'newest', label: 'Newest' },
+]
+const prettyStatus = s => (s || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
 
 const STATUS_STYLE = {
   RECRUITING: 'text-mint border-mint/40 bg-mint/10',
@@ -20,39 +29,77 @@ function StatusBadge({ status }) {
   return <span className={`text-[10px] font-sans font-semibold uppercase tracking-[0.08em] px-2 py-0.5 rounded-sm border ${STATUS_STYLE[status] || 'text-muted border-rule bg-canvas'}`}>{label}</span>
 }
 
-function TrialRow({ trial }) {
+function TrialRow({ trial, sponsor }) {
   const m = trial.metadata || {}
   return (
-    <Link to={`/item/${trial.id}`} className="group block py-5">
+    <div className="py-5">
       <div className="flex items-center gap-3 mb-1.5 flex-wrap">
         <Kicker>Clinical Trial</Kicker>
         <StatusBadge status={m.status} />
         {m.phase && <span className="text-[11px] font-sans font-semibold uppercase tracking-[0.06em] text-ink-soft">{m.phase}</span>}
+        {m.nctId && <span className="text-[11px] font-mono text-muted">{m.nctId}</span>}
         <DeviceClassLabels entity={trial} max={1} />
       </div>
-      <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{trial.title}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <Link to={`/item/${trial.id}`} className="group block min-w-0">
+          <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{trial.title}</h3>
+        </Link>
+        <StarButton variant="icon" item={{ type: 'trials', id: trial.id, label: trial.title, to: `/item/${trial.id}` }} />
+      </div>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 text-[13px] text-muted font-sans">
-        {m.sponsor && <span className="truncate max-w-[22rem]">{m.sponsor}</span>}
+        {/* Sponsor links to the company page when the sponsored_by edge resolves it. */}
+        {sponsor?.id
+          ? <Link to={`/company/${sponsor.id}`} className="text-accent hover:underline truncate max-w-[22rem]">{sponsor.name || m.sponsor}</Link>
+          : m.sponsor && <span className="truncate max-w-[22rem]">{m.sponsor}</span>}
+        {m.enrollment ? <><span aria-hidden>·</span><span>n={m.enrollment}</span></> : null}
         {m.conditions?.[0] && <><span aria-hidden>·</span><span>{m.conditions.slice(0, 2).join(', ')}</span></>}
         {trial.published_at && <><span aria-hidden>·</span><span>{new Date(trial.published_at) > new Date() ? 'Starts' : 'Started'} {fmtDate(trial.published_at)}</span></>}
+        <span aria-hidden>·</span>
+        <a href={m.nctId ? `https://clinicaltrials.gov/study/${m.nctId}` : trial.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
       </div>
-    </Link>
+    </div>
+  )
+}
+
+/** Recently changed trials: dated status/phase/enrollment transitions. */
+function RecentChanges({ changes }) {
+  if (!changes.length) return null
+  return (
+    <div className="mb-8 border border-rule rounded-sm bg-canvas/50 p-4">
+      <div className="flex items-center gap-2 text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-3">
+        <Activity className="w-3.5 h-3.5 text-accent" /> Recently changed
+      </div>
+      <ul className="flex flex-col divide-y divide-rule">
+        {changes.map(c => (
+          <li key={c.id} className="py-2 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3">
+            <span className="min-w-0 text-[13.5px] font-sans text-ink">
+              <span className="text-muted">{c.field}:</span>{' '}
+              {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
+              {c.title && <span className="text-muted"> · {c.url ? <a href={c.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent">{c.nct_id}</a> : c.nct_id}</span>}
+            </span>
+            <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(c.changed_at)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
 export default function Trials() {
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [phase, setPhase] = useState(null)
   const [status, setStatus] = useState(null)
-  const [sort, setSort] = useState('relevant')
+  const [sort, setSort] = useState('changed')
   const [page, setPage] = useState(0)
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
   const [year, setYear] = useState(null)
+  const [changes, setChanges] = useState([])
+  const [sponsors, setSponsors] = useState({})
   const debounce = useRef(null)
 
   useEffect(() => {
@@ -64,10 +111,16 @@ export default function Trials() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    setResult(await searchTrials({ query, facets, recency, yearRange: year, phase, status, sort, page, pageSize: PAGE_SIZE }))
-    setLoading(false)
+    setSponsors({})
+    const res = await searchTrials({ query, facets, recency, yearRange: year, phase, status, sort, page, pageSize: PAGE_SIZE })
+    setResult(res); setLoading(false)
+    // Resolve sponsor orgs for the visible rows so each can link to its company.
+    if (res.rows.length) getTrialSponsors(res.rows.map(r => r.id)).then(setSponsors)
   }, [query, facets, recency, year, phase, status, sort, page])
   useEffect(() => { load() }, [load])
+
+  // Recently changed trials (status/phase/enrollment), loaded once.
+  useEffect(() => { getRecentTrialChanges(12).then(setChanges) }, [])
 
   // Histogram reflects facets + scope only; hide it during a text search.
   useEffect(() => {
@@ -96,6 +149,8 @@ export default function Trials() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
+      <RecentChanges changes={changes} />
+
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
         <FacetSidebar
           facets={facets}
@@ -103,6 +158,7 @@ export default function Trials() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_TRIALS} required />}
           extras={[
             { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },
             { label: 'Status', value: status, onChange: setStatus, options: TRIAL_STATUS, allLabel: 'Any status' },
@@ -111,9 +167,9 @@ export default function Trials() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
+            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_TRIALS} required /></div>
           </div>
 
           {loading ? (
@@ -123,7 +179,7 @@ export default function Trials() {
           ) : (
             <>
               <div className="divide-rule">
-                {rows.map((t, i) => <TrialRow key={t.id || i} trial={t} />)}
+                {rows.map((t, i) => <TrialRow key={t.id || i} trial={t} sponsor={sponsors[t.id]} />)}
               </div>
               {pages > 1 && (
                 <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">

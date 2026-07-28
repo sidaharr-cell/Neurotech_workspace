@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Search, Cpu, ScrollText, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
-import { searchDevices, searchPatents, yearHistogram } from '../lib/data'
+import { searchDevices, searchPatents, yearHistogram, facetCounts } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
 import FilterSelect, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
+import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
 const KINDS = [
@@ -36,7 +37,7 @@ export default function Devices() {
   const [kind, setKind] = useState('device')
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [fda, setFda] = useState(null)
   const [sort, setSort] = useState('newest')
@@ -45,6 +46,7 @@ export default function Devices() {
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState(null)
   const [histogram, setHistogram] = useState(null)
+  const [facetCts, setFacetCts] = useState(null)
   const [year, setYear] = useState(null)
   const debounce = useRef(null)
   const isPatent = kind === 'patent'
@@ -75,6 +77,15 @@ export default function Devices() {
     return () => { alive = false }
   }, [facets, isPatent, query])
 
+  // Per-facet-value counts (devices only; patents table is fat, facetCounts
+  // returns null there and the sidebar shows no counts).
+  useEffect(() => {
+    let alive = true
+    if (isPatent) { setFacetCts(null); return }
+    facetCounts({ table: 'devices', facets }).then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, isPatent])
+
   const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !fda
   const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
@@ -82,8 +93,8 @@ export default function Devices() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
-        kicker="Devices & Patents"
-        title="Devices & Patents"
+        kicker="Devices and Patents"
+        title="Devices and Patents"
         sub="FDA-cleared and approved neurotechnology devices, plus a classification-defined index of neurotech patents."
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{shownTotal.toLocaleString()} {isPatent ? 'patents' : 'devices'}</span>}
       />
@@ -114,6 +125,8 @@ export default function Devices() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          counts={facetCts}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />}
           extras={[
             ...(!isPatent ? [{ label: 'FDA route', value: fda, onChange: setFda, options: DEVICE_FDA, allLabel: 'Any route' }] : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
@@ -121,9 +134,9 @@ export default function Devices() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />
+            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required /></div>
           </div>
 
           {loading ? (
