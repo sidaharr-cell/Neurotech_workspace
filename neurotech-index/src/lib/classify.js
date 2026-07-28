@@ -112,6 +112,20 @@ export function scopeOf(row, type) {
   }
 }
 
+/**
+ * A paper that reaches scope ONLY through keywords needs a real topical signal,
+ * not an incidental method mention (the classic "we recorded EEG/EMG" case in a
+ * paper that is not about neurotechnology). Require the neurotech term to appear
+ * in the TITLE, or at least two distinct function/application signals to
+ * corroborate. Access-only or a lone abstract modality word is not enough.
+ */
+function paperKeywordScope(row, facets) {
+  const tf = keywordFacets(row.title || '')
+  const titleSignal = tf.function.length + tf.application.length > 0
+  const corroboration = facets.function.length + facets.application.length >= 2
+  return titleSignal || corroboration
+}
+
 // ── The classifier ──────────────────────────────────────────────────────────
 
 /**
@@ -152,7 +166,11 @@ export function classify(row, type, opts = {}) {
 
   // 4 — scope, then abstain
   const declared = scopeOf(row, type)
-  const in_scope = declared === null ? !isEmptyFacets(facets) : declared
+  let in_scope
+  if (declared !== null) in_scope = declared
+  else if (isEmptyFacets(facets)) in_scope = false
+  else if (type === 'papers') in_scope = paperKeywordScope(row, facets)  // guard incidental method mentions
+  else in_scope = true
 
   // Out-of-scope rows carry no facets — "not neurotech" and "neurotech we
   // failed to classify" must stay distinguishable.
