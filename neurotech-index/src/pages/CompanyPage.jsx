@@ -215,17 +215,18 @@ export default function CompanyPage() {
         <ArrowLeft className="w-4 h-4" /> Back to Companies
       </Link>
 
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-3 flex-wrap">
-        <Kicker>Company</Kicker>
-        {labels.map(b => (
-          <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
-        ))}
+      {/* Header — badges and the watch action share the top row; the name spans
+          full width below so it never wraps into a thin column. */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <Kicker>Company</Kicker>
+          {labels.map(b => (
+            <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
+          ))}
+        </div>
+        <div className="shrink-0"><StarButton item={{ type: 'organizations', id: company.id, label: company.name, to: `/company/${company.id}` }} /></div>
       </div>
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-[1.1] font-semibold text-ink tracking-[-0.015em]">{company.name}</h1>
-        <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'organizations', id: company.id, label: company.name, to: `/company/${company.id}` }} /></div>
-      </div>
+      <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-[1.1] font-semibold text-ink tracking-[-0.015em]">{company.name}</h1>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {company.location && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{company.location}</span>}
         {company.founded && <><span aria-hidden>·</span><span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Founded {company.founded}</span></>}
