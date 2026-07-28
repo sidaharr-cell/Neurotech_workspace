@@ -74,8 +74,9 @@ function YearHistogram({ data, selected = null, onSelect }) {
   )
 }
 
-// A single checkbox row.
-function CheckRow({ checked, onChange, label }) {
+// A single checkbox row. `count`, when provided, shows how many results the
+// value would yield and sits right-aligned.
+function CheckRow({ checked, onChange, label, count = null }) {
   return (
     <label className="flex items-center gap-2.5 py-[5px] cursor-pointer group select-none">
       <span
@@ -90,9 +91,12 @@ function CheckRow({ checked, onChange, label }) {
         )}
       </span>
       <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" />
-      <span className={`text-[14px] font-sans leading-snug transition-colors ${checked ? 'text-ink font-medium' : 'text-ink-soft group-hover:text-ink'}`}>
+      <span className={`flex-1 min-w-0 text-[14px] font-sans leading-snug transition-colors ${checked ? 'text-ink font-medium' : 'text-ink-soft group-hover:text-ink'}`}>
         {label}
       </span>
+      {count != null && (
+        <span className="shrink-0 text-[12px] font-sans tabular-nums text-muted">{count.toLocaleString()}</span>
+      )}
     </label>
   )
 }
@@ -116,33 +120,63 @@ function RadioRow({ checked, onChange, label }) {
   )
 }
 
-/** A checkbox facet section with a "See all" expander when it has many options. */
-function CheckSection({ label, options, selected, onToggle, collapseAt = 99 }) {
+/**
+ * A checkbox facet section with a "See all" expander when it has many options.
+ * When `counts` (a value->n map) is supplied, each row shows its count and
+ * values that would return zero results are hidden (a selected value is never
+ * hidden, so a filter can always be cleared).
+ */
+function CheckSection({ label, options, selected, onToggle, collapseAt = 99, counts = null }) {
   const [expanded, setExpanded] = useState(false)
-  const shown = expanded ? options : options.slice(0, collapseAt)
+  const visible = counts
+    ? options.filter(o => (counts[o.id] ?? 0) > 0 || selected.includes(o.id))
+    : options
+  const shown = expanded ? visible : visible.slice(0, collapseAt)
+  if (counts && visible.length === 0) return null
   return (
     <div>
       <SectionLabel>{label}</SectionLabel>
-      <div className="flex flex-col">
+      {/* Horizontal (wrapping) on narrow screens to save vertical space; a
+          single column on the desktop left rail. */}
+      <div className="flex flex-wrap gap-x-4 gap-y-0 lg:flex-col lg:gap-x-0">
         {shown.map(o => (
-          <CheckRow key={o.id} label={o.label} checked={selected.includes(o.id)} onChange={() => onToggle(o.id)} />
+          <CheckRow key={o.id} label={o.label} count={counts ? (counts[o.id] ?? 0) : null}
+            checked={selected.includes(o.id)} onChange={() => onToggle(o.id)} />
         ))}
       </div>
-      {options.length > collapseAt && (
+      {visible.length > collapseAt && (
         <button
           onClick={() => setExpanded(e => !e)}
           className="mt-1 text-[13px] font-sans text-accent hover:text-accent-dark transition-colors"
         >
-          {expanded ? 'Show fewer' : `See all ${options.length}`}
+          {expanded ? 'Show fewer' : `See all ${visible.length}`}
         </button>
       )}
     </div>
   )
 }
 
+/**
+ * The "Filter" toggle, styled identically to the Sort dropdown (FilterSelect) so
+ * the two controls match. Used in the mobile toolbar next to Sort.
+ */
+function FiltersPill({ open, count, onClick }) {
+  const active = count > 0
+  return (
+    <button onClick={onClick} aria-expanded={open}
+      className={`inline-flex items-center gap-1.5 text-[13px] font-sans pl-3 pr-2 py-1.5 rounded-full border transition-colors ${
+        active ? 'bg-accent text-paper border-accent' : 'bg-paper text-ink-soft border-rule hover:border-ink'
+      }`}>
+      <span className={`text-[10px] uppercase tracking-[0.08em] ${active ? 'text-paper/75' : 'text-muted'}`}>Filter</span>
+      <span className="font-medium">{count > 0 ? `${count} selected` : 'All'}</span>
+      <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform ${open ? 'rotate-180' : ''} ${active ? 'text-paper/80' : 'text-muted'}`} />
+    </button>
+  )
+}
+
 export const NO_FACETS = { function: [], access: [], application: [] }
 
-export default function FacetSidebar({ facets = NO_FACETS, onChange, extras = [], histogram = null, year = null, onYear }) {
+export default function FacetSidebar({ facets = NO_FACETS, onChange, extras = [], histogram = null, year = null, onYear, counts = null, sortControl = null }) {
   const sel = key => facets[key] || []
   const toggle = (key, id) => {
     const cur = sel(key)
@@ -154,47 +188,48 @@ export default function FacetSidebar({ facets = NO_FACETS, onChange, extras = []
   const activeCount =
     sel('function').length + sel('access').length + sel('application').length +
     extras.filter(e => e.value != null).length + (year ? 1 : 0)
+  const clearAll = anyFacet ? (
+    <button onClick={() => onChange({ ...facets, ...NO_FACETS })}
+      className="text-[13px] font-sans text-muted hover:text-accent transition-colors shrink-0">Clear all</button>
+  ) : null
 
   return (
-    <aside className="w-full lg:w-60 shrink-0">
-      {/* Header height (h-9) and rule match the results header so the two
-          underlines align. On desktop it is a static label; on mobile it is a
-          tap target that expands/collapses the whole panel, so the results stay
-          prominent on narrow screens. */}
-      <div className="flex items-center justify-between h-9 mb-4 lg:mb-6 border-b border-rule">
-        <button
-          onClick={() => setOpen(o => !o)}
-          aria-expanded={open}
-          className="flex items-center gap-1.5 text-[13px] font-sans text-muted lg:pointer-events-none"
-        >
+    // On desktop the sidebar carries a hairline rule on its right edge; the flex
+    // row stretches it to full height, so the rule runs the whole panel top to
+    // bottom, separating the filters from the content.
+    <aside className="w-full lg:w-60 shrink-0 lg:border-r lg:border-rule lg:pr-8">
+      {/* Mobile: Filter and Sort sit on one line as matching pills; the panel
+          drops below when Filter is open, with facets laid out horizontally. */}
+      <div className="lg:hidden flex items-center gap-2.5 mb-5">
+        <FiltersPill open={open} count={activeCount} onClick={() => setOpen(o => !o)} />
+        {sortControl}
+        {clearAll && <span className="ml-auto">{clearAll}</span>}
+      </div>
+
+      {/* Desktop: a static left-rail header; height/rule align with the results
+          header so the two underlines line up. */}
+      <div className="hidden lg:flex items-center justify-between h-11 mb-6 border-b border-rule">
+        <span className="flex items-center gap-1.5 text-[13px] font-sans text-muted">
           Filters
           {activeCount > 0 && (
             <span className="inline-flex items-center justify-center min-w-[1.15rem] h-[1.15rem] px-1 rounded-full bg-accent text-paper text-[11px] font-semibold tabular-nums">
               {activeCount}
             </span>
           )}
-          <ChevronDown className={`w-4 h-4 lg:hidden transition-transform ${open ? 'rotate-180' : ''}`} />
-        </button>
-        {anyFacet ? (
-          <button
-            onClick={() => onChange({ ...facets, ...NO_FACETS })}
-            className="text-[13px] font-sans text-muted hover:text-accent transition-colors"
-          >
-            Clear all
-          </button>
-        ) : null}
+        </span>
+        {clearAll}
       </div>
 
-      <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col gap-6`}>
+      <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col gap-5 lg:gap-6`}>
         {histogram && <YearHistogram data={histogram} selected={year?.label ?? null} onSelect={onYear} />}
-        <CheckSection label="Function" options={FUNCTION_OPTS} selected={sel('function')} onToggle={id => toggle('function', id)} />
-        <CheckSection label="Access" options={ACCESS_OPTS} selected={sel('access')} onToggle={id => toggle('access', id)} />
-        <CheckSection label="Application" options={APPLICATION_OPTS} selected={sel('application')} onToggle={id => toggle('application', id)} collapseAt={6} />
+        <CheckSection label="Function" options={FUNCTION_OPTS} selected={sel('function')} onToggle={id => toggle('function', id)} counts={counts?.function} />
+        <CheckSection label="Access" options={ACCESS_OPTS} selected={sel('access')} onToggle={id => toggle('access', id)} counts={counts?.access} />
+        <CheckSection label="Application" options={APPLICATION_OPTS} selected={sel('application')} onToggle={id => toggle('application', id)} collapseAt={6} counts={counts?.application} />
 
         {extras.map(ex => (
           <div key={ex.label}>
             <SectionLabel>{ex.label}</SectionLabel>
-            <div className="flex flex-col">
+            <div className="flex flex-wrap gap-x-4 gap-y-0 lg:flex-col lg:gap-x-0">
               <RadioRow label={ex.allLabel || 'Any'} checked={ex.value == null} onChange={() => ex.onChange(null)} />
               {ex.options.map(o => (
                 <RadioRow key={o.id} label={o.label} checked={ex.value === o.id} onChange={() => ex.onChange(o.id)} />

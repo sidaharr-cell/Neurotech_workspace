@@ -17,7 +17,7 @@
  *   4. abstain             record nothing rather than guess
  */
 
-export const CLASSIFIER_VERSION = 'v1.0'
+export const CLASSIFIER_VERSION = 'v1.2'
 
 // ── Facet vocabularies ──────────────────────────────────────────────────────
 
@@ -38,12 +38,12 @@ export const ACCESS_LABEL = {
   not_applicable: 'Not applicable',
 }
 export const APPLICATION_LABEL = {
-  movement_restoration: 'Movement restoration', communication_speech: 'Communication & speech',
+  movement_restoration: 'Movement restoration', communication_speech: 'Communication and speech',
   sensory_restoration: 'Sensory restoration', epilepsy: 'Epilepsy',
   movement_disorders: 'Movement disorders', psychiatric: 'Psychiatric', pain: 'Pain',
-  cognition_memory: 'Cognition & memory', autonomic_organ: 'Autonomic & organ',
+  cognition_memory: 'Cognition and memory', autonomic_organ: 'Autonomic and organ',
   rehabilitation: 'Rehabilitation', diagnostics: 'Diagnostics',
-  research_tool: 'Research tool', consumer_wellness: 'Consumer & wellness',
+  research_tool: 'Research tool', consumer_wellness: 'Consumer and wellness',
 }
 
 // ── Derived badges ──────────────────────────────────────────────────────────

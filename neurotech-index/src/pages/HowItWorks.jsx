@@ -93,7 +93,7 @@ export default function HowItWorks() {
 
         <div className="grid sm:grid-cols-2 gap-4">
           <RankCard
-            type="Research & preprints"
+            type="Research and preprints"
             lead="Papers are ranked mostly by real scientific impact, not by our opinion."
             signals={[
               { k: 'Citation impact', v: 'how much other scientists cite it, adjusted for its field and age (via OpenAlex) so a brand-new landmark is not buried under older work' },
@@ -103,7 +103,7 @@ export default function HowItWorks() {
             ]}
           />
           <RankCard
-            type="News & media"
+            type="News and media"
             lead="Coverage is ranked for credibility and freshness, since news dates quickly."
             signals={[
               { k: 'Outlet authority', v: 'established science and news outlets rank above aggregators' },
@@ -117,12 +117,12 @@ export default function HowItWorks() {
             signals={[
               { k: 'Phase', v: 'later-stage trials (Phase 3 or 4) rank above early ones' },
               { k: 'Status', v: 'actively recruiting studies rank above completed or halted ones' },
-              { k: 'Size & sponsor', v: 'larger enrollment and established sponsors rank higher' },
+              { k: 'Size and sponsor', v: 'larger enrollment and established sponsors rank higher' },
               { k: 'Recency', v: 'more recently started trials rank higher' },
             ]}
           />
           <RankCard
-            type="Labs & companies"
+            type="Labs and companies"
             lead="Organizations are ranked by objective, public measures of activity."
             signals={[
               { k: 'Labs', v: 'ranked by total NIH research funding and how recently and actively they are funded' },
@@ -151,7 +151,7 @@ export default function HowItWorks() {
         </p>
 
         <Equation
-          title="Research & preprints"
+          title="Research and preprints"
           formula="score = 0.30×impact + 0.28×relevance + 0.22×recency + 0.10×velocity + 0.10×prestige"
           terms={[
             ['impact', 'is the OpenAlex citation percentile for the paper’s field and year (top 1% = 0.99).'],
@@ -164,7 +164,7 @@ export default function HowItWorks() {
         />
 
         <Equation
-          title="News & media"
+          title="News and media"
           formula="score = 0.40×relevance + 0.35×recency + 0.25×authority"
           terms={[
             ['relevance', 'is the AI relevance rating divided by 10.'],
@@ -232,12 +232,12 @@ export default function HowItWorks() {
         </p>
 
         <div className="border-t border-rule">
-        <SourceGroup title="Research papers & preprints" defaultOpen>
+        <SourceGroup title="Research papers and preprints" defaultOpen>
           <Source name="PubMed (NCBI)" url="https://pubmed.ncbi.nlm.nih.gov" note="peer-reviewed biomedical literature" />
           <Source name="arXiv" url="https://arxiv.org" note="preprints in physics, CS, and quantitative biology" />
         </SourceGroup>
 
-        <SourceGroup title="Citation & impact data (used for ranking)">
+        <SourceGroup title="Citation and impact data (used for ranking)">
           <Source name="OpenAlex" url="https://openalex.org" note="field- and age-normalized citation impact" />
           <Source name="Semantic Scholar" url="https://www.semanticscholar.org" note="citation counts" />
         </SourceGroup>
@@ -254,11 +254,11 @@ export default function HowItWorks() {
           <Source name="NIH RePORTER" url="https://reporter.nih.gov" note="NIH-funded projects and award amounts" />
         </SourceGroup>
 
-        <SourceGroup title="Companies & funding">
+        <SourceGroup title="Companies and funding">
           <Source name="SEC EDGAR" url="https://www.sec.gov/edgar" note="Form D capital-raise filings" />
         </SourceGroup>
 
-        <SourceGroup title="News & media (RSS + aggregators)">
+        <SourceGroup title="News and media (RSS + aggregators)">
           <Source name="Nature" url="https://www.nature.com/subjects/neuroscience" note="neuroscience news feed" />
           <Source name="STAT" url="https://www.statnews.com" note="health and biotech journalism" />
           <Source name="The Transmitter" url="https://www.thetransmitter.org" note="neuroscience news (Simons Foundation)" />

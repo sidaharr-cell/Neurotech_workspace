@@ -155,7 +155,7 @@ export default function MagazineFeed() {
         />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-end h-9 mb-6 border-b border-rule">
+          <div className="flex items-center justify-end h-11 mb-6 border-b border-rule">
             <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
           </div>
 

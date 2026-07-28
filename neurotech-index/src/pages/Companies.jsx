@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FacetSidebar from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
-import { searchLabs, searchCompanies } from '../lib/data'
+import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
+import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -14,26 +15,10 @@ const KINDS = [
   { id: 'lab', label: 'Labs' },
 ]
 
-// NIH RePORTER doesn't give lab website URLs, so link the lab name to a
-// targeted search (PI + institution) whose top result is the lab's homepage.
-function labSearchUrl(org) {
-  const pi = (org.founders?.[0] || org.name.replace(/\s*Lab\s*$/i, '')).replace(/\s+/g, ' ').trim()
-  const inst = (org.description || '').split(' · ')[0].trim()
-  const q = `${pi} ${inst} lab`.replace(/\s+/g, ' ').trim()
-  return `https://www.google.com/search?q=${encodeURIComponent(q)}`
-}
-
-function OrgRow({ org }) {
+function OrgRow({ org, counts }) {
   const isLab = org.type === 'lab'
-  // Companies route to their own NeuroBase analytics page (internal). Labs link
-  // out: to their homepage when they have one (academic labs), else a targeted
-  // search (NIH labs). Never nest an <a> inside the row's link.
-  const rowIsLink = !isLab || !!org.website
-  const nameHref = isLab ? (org.website || labSearchUrl(org)) : null
-  const Icon = isLab ? ExternalLink : ArrowUpRight
-  const nameContent = (
-    <>{org.name}<Icon className="w-3.5 h-3.5 text-muted opacity-60 group-hover:opacity-100 transition-opacity" /></>
-  )
+  const c = counts?.[org.id]
+  // Both companies and labs route to their own internal NeuroBase page.
   const inner = (
     <div className="min-w-0 flex-1">
       <div className="flex items-center gap-3 mb-1.5 flex-wrap">
@@ -42,23 +27,22 @@ function OrgRow({ org }) {
         {!isLab && org.funding > 0 && <span className="text-[11px] font-mono text-accent">{fmtMoney(org.funding)} raised</span>}
       </div>
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em]">
-        {rowIsLink ? (
-          // The row itself is the anchor — render the name as a styled span.
-          <span className="headline-link inline-flex items-center gap-1.5 group-hover:text-accent transition-colors">{nameContent}</span>
-        ) : nameHref ? (
-          <a href={nameHref} target="_blank" rel="noopener noreferrer"
-            className="headline-link inline-flex items-center gap-1.5 hover:text-accent transition-colors">
-            {nameContent}
-          </a>
-        ) : (
-          <span className="headline-link inline-flex items-center gap-1.5">{org.name}</span>
-        )}
+        <span className="headline-link inline-flex items-center gap-1.5 group-hover:text-accent transition-colors">
+          {org.name}<ArrowUpRight className="w-3.5 h-3.5 text-muted opacity-60 group-hover:opacity-100 transition-opacity" />
+        </span>
       </h3>
       <p className="mt-1 flex items-center gap-1 text-[13px] text-muted font-sans">
         {org.location && <><MapPin className="w-3.5 h-3.5" />{org.location}</>}
         {!isLab && org.founded && <><span aria-hidden>·</span>Founded {org.founded}</>}
         {!isLab && org.latestRound && <><span aria-hidden>·</span>{org.latestRound} {org.roundYear}</>}
       </p>
+      {!isLab && c && (c.devices > 0 || c.trials > 0) && (
+        <p className="mt-1 text-[12px] font-sans text-accent">
+          {c.devices > 0 && <>{c.devices} linked device{c.devices === 1 ? '' : 's'}</>}
+          {c.devices > 0 && c.trials > 0 && <span className="text-muted"> · </span>}
+          {c.trials > 0 && <>{c.trials} linked trial{c.trials === 1 ? '' : 's'}</>}
+        </p>
+      )}
       {org.description && (
         isLab && org.description.includes('Focus:')
           ? (() => {
@@ -76,22 +60,28 @@ function OrgRow({ org }) {
       )}
     </div>
   )
-  // Company → internal analytics page; lab with site → external homepage.
-  if (!isLab) return <Link to={`/company/${org.id}`} className="group block py-5">{inner}</Link>
-  return org.website
-    ? <a href={org.website} target="_blank" rel="noopener noreferrer" className="group block py-5">{inner}</a>
-    : <div className="group py-5">{inner}</div>
+  return <Link to={isLab ? `/lab/${org.id}` : `/company/${org.id}`} className="group block py-5">{inner}</Link>
 }
 
 export default function Companies() {
   const [kind, setKind] = useState('company')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
   const [result, setResult] = useState({ rows: [], total: 0 })
+  const [counts, setCounts] = useState({})          // per-org device/trial counts
+  const [facetCts, setFacetCts] = useState(null)    // per-facet-value result counts
   const [loading, setLoading] = useState(false)
   const debounce = useRef(null)
+
+  // Per-facet-value counts, scoped to the current organization type.
+  useEffect(() => {
+    let alive = true
+    facetCounts({ table: 'organizations', facets, extraFilter: q => q.eq('type', kind) })
+      .then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, kind])
 
   useEffect(() => {
     clearTimeout(debounce.current)
@@ -104,9 +94,15 @@ export default function Companies() {
   // organizations table (type='company' | 'lab').
   const load = useCallback(async () => {
     setLoading(true)
+    setCounts({})
     const search = kind === 'lab' ? searchLabs : searchCompanies
-    setResult(await search({ query, facets, page, pageSize: PAGE_SIZE }))
+    const res = await search({ query, facets, page, pageSize: PAGE_SIZE })
+    setResult(res)
     setLoading(false)
+    // Companies show graph-derived device/trial counts; labs do not.
+    if (kind === 'company' && res.rows.length) {
+      getOrgCounts(res.rows.map(r => r.id)).then(setCounts)
+    }
   }, [kind, query, facets, page])
   useEffect(() => { load() }, [load])
 
@@ -116,7 +112,7 @@ export default function Companies() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
-        kicker="Companies & Labs"
+        kicker="Companies and Labs"
         title="Companies"
         sub="Neurotechnology companies and NIH-funded research labs, with funding, focus, and location."
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>}
@@ -143,10 +139,10 @@ export default function Companies() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar facets={facets} onChange={setFacets} />
+        <FacetSidebar facets={facets} onChange={setFacets} counts={facetCts} />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center h-9 mb-6 border-b border-rule">
+          <div className="flex items-center h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>
           </div>
           {loading ? (
@@ -155,7 +151,7 @@ export default function Companies() {
             <EmptyState icon={MapPin} title={`No ${kind === 'company' ? 'companies' : 'labs'} match these filters`} />
           ) : (
             <>
-              <div className="divide-rule">{result.rows.map((o, i) => <OrgRow key={o.id || i} org={o} />)}</div>
+              <div className="divide-rule">{result.rows.map((o, i) => <OrgRow key={o.id || i} org={o} counts={counts} />)}</div>
               {pages > 1 && (
                 <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
                   <button disabled={page === 0} onClick={() => setPage(p => Math.max(0, p - 1))}
