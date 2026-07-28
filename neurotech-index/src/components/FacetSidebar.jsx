@@ -194,7 +194,10 @@ export default function FacetSidebar({ facets = NO_FACETS, onChange, extras = []
   ) : null
 
   return (
-    <aside className="w-full lg:w-60 shrink-0">
+    // On desktop the sidebar carries a hairline rule on its right edge; the flex
+    // row stretches it to full height, so the rule runs the whole panel top to
+    // bottom, separating the filters from the content.
+    <aside className="w-full lg:w-60 shrink-0 lg:border-r lg:border-rule lg:pr-8">
       {/* Mobile: Filter and Sort sit on one line as matching pills; the panel
           drops below when Filter is open, with facets laid out horizontally. */}
       <div className="lg:hidden flex items-center gap-2.5 mb-5">
