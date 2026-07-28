@@ -52,17 +52,18 @@ export default function LabPage() {
         <ArrowLeft className="w-4 h-4" /> Back to Companies and Labs
       </Link>
 
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-3 flex-wrap">
-        <Kicker>Lab</Kicker>
-        {badges.map(b => (
-          <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
-        ))}
+      {/* Header — badges and the watch action share the top row; the name spans
+          full width below so it never wraps into a thin column. */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <Kicker>Lab</Kicker>
+          {badges.map(b => (
+            <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
+          ))}
+        </div>
+        <div className="shrink-0"><StarButton item={{ type: 'organizations', id: lab.id, label: lab.name, to: `/lab/${lab.id}` }} /></div>
       </div>
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{lab.name}</h1>
-        <div className="pt-1.5 shrink-0"><StarButton item={{ type: 'organizations', id: lab.id, label: lab.name, to: `/lab/${lab.id}` }} /></div>
-      </div>
+      <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{lab.name}</h1>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {lab.institution && <span>{lab.institution}</span>}
         {lab.location && <><span aria-hidden>·</span><span>{lab.location}</span></>}

@@ -98,22 +98,24 @@ export default function PaperDetail() {
         <ArrowLeft className="w-4 h-4" /> Back to Research
       </Link>
 
-      <div className="flex items-center gap-3 mb-3 flex-wrap">
-        <Kicker>Research</Kicker>
-        <KindBadge source={paper.source} />
-        {badges.map(b => (
-          <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
-        ))}
-      </div>
-
-      <CitationMeta paper={paper} />
-      <div className="flex items-start justify-between gap-4">
-        <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{paper.title}</h1>
-        <div className="pt-1.5 shrink-0 flex items-center gap-2">
+      {/* Badges and actions share the top row; the title spans full width below
+          so it never wraps into a thin column beside the buttons. */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <Kicker>Research</Kicker>
+          <KindBadge source={paper.source} />
+          {badges.map(b => (
+            <span key={b} className="text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-accent">{b}</span>
+          ))}
+        </div>
+        <div className="shrink-0 flex items-center gap-2">
           <CiteButton paper={paper} />
           {paper.pubmed_id && <StarButton item={{ type: 'papers', id: paper.pubmed_id, label: paper.title, to: `/paper/${paper.pubmed_id}` }} />}
         </div>
       </div>
+
+      <CitationMeta paper={paper} />
+      <h1 className="font-serif text-3xl sm:text-[2.4rem] leading-[1.12] font-semibold text-ink tracking-[-0.015em]">{paper.title}</h1>
 
       {authors && <p className="mt-4 text-[15px] text-ink-soft font-body leading-relaxed">{authors}</p>}
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted font-sans">
