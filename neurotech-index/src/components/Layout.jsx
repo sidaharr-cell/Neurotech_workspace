@@ -4,11 +4,11 @@ import { ChevronDown, Search, Menu, X, Cog, Star } from 'lucide-react'
 import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
-  { to: '/media', label: 'Media' },
-  { to: '/research', label: 'Research' },
   { to: '/trials', label: 'Clinical Trials' },
   { to: '/companies', label: 'Companies and Labs' },
   { to: '/devices', label: 'Devices and Patents' },
+  { to: '/media', label: 'Media' },
+  { to: '/research', label: 'Research' },
 ]
 
 // Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).

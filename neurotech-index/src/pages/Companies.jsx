@@ -142,7 +142,7 @@ export default function Companies() {
         <FacetSidebar facets={facets} onChange={setFacets} counts={facetCts} />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center h-9 mb-6 border-b border-rule">
+          <div className="flex items-center h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>
           </div>
           {loading ? (
