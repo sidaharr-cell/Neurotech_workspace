@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
 import FacetSidebar from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
@@ -15,27 +15,10 @@ const KINDS = [
   { id: 'lab', label: 'Labs' },
 ]
 
-// NIH RePORTER doesn't give lab website URLs, so link the lab name to a
-// targeted search (PI + institution) whose top result is the lab's homepage.
-function labSearchUrl(org) {
-  const pi = (org.founders?.[0] || org.name.replace(/\s*Lab\s*$/i, '')).replace(/\s+/g, ' ').trim()
-  const inst = (org.description || '').split(' · ')[0].trim()
-  const q = `${pi} ${inst} lab`.replace(/\s+/g, ' ').trim()
-  return `https://www.google.com/search?q=${encodeURIComponent(q)}`
-}
-
 function OrgRow({ org, counts }) {
   const isLab = org.type === 'lab'
   const c = counts?.[org.id]
-  // Companies route to their own NeuroBase analytics page (internal). Labs link
-  // out: to their homepage when they have one (academic labs), else a targeted
-  // search (NIH labs). Never nest an <a> inside the row's link.
-  const rowIsLink = !isLab || !!org.website
-  const nameHref = isLab ? (org.website || labSearchUrl(org)) : null
-  const Icon = isLab ? ExternalLink : ArrowUpRight
-  const nameContent = (
-    <>{org.name}<Icon className="w-3.5 h-3.5 text-muted opacity-60 group-hover:opacity-100 transition-opacity" /></>
-  )
+  // Both companies and labs route to their own internal NeuroBase page.
   const inner = (
     <div className="min-w-0 flex-1">
       <div className="flex items-center gap-3 mb-1.5 flex-wrap">
@@ -44,17 +27,9 @@ function OrgRow({ org, counts }) {
         {!isLab && org.funding > 0 && <span className="text-[11px] font-mono text-accent">{fmtMoney(org.funding)} raised</span>}
       </div>
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em]">
-        {rowIsLink ? (
-          // The row itself is the anchor — render the name as a styled span.
-          <span className="headline-link inline-flex items-center gap-1.5 group-hover:text-accent transition-colors">{nameContent}</span>
-        ) : nameHref ? (
-          <a href={nameHref} target="_blank" rel="noopener noreferrer"
-            className="headline-link inline-flex items-center gap-1.5 hover:text-accent transition-colors">
-            {nameContent}
-          </a>
-        ) : (
-          <span className="headline-link inline-flex items-center gap-1.5">{org.name}</span>
-        )}
+        <span className="headline-link inline-flex items-center gap-1.5 group-hover:text-accent transition-colors">
+          {org.name}<ArrowUpRight className="w-3.5 h-3.5 text-muted opacity-60 group-hover:opacity-100 transition-opacity" />
+        </span>
       </h3>
       <p className="mt-1 flex items-center gap-1 text-[13px] text-muted font-sans">
         {org.location && <><MapPin className="w-3.5 h-3.5" />{org.location}</>}
@@ -85,11 +60,7 @@ function OrgRow({ org, counts }) {
       )}
     </div>
   )
-  // Company → internal analytics page; lab with site → external homepage.
-  if (!isLab) return <Link to={`/company/${org.id}`} className="group block py-5">{inner}</Link>
-  return org.website
-    ? <a href={org.website} target="_blank" rel="noopener noreferrer" className="group block py-5">{inner}</a>
-    : <div className="group py-5">{inner}</div>
+  return <Link to={isLab ? `/lab/${org.id}` : `/company/${org.id}`} className="group block py-5">{inner}</Link>
 }
 
 export default function Companies() {
