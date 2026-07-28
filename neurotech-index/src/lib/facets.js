@@ -17,7 +17,7 @@
  *   4. abstain             record nothing rather than guess
  */
 
-export const CLASSIFIER_VERSION = 'v1.1'
+export const CLASSIFIER_VERSION = 'v1.2'
 
 // ── Facet vocabularies ──────────────────────────────────────────────────────
 
