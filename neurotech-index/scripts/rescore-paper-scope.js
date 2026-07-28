@@ -47,7 +47,7 @@ async function main() {
       const scopeChanged = !!r.in_scope !== !!p.in_scope
       const facetChanged = !eqArr(r.facet_function, p.facet_function) || !eqArr(r.facet_access, p.facet_access) || !eqArr(r.facet_application, p.facet_application)
       if (!scopeChanged && !facetChanged) continue
-      if (scopeChanged) (r.in_scope ? outToIn++ : inToOut++); else facetOnly++
+      if (scopeChanged) { if (r.in_scope) outToIn++; else inToOut++ } else facetOnly++
       changed.push({ id: p.id, title: p.title, in_scope: r.in_scope, facet_function: r.facet_function, facet_access: r.facet_access, facet_application: r.facet_application, classifier_version: r.classifier_version })
     }
     if (!DRY) {
