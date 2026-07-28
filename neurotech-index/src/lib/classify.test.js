@@ -10,6 +10,16 @@ describe('classify: incidental method keywords do not put a paper in scope', () 
     expect(r.in_scope).toBe(false)
     expect(r.facet_function).toEqual([])
   })
+  it('excludes a disease study where a recording method and a disease word both appear (not a neurotech application)', () => {
+    // EEG (records, a method) + Alzheimer (a disease studied, not a neurotech target)
+    const r = paper('Hypothalamic MCH neurons links tau pathology to sleep disruption',
+      'EEG and EMG were recorded. Relevance to Alzheimer disease is discussed.')
+    expect(r.in_scope).toBe(false)
+  })
+  it('excludes an fMRI cognitive-neuroscience study that uses imaging only as a method', () => {
+    expect(paper('Neural correlates of decision-making in the prefrontal cortex',
+      'Functional MRI was used to measure brain activity.').in_scope).toBe(false)
+  })
   it('excludes a paper whose neurotech term is a MINOR MeSH topic only', () => {
     const r = paper('Tau pathology and neuronal loss', 'used electroencephalography',
       [{ name: 'Electroencephalography', major: false }, { name: 'tau Proteins', major: true }])

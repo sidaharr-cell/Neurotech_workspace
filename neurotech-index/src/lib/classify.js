@@ -114,16 +114,23 @@ export function scopeOf(row, type) {
 
 /**
  * A paper that reaches scope ONLY through keywords needs a real topical signal,
- * not an incidental method mention (the classic "we recorded EEG/EMG" case in a
- * paper that is not about neurotechnology). Require the neurotech term to appear
- * in the TITLE, or at least two distinct function/application signals to
- * corroborate. Access-only or a lone abstract modality word is not enough.
+ * not an incidental method mention. The hard case is recording/imaging: EEG, EMG,
+ * fMRI and the like are as often a neuroscience METHOD as a neurotechnology
+ * subject, and a disease word in the abstract ("Alzheimer") is the thing being
+ * studied, not evidence of a neurotech application. So:
+ *   - a neurotech term (function OR application) in the TITLE is topical -> in;
+ *   - stimulation or decoding/BCI anywhere is a strong intervention/interface
+ *     signal -> in;
+ *   - a lone recording/imaging modality mentioned only in the abstract is a
+ *     method mention -> out, unless a SECOND distinct function corroborates
+ *     (genuinely multimodal work).
  */
 function paperKeywordScope(row, facets) {
   const tf = keywordFacets(row.title || '')
-  const titleSignal = tf.function.length + tf.application.length > 0
-  const corroboration = facets.function.length + facets.application.length >= 2
-  return titleSignal || corroboration
+  if (tf.function.length || tf.application.length) return true
+  if (facets.function.some(f => f === 'stimulates' || f === 'decodes')) return true
+  if (facets.function.length >= 2) return true
+  return false
 }
 
 // ── The classifier ──────────────────────────────────────────────────────────
