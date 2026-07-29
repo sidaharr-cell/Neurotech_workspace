@@ -1,0 +1,39 @@
+{
+  "_readme": [
+    "Company statuses that no automated source can establish.",
+    "",
+    "backfill-org-status.js derives `public` from the SEC ticker file, which is a",
+    "primary document and needs no human. It refuses to write `acquired` or",
+    "`defunct`, because EDGAR records that a company stopped filing, not why: an",
+    "acquisition and a bankruptcy look identical in a filing history. Those two",
+    "values are written here instead, one company at a time, each with the filing",
+    "that establishes it.",
+    "",
+    "`source_url` must be a primary document, normally the 8-K reporting the",
+    "event. `effective_date` is the date of the event the filing reports, not the",
+    "date the filing was made. Nothing here is written from memory.",
+    "",
+    "Applied by scripts/backfill-org-status.js, which is idempotent."
+  ],
+
+  "Axonics Modulation Technologies": {
+    "status": "acquired",
+    "effective_date": "2024-11-15",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/1603756/000162828024048038/axnx-20241115.htm",
+    "note": "8-K: merger with Boston Scientific Corporation completed 15 Nov 2024 under the Agreement and Plan of Merger dated 8 Jan 2024. Axonics filed Form 25-NSE the same day and Form 15-12G on 25 Nov 2024.",
+    "was_publicly_traded": true,
+    "listing_source_url": "https://www.sec.gov/Archives/edgar/data/1603756/000135445724000871/xslF25X02/primary_doc.xml",
+    "listing_note": "Form 25-NSE, the exchange's notification of delisting, filed 15 Nov 2024 for AXNX on Nasdaq. A delisting is only possible for a listed security, so the filing establishes the listing. The partial-total marker already fires on `acquired`; this keeps the column itself truthful."
+  },
+
+  "Pear Therapeutics": {
+    "status": "defunct",
+    "effective_date": "2023-04-07",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/1835567/000183556723000020/pear-20230405.htm",
+    "note": "8-K Item 1.03 Bankruptcy or Receivership: voluntary chapter 11 petition filed 7 Apr 2023 by Pear Therapeutics, Inc. and Pear Therapeutics (US), Inc. Form 25-NSE followed on 2 May 2023.",
+    "cik": "0001835567",
+    "was_publicly_traded": true,
+    "listing_source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001835567&type=25-NSE",
+    "listing_note": "Class A common stock traded on Nasdaq as PEAR, and warrants as PEARW, per the cover page of the 8-K above. The registrant is the former Thimble Point Acquisition Corp. Its private-only total is therefore partial, and the chart marks it."
+  }
+}

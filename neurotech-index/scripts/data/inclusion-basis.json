@@ -1,0 +1,265 @@
+{
+  "_readme": [
+    "Why each funded company is, or is not, in the neurotech set.",
+    "",
+    "The rule, from docs/funding-chart-audit.md: companies whose primary product",
+    "interfaces with, measures, or modulates the nervous system. Includes implanted",
+    "and external neuromodulation devices, brain-computer interfaces, neurological",
+    "diagnostic and imaging software, and prescription digital therapeutics for",
+    "neurological or psychiatric indications. Excludes companies developing drugs",
+    "for neurological indications, and general-purpose platforms not specific to",
+    "the nervous system.",
+    "",
+    "Every entry is grounded in a record this database already holds. `evidence`",
+    "names which one: `description` is the organizations.description text,",
+    "`fda_device` is a linked openFDA clearance, and `company_site` is the",
+    "company's own product page, read where the stored description was too thin",
+    "to decide on. Nothing here is written from memory of the company.",
+    "",
+    "The rule turns on what the product interfaces with, not what disease it",
+    "treats. That is why Setpoint Medical (vagus nerve stimulation for autoimmune",
+    "disease) and Axon Therapies (splanchnic nerve ablation for heart failure) are",
+    "both in: each modulates a nerve. Applying it by indication instead would",
+    "exclude both, and would be a different rule than the one agreed.",
+    "",
+    "Applied by scripts/backfill-inclusion.js. Excluded companies get no",
+    "inclusion_basis, which is what keeps them off the chart."
+  ],
+
+  "Neuralink": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Fully implanted 1024-electrode array recording cortical activity for paralysis. Interfaces directly with the nervous system." },
+
+  "Setpoint Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted vagus nerve stimulator. Modulates the nervous system; the autoimmune indication does not change what the device interfaces with." },
+
+  "NeuroPace": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "diagnostics_imaging", "evidence": "description",
+    "basis": "Implanted responsive neurostimulator for epilepsy. Records cortical activity and stimulates to interrupt seizures." },
+
+  "Ceribell": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "FDA-cleared rapid EEG system measuring cortical electrical activity at the bedside without a technologist." },
+
+  "Cognito Therapeutics": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "digital_therapeutic", "evidence": "description",
+    "basis": "Non-invasive sensory gamma stimulation targeting neural oscillations in neurodegenerative disease." },
+
+  "Saluda Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Closed-loop spinal cord stimulator that measures evoked compound action potentials and adjusts stimulation to them." },
+
+  "Science Corporation": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Retinal prosthesis and implanted neural interfaces." },
+
+  "Pear Therapeutics": { "decision": "include", "modality": "digital_therapeutic", "evidence": "description",
+    "basis": "FDA-cleared prescription digital therapeutics for psychiatric indications, named explicitly by the inclusion rule." },
+
+  "Precision Neuroscience": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Thin-film surface microelectrode array placed on the cortex, designed to be minimally invasive and reversible." },
+
+  "Onward Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Targeted spinal cord stimulation restoring movement and function after spinal cord injury." },
+
+  "Merge Labs": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Brain-computer interface company developing high-bandwidth neural interfaces." },
+
+  "Nalu Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "Implanted peripheral nerve stimulator for pain relief. FDA 510(k) cleared 2019, product code GZF." },
+
+  "iSchemaView, Inc.": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "RAPID brain tissue imaging platform for stroke triage. Neurological imaging software." },
+
+  "Blackrock Neurotech": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Utah-array intracortical recording systems, with the longest track record of human BCI implants." },
+
+  "MicroTransponder": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Vagus nerve stimulation paired with rehabilitation, for tinnitus and stroke recovery." },
+
+  "Neuros Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "High-frequency nerve block system for chronic post-amputation pain." },
+
+  "ShiraTronics": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted neuromodulation system for chronic migraine." },
+
+  "Cala Health": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Wrist-worn transcutaneous afferent patterned stimulation for essential tremor." },
+
+  "Axonics Modulation Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implantable neuromodulation for overactive bladder and chronic pain, licensed from the Alfred Mann Foundation." },
+
+  "Axon Therapies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Ablates the greater splanchnic nerve. Modulates the nervous system; cardiac indication, same reasoning as Setpoint Medical." },
+
+  "Paradromics": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "High-data-rate intracortical microelectrode array aimed at restoring communication." },
+
+  "Synchron": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Endovascular stent-electrode array recording motor cortex activity via the jugular vein." },
+
+  "Autonomic Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Miniaturized implanted neurostimulation for severe headache." },
+
+  "Beacon Biosignals": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "EEG analytics platform measuring neural activity for neurological and psychiatric drug development." },
+
+  "SPR Therapeutics": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Percutaneous peripheral nerve stimulation for pain." },
+
+  "NeuSpera Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Miniaturized implanted neuromodulation using mid-field powering." },
+
+  "Neural Analytics": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Robotic transcranial ultrasound measuring cerebral blood flow to detect and track brain-health disorders." },
+
+  "Kernel": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wearable time-domain fNIRS headset measuring brain activity non-invasively." },
+
+  "INBRAIN Neuroelectronics": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Graphene-based neural interface for high-resolution recording and stimulation." },
+
+  "Nia Therapeutics": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Implanted neural interface for memory restoration after brain injury." },
+
+  "PhotoPharmics": { "decision": "include", "modality": "neuromodulation", "evidence": "company_site",
+    "basis": "Celeste photo-neuromodulation device delivering specialized light through retinal pathways for Parkinson's disease. Non-invasive, but it modulates a neural pathway." },
+
+  "MedRhythms": { "decision": "include", "modality": "digital_therapeutic", "evidence": "company_site",
+    "basis": "Prescription rhythmic auditory stimulation (InTandem, MOVIVE) for gait rehabilitation after stroke and in Parkinson's disease." },
+
+  "Blue Note Therapeutics": { "decision": "include", "modality": "digital_therapeutic", "evidence": "description",
+    "basis": "Prescription digital therapeutics for psychiatric indications, named explicitly by the inclusion rule." },
+
+  "ImThera Medical Inc": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted hypoglossal nerve stimulator for obstructive sleep apnea. Modulates a nerve; the sleep indication does not change what the device interfaces with." },
+
+  "Linus Health": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "company_site",
+    "basis": "Digital cognitive assessment platform measuring cognitive function through digitized clock-drawing, speech and gait tests." },
+
+  "Rune Labs": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "StrivePD platform measuring Parkinson's motor state from wearable and deep brain stimulation data. FDA 510(k) cleared, K213519." },
+
+  "BRAINBox Solutions": { "decision": "exclude", "evidence": "company_site",
+    "reason": "mTBI diagnostic pairing blood biomarkers with neurocognitive testing. Excluded with Octave Bioscience: a marker of a neurological disease is not the nervous system itself." },
+
+  "Mindstrong": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Digital biomarkers deriving continuous objective measures of cognition and mood. Included on the measurement platform, not on the virtual care arm." },
+
+  "electroCore": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "gammaCore non-invasive vagus nerve stimulator, FDA cleared. The stored description is boilerplate; the device record is the grounds." },
+
+  "Nevro": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Senza spinal cord stimulation system for chronic pain." },
+
+  "Inspire Medical Systems": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted upper airway stimulation for obstructive sleep apnea. Modulates a nerve; same reasoning as ImThera Medical." },
+
+  "Ensodata": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "EnsoSleep scores sleep-study waveforms, which are EEG and related neurophysiological signals. Measures nervous system activity." },
+
+  "Axoft": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Soft tissue-like neural implant materials designed to reduce scarring in long-term implanted interfaces." },
+
+  "BrainScope Company": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Handheld EEG-based device assessing brain function at the point of care after head injury. Measures the brain directly, unlike a blood biomarker panel." },
+
+  "Cognixion": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Non-invasive brain-computer interface headset for assisted communication. Modality is other because the enum's BCI value is specifically implanted." },
+
+  "NeuroLutions": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Brain-computer interface devices restoring function after neurological injury. Non-invasive, so not the implanted BCI value." },
+
+  "Freespira": { "decision": "include", "modality": "digital_therapeutic", "evidence": "fda_device",
+    "basis": "Prescription breathing system cleared for panic disorder and PTSD. A prescription digital therapeutic for psychiatric indications, named by the rule." },
+
+  "BrainsWay": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "Deep transcranial magnetic stimulation systems for psychiatric indications." },
+
+  "NeuroMetrix": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Nerve conduction testing for diabetic peripheral neuropathy and carpal tunnel. Measures peripheral nerve function." },
+
+  "Neuroelectrics": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "diagnostics_imaging", "evidence": "description",
+    "basis": "Transcranial current stimulation paired with EEG, to quantify brain activity and treat neurological disorders." },
+
+  "Spark Biomedical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Non-invasive transcutaneous auricular neurostimulation for opioid withdrawal." },
+
+  "NeuroSigma": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Trigeminal nerve stimulation for epilepsy, depression and ADHD." },
+
+  "RightEye": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "Eye-tracking system measuring oculomotor function, which is a readout of cranial nerve and brainstem control, for early detection of impairment." },
+
+  "Stimwave Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Wireless injectable microsize neurostimulators for pain." },
+
+  "Forest Devices, Inc.": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "AlphaStroke reads brain electrical activity to screen for stroke before imaging is available." },
+
+  "Nexstim": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "diagnostics_imaging", "evidence": "description",
+    "basis": "Navigated transcranial magnetic stimulation for functional brain mapping and therapy." },
+
+  "Mainstay Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "ReActiv8 implant stimulating the nerves that activate the muscles stabilising the lower back." },
+
+  "Biowave": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "Percutaneous and surface neuromodulation pain therapy devices, so named in their own FDA clearances." },
+
+  "NeuroOne": { "decision": "include", "modality": "implanted_bci", "evidence": "fda_device",
+    "basis": "Evo sEEG system and cortical electrodes: thin-film implanted arrays recording from the brain. The stored location and website look wrong and need review." },
+
+  "OpenBCI": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Open-source EEG and brain-computer interface hardware. Non-invasive, so not the implanted BCI value." },
+
+  "NeuroQore": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Magnetic brain stimulation therapy for major depressive disorder." },
+
+  "Synapse Biomedical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "NeuRx diaphragm pacing system, stimulating the phrenic nerve to drive the diaphragm." },
+
+  "Optima Neuroscience": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "EEG analysis technologies for diagnosing neurological disorders." },
+
+  "Advanced Brain Monitoring": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wearable EEG and multi-sensor platforms acquiring and analysing brain activity outside the lab." },
+
+  "Penumbra": { "decision": "exclude", "evidence": "description",
+    "reason": "Thrombectomy and aneurysm-coil devices for stroke and neurovascular disease. Blood-vessel devices; same reasoning as MIVI Neuroscience and Silk Road Medical." },
+
+  "Greatbatch": { "decision": "exclude", "evidence": "description",
+    "reason": "Contract manufacturer of components and batteries for implantable devices, sold to OEMs across cardiac and neuro. A supplier of parts, not a company with a nervous-system product." },
+
+  "Silk Road Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Transcarotid devices for arterial disease. A blood-vessel device; same reasoning as Conformal Medical and MIVI Neuroscience." },
+
+  "Tenax Therapeutics": { "decision": "exclude", "evidence": "description",
+    "reason": "Therapeutics maintaining tissue oxygen supply. Nothing in the record describes a product that interfaces with, measures, or modulates the nervous system." },
+
+  "Tengion": { "decision": "exclude", "evidence": "description",
+    "reason": "Regenerative neo-organs from autologous cells. The lead product is a neo-bladder; the neurogenic-bladder indication is downstream of a neurological condition, not an interface with the nervous system." },
+
+  "Cerebral": { "decision": "exclude", "evidence": "description",
+    "reason": "Telehealth mental-health service with online medication management. Care delivery and prescribing. No product that interfaces with, measures, or modulates the nervous system." },
+
+  "MIVI Neuroscience": { "decision": "exclude", "evidence": "description",
+    "reason": "Neurointerventional catheters for stroke procedures. A blood-vessel device. Same reasoning as Conformal Medical: treating a neurological event is not interfacing with the nervous system." },
+
+  "Artio Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Endovascular occlusion devices for cerebral aneurysms and peripheral vascular disease. A blood-vessel device, and the peripheral indications make it not nervous-system specific." },
+
+  "Impel NeuroPharma": { "decision": "exclude", "evidence": "description",
+    "reason": "Nose-to-brain drug delivery device. It exists to deliver drugs for neurological indications, which the rule excludes. The device does not itself measure or modulate the nervous system." },
+
+  "NeuroFlow": { "decision": "exclude", "evidence": "description",
+    "reason": "Behavioral-health care-coordination platform for providers. Workflow and engagement software. It tracks patients, not the nervous system." },
+
+  "Atomwise": { "decision": "exclude", "evidence": "description",
+    "reason": "AI drug-discovery platform. Excluded twice over: it develops drugs, and it is a general-purpose discovery platform not specific to the nervous system." },
+
+  "Conformal Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Left atrial appendage closure to prevent stroke in atrial fibrillation. A cardiac device. Preventing a neurological event is not interfacing with the nervous system." },
+
+  "Elucid Bioimaging": { "decision": "exclude", "evidence": "description",
+    "reason": "Cardiovascular plaque imaging software. Neither the imaging target nor the indication is neurological." },
+
+  "Cell Point": { "decision": "exclude", "evidence": "description",
+    "reason": "Molecular imaging agents for oncology, cardiology, stroke and diabetes. A general imaging-agent platform, not nervous-system specific." },
+
+  "Octave Bioscience": { "decision": "exclude", "evidence": "description",
+    "reason": "Blood-based molecular diagnostics for multiple sclerosis. Measures biomarkers of a neurological disease rather than the nervous system itself. Reviewed 28 Jul 2026 and confirmed out, with BRAINBox Solutions." }
+}

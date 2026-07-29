@@ -8,6 +8,7 @@ import {
 import { getCompanyById, getCompanyRelated, getCompanyAnalytics, getOrgGraph, getPatentYears } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
+import { fmtMonthYear, unavailableLabel } from '../lib/fundingBoard'
 import { StarButton } from '../components/Watch'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -422,8 +423,14 @@ export default function CompanyPage() {
           Sourced separately from the research dossier above, from SEC EDGAR, USPTO, and disclosed announcements, at varying confidence. These figures never affect any research ranking, the feed, or the research facets. No valuations are inferred and no investment guidance is given.
         </p>
 
-        {/* Funding — SEC EDGAR (disclosed filings) or a curated overlay (lower confidence) */}
-        <BizSub title="Funding" note={company.latestRound ? `Latest: ${company.latestRound} ${company.roundYear || ''}`.trim() : null}>
+        {/* Funding — SEC EDGAR Form D filings, read from the organizations table.
+            Form D does not name a round, so the note carries the amount and the
+            month rather than a label like "Series C" that no filing supports. */}
+        <BizSub title="Funding" note={company.latestRaise
+          ? `Latest: ${fmtMoney(company.latestRaise)}${company.latestRaiseDate ? ` · ${fmtMonthYear(company.latestRaiseDate)}` : ''}`
+          : (company.funding > 0 ? `Latest: ${(unavailableLabel({
+              status: company.status, unavailableReason: company.fundingUnavailableReason,
+            }).short)}` : null)}>
           {(company.funding > 0 || company.fundingRounds?.length > 0) ? (
             <>
               <div className="flex flex-wrap gap-x-10 gap-y-3">
@@ -439,10 +446,16 @@ export default function CompanyPage() {
                 )}
               </div>
               <FundingTimeline rounds={company.fundingRounds} />
-              <BizProv confidence={company.fundingSource?.includes('sec') ? 'high' : 'low'}
-                text={company.fundingSource?.includes('sec')
-                  ? `SEC EDGAR Form D filings${company.fundingSource?.includes('curated') ? ' with a curated overlay' : ''}. Undisclosed amounts are shown as undisclosed; none are estimated.`
-                  : 'Curated figures from public announcements. Lower confidence than an EDGAR filing; no amount is estimated.'} />
+              <BizProv confidence={company.fundingSource === 'sec' ? 'high' : 'low'}
+                text={company.fundingSource === 'sec'
+                  ? 'SEC EDGAR Form D filings. Private capital only, so a figure for a company that has since listed or been acquired excludes what it raised afterwards. Undisclosed amounts are shown as undisclosed; none are estimated.'
+                  : 'Not traceable to an SEC filing. Lower confidence; no amount is estimated.'} />
+              {company.fundingSourceUrl && (
+                <p className="text-[12px] font-sans text-muted mt-1">
+                  <a href={company.fundingSourceUrl} target="_blank" rel="noreferrer"
+                    className="text-accent hover:underline">Filing this figure was read from</a>
+                </p>
+              )}
             </>
           ) : <p className="text-[14px] text-muted font-body">No disclosed funding on record.</p>}
           <BusinessActivityChart deviceYears={deviceYears} patentYears={patentYears} />

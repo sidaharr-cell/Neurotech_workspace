@@ -7,7 +7,6 @@ import papersJson from '../data/papers.json'
 import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
 import researchersJson from '../data/researchers.json'
-import { getFunding } from './companyFunding'
 import { FUNCTION, ACCESS, APPLICATION } from './facets'
 
 function tag(type) {
@@ -345,9 +344,37 @@ export async function searchLabs({ query = '', facets = {}, page = 0, pageSize =
   return { rows: (data || []).map(r => ({ ...r, _type: 'organizations' })), total: count ?? 0 }
 }
 
+/**
+ * Funding fields for a company row, straight from the organizations table.
+ *
+ * These used to be merged in the browser from two committed JSON files keyed by
+ * company name, which is how a company could read $300M on its own page and
+ * $180M on the funding chart. One source now. Amounts are stored in whole
+ * dollars and the UI formats millions, so the conversion happens here.
+ *
+ * latestRound is null because Form D does not name a round: an issuer files the
+ * same document for a seed and a Series D. The old curated overlay supplied
+ * labels like "Series C" that no primary source backed.
+ */
+function withFunding(r) {
+  const total = r.total_raised_usd || 0
+  return {
+    ...r,
+    _type: 'organizations',
+    funding: total ? Math.round(total / 1e6) : 0,
+    fundingSourceUrl: r.total_raised_source_url || null,
+    fundingSource: r.total_raised_confidence === 'filing_verified' ? 'sec' : total ? 'other' : 'none',
+    latestRound: null,
+    latestRaise: r.latest_raise_usd ? Math.round(r.latest_raise_usd / 1e6) : 0,
+    latestRaiseDate: r.latest_raise_date || null,
+    roundYear: r.latest_raise_date ? Number(String(r.latest_raise_date).slice(0, 4)) : null,
+    fundingUnavailableReason: r.latest_raise_usd
+      ? null : (r.latest_raise_unavailable_reason || 'unverified'),
+  }
+}
+
 /** Server-side paginated search over neurotech companies (organizations,
- *  type='company'). Funding (total + latest round) is overlaid by name from the
- *  client-side companyFunding map, so funded companies show a raised badge. */
+ *  type='company'), including each company's sourced funding figures. */
 export async function searchCompanies({ query = '', facets = {}, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim().replace(/[(),%]/g, ' ')
@@ -365,26 +392,30 @@ export async function searchCompanies({ query = '', facets = {}, page = 0, pageS
     ({ data, count, error } = await base().order('name'))
   }
   if (error) { console.warn('searchCompanies error:', error.message); return { rows: [], total: 0 } }
-  const rows = (data || []).map(r => {
-    const f = getFunding(r.name)
-    return {
-      ...r,
-      _type: 'organizations',
-      funding: f?.total ?? 0,
-      latestRound: f?.latestRound ?? null,
-      roundYear: f?.roundYear ?? null,
-    }
-  })
-  return { rows, total: count ?? 0 }
+  return { rows: (data || []).map(withFunding), total: count ?? 0 }
 }
 
-/** One company by its (deterministic) id, with funding overlaid. */
+/** One company by its (deterministic) id, with its funding and its rounds. */
 export async function getCompanyById(id) {
   if (!supabase) return null
   const { data, error } = await supabase.from('organizations').select('*').eq('id', id).eq('type', 'company').maybeSingle()
   if (error || !data) return null
-  const f = getFunding(data.name)
-  return { ...data, _type: 'organizations', funding: f?.total ?? 0, latestRound: f?.latestRound ?? null, roundYear: f?.roundYear ?? null, fundingRounds: f?.rounds ?? [], fundingSource: f?.source ?? 'none' }
+  // Rounds come from funding_rounds, one row per filing, each with the archive
+  // URL it was read from. The timeline charts them by year.
+  const { data: rounds } = await supabase.from('funding_rounds')
+    .select('amount_usd,round_date,source_url,accession_number')
+    .eq('organization_id', id).order('round_date', { ascending: true })
+  return {
+    ...withFunding(data),
+    fundingRounds: (rounds || [])
+      .filter(r => r.amount_usd && r.round_date)
+      .map(r => ({
+        date: r.round_date,
+        amount: Math.round(r.amount_usd / 1e6),
+        sourceUrl: r.source_url,
+        accession: r.accession_number,
+      })),
+  }
 }
 
 /**

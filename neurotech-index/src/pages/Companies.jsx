@@ -6,6 +6,7 @@ import FacetSidebar from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
 import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
 import { useUrlFacets } from '../lib/useUrlFacets'
+import { fmtMonthYear } from '../lib/fundingBoard'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -34,7 +35,12 @@ function OrgRow({ org, counts }) {
       <p className="mt-1 flex items-center gap-1 text-[13px] text-muted font-sans">
         {org.location && <><MapPin className="w-3.5 h-3.5" />{org.location}</>}
         {!isLab && org.founded && <><span aria-hidden>·</span>Founded {org.founded}</>}
-        {!isLab && org.latestRound && <><span aria-hidden>·</span>{org.latestRound} {org.roundYear}</>}
+        {/* Form D does not name the round, so this is the amount and month of
+            the most recent filing rather than a "Series C" label. */}
+        {!isLab && org.latestRaise > 0 && (
+          <><span aria-hidden>·</span>Latest {fmtMoney(org.latestRaise)}
+            {org.latestRaiseDate && ` ${fmtMonthYear(org.latestRaiseDate)}`}</>
+        )}
       </p>
       {!isLab && c && (c.devices > 0 || c.trials > 0) && (
         <p className="mt-1 text-[12px] font-sans text-accent">
