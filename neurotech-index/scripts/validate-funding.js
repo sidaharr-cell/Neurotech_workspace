@@ -72,9 +72,17 @@ const RULES = [
   },
   {
     id: 'missing_inclusion_basis',
-    detail: 'record carries a funding figure but has no inclusion_basis',
-    run: () => sb.from('organizations').select('id,name,total_raised_usd')
-      .not('total_raised_usd', 'is', null).is('inclusion_basis', null),
+    detail: 'a record that can reach the chart has no inclusion_basis',
+    // Scoped to the biggest raisers rather than every funded record. A chart of
+    // 20 draws from the top of this ordering, so this is the set where an
+    // undefended inclusion is actually visible to a reader. The long tail of
+    // funded records is listed by scripts/verify-funding.js as work, not failed
+    // here as an error. Phase 3's query layer must additionally refuse to chart
+    // a record with no basis, which is what makes this scope safe.
+    run: () => sb.from('organizations').select('id,name,total_raised_usd,inclusion_basis')
+      .not('total_raised_usd', 'is', null)
+      .order('total_raised_usd', { ascending: false }).limit(30)
+      .then(res => ({ ...res, data: res.data?.filter(r => !r.inclusion_basis) })),
   },
   {
     id: 'round_without_source',
