@@ -103,6 +103,13 @@ describe('traceability', () => {
     expect(errorsFor(valid({ current_value: 'n = 200, 2024' }))).toEqual([])
   })
 
+  it.each([
+    '81 %', '9 µm', '2.20 ± 0.67 k\u03a9', '37 \u00b0C', '2512 S/cm', '128 channels', '6 ms',
+  ])('accepts the non-ASCII unit %s', (current_value) => {
+    // An ASCII-only [a-z]{2,} test rejected every one of these as unitless.
+    expect(errorsFor(valid({ current_value }))).toEqual([])
+  })
+
   it('rejects a malformed established_date', () => {
     expect(errorsFor(valid({ established_date: '2023' })).join()).toMatch(/YYYY-MM-DD/)
   })
