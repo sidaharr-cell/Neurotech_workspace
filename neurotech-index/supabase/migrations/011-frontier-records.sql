@@ -255,7 +255,31 @@ end $$;
 create or replace view frontier_records_live as
   select * from frontier_records where superseded_by is null;
 
--- ── Verify ──────────────────────────────────────────────────────────────────
+-- ── 6. Reload the API schema cache ──────────────────────────────────────────
+-- Supabase normally reloads PostgREST after DDL on its own, but "applied" and
+-- "visible to the API" are separate states, and when they diverge every client
+-- call fails with the same misleading 404: "Could not find the table in the
+-- schema cache". Asking for the reload explicitly costs nothing and removes one
+-- of the two things that message can mean.
+notify pgrst, 'reload schema';
+
+-- ── 7. Proof this script ran ────────────────────────────────────────────────
+-- MUST be the last statement. The SQL editor shows the result of the final
+-- statement, so running this file always ends by printing what it created.
+-- Expect FOUR rows: frontier_records, frontier_record_changes,
+-- frontier_record_proposals, frontier_records_live.
+--
+-- Zero rows here means the script did not execute against this database, which
+-- a silent editor cannot otherwise be distinguished from success. Note it looks
+-- across ALL schemas, not just public: a table created somewhere else on the
+-- search_path is invisible to a public-only check and would make later
+-- `create table if not exists` calls no-ops with no error.
+select table_schema, table_name, table_type
+  from information_schema.tables
+ where table_name like 'frontier%'
+ order by table_schema, table_name;
+
+-- ── Further verification, once records are loaded ───────────────────────────
 -- select subfield, axis_type, count(*) from frontier_records_live group by 1,2 order by 1,2;
 -- select count(*) from frontier_records_live where axis_type = 'evidence';
 -- select indication, count(*) from frontier_records_live
