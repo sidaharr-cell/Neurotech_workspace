@@ -20,7 +20,10 @@
     "status": "acquired",
     "effective_date": "2024-11-15",
     "source_url": "https://www.sec.gov/Archives/edgar/data/1603756/000162828024048038/axnx-20241115.htm",
-    "note": "8-K: merger with Boston Scientific Corporation completed 15 Nov 2024 under the Agreement and Plan of Merger dated 8 Jan 2024. Axonics filed Form 25-NSE the same day and Form 15-12G on 25 Nov 2024."
+    "note": "8-K: merger with Boston Scientific Corporation completed 15 Nov 2024 under the Agreement and Plan of Merger dated 8 Jan 2024. Axonics filed Form 25-NSE the same day and Form 15-12G on 25 Nov 2024.",
+    "was_publicly_traded": true,
+    "listing_source_url": "https://www.sec.gov/Archives/edgar/data/1603756/000135445724000871/xslF25X02/primary_doc.xml",
+    "listing_note": "Form 25-NSE, the exchange's notification of delisting, filed 15 Nov 2024 for AXNX on Nasdaq. A delisting is only possible for a listed security, so the filing establishes the listing. The partial-total marker already fires on `acquired`; this keeps the column itself truthful."
   },
 
   "Pear Therapeutics": {

@@ -91,6 +91,7 @@ export const UNAVAILABLE_REASONS = {
   no_filing_found: { short: 'None found', long: 'Searched SEC Form D filings; no round located.' },
   not_applicable_public: { short: 'Public', long: 'Publicly traded. Private rounds are not the relevant instrument.' },
   not_applicable_acquired: { short: 'Acquired', long: 'Acquired. No longer raising independently.' },
+  not_applicable_defunct: { short: 'Defunct', long: 'No longer operating. Not raising.' },
   foreign_issuer_not_covered: { short: 'Non-US', long: 'Not a US issuer, so SEC Form D does not apply.' },
   unverified: { short: 'Not checked', long: 'This record has not been checked yet.' },
 }
@@ -98,16 +99,13 @@ export const UNAVAILABLE_REASONS = {
 /**
  * What to render where the latest raise is absent.
  *
- * The stored enum has no `not_applicable_defunct`: migration 008 constrains
- * latest_raise_unavailable_reason to five values, so unavailableReason() files a
- * defunct company under `not_applicable_acquired`. Storing it that way is merely
- * lossy. RENDERING it that way tells a reader that Pear Therapeutics was
- * acquired, when what it actually did was file for chapter 11 — a fabricated
- * fact of exactly the kind this chart exists to stop.
- *
- * Status is itself a sourced field, with its own status_source_url, so where it
- * says acquired or defunct it wins over the collapsed reason code. Widen the
- * CHECK constraint and this special case goes away.
+ * Migration 009 widened the stored enum to hold `not_applicable_defunct`, so
+ * this is no longer patching over a column that could not express the truth.
+ * Status still wins, for a narrower reason: it is a sourced field with its own
+ * status_source_url, while the reason code is written by the ingestion run. A
+ * company whose status changed since its last EDGAR check therefore reads
+ * correctly here before the next sweep catches up, rather than showing a stale
+ * reason for up to 21 days.
  */
 export function unavailableLabel(row) {
   if (row.status === 'defunct') {

@@ -34,13 +34,8 @@
  * Idempotent: it only touches columns that are still null, so a second run is a
  * no-op. Safe to run before or after the funding figures land.
  */
-import { readFileSync } from 'fs'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const dataDir = join(__dirname, '../src/data')
 const COMMIT = process.argv.includes('--commit')
 const STAMP = 'funding-phase1'
 const CHUNK = 200
@@ -86,17 +81,6 @@ export function assertSafe(rows) {
   }
 }
 
-/** Count the figures in the JSON overlay that this script is NOT migrating. */
-function unmigratedFigures() {
-  const read = f => { try { return JSON.parse(readFileSync(join(dataDir, f), 'utf8')) } catch { return {} } }
-  const sec = read('funding.json')
-  const curated = read('companies-funding.json')
-  const secTotals = Object.values(sec).filter(v => v?.total > 0).length
-  const secRounds = Object.values(sec).reduce((n, v) => n + (v?.rounds?.length || 0), 0)
-  const curatedTotals = Object.values(curated).filter(v => v?.total > 0).length
-  return { secTotals, secRounds, curatedTotals }
-}
-
 async function run() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
     console.error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required.')
@@ -127,14 +111,6 @@ async function run() {
     const sample = patches[0]
     console.log(`sample patch:        ${JSON.stringify(sample)}`)
   }
-
-  const { secTotals, secRounds, curatedTotals } = unmigratedFigures()
-  console.log('')
-  console.log('NOT migrated by this script, because these figures have no stored source URL:')
-  console.log(`  ${secTotals} SEC totals and ${secRounds} dated SEC rounds in src/data/funding.json`)
-  console.log(`  ${curatedTotals} curated totals in src/data/companies-funding.json`)
-  console.log('  They move in Phase 2, once ingestion captures the CIK, accession number, and URL.')
-  console.log('')
 
   if (!COMMIT) {
     console.log('Dry run. Nothing was written. Re-run with --commit to apply.')

@@ -6,6 +6,7 @@
  *   node --env-file=.env scripts/backfill-funding.js --limit 25       # top 25 by stored total
  *   node --env-file=.env scripts/backfill-funding.js --only "Neuralink,Synchron"
  *   node --env-file=.env scripts/backfill-funding.js --force          # ignore freshness
+ *   node --env-file=.env scripts/backfill-funding.js --max 1000       # bigger slice
  *
  * What changed in Phase 2, and why.
  *
@@ -32,25 +33,17 @@
  *    company that registered $100M and sold $10M was charted at $100M. This
  *    prefers money actually sold and flags the fallback.
  *
- * 5. Rounds go to Postgres. funding_rounds gets one row per round with its
- *    accession number and filing URL.
+ * 5. Everything goes to Postgres. funding_rounds gets one row per round with
+ *    its accession number and filing URL, and organizations.funding_checked_at
+ *    records that a company was checked whether or not the check found
+ *    anything, which is what keeps the nightly sweep incremental: without it
+ *    the ~880 companies with no Form D would be re-queried every night.
  *
- *    Nothing in src/ reads src/data/funding.json any more: Phase 3 moved the
- *    chart, and the company pages followed. Its one remaining job is the
- *    freshness ledger that makes this sweep incremental, recording that a
- *    company was checked whether or not the check found anything. Without that,
- *    the 877 companies with no Form D would be re-queried every night.
- *
- *    Migration 009 adds organizations.funding_checked_at, which does that job in
- *    the database. This script prefers the column when it exists and falls back
- *    to the file when it does not, so applying 009 retires the file with no
- *    further change, and the file can then be deleted.
+ *    That ledger used to be src/data/funding.json, a committed file the browser
+ *    also read. Migration 009 moved it into the column and the file is gone.
  *
  * Nothing is written without --commit.
  */
-import { readFileSync, writeFileSync } from 'fs'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import {
   matchIssuer, shouldQueryFormD, latestRaise, unavailableReason, classifyFailure,
@@ -58,8 +51,6 @@ import {
   retiresStoredFigure,
 } from './lib/funding.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const dataDir = join(__dirname, '../src/data')
 
 const arg = name => {
   const i = process.argv.indexOf(name)
@@ -68,6 +59,9 @@ const arg = name => {
 const COMMIT = process.argv.includes('--commit')
 const FORCE = process.argv.includes('--force')
 const LIMIT = Number(arg('--limit')) || null
+// How many due companies one run will check. Sized so a run fits inside the
+// workflow's 45-minute job timeout at EDGAR's rate. See the cap in run().
+const MAX_PER_RUN = Number(arg('--max')) || 300
 // Company names contain commas ("iSchemaView, Inc."), so a semicolon in the
 // argument switches the separator to semicolons.
 const onlyArg = arg('--only')
@@ -207,20 +201,8 @@ async function resolve(org) {
 
 // ── Company set ─────────────────────────────────────────────────────────────
 
-/**
- * Has migration 009 added funding_checked_at? When it has, the freshness ledger
- * is a column and src/data/funding.json has no remaining job. Until then the
- * committed file carries it. Asking beats assuming, so this script works either
- * side of the migration and switches over on its own.
- */
-async function hasCheckedAtColumn() {
-  const { error } = await sb.from('organizations').select('funding_checked_at').limit(1)
-  return !error
-}
-
-async function loadCompanies(withCheckedAt) {
-  const cols = 'id,name,founded,location,status,cik,total_raised_usd'
-    + (withCheckedAt ? ',funding_checked_at' : '')
+async function loadCompanies() {
+  const cols = 'id,name,founded,location,status,cik,total_raised_usd,funding_checked_at'
   const all = []
   for (let from = 0; ; from += 1000) {
     const { data, error } = await sb.from('organizations')
@@ -260,28 +242,38 @@ async function run() {
     process.exit(1)
   }
 
-  const dbLedger = await hasCheckedAtColumn()
-  const companies = await loadCompanies(dbLedger)
+  const all = await loadCompanies()
   const history = await storedHistory()
-  const legacyPath = join(dataDir, 'funding.json')
-  let legacy = {}
-  try { legacy = JSON.parse(readFileSync(legacyPath, 'utf8')) } catch { /* first run */ }
 
-  console.log(dbLedger
-    ? 'freshness ledger: organizations.funding_checked_at'
-    : 'freshness ledger: src/data/funding.json (apply migration 009 to move it into Postgres)')
-
-  // A check counts whether or not it found anything: the 877 companies with no
+  // A check counts whether or not it found anything: the ~880 companies with no
   // Form D must not be re-queried nightly just because the answer was "none".
-  const checkedAt = org => (dbLedger ? org.funding_checked_at : legacy[org.name]?.checkedAt)
-  const fresh = org =>
-    !FORCE && checkedAt(org) && (Date.now() - new Date(checkedAt(org))) / 864e5 < STALE_DAYS
+  const fresh = org => !FORCE && org.funding_checked_at
+    && (Date.now() - new Date(org.funding_checked_at)) / 864e5 < STALE_DAYS
+
+  // Cap the work per run, oldest check first.
+  //
+  // A full sweep is about 70 minutes at EDGAR's polite rate, and the workflow
+  // kills the job at 45. Writes happen once at the end, so a killed run writes
+  // NOTHING and the next night starts over: a permanent stall, not a slow
+  // recovery. That is not hypothetical. Every row was seeded with roughly the
+  // same funding_checked_at when the ledger moved into Postgres, so without a
+  // cap the whole set would fall stale on the same night.
+  //
+  // Taking the oldest-checked first spreads the population out over a few runs
+  // and keeps it spread, because each run re-stamps only what it touched.
+  const due = all
+    .filter(o => !fresh(o))
+    .sort((a, b) => (a.funding_checked_at || '').localeCompare(b.funding_checked_at || ''))
+  const companies = (ONLY || LIMIT) ? all : due.slice(0, MAX_PER_RUN)
+  if (!ONLY && !LIMIT && due.length > companies.length) {
+    console.log(`${due.length} companies are due; checking the ${companies.length} least recently ` +
+      `checked this run. Raise with --max.`)
+  }
 
   const tally = { resolved: 0, reused: 0, skipped: 0, byFailure: {}, aliasMatches: 0, offeringBasis: 0 }
   const orgUpdates = []
   const roundRows = []
   const retiredIds = []   // figures withdrawn this run; their rounds go too
-  const nextLegacy = { ...legacy }
   const now = new Date().toISOString()
 
   console.log(`${companies.length} companies to check. ${COMMIT ? 'WRITING' : 'dry run'}.\n`)
@@ -297,7 +289,7 @@ async function run() {
         id: org.id, name: org.name,
         latest_raise_usd: null,
         latest_raise_unavailable_reason: reason,
-        ...(dbLedger ? { funding_checked_at: now } : {}),
+        funding_checked_at: now,
         pipeline_version: PIPELINE,
       })
       console.log(`  – ${org.name}: not queried (${org.status}), reason ${reason}`)
@@ -322,7 +314,7 @@ async function run() {
         latest_raise_usd: null,
         latest_raise_unavailable_reason: reason,
         cik: cik || null,
-        ...(dbLedger ? { funding_checked_at: now } : {}),
+        funding_checked_at: now,
         pipeline_version: PIPELINE,
       }
       // A company that used to resolve and now definitively does not was
@@ -343,11 +335,9 @@ async function run() {
           latest_raise_accession_number: null,
         })
         retiredIds.push(org.id)
-        delete nextLegacy[org.name]
         console.log(`  ! ${org.name}: retiring a stored $${usdToM(org.total_raised_usd)}M total — ${failure}`)
       }
       orgUpdates.push(update)
-      nextLegacy[org.name] = { source: 'none', failure, checkedAt: now }
       console.log(`  ✗ ${org.name}: ${failure} (hits ${stats.hits}, matches ${stats.matches}) -> ${reason}`)
       await sleep(200)
       continue
@@ -375,7 +365,7 @@ async function run() {
       latest_raise_unavailable_reason: latest.reason,
       latest_raise_date_basis: 'filing_date',
       cik,
-      ...(dbLedger ? { funding_checked_at: now } : {}),
+      funding_checked_at: now,
       pipeline_version: PIPELINE,
     })
 
@@ -396,14 +386,6 @@ async function run() {
       })
     }
 
-    nextLegacy[org.name] = {
-      total: usdToM(total),
-      latestAmount: latest.amountUsd ? usdToM(latest.amountUsd) : 0,
-      latestDate: latest.date || null,
-      rounds: rounds.map(r => ({ date: r.date, amount: usdToM(r.amountUsd) })).filter(r => r.amount > 0),
-      source: 'sec',
-      checkedAt: now,
-    }
 
     const flag = matchKind === 'alias' ? ' [alias]' : ''
     console.log(`  ✓ ${org.name}${flag}: $${usdToM(total)}M across ${rounds.length} round(s)` +
@@ -412,8 +394,6 @@ async function run() {
   }
 
   // ── Report ────────────────────────────────────────────────────────────────
-  const before = Object.values(legacy).filter(v => v?.total > 0).length
-  const beforeRate = Object.keys(legacy).length ? before / Object.keys(legacy).length : 0
   console.log('\n─── run summary ───')
   console.log(`resolved:        ${tally.resolved}`)
   console.log(`reused (fresh):  ${tally.reused}`)
@@ -432,8 +412,6 @@ async function run() {
   const attempted = tally.resolved + Object.values(tally.byFailure).reduce((a, b) => a + b, 0)
   console.log(`\nmatch rate this run: ${tally.resolved}/${attempted} ` +
     `(${attempted ? Math.round((tally.resolved / attempted) * 100) : 0}%)`)
-  console.log(`match rate before:   ${before}/${Object.keys(legacy).length} (${Math.round(beforeRate * 100)}%) ` +
-    'across the whole company set')
 
   if (!COMMIT) {
     console.log('\nDry run. Nothing written. Re-run with --commit to apply.')
@@ -467,12 +445,7 @@ async function run() {
     process.stdout.write(`\r  funding_rounds ${m}/${roundRows.length}`)
   }
 
-  if (!dbLedger) {
-    const sorted = Object.fromEntries(Object.keys(nextLegacy).sort().map(k => [k, nextLegacy[k]]))
-    writeFileSync(legacyPath, JSON.stringify(sorted, null, 2) + '\n')
-  }
-  console.log(`\n✓ wrote ${orgUpdates.length} organizations and ${roundRows.length} rounds` +
-    (dbLedger ? '. src/data/funding.json is no longer written and can be deleted.' : ', and src/data/funding.json'))
+  console.log(`\n✓ wrote ${orgUpdates.length} organizations and ${roundRows.length} rounds`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })
