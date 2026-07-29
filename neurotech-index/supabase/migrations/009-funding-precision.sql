@@ -55,6 +55,22 @@ do $$ begin
       'not_applicable_defunct', 'foreign_issuer_not_covered', 'unverified'));
 end $$;
 
+-- ── 3. When a company was last checked against EDGAR ────────────────────────
+-- The daily sweep is incremental: a company checked within 21 days is skipped.
+-- That timestamp lives in src/data/funding.json, a committed file the browser no
+-- longer reads and which exists now only as an ingestion ledger. It records a
+-- check whether it succeeded or failed, which is the part Postgres cannot
+-- currently express: total_raised_retrieved_at is only set on success, so
+-- without this column the 877 companies that legitimately have no Form D would
+-- be re-queried every single night.
+--
+-- With this column the ledger has no remaining job and src/data/funding.json can
+-- be deleted. scripts/backfill-funding.js already prefers the column when it
+-- exists and falls back to the file when it does not, so the switch happens on
+-- its own the first run after this migration.
+alter table organizations add column if not exists funding_checked_at timestamptz;
+create index if not exists organizations_funding_checked on organizations(funding_checked_at);
+
 -- ── 2. Public-listing history ───────────────────────────────────────────────
 -- Null means not researched, which is the honest default for 1,063 companies
 -- whose status nobody has looked at. It is deliberately NOT defaulted to false:
