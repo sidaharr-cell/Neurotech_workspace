@@ -187,9 +187,12 @@ async function run() {
     if (error) {
       console.error('read failed:', error.message)
       // PostgREST says "Could not find the table ... in the schema cache" when
-      // the migration has not been applied, not "does not exist".
+      // the migration has not been applied, not "does not exist". That one
+      // message covers four different causes with four different fixes, so
+      // point at the check that tells them apart rather than guessing here.
       if (/does not exist|schema cache/i.test(error.message)) {
-        console.error('Apply supabase/migrations/011-frontier-records.sql in the Supabase SQL editor first.')
+        console.error('\nMigration 011 does not appear to be in effect. To find out why:')
+        console.error('  npm run verify:frontier')
       }
       process.exit(1)
     }
