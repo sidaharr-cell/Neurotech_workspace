@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Allen Institute for Brain Science",
+    "location": "Seattle, WA, USA",
+    "website": "https://alleninstitute.org",
+    "description": "The Allen Institute produces large-scale open atlases of gene expression, cell types, and neural connectivity in the mouse and human brain. The Allen Brain Atlas, Allen Cell Types Database, and Human Brain Atlas are foundational references used by thousands of neuroscience labs globally."
+  },
+  {
+    "name": "MIT McGovern Institute for Brain Research",
+    "location": "Cambridge, MA, USA",
+    "website": "https://mcgovern.mit.edu",
+    "description": "The McGovern Institute at MIT is a world-leading neuroscience research center. Groups here have developed CLARITY (tissue clearing), synthetic retinas, near-field BCI telementry, flexible neural probes, and fundamental work on neural circuits underlying cognition, memory, and motor control."
+  },
+  {
+    "name": "UCSF Weill Institute for Neurosciences",
+    "location": "San Francisco, CA, USA",
+    "website": "https://weill.ucsf.edu",
+    "description": "The UCSF Weill Institute brings together over 500 clinicians and researchers across 26 departments to investigate and treat diseases of the brain and nervous system. Notable neurotech research includes ECoG-based speech BCIs (Chang Lab), closed-loop DBS for depression (Krystal Lab), and spinal cord stimulation for paralysis."
+  },
+  {
+    "name": "Johns Hopkins Applied Physics Laboratory",
+    "location": "Laurel, MD, USA",
+    "website": "https://www.jhuapl.edu",
+    "description": "APL's Intelligent Systems Center develops advanced prosthetic limbs and neural interfaces under DARPA's Revolutionizing Prosthetics program. They built the DEKA Arm (Luke Arm) and demonstrated the first BCI-controlled modular prosthetic limb with sensory feedback in a human participant."
+  },
+  {
+    "name": "BrainGate Consortium",
+    "location": "Providence, RI, USA (coordinated)",
+    "website": "https://braingate.org",
+    "description": "BrainGate is a multi-institution collaborative research program conducting the first long-term clinical trials of intracortical BCIs. Spanning Brown University, Massachusetts General Hospital, Harvard Medical School, and Stanford University, BrainGate has enrolled dozens of participants with ALS, SCI, and brainstem stroke."
+  },
+  {
+    "name": "Carnegie Mellon University NeuroTech Lab",
+    "location": "Pittsburgh, PA, USA",
+    "website": "https://www.cnbc.cmu.edu",
+    "description": "The CMU NeuroTech Lab (Schwartz group) focuses on high-performance neuroprosthetics and motor cortex decoding. They pioneered dexterous 7-DOF arm control from motor cortex signals and have collaborated extensively with the University of Pittsburgh for human BCI clinical work."
+  }
+]

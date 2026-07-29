@@ -4,10 +4,14 @@
  * by deterministic id, then prunes rows no source mentions any more.
  *   node --env-file=.env scripts/backfill-labs.js
  *
- * Two sources, unioned and deduped by normalized lab name:
+ * Three sources, unioned and deduped by normalized lab name:
  *   1. NIH RePORTER (free, live)      — US NIH-funded labs, ranked by award $.
  *   2. NeuroTechX "Academic Labs"     — global academic labs (with real
  *      homepages), fetched live from the shared Airtable, snapshot fallback.
+ *   3. src/data/labs-extra.json       — hand-curated institutes and consortia
+ *      that neither source lists (the Allen Institute, BrainGate, APL). The
+ *      companies ingest has had companies-extra.json for this all along; labs
+ *      had no equivalent, so six seeded rows sat under types nothing queries.
  * Every row is classified through the shared classifier so the Labs facet
  * filter works immediately after a fresh backfill.
  */
@@ -146,12 +150,29 @@ const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_K
   })
   console.log(`Aggregated ${nihRows.length} unique labs from NIH RePORTER`)
 
+  const extraRows = JSON.parse(readFileSync(resolve(__dir, '../src/data/labs-extra.json'), 'utf8'))
+    .map(l => ({
+      name: l.name,
+      type: 'lab',
+      location: l.location || null,
+      founded: null,
+      description: l.description,
+      focus_areas: deriveTags([l.name, l.description].join(' ')),
+      website: l.website,
+      founders: [],
+      // Above the unfunded academic rows: these are named institutes rather
+      // than single labs, and they are curated rather than scraped.
+      rank_score: 0.34,
+    }))
+  console.log(`Loaded ${extraRows.length} curated institutes from labs-extra.json`)
+
   const academicRows = await loadAcademicLabs()
   console.log(`Loaded ${academicRows.length} academic labs from NeuroTechX`)
 
   // Union + dedup by normalized name; NIH (funding-ranked) wins on collision.
   const byKey = new Map()
-  for (const r of [...nihRows, ...academicRows]) {
+  // Curated rows win a name collision, which is why they go first.
+  for (const r of [...extraRows, ...nihRows, ...academicRows]) {
     const k = normLabName(r.name)
     if (k && !byKey.has(k)) byKey.set(k, r)
   }
