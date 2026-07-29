@@ -210,7 +210,12 @@ async function run() {
     const prev = stored[desired.id]
 
     if (!prev) {
-      creates.push(desired)
+      // record_version and last_updated are set explicitly rather than left to
+      // the column defaults. PostgREST unions the columns across an upsert
+      // batch and fills a row's missing keys with NULL, not DEFAULT, so a batch
+      // mixing creates with revisions nulled record_version on every create and
+      // failed the NOT NULL constraint.
+      creates.push({ ...desired, record_version: 1, last_updated: new Date().toISOString() })
       changeRows.push({
         record_id: desired.id, record_version: 1, field: 'created',
         old_value: null, new_value: `${desired.axis} = ${desired.current_value}`,
@@ -265,23 +270,85 @@ async function run() {
   }
 
   // ── Write ─────────────────────────────────────────────────────────────────
+  // Records and their change-log rows are written together, per batch. Writing
+  // all records and THEN all change rows means a failure between the two phases
+  // leaves records with no history at all: one run died mid-way and left 100
+  // records untraceable, which is the exact silent inconsistency the change log
+  // exists to prevent. Interleaving leaves a consistent prefix instead.
   const toWrite = [...creates, ...revisions]
+  const changesByRecord = new Map()
+  for (const c of changeRows) {
+    if (!changesByRecord.has(c.record_id)) changesByRecord.set(c.record_id, [])
+    changesByRecord.get(c.record_id).push(c)
+  }
   for (let i = 0; i < toWrite.length; i += 100) {
-    const { error } = await sb.from('frontier_records').upsert(toWrite.slice(i, i + 100), { onConflict: 'id' })
+    const batch = toWrite.slice(i, i + 100)
+    const { error } = await sb.from('frontier_records').upsert(batch, { onConflict: 'id' })
     if (error) { console.error('upsert failed:', error.message); process.exit(1) }
+    const batchChanges = batch.flatMap(r => changesByRecord.get(r.id) || [])
+    if (batchChanges.length) {
+      const { error: cErr } = await sb.from('frontier_record_changes').insert(batchChanges)
+      if (cErr) { console.error('change log insert failed:', cErr.message); process.exit(1) }
+    }
   }
   for (const s of supersedes) {
     const { error } = await sb.from('frontier_records')
       .update({ superseded_by: s.newId, last_updated: new Date().toISOString() }).eq('id', s.oldId)
     if (error) { console.error(`supersede ${s.oldKey} failed:`, error.message); process.exit(1) }
   }
-  for (let i = 0; i < changeRows.length; i += 100) {
-    const { error } = await sb.from('frontier_record_changes').insert(changeRows.slice(i, i + 100))
+  // Supersede entries reference records written above, so they go last.
+  const superChanges = changeRows.filter(c => c.field === 'superseded')
+  for (let i = 0; i < superChanges.length; i += 100) {
+    const { error } = await sb.from('frontier_record_changes').insert(superChanges.slice(i, i + 100))
     if (error) { console.error('change log insert failed:', error.message); process.exit(1) }
   }
   console.log(`✓ wrote ${toWrite.length} record(s), ${supersedes.length} supersede(s), ${changeRows.length} change log row(s).`)
 
+  await reconcileChangeLog(sb)
   await loadProposals(sb)
+}
+
+/**
+ * Every record must have a `created` entry. Repairs records that have none.
+ *
+ * This exists because a run that failed between writing records and writing
+ * their change rows left 100 records with no history. The write path no longer
+ * has that gap, but a record whose history is silently missing is unauditable,
+ * and spec 3.1 rests the traceability of every historical score on this log.
+ * Checking costs one query.
+ */
+export async function reconcileChangeLog(sb) {
+  const recs = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('frontier_records')
+      .select('id,axis,current_value,record_version').range(from, from + 999)
+    if (error) return
+    if (!data.length) break
+    recs.push(...data)
+    if (data.length < 1000) break
+  }
+  const created = new Set()
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('frontier_record_changes')
+      .select('record_id,field').eq('field', 'created').range(from, from + 999)
+    if (error) return
+    if (!data.length) break
+    for (const c of data) created.add(c.record_id)
+    if (data.length < 1000) break
+  }
+  const orphans = recs.filter(r => !created.has(r.id))
+  if (!orphans.length) return
+  const rows = orphans.map(r => ({
+    record_id: r.id, record_version: r.record_version || 1, field: 'created',
+    old_value: null, new_value: `${r.axis} = ${r.current_value}`,
+    reason: 'reconciled: the run that created this record did not write its log entry',
+    changed_by: CHANGED_BY,
+  }))
+  for (let i = 0; i < rows.length; i += 100) {
+    const { error } = await sb.from('frontier_record_changes').insert(rows.slice(i, i + 100))
+    if (error) { console.error('change log reconcile failed:', error.message); return }
+  }
+  console.log(`✓ reconciled ${rows.length} record(s) that had no created entry.`)
 }
 
 /**

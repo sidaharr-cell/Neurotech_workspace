@@ -235,6 +235,12 @@ Rules:
   silently mis-scores every item in this subfield.
 - Return at most ${AXES_PER_SUBFIELD} axes, the ones with the most solid and
   comparable candidates. Prefer an axis with several comparable members.
+- SPREAD ACROSS AXIS TYPES. A subfield described by five performance axes is
+  much less useful than one described by performance, longevity, scale and
+  invasiveness, because an absence on a type we never cover carries no
+  information at all. Whenever the candidates support a longevity,
+  invasiveness, manufacturability or cost axis, include it, even if its
+  candidates are fewer than yet another performance axis would have.
 
 Subfield: {subfield}
 
