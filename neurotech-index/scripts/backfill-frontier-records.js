@@ -58,7 +58,11 @@ const hasUnits = v => {
   if (!/\d/.test(s)) return false
   // Cohort size is the unit on the evidence axis, and it is a single letter.
   if (/\bn\s*=\s*\d/i.test(s)) return true
-  return /[a-z]{2,}/i.test(s.replace(/\d+/g, ' '))
+  // Strip the numbers and the punctuation that decorates them, then require
+  // something unit-shaped to remain. Deliberately Unicode-aware: real units
+  // include %, µm, kΩ and °C, and an ASCII-only test rejected all of them.
+  const rest = s.replace(/\d+(?:\.\d+)?/g, ' ').replace(/[±<>=~,;:()[\]/\\.-]/g, ' ')
+  return /[%°]|\p{L}/u.test(rest)
 }
 
 /** Validate one entry. Returns an array of problem strings, empty when clean. */
