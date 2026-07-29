@@ -945,3 +945,101 @@ function normalizeSupabaseResearcher(r) {
     ...facetsOf(r),
   }
 }
+
+// ── Frontier records ─────────────────────────────────────────────────────────
+// The anchor layer for potential-impact scoring: what the best current result IS
+// on each axis the field measures. Scoring compares an item against these rather
+// than asking whether it is important. See
+// docs/neurobase-potential-impact-build-spec-v1.0.md section 3.1, and migration
+// 011 for the schema.
+//
+// Reads default to LIVE records only. A superseded record is kept forever so
+// historical scores stay reproducible, but scoring an item against a frontier
+// that has already moved is always a bug, so callers have to ask for those
+// explicitly.
+//
+// With no Supabase configured these return empty rather than falling back to
+// static JSON. There is no bundled record set, and an empty set is a supported
+// state throughout the pipeline: spec 7.1.3 caps FD and GAP at 0 and lets the
+// item rank on the leverage or gate path instead.
+
+const FRONTIER_COLS = 'id,subfield,partition_version,axis,axis_type,indication,' +
+  'indication_version,current_value,held_by_type,held_by_id,established_date,' +
+  'confidence,superseded_by,record_version,notes,source,source_url,last_updated'
+
+/**
+ * Frontier records, filtered by any combination of subfield, axis type, and
+ * indication. Querying by subfield and axis type is the retrieval step in spec
+ * 7.1.2; `indication` narrows to the evidence records a trial is scored against.
+ */
+export async function getFrontierRecords({
+  subfield = null, axisType = null, indication = null, includeSuperseded = false,
+} = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_records').select(FRONTIER_COLS)
+  if (!includeSuperseded) q = q.is('superseded_by', null)
+  if (subfield) q = q.in('subfield', arr(subfield))
+  if (axisType) q = q.in('axis_type', arr(axisType))
+  if (indication) q = q.in('indication', arr(indication))
+  const { data, error } = await q.order('subfield').order('axis')
+  if (error) return []
+  return data || []
+}
+
+/** One record, superseded or not. */
+export async function getFrontierRecordById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('frontier_records')
+    .select(FRONTIER_COLS).eq('id', id).maybeSingle()
+  return error ? null : data
+}
+
+/**
+ * The full revision history of a record, oldest first. Revising a record changes
+ * the score of every item ever compared against it, so "what did this record say
+ * when that item was scored" has to be answerable.
+ */
+export async function getFrontierRecordHistory(id) {
+  if (!supabase || !id) return []
+  const { data, error } = await supabase.from('frontier_record_changes')
+    .select('id,record_id,record_version,field,old_value,new_value,reason,changed_by,changed_at')
+    .eq('record_id', id)
+    .order('record_version', { ascending: true }).order('changed_at', { ascending: true })
+  if (error) return []
+  return data || []
+}
+
+/**
+ * Live record counts per subfield and axis type. Phase 2 accepts when every
+ * subfield has at least three records, and a subfield that stays empty is why
+ * items there can only ever rank on the leverage path (spec 7.1.3), so this is
+ * the number that says whether the record layer is actually bootstrapped.
+ */
+export async function getFrontierCoverage() {
+  const records = await getFrontierRecords()
+  const bySubfield = {}, byIndication = {}
+  for (const r of records) {
+    const s = (bySubfield[r.subfield] ||= { total: 0, axisTypes: {} })
+    s.total++
+    s.axisTypes[r.axis_type] = (s.axisTypes[r.axis_type] || 0) + 1
+    if (r.indication) byIndication[r.indication] = (byIndication[r.indication] || 0) + 1
+  }
+  return { total: records.length, bySubfield, byIndication }
+}
+
+/**
+ * Queued record update proposals. Human-gated: the scorer proposes, nothing
+ * applies itself. Automatic application lets one bad record poison every
+ * subsequent comparison in its subfield, and the resulting scores look normal.
+ */
+export async function getFrontierProposals({ status = 'pending' } = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_record_proposals')
+    .select('id,record_id,subfield,axis,axis_type,indication,proposed_value,' +
+      'item_type,item_id,evidence_grade,rubric_version,rationale,status,' +
+      'reviewed_by,reviewed_at,review_note,created_at')
+  if (status) q = q.in('status', arr(status))
+  const { data, error } = await q.order('created_at', { ascending: false })
+  if (error) return []
+  return data || []
+}
