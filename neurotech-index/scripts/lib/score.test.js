@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { buildPrompt, applyCeilings, SCORING_TOOL, RESEARCH_RUBRIC, TRIAL_RUBRIC } from './score.js'
+import {
+  buildPrompt, applyCeilings, SCORING_TOOL, RESEARCH_RUBRIC, TRIAL_RUBRIC,
+  parseToolScores, firstJsonObject,
+} from './score.js'
 
 const extraction = {
   claimed: 'Restores speech', demonstrated: 'Decoded 62 wpm',
@@ -147,5 +150,66 @@ describe('the rubrics carry the MUST conditions from the spec', () => {
   })
   it('GATE 2 demands a specific unlock', () => {
     expect(TRIAL_RUBRIC).toMatch(/MUST name the specific approval/)
+  })
+})
+
+describe('tool-output salvage, from the shape a live run actually produced', () => {
+  // Verbatim shape observed in the first Phase 4 run: FD arrived as a string
+  // holding the rest of the object, with literal <parameter> markers.
+  const folded = '{"score": 2, "justification": "Moves a record.", "referent": "62 wpm"}\n'
+    + '<parameter name="LV">{"score": 1, "justification": "Local only.", "referent": "own rig"}\n'
+    + '<parameter name="TR">{"score": 0, "justification": "Specific.", "referent": "one dataset"}\n'
+    + '<parameter name="translational_distance">2'
+
+  it('recovers the leading dimension object', () => {
+    const { scores } = parseToolScores({ FD: folded }, ['FD', 'LV', 'TR'])
+    expect(scores.FD).toMatchObject({ score: 2, referent: '62 wpm' })
+  })
+
+  it('recovers the siblings folded into the same string', () => {
+    const { scores, recovered } = parseToolScores({ FD: folded }, ['FD', 'LV', 'TR'])
+    expect(recovered).toBe(true)
+    expect(scores.LV.score).toBe(1)
+    expect(scores.TR.score).toBe(0)
+    expect(scores.translational_distance).toBe(2)
+  })
+
+  it('reports nothing malformed once recovery succeeds', () => {
+    expect(parseToolScores({ FD: folded }, ['FD', 'LV', 'TR']).malformed).toEqual([])
+  })
+
+  it('passes a well-formed payload through untouched', () => {
+    const good = { FD: { score: 3, referent: 'x' }, LV: { score: 0, referent: '' }, TR: { score: 1, referent: 'y' } }
+    const { scores, recovered, malformed } = parseToolScores(good, ['FD', 'LV', 'TR'])
+    expect(recovered).toBe(false)
+    expect(malformed).toEqual([])
+    expect(scores.FD.score).toBe(3)
+  })
+
+  it('REFUSES what it cannot recover rather than letting it score zero', () => {
+    // The bug this exists for: a string that yields no object read as .score
+    // undefined, composed to 0, and 8 of 48 items silently scored zero.
+    const { malformed } = parseToolScores({ FD: 'not json at all', LV: { score: 1, referent: 'a' }, TR: { score: 1, referent: 'b' } }, ['FD', 'LV', 'TR'])
+    expect(malformed).toEqual(['FD'])
+  })
+
+  it('refuses a dimension with a non-integer or out-of-range score', () => {
+    expect(parseToolScores({ FD: { score: '2' } }, ['FD']).malformed).toEqual(['FD'])
+    expect(parseToolScores({ FD: { score: 7 } }, ['FD']).malformed).toEqual(['FD'])
+    expect(parseToolScores({ FD: { score: -1 } }, ['FD']).malformed).toEqual(['FD'])
+    expect(parseToolScores({ FD: {} }, ['FD']).malformed).toEqual(['FD'])
+  })
+
+  it('accepts a legitimate zero, which is a real verdict', () => {
+    expect(parseToolScores({ FD: { score: 0, referent: '' } }, ['FD']).malformed).toEqual([])
+  })
+
+  it('is not fooled by braces inside strings', () => {
+    const s = '{"score": 1, "referent": "the set {a, b} was used"}'
+    expect(firstJsonObject(s).referent).toBe('the set {a, b} was used')
+  })
+
+  it('handles escaped quotes', () => {
+    expect(firstJsonObject('{"referent": "he said \\"hi\\"", "score": 1}').score).toBe(1)
   })
 })

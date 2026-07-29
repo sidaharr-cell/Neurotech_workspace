@@ -233,3 +233,79 @@ export function applyCeilings(scores, { fdCeiling = 4, granularityCap = {} } = {
   clamp('METH', granularityCap.METH ?? 4, 'input granularity')
   return { scores: out, capped }
 }
+
+// ── Tool-output salvage ─────────────────────────────────────────────────────
+// Observed in a live Phase 4 run: `input.FD` arrived as a STRING holding the
+// serialized remainder of the whole object, with literal `<parameter name="LV">`
+// markers separating the fields that should have been siblings. Reading `.score`
+// off that string yields undefined, which composed to 0, so 8 of 48 items scored
+// zero on every dimension and nothing detected it. The same shape broke the
+// promotion grouping earlier (see coerceArray in promote-proposals.js).
+//
+// Salvage what is recoverable, then REFUSE anything still malformed. Scoring 0
+// is a real verdict and must never be the silent result of a parse failure.
+
+/** First balanced JSON object in a string, quote- and escape-aware. */
+export function firstJsonObject(s) {
+  const start = String(s).indexOf('{')
+  if (start < 0) return null
+  let depth = 0, inStr = false, esc = false
+  for (let i = start; i < s.length; i++) {
+    const c = s[i]
+    if (esc) { esc = false; continue }
+    if (c === '\\') { esc = true; continue }
+    if (c === '"') { inStr = !inStr; continue }
+    if (inStr) continue
+    if (c === '{') depth++
+    else if (c === '}' && --depth === 0) {
+      try { return JSON.parse(s.slice(start, i + 1)) } catch { return null }
+    }
+  }
+  return null
+}
+
+/**
+ * Recover sibling fields the model folded into one string as
+ * `<parameter name="X">VALUE` blocks. Returns { X: parsedValue, ... }.
+ */
+export function recoverFoldedParameters(s) {
+  const out = {}
+  const re = /<parameter name="([^"]+)">/g
+  const str = String(s)
+  let m
+  while ((m = re.exec(str)) !== null) {
+    const name = m[1]
+    const rest = str.slice(m.index + m[0].length)
+    const obj = rest.trimStart().startsWith('{') ? firstJsonObject(rest) : null
+    if (obj) { out[name] = obj; continue }
+    const scalar = rest.match(/^\s*("(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?|true|false|null)/)
+    if (scalar) { try { out[name] = JSON.parse(scalar[1]) } catch { /* leave it out */ } }
+  }
+  return out
+}
+
+/**
+ * Normalize a raw tool input into well-formed dimension blocks.
+ * Returns { scores, recovered, malformed } — `malformed` names any required
+ * dimension that could not be recovered, and the caller MUST reject the item.
+ */
+export function parseToolScores(raw, dims) {
+  const out = { ...raw }
+  let recovered = false
+  for (const d of dims) {
+    if (typeof out[d] === 'string') {
+      const obj = firstJsonObject(out[d])
+      const folded = recoverFoldedParameters(out[d])
+      if (obj) { out[d] = obj; recovered = true }
+      for (const [k, v] of Object.entries(folded)) {
+        // Only fill fields the model did not supply properly at the top level.
+        if (out[k] === undefined || typeof out[k] === 'string') { out[k] = v; recovered = true }
+      }
+    }
+  }
+  const malformed = dims.filter(d => {
+    const v = out[d]
+    return !v || typeof v !== 'object' || !Number.isInteger(v.score) || v.score < 0 || v.score > 4
+  })
+  return { scores: out, recovered, malformed }
+}

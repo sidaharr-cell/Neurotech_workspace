@@ -24,30 +24,55 @@ const COMMIT = process.argv.includes('--commit')
 const FORCE = process.argv.includes('--force')
 const CONCURRENCY = 25
 
-/** Each table, the live column being frozen, and the row filter. */
+/**
+ * Each table and the live column being frozen.
+ *
+ * papers is listed but has NO source column. CLAUDE.md states that scores live
+ * in `papers.rank_score`; that column does not exist in the database. The app
+ * already copes (src/lib/data.js catches the missing column and falls back to
+ * year order), so the "most relevant" paper sort has been sorting by year.
+ *
+ * The consequence for this script is that papers have no stored significance to
+ * preserve, and the consequence for spec 10.2 and 13 is that the legacy
+ * comparison surface and the rank correlation exist for feed items and trials
+ * only. That is a real limit on evaluating the new sort, and it is reported
+ * rather than passed over.
+ */
 const TARGETS = [
   { table: 'news_feed', from: 'relevance_score', label: 'feed items and trials' },
   { table: 'papers', from: 'rank_score', label: 'papers' },
 ]
 
-async function pageAll(sb, table, select) {
+/**
+ * Returns { rows, skip } — `skip` when the table has no score to freeze.
+ *
+ * A missing SOURCE column and a missing TARGET column mean opposite things, and
+ * the first version of this conflated them: it hit `papers.rank_score does not
+ * exist` and told the operator to apply migration 014, which was already
+ * applied. Only the target's absence means the migration is missing.
+ */
+async function pageAll(sb, table, from, select) {
   const out = []
-  for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from(table).select(select).range(from, from + 999)
+  for (let offset = 0; ; offset += 1000) {
+    const { data, error } = await sb.from(table).select(select).range(offset, offset + 999)
     if (error) {
-      if (/does not exist|schema cache/i.test(error.message)) {
+      const missing = /column (\S+) does not exist/i.exec(error.message)?.[1] || ''
+      if (missing.includes('legacy_significance')) {
         console.error(`  ! ${table}: ${error.message}`)
         console.error('    Apply supabase/migrations/014-legacy-significance.sql first.')
         process.exit(1)
       }
+      if (missing.includes(from)) {
+        return { rows: [], skip: `no ${from} column, so there is no stored score to preserve` }
+      }
       console.error(`  ! ${table} read failed: ${error.message}`)
-      return out
+      return { rows: out, skip: null }
     }
     if (!data.length) break
     out.push(...data)
     if (data.length < 1000) break
   }
-  return out
+  return { rows: out, skip: null }
 }
 
 async function run() {
@@ -59,7 +84,8 @@ async function run() {
   const takenAt = new Date().toISOString()
 
   for (const t of TARGETS) {
-    const rows = await pageAll(sb, t.table, `id,${t.from},legacy_significance`)
+    const { rows, skip } = await pageAll(sb, t.table, t.from, `id,${t.from},legacy_significance`)
+    if (skip) { console.log(`\n${t.table} (${t.label})\n  skipped: ${skip}`); continue }
     const withScore = rows.filter(r => r[t.from] != null)
     const already = withScore.filter(r => r.legacy_significance != null)
     const todo = FORCE ? withScore : withScore.filter(r => r.legacy_significance == null)
