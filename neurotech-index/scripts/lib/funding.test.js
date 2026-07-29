@@ -120,6 +120,15 @@ describe('why a latest raise is absent', () => {
     })).toBe('not_applicable_acquired')
   })
 
+  it('does not call a defunct company acquired', () => {
+    // Before migration 009 widened the CHECK, defunct had to borrow the
+    // acquired code, which said Pear Therapeutics was bought when it filed for
+    // chapter 11.
+    expect(unavailableReason({
+      status: 'defunct', isUsIssuer: true, searched: false, filingCount: 0,
+    })).toBe('not_applicable_defunct')
+  })
+
   it('prefers the listing status over the foreign-issuer fact when both apply', () => {
     // Onward Medical is both Dutch and listed on Euronext. One enum, one value:
     // the listing is the more specific reason Form D does not apply.

@@ -153,7 +153,11 @@ export function latestRaise({ status, rounds = [], isUsIssuer, searched }) {
  */
 export function unavailableReason({ status, isUsIssuer, searched, filingCount }) {
   if (status === 'public') return 'not_applicable_public'
-  if (status === 'acquired' || status === 'defunct') return 'not_applicable_acquired'
+  if (status === 'acquired') return 'not_applicable_acquired'
+  // Migration 009 widened the CHECK to hold this. Before it, a defunct company
+  // had to borrow 'not_applicable_acquired', which said Pear Therapeutics was
+  // acquired when it filed for chapter 11.
+  if (status === 'defunct') return 'not_applicable_defunct'
   if (!searched) return 'unverified'
   if (!isUsIssuer) return 'foreign_issuer_not_covered'
   if (!filingCount) return 'no_filing_found'
