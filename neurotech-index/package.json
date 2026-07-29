@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "refresh": "node --env-file-if-exists=.env scripts/refresh.js",
     "seed": "node --env-file-if-exists=.env scripts/seed.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "validate:funding": "node --env-file-if-exists=.env scripts/validate-funding.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",
