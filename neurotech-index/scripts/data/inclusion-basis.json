@@ -12,8 +12,9 @@
     "",
     "Every entry is grounded in a record this database already holds. `evidence`",
     "names which one: `description` is the organizations.description text,",
-    "`fda_device` is a linked openFDA clearance. Nothing here is written from",
-    "memory of the company.",
+    "`fda_device` is a linked openFDA clearance, and `company_site` is the",
+    "company's own product page, read where the stored description was too thin",
+    "to decide on. Nothing here is written from memory of the company.",
     "",
     "The rule turns on what the product interfaces with, not what disease it",
     "treats. That is why Setpoint Medical (vagus nerve stimulation for autoimmune",
@@ -111,6 +112,60 @@
 
   "INBRAIN Neuroelectronics": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
     "basis": "Graphene-based neural interface for high-resolution recording and stimulation." },
+
+  "Nia Therapeutics": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Implanted neural interface for memory restoration after brain injury." },
+
+  "PhotoPharmics": { "decision": "include", "modality": "neuromodulation", "evidence": "company_site",
+    "basis": "Celeste photo-neuromodulation device delivering specialized light through retinal pathways for Parkinson's disease. Non-invasive, but it modulates a neural pathway." },
+
+  "MedRhythms": { "decision": "include", "modality": "digital_therapeutic", "evidence": "company_site",
+    "basis": "Prescription rhythmic auditory stimulation (InTandem, MOVIVE) for gait rehabilitation after stroke and in Parkinson's disease." },
+
+  "Blue Note Therapeutics": { "decision": "include", "modality": "digital_therapeutic", "evidence": "description",
+    "basis": "Prescription digital therapeutics for psychiatric indications, named explicitly by the inclusion rule." },
+
+  "ImThera Medical Inc": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted hypoglossal nerve stimulator for obstructive sleep apnea. Modulates a nerve; the sleep indication does not change what the device interfaces with." },
+
+  "Linus Health": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "company_site",
+    "basis": "Digital cognitive assessment platform measuring cognitive function through digitized clock-drawing, speech and gait tests." },
+
+  "Rune Labs": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "StrivePD platform measuring Parkinson's motor state from wearable and deep brain stimulation data. FDA 510(k) cleared, K213519." },
+
+  "BRAINBox Solutions": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "company_site",
+    "basis": "Traumatic brain injury diagnostic pairing blood biomarkers with tablet-based neurocognitive testing. The neurocognitive half measures nervous system function directly." },
+
+  "Mindstrong": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Digital biomarkers deriving continuous objective measures of cognition and mood. Included on the measurement platform, not on the virtual care arm." },
+
+  "Greatbatch": { "decision": "exclude", "evidence": "description",
+    "reason": "Contract manufacturer of components and batteries for implantable devices, sold to OEMs across cardiac and neuro. A supplier of parts, not a company with a nervous-system product." },
+
+  "Silk Road Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Transcarotid devices for arterial disease. A blood-vessel device; same reasoning as Conformal Medical and MIVI Neuroscience." },
+
+  "Tenax Therapeutics": { "decision": "exclude", "evidence": "description",
+    "reason": "Therapeutics maintaining tissue oxygen supply. Nothing in the record describes a product that interfaces with, measures, or modulates the nervous system." },
+
+  "Tengion": { "decision": "exclude", "evidence": "description",
+    "reason": "Regenerative neo-organs from autologous cells. The lead product is a neo-bladder; the neurogenic-bladder indication is downstream of a neurological condition, not an interface with the nervous system." },
+
+  "Cerebral": { "decision": "exclude", "evidence": "description",
+    "reason": "Telehealth mental-health service with online medication management. Care delivery and prescribing. No product that interfaces with, measures, or modulates the nervous system." },
+
+  "MIVI Neuroscience": { "decision": "exclude", "evidence": "description",
+    "reason": "Neurointerventional catheters for stroke procedures. A blood-vessel device. Same reasoning as Conformal Medical: treating a neurological event is not interfacing with the nervous system." },
+
+  "Artio Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Endovascular occlusion devices for cerebral aneurysms and peripheral vascular disease. A blood-vessel device, and the peripheral indications make it not nervous-system specific." },
+
+  "Impel NeuroPharma": { "decision": "exclude", "evidence": "description",
+    "reason": "Nose-to-brain drug delivery device. It exists to deliver drugs for neurological indications, which the rule excludes. The device does not itself measure or modulate the nervous system." },
+
+  "NeuroFlow": { "decision": "exclude", "evidence": "description",
+    "reason": "Behavioral-health care-coordination platform for providers. Workflow and engagement software. It tracks patients, not the nervous system." },
 
   "Atomwise": { "decision": "exclude", "evidence": "description",
     "reason": "AI drug-discovery platform. Excluded twice over: it develops drugs, and it is a general-purpose discovery platform not specific to the nervous system." },

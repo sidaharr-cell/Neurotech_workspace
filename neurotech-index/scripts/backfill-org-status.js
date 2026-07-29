@@ -18,18 +18,25 @@
  *   there. Inferring private from absence would put a wrong badge on the chart
  *   for every foreign-listed company.
  *
- *   It never writes `acquired` or `defunct`. EDGAR records that a company
+ *   It never DERIVES `acquired` or `defunct`. EDGAR records that a company
  *   stopped filing, not why. Axonics was acquired by Boston Scientific and Pear
  *   Therapeutics went through bankruptcy, and nothing in the filing history
- *   distinguishes those two outcomes. Both need a human with a source, and both
- *   show up in scripts/verify-funding.js as missing status until someone does
- *   that work.
+ *   distinguishes those two outcomes. Both need a human who has read the 8-K.
+ *   Those decisions live in scripts/data/org-status.json, one company per entry
+ *   with the filing that establishes it, and are applied by the second pass
+ *   below. Anything not in that file stays null and shows up in
+ *   scripts/verify-funding.js as work.
  *
- * So this fills in one status value, the one that can be proven from a primary
- * document, and leaves the rest null.
+ * So this writes one status value it can prove from a list, applies the ones a
+ * human has proved from a filing, and leaves the rest null.
  */
+import { readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { core, issuerUrl } from './lib/funding.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const COMMIT = process.argv.includes('--commit')
 const PIPELINE = 'status-phase2'
@@ -126,7 +133,44 @@ async function run() {
     console.log('\nName matched a ticker but the industry does not fit, so left alone:')
     for (const r of rejected) console.log(`  ✗ ${r}`)
   }
-  console.log(`\n${updates.length} company/companies resolved to public.`)
+
+  // ── Pass two: the statuses a filing establishes but a list cannot ─────────
+  // These overwrite a derived `public`, and should: a company that was public
+  // and has since been acquired is acquired now. The ticker file simply stops
+  // listing it, which is silence, not a correction.
+  const curated = JSON.parse(readFileSync(join(__dirname, 'data/org-status.json'), 'utf8'))
+  const byName = new Map(orgs.map(o => [o.name, o]))
+  const decided = Object.entries(curated).filter(([k]) => !k.startsWith('_'))
+  const unmatched = []
+  console.log('')
+  for (const [name, d] of decided) {
+    const org = byName.get(name)
+    if (!org) { unmatched.push(name); continue }
+    if (!d.source_url) {
+      console.error(`  ✗ ${name}: no source_url. A status is a factual claim and needs one.`)
+      process.exit(1)
+    }
+    // Drop any derived row for the same company so the curated one wins.
+    const i = updates.findIndex(u => u.id === org.id)
+    if (i > -1) updates.splice(i, 1)
+    updates.push({
+      id: org.id, name: org.name,
+      status: d.status,
+      status_effective_date: d.effective_date || null,
+      status_source_url: d.source_url,
+      status_verified_at: now,
+      ...(d.cik ? { cik: d.cik } : {}),
+      pipeline_version: PIPELINE,
+    })
+    console.log(`  ${name} -> ${d.status} (${d.effective_date || 'date unknown'}, from filing)`)
+  }
+  if (unmatched.length) {
+    console.log(`\n${unmatched.length} name(s) in org-status.json with no matching company row:`)
+    for (const n of unmatched) console.log(`  ? ${n}`)
+  }
+  console.log(`\n${updates.length} status value(s) to write: ` +
+    `${updates.filter(u => u.status === 'public').length} public from the ticker file, ` +
+    `${updates.filter(u => u.status !== 'public').length} from a filing.`)
   console.log(`${orgs.length - updates.length} left as-is: not on the US ticker list, which is not ` +
     'evidence of being private.')
 
