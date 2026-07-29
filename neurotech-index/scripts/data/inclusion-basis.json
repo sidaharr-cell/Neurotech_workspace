@@ -140,6 +140,87 @@
   "Mindstrong": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
     "basis": "Digital biomarkers deriving continuous objective measures of cognition and mood. Included on the measurement platform, not on the virtual care arm." },
 
+  "electroCore": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "gammaCore non-invasive vagus nerve stimulator, FDA cleared. The stored description is boilerplate; the device record is the grounds." },
+
+  "Nevro": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Senza spinal cord stimulation system for chronic pain." },
+
+  "Inspire Medical Systems": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted upper airway stimulation for obstructive sleep apnea. Modulates a nerve; same reasoning as ImThera Medical." },
+
+  "Ensodata": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "EnsoSleep scores sleep-study waveforms, which are EEG and related neurophysiological signals. Measures nervous system activity." },
+
+  "Axoft": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Soft tissue-like neural implant materials designed to reduce scarring in long-term implanted interfaces." },
+
+  "BrainScope Company": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Handheld EEG-based device assessing brain function at the point of care after head injury. Measures the brain directly, unlike a blood biomarker panel." },
+
+  "Cognixion": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Non-invasive brain-computer interface headset for assisted communication. Modality is other because the enum's BCI value is specifically implanted." },
+
+  "NeuroLutions": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Brain-computer interface devices restoring function after neurological injury. Non-invasive, so not the implanted BCI value." },
+
+  "Freespira": { "decision": "include", "modality": "digital_therapeutic", "evidence": "fda_device",
+    "basis": "Prescription breathing system cleared for panic disorder and PTSD. A prescription digital therapeutic for psychiatric indications, named by the rule." },
+
+  "BrainsWay": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "Deep transcranial magnetic stimulation systems for psychiatric indications." },
+
+  "NeuroMetrix": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Nerve conduction testing for diabetic peripheral neuropathy and carpal tunnel. Measures peripheral nerve function." },
+
+  "Neuroelectrics": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "diagnostics_imaging", "evidence": "description",
+    "basis": "Transcranial current stimulation paired with EEG, to quantify brain activity and treat neurological disorders." },
+
+  "Spark Biomedical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Non-invasive transcutaneous auricular neurostimulation for opioid withdrawal." },
+
+  "NeuroSigma": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Trigeminal nerve stimulation for epilepsy, depression and ADHD." },
+
+  "RightEye": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "Eye-tracking system measuring oculomotor function, which is a readout of cranial nerve and brainstem control, for early detection of impairment." },
+
+  "Stimwave Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Wireless injectable microsize neurostimulators for pain." },
+
+  "Forest Devices, Inc.": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
+    "basis": "AlphaStroke reads brain electrical activity to screen for stroke before imaging is available." },
+
+  "Nexstim": { "decision": "include", "modality": "neuromodulation", "modality_secondary": "diagnostics_imaging", "evidence": "description",
+    "basis": "Navigated transcranial magnetic stimulation for functional brain mapping and therapy." },
+
+  "Mainstay Medical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "ReActiv8 implant stimulating the nerves that activate the muscles stabilising the lower back." },
+
+  "Biowave": { "decision": "include", "modality": "neuromodulation", "evidence": "fda_device",
+    "basis": "Percutaneous and surface neuromodulation pain therapy devices, so named in their own FDA clearances." },
+
+  "NeuroOne": { "decision": "include", "modality": "implanted_bci", "evidence": "fda_device",
+    "basis": "Evo sEEG system and cortical electrodes: thin-film implanted arrays recording from the brain. The stored location and website look wrong and need review." },
+
+  "OpenBCI": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Open-source EEG and brain-computer interface hardware. Non-invasive, so not the implanted BCI value." },
+
+  "NeuroQore": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Magnetic brain stimulation therapy for major depressive disorder." },
+
+  "Synapse Biomedical": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "NeuRx diaphragm pacing system, stimulating the phrenic nerve to drive the diaphragm." },
+
+  "Optima Neuroscience": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "EEG analysis technologies for diagnosing neurological disorders." },
+
+  "Advanced Brain Monitoring": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wearable EEG and multi-sensor platforms acquiring and analysing brain activity outside the lab." },
+
+  "Penumbra": { "decision": "exclude", "evidence": "description",
+    "reason": "Thrombectomy and aneurysm-coil devices for stroke and neurovascular disease. Blood-vessel devices; same reasoning as MIVI Neuroscience and Silk Road Medical." },
+
   "Greatbatch": { "decision": "exclude", "evidence": "description",
     "reason": "Contract manufacturer of components and batteries for implantable devices, sold to OEMs across cardiac and neuro. A supplier of parts, not a company with a nervous-system product." },
 
