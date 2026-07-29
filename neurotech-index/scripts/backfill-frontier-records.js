@@ -212,7 +212,9 @@ async function run() {
         old_value: null, new_value: `${desired.axis} = ${desired.current_value}`,
         reason: e.reason || null, changed_by: CHANGED_BY,
       })
-      console.log(`  + ${key} [${desired.subfield} / ${desired.axis_type}] ${desired.current_value}`)
+      // Evidence records carry an indication instead of a subfield.
+      const scope = desired.subfield || desired.indication || 'no scope'
+      console.log(`  + ${key} [${scope} / ${desired.axis_type}] ${desired.current_value}`)
       continue
     }
 
