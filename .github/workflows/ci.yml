@@ -1,0 +1,48 @@
+name: CI
+
+# The app had no CI before this. The only workflow was the daily data refresh,
+# which never ran lint, tests, or a build. Vercel builds on push, but nothing
+# anywhere ran the test suite.
+on:
+  push:
+    branches: [main, revamp]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: neurotech-index
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: neurotech-index/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # Fails when a record asserts a financial or regulatory fact it cannot
+      # support. Skips itself, and passes, when the secrets are absent (a fork
+      # cannot read them), so the check never blocks work it cannot perform.
+      - name: Validate funding data integrity
+        run: npm run validate:funding
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
