@@ -99,6 +99,18 @@ describe('toRow', () => {
     expect(toRow({ id: '1', name: 'N', status: 'private', total_raised_usd: 1 }).partialTotal).toBe(false)
   })
 
+  it('marks a defunct company only when it is known to have been listed', () => {
+    // Pear Therapeutics listed through a SPAC, so its private-only total is
+    // partial. A startup that folded without ever listing has a complete one,
+    // and marking it partial would claim public capital that never existed.
+    const listed = { id: '1', name: 'Pear', status: 'defunct', total_raised_usd: 1, was_publicly_traded: true }
+    const never = { id: '2', name: 'Quiet', status: 'defunct', total_raised_usd: 1, was_publicly_traded: false }
+    const unknown = { id: '3', name: 'Unresearched', status: 'defunct', total_raised_usd: 1 }
+    expect(toRow(listed).partialTotal).toBe(true)
+    expect(toRow(never).partialTotal).toBe(false)
+    expect(toRow(unknown).partialTotal).toBe(false)   // null is not false, and not true either
+  })
+
   it('always carries a reason when the latest raise is null', () => {
     const r = toRow({ id: '1', name: 'N', latest_raise_usd: null, latest_raise_unavailable_reason: null })
     expect(r.unavailableReason).toBe('unverified')   // never a bare n/a

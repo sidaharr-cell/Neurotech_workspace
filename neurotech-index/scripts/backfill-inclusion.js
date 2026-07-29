@@ -49,13 +49,29 @@ async function run() {
 
   const updates = []
   const missing = []
-  let included = 0, excluded = 0
+  let included = 0, excluded = 0, revoked = 0
   for (const [name, d] of entries) {
     const org = byName[name]
     if (!org) { missing.push(name); continue }
     if (d.decision === 'exclude') {
       excluded++
-      console.log(`  ✗ ${name}: ${d.reason}`)
+      // A decision can be reversed. If this company was included before, it
+      // carries a basis in the database, and that basis is exactly what lets it
+      // onto the chart. Withdrawing the decision has to withdraw the basis too,
+      // or the reversal changes this file and nothing else.
+      if (org.inclusion_basis) {
+        updates.push({
+          id: org.id, name: org.name,
+          inclusion_basis: null,
+          modality: null,
+          modality_secondary: null,
+          pipeline_version: PIPELINE,
+        })
+        revoked++
+        console.log(`  ↩ ${name}: was included, now excluded — clearing its basis. ${d.reason}`)
+      } else {
+        console.log(`  ✗ ${name}: ${d.reason}`)
+      }
       continue
     }
     included++
@@ -69,7 +85,8 @@ async function run() {
     console.log(`  ✓ ${name} [${d.modality}] ${d.basis}`)
   }
 
-  console.log(`\n${included} included, ${excluded} excluded, ${entries.length} decided.`)
+  console.log(`\n${included} included, ${excluded} excluded, ${entries.length} decided.` +
+    (revoked ? ` ${revoked} previously-included record(s) had a basis withdrawn.` : ''))
   if (missing.length) {
     console.log(`\n${missing.length} name(s) in the file with no matching company row:`)
     for (const n of missing) console.log(`  ? ${n}`)
@@ -83,7 +100,7 @@ async function run() {
     const { error: e } = await sb.from('organizations').upsert(updates.slice(i, i + 100), { onConflict: 'id' })
     if (e) { console.error('upsert failed:', e.message); process.exit(1) }
   }
-  console.log(`✓ wrote ${updates.length} inclusion bases.`)
+  console.log(`✓ wrote ${updates.length} inclusion decision(s).`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })

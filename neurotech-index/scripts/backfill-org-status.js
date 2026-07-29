@@ -138,6 +138,15 @@ async function run() {
   // These overwrite a derived `public`, and should: a company that was public
   // and has since been acquired is acquired now. The ticker file simply stops
   // listing it, which is silence, not a correction.
+  // Has migration 009 been applied? Asking the database beats assuming, so this
+  // script works either side of it and starts writing the listing columns the
+  // moment they exist.
+  const probe = await sb.from('organizations').select('was_publicly_traded').limit(1)
+  const has009 = !probe.error
+  if (!has009) {
+    console.log('· migration 009 not applied; public-listing history will be skipped.\n')
+  }
+
   const curated = JSON.parse(readFileSync(join(__dirname, 'data/org-status.json'), 'utf8'))
   const byName = new Map(orgs.map(o => [o.name, o]))
   const decided = Object.entries(curated).filter(([k]) => !k.startsWith('_'))
@@ -153,6 +162,10 @@ async function run() {
     // Drop any derived row for the same company so the curated one wins.
     const i = updates.findIndex(u => u.id === org.id)
     if (i > -1) updates.splice(i, 1)
+    if (d.was_publicly_traded && !d.listing_source_url) {
+      console.error(`  ✗ ${name}: was_publicly_traded needs a listing_source_url.`)
+      process.exit(1)
+    }
     updates.push({
       id: org.id, name: org.name,
       status: d.status,
@@ -160,6 +173,11 @@ async function run() {
       status_source_url: d.source_url,
       status_verified_at: now,
       ...(d.cik ? { cik: d.cik } : {}),
+      // Migration 009 adds these. Held back until it has run, because a write
+      // naming a column that does not exist fails the whole 100-row chunk.
+      ...(d.was_publicly_traded && has009
+        ? { was_publicly_traded: true, public_listing_source_url: d.listing_source_url }
+        : {}),
       pipeline_version: PIPELINE,
     })
     console.log(`  ${name} -> ${d.status} (${d.effective_date || 'date unknown'}, from filing)`)

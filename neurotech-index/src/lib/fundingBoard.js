@@ -263,6 +263,23 @@ const COLUMNS = [
   'stage_evidence_type', 'stage_evidence_id', 'last_verified_at',
 ].join(',')
 
+/** Added by migration 009. Requested separately so the chart keeps working on a
+ *  database where that migration has not been applied yet, and starts using the
+ *  column the moment it has, with no redeploy. */
+const COLUMNS_009 = `${COLUMNS},was_publicly_traded`
+
+async function selectFundedOrgs() {
+  const query = cols => supabase.from('organizations').select(cols)
+    .eq('type', 'company')
+    .not('total_raised_usd', 'is', null)
+    .not('inclusion_basis', 'is', null)
+    .order('total_raised_usd', { ascending: false })
+    .limit(500)
+  const res = await query(COLUMNS_009)
+  if (res.error && /was_publicly_traded/.test(res.error.message)) return query(COLUMNS)
+  return res
+}
+
 /** DB row → the shape the chart renders. Dollars stay whole; the component
  *  formats. A private-only total on a public or acquired company is a PARTIAL
  *  total, and the row says so rather than leaving the reader to assume. */
@@ -276,8 +293,15 @@ export function toRow(o, trailing = 0) {
     totalSourceUrl: o.total_raised_source_url || null,
     totalConfidence: o.total_raised_confidence || 'unverified',
     capitalScope: o.capital_scope || CAPITAL_SCOPE,
+    // A private-only total is partial whenever the company also raised on the
+    // public markets. Public and acquired companies always did. A DEFUNCT one
+    // only did if it listed before it died, which is a fact and not an
+    // inference: Pear Therapeutics listed through a SPAC, while a startup that
+    // quietly folded has a complete private total. was_publicly_traded is null
+    // until migration 009 adds it, and null is not false.
     partialTotal: (o.capital_scope || CAPITAL_SCOPE) === 'private_only'
-      && (o.status === 'public' || o.status === 'acquired'),
+      && (o.status === 'public' || o.status === 'acquired'
+        || (o.status === 'defunct' && o.was_publicly_traded === true)),
     trailing,
     latestAmount: o.latest_raise_usd || 0,
     latestDate: o.latest_raise_date || null,
@@ -309,12 +333,7 @@ export async function getFundingBoard() {
     // scripts/data/inclusion-basis.json stay off: they are marked with a reason
     // and given no basis rather than deleted, so the fact that they were
     // considered survives.
-    supabase.from('organizations').select(COLUMNS)
-      .eq('type', 'company')
-      .not('total_raised_usd', 'is', null)
-      .not('inclusion_basis', 'is', null)
-      .order('total_raised_usd', { ascending: false })
-      .limit(500),
+    selectFundedOrgs(),
     supabase.from('funding_rounds')
       .select('organization_id,amount_usd,round_date')
       .gte('round_date', trailingCutoff())
