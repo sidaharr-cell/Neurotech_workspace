@@ -1,10 +1,14 @@
 /**
  * uuid.js — deterministic UUIDv5 (RFC 4122, SHA-1 namespaced).
  *
- * Company rows are rebuilt nightly (delete + insert), so a random primary key
- * would change every run and break every /company/:id URL and cached analytics
- * file. Deriving the id from the company name keeps it stable: same name in →
- * same uuid out, forever.
+ * Company rows are re-ingested nightly, so a random primary key would change
+ * every run and break every /company/:id URL and cached analytics file. Deriving
+ * the id from the company name keeps it stable: same name in → same uuid out,
+ * forever.
+ *
+ * That stability is also what lets backfill-companies.js upsert rather than
+ * delete and re-insert, which matters now that other pipelines own columns on
+ * the same row.
  */
 import { createHash } from 'node:crypto'
 

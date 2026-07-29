@@ -1,187 +1,451 @@
 /**
- * backfill-funding.js — auto-update company funding from SEC EDGAR Form D
- * filings (free) for EVERY company in the database, not just the curated few.
- * Resolves each company's own issuer entity, extracts its real rounds, and
- * writes src/data/funding.json { name: { total, latestAmount, latestDate,
- * source, checkedAt } }.
+ * backfill-funding.js — company funding from SEC EDGAR Form D, with provenance.
  *
- *   node --env-file=.env scripts/backfill-funding.js          # DB company set
- *   node --env-file=.env scripts/backfill-funding.js --force  # re-check all
+ *   node --env-file=.env scripts/backfill-funding.js                  # dry run
+ *   node --env-file=.env scripts/backfill-funding.js --commit         # write
+ *   node --env-file=.env scripts/backfill-funding.js --limit 25       # top 25 by stored total
+ *   node --env-file=.env scripts/backfill-funding.js --only "Neuralink,Synchron"
+ *   node --env-file=.env scripts/backfill-funding.js --force          # ignore freshness
+ *   node --env-file=.env scripts/backfill-funding.js --max 1000       # bigger slice
  *
- * Company set comes from the organizations table (type='company'); falls back
- * to companies.json when Supabase isn't configured. Curated figures are NOT
- * written here — they live in companies-funding.json and win in the overlay
- * (src/lib/companyFunding.js).
+ * What changed in Phase 2, and why.
  *
- * Incremental: an entry checked within STALE_DAYS is kept as-is (including
- * negative "source:none" markers), so the daily cron only resolves new or
- * stale companies. That keeps the SEC crawl fast after the first full pass.
+ * 1. Provenance. The old version built the archive URL, fetched it, read two
+ *    numbers, and discarded the URL, the CIK, and the accession number. Every
+ *    figure it produced was therefore unciteable. This version keeps all three
+ *    and writes them beside the number, which is what migration 008 requires and
+ *    what hard rule 1 has always required.
+ *
+ * 2. Failure reasons. Every failure used to collapse into `{ source: 'none' }`:
+ *    no hits, hits that failed the name filter, a matched issuer with no
+ *    amounts, a founding-year rejection, and any thrown exception were one
+ *    indistinguishable outcome. They are now six named codes (scripts/lib/
+ *    funding.js FAILURE), logged per company and summarised at the end, and they
+ *    map onto the display enum through unavailableReason().
+ *
+ * 3. Status branching. A public, acquired, or defunct company is not raising
+ *    private rounds, so it never gets an ongoing latest-raise figure. It is
+ *    still queried once, because its historical Form D filings are what its
+ *    private total is made of. See shouldQueryFormD in the lib for the full
+ *    argument.
+ *
+ * 4. Amounts. The old code used max(totalAmountSold, totalOfferingAmount), so a
+ *    company that registered $100M and sold $10M was charted at $100M. This
+ *    prefers money actually sold and flags the fallback.
+ *
+ * 5. Everything goes to Postgres. funding_rounds gets one row per round with
+ *    its accession number and filing URL, and organizations.funding_checked_at
+ *    records that a company was checked whether or not the check found
+ *    anything, which is what keeps the nightly sweep incremental: without it
+ *    the ~880 companies with no Form D would be re-queried every night.
+ *
+ *    That ledger used to be src/data/funding.json, a committed file the browser
+ *    also read. Migration 009 moved it into the column and the file is gone.
+ *
+ * Nothing is written without --commit.
  */
-import { readFileSync, writeFileSync } from 'fs'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
+import {
+  matchIssuer, shouldQueryFormD, latestRaise, unavailableReason, classifyFailure,
+  clusterRounds, totalRaised, parseFilingXml, filingDocUrl, filingIndexUrl, isUsLocation,
+  retiresStoredFigure,
+} from './lib/funding.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const dataDir = join(__dirname, '../src/data')
+
+const arg = name => {
+  const i = process.argv.indexOf(name)
+  return i > -1 ? process.argv[i + 1] : null
+}
+const COMMIT = process.argv.includes('--commit')
 const FORCE = process.argv.includes('--force')
-const VERIFY = process.argv.includes('--verify')
+const LIMIT = Number(arg('--limit')) || null
+// How many due companies one run will check. Sized so a run fits inside the
+// workflow's 45-minute job timeout at EDGAR's rate. See the cap in run().
+const MAX_PER_RUN = Number(arg('--max')) || 300
+// Company names contain commas ("iSchemaView, Inc."), so a semicolon in the
+// argument switches the separator to semicolons.
+const onlyArg = arg('--only')
+const ONLY = onlyArg
+  ? onlyArg.split(onlyArg.includes(';') ? ';' : ',').map(s => s.trim()).filter(Boolean)
+  : null
+
 const STALE_DAYS = 21
-
+const PIPELINE = 'funding-phase2'
 const UA = { headers: { 'User-Agent': 'NeuroBase research@neurobase.app' } }
-const BAD = /\b(spv|fund|trust|partners|capital|ventures|holdings|series|lp|l\.p\.)\b/i
 const sleep = ms => new Promise(r => setTimeout(r, ms))
-const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
-// Issuer "core": drop the (CIK …) suffix and legal-entity words only, so a match
-// requires the *same* company, not a bigger namesake. "RefleXion Medical Inc"
-// (core: reflexionmedical) no longer matches "Reflexion", but "Nalu Medical,
-// Inc." (core: nalumedical) still matches "Nalu Medical".
-const LEGAL = /\b(inc|incorporated|llc|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|ag|sa|bv|nv|oy|ab|as|srl|spa|pbc|holdings|group|the)\b/gi
-const core = s => norm(String(s || '').replace(/\(cik[^)]*\)/gi, ' ').replace(LEGAL, ' '))
+const usdToM = usd => Math.round(usd / 1e6)
 
-// Load the company set: prefer the live DB (all ~1k companies), else the
-// curated JSON. { name, founded } — founded (when known) rejects namesakes.
-async function loadCompanies() {
-  const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_KEY
-  if (url && key) {
-    const sb = createClient(url, key)
-    const all = []
-    for (let from = 0; ; from += 1000) {
-      const { data, error } = await sb.from('organizations').select('name,founded')
-        .eq('type', 'company').range(from, from + 999)
-      if (error) { console.warn('DB load failed, using companies.json:', error.message); break }
-      all.push(...data)
-      if (data.length < 1000) return all
+const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+
+// ── EDGAR ───────────────────────────────────────────────────────────────────
+
+async function edgarSearch(name) {
+  const url = `https://efts.sec.gov/LATEST/search-index?q=%22${encodeURIComponent(name)}%22&forms=D`
+  const res = await fetch(url, UA)
+  if (!res.ok) throw new Error(`EDGAR search ${res.status}`)
+  const body = await res.json()
+  return body.hits?.hits?.map(h => h._source) || []
+}
+
+/**
+ * Former names for a CIK, straight from EDGAR. This is how a rename is
+ * established: the submissions document says so, and its URL is the citation.
+ * No string-similarity guessing.
+ */
+async function formerNames(cik) {
+  try {
+    const url = `https://data.sec.gov/submissions/CIK${String(cik).padStart(10, '0')}.json`
+    const res = await fetch(url, UA)
+    if (!res.ok) return { names: [], url }
+    const body = await res.json()
+    return { names: (body.formerNames || []).map(f => f.name), url }
+  } catch { return { names: [], url: null } }
+}
+
+async function fetchFilingAmount(cik, adsh) {
+  const res = await fetch(filingDocUrl(cik, adsh), UA)
+  if (!res.ok) throw new Error(`filing ${res.status}`)
+  return parseFilingXml(await res.text())
+}
+
+/**
+ * Resolve one company to its Form D history.
+ * Returns { rounds, cik, matchKind, failure, aliasSourceUrl, stats }.
+ */
+async function resolve(org) {
+  const stats = { hits: 0, matches: 0, filings: 0 }
+  try {
+    const hits = await edgarSearch(org.name)
+    stats.hits = hits.length
+    if (!hits.length) {
+      return { rounds: [], failure: classifyFailure({ searched: true, hitCount: 0 }), stats }
     }
-    if (all.length) return all
-  }
-  return JSON.parse(readFileSync(join(dataDir, 'companies.json'), 'utf8'))
-    .filter(c => c.type === 'company').map(c => ({ name: c.name, founded: c.founded }))
-}
 
-async function filingAmount(cik, adsh) {
-  const url = `https://www.sec.gov/Archives/edgar/data/${cik.replace(/^0+/, '')}/${adsh.replace(/-/g, '')}/primary_doc.xml`
-  try {
-    const xml = await (await fetch(url, UA)).text()
-    const sold = +(xml.match(/<totalAmountSold>([^<]+)</)?.[1] || 0)
-    const off = +(xml.match(/<totalOfferingAmount>([^<]+)</)?.[1] || 0)
-    return Math.max(sold, off)
-  } catch { return 0 }
-}
+    let matched = hits.filter(h => matchIssuer(org.name, h.display_names?.[0]))
+    let matchKind = matched.length ? 'exact' : null
+    let aliasSourceUrl = null
 
-// Group filings into distinct rounds (gap > 120 days), max amount per round.
-function clusterTotal(filings) {
-  const sorted = [...filings].sort((a, b) => a.date.localeCompare(b.date))
-  let total = 0, cur = null
-  for (const f of sorted) {
-    if (!cur || (new Date(f.date) - new Date(cur.last)) / 864e5 > 120) {
-      if (cur) total += cur.max
-      cur = { max: f.amount, last: f.date }
-    } else { cur.max = Math.max(cur.max, f.amount); cur.last = f.date }
-  }
-  if (cur) total += cur.max
-  return total
-}
+    // Nothing matched on the current name. The issuer may have renamed, so ask
+    // EDGAR for its former names before giving up. Capped at the three most
+    // common CIKs so a generic company name cannot fan out into dozens of calls.
+    if (!matched.length) {
+      const freq = {}
+      for (const h of hits) { const c = h.ciks?.[0]; if (c) freq[c] = (freq[c] || 0) + 1 }
+      const candidates = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0])
+      for (const cik of candidates) {
+        const { names, url } = await formerNames(cik)
+        await sleep(120)
+        if (names.some(n => matchIssuer(org.name, n))) {
+          matched = hits.filter(h => h.ciks?.[0] === cik)
+          matchKind = 'alias'
+          aliasSourceUrl = url
+          break
+        }
+      }
+    }
 
-// Same 120-day clustering, but return one { date, amount } per round (the
-// cluster's peak amount, dated at its latest filing).
-function clusterRounds(filings) {
-  const sorted = [...filings].sort((a, b) => a.date.localeCompare(b.date))
-  const rounds = []
-  let cur = null
-  for (const f of sorted) {
-    if (!cur || (new Date(f.date) - new Date(cur.date)) / 864e5 > 120) {
-      cur = { date: f.date, amount: f.amount }
-      rounds.push(cur)
-    } else { cur.amount = Math.max(cur.amount, f.amount); cur.date = f.date }
-  }
-  return rounds
-}
+    stats.matches = matched.length
+    if (!matched.length) {
+      return { rounds: [], failure: classifyFailure({ searched: true, hitCount: hits.length, matchCount: 0 }), stats }
+    }
 
-async function resolve(name) {
-  const cn = core(name)
-  if (cn.length < 4) return null // too generic to disambiguate an issuer
-  try {
-    const d = await (await fetch(`https://efts.sec.gov/LATEST/search-index?q=%22${encodeURIComponent(name)}%22&forms=D`, UA)).json()
-    const hits = (d.hits?.hits || []).filter(h => {
-      const dn = h._source.display_names?.[0] || ''
-      if (BAD.test(dn)) return false
-      // Require the issuer to be the SAME company (equal once legal suffixes are
-      // stripped), not just a name-prefix — kills bigger-namesake false matches.
-      return core(dn) === cn
-    })
-    if (!hits.length) return null
-    // Lock to the single most-frequent clean issuer CIK.
+    // Lock to the single most-frequent issuer CIK among the matches.
     const freq = {}
-    hits.forEach(h => { const c = h._source.ciks?.[0]; if (c) freq[c] = (freq[c] || 0) + 1 })
-    const cik = Object.entries(freq).sort((a, b) => b[1] - a[1])[0][0]
-    const own = hits.filter(h => h._source.ciks?.[0] === cik)
+    for (const h of matched) { const c = h.ciks?.[0]; if (c) freq[c] = (freq[c] || 0) + 1 }
+    const cik = Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0]
+    if (!cik) {
+      return { rounds: [], failure: classifyFailure({ searched: true, hitCount: hits.length, matchCount: 0 }), stats }
+    }
+
     const filings = []
-    for (const h of own) {
-      const amount = await filingAmount(cik, h._source.adsh)
-      if (amount > 0) filings.push({ date: h._source.file_date, amount })
+    for (const h of matched.filter(m => m.ciks?.[0] === cik)) {
+      try {
+        const { amountUsd, amountBasis } = await fetchFilingAmount(cik, h.adsh)
+        if (amountUsd > 0) {
+          filings.push({
+            date: h.file_date,
+            amountUsd,
+            amountBasis,
+            accession: h.adsh,
+            sourceUrl: filingIndexUrl(cik, h.adsh),
+          })
+        }
+      } catch { /* one unreadable filing must not lose the rest */ }
       await sleep(120)
     }
-    if (!filings.length) return null
-    filings.sort((a, b) => b.date.localeCompare(a.date))
-    // Dated rounds (deduped by 120-day cluster) for the funding-per-year chart.
-    const rounds = clusterRounds(filings).map(r => ({ date: r.date, amount: Math.round(r.amount / 1e6) })).filter(r => r.amount > 0)
-    return { total: Math.round(clusterTotal(filings) / 1e6), latestAmount: Math.round(filings[0].amount / 1e6), latestDate: filings[0].date, rounds }
-  } catch { return null }
+    stats.filings = filings.length
+
+    if (!filings.length) {
+      return {
+        rounds: [], cik, matchKind,
+        failure: classifyFailure({ searched: true, hitCount: hits.length, matchCount: matched.length, filingCount: 0 }),
+        stats,
+      }
+    }
+
+    // A namesake gives itself away by filing before the company existed.
+    const founded = parseInt(org.founded, 10)
+    const newest = filings.map(f => f.date).sort().pop()
+    if (founded && newest && new Date(newest).getUTCFullYear() < founded) {
+      return {
+        rounds: [], cik, matchKind,
+        failure: classifyFailure({ searched: true, foundedMismatch: true }), stats,
+      }
+    }
+
+    return { rounds: clusterRounds(filings), cik, matchKind, aliasSourceUrl, failure: null, stats }
+  } catch (error) {
+    return { rounds: [], failure: classifyFailure({ error }), stats }
+  }
 }
 
-async function run() {
-  const path = join(dataDir, 'funding.json')
-  let prev = {}
-  try { prev = JSON.parse(readFileSync(path, 'utf8')) } catch { /* first run */ }
-  const fresh = e => e?.checkedAt && (Date.now() - new Date(e.checkedAt)) / 864e5 < STALE_DAYS
+// ── Company set ─────────────────────────────────────────────────────────────
 
-  // --verify: re-check ONLY companies currently marked source:'sec' (cheap pass
-  // to purge namesake false positives after a matcher change). Keeps the rest.
-  if (VERIFY) {
-    const out = { ...prev }
-    let kept = 0, dropped = 0
-    for (const name of Object.keys(prev).filter(k => prev[k]?.source === 'sec')) {
-      const r = await resolve(name)
-      if (r && r.total > 0) {
-        out[name] = { total: r.total, latestAmount: r.latestAmount, latestDate: r.latestDate, rounds: r.rounds, source: 'sec', checkedAt: new Date().toISOString() }
-        kept++
-      } else {
-        out[name] = { source: 'none', checkedAt: new Date().toISOString() }
-        dropped++
-        console.log(`  ✗ dropped ${name} (no longer a same-name issuer match)`)
-      }
-      await sleep(150)
+async function loadCompanies() {
+  const cols = 'id,name,founded,location,status,cik,total_raised_usd,funding_checked_at'
+  const all = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('organizations')
+      .select(cols)
+      .eq('type', 'company').range(from, from + 999)
+    if (error) throw new Error(`load companies: ${error.message}`)
+    all.push(...data)
+    if (data.length < 1000) break
+  }
+  if (ONLY) return all.filter(c => ONLY.includes(c.name))
+  // --limit takes the biggest known raisers first, so a short run covers the
+  // companies that can actually reach the chart.
+  if (LIMIT) {
+    return [...all].sort((a, b) => (b.total_raised_usd || 0) - (a.total_raised_usd || 0)).slice(0, LIMIT)
+  }
+  return all
+}
+
+/** Which companies already have round history stored. */
+async function storedHistory() {
+  const byOrg = {}
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('funding_rounds')
+      .select('organization_id,accession_number').range(from, from + 999)
+    if (error) throw new Error(`load rounds: ${error.message}`)
+    for (const r of data) (byOrg[r.organization_id] ||= []).push(r.accession_number)
+    if (data.length < 1000) break
+  }
+  return byOrg
+}
+
+// ── Run ─────────────────────────────────────────────────────────────────────
+
+async function run() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    console.error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required.')
+    process.exit(1)
+  }
+
+  const all = await loadCompanies()
+  const history = await storedHistory()
+
+  // A check counts whether or not it found anything: the ~880 companies with no
+  // Form D must not be re-queried nightly just because the answer was "none".
+  const fresh = org => !FORCE && org.funding_checked_at
+    && (Date.now() - new Date(org.funding_checked_at)) / 864e5 < STALE_DAYS
+
+  // Cap the work per run, oldest check first.
+  //
+  // A full sweep is about 70 minutes at EDGAR's polite rate, and the workflow
+  // kills the job at 45. Writes happen once at the end, so a killed run writes
+  // NOTHING and the next night starts over: a permanent stall, not a slow
+  // recovery. That is not hypothetical. Every row was seeded with roughly the
+  // same funding_checked_at when the ledger moved into Postgres, so without a
+  // cap the whole set would fall stale on the same night.
+  //
+  // Taking the oldest-checked first spreads the population out over a few runs
+  // and keeps it spread, because each run re-stamps only what it touched.
+  const due = all
+    .filter(o => !fresh(o))
+    .sort((a, b) => (a.funding_checked_at || '').localeCompare(b.funding_checked_at || ''))
+  const companies = (ONLY || LIMIT) ? all : due.slice(0, MAX_PER_RUN)
+  if (!ONLY && !LIMIT && due.length > companies.length) {
+    console.log(`${due.length} companies are due; checking the ${companies.length} least recently ` +
+      `checked this run. Raise with --max.`)
+  }
+
+  const tally = { resolved: 0, reused: 0, skipped: 0, byFailure: {}, aliasMatches: 0, offeringBasis: 0 }
+  const orgUpdates = []
+  const roundRows = []
+  const retiredIds = []   // figures withdrawn this run; their rounds go too
+  const now = new Date().toISOString()
+
+  console.log(`${companies.length} companies to check. ${COMMIT ? 'WRITING' : 'dry run'}.\n`)
+
+  for (const org of companies) {
+    const hasHistory = (history[org.id] || []).length > 0
+    const searched = shouldQueryFormD(org.status, hasHistory)
+
+    if (!searched) {
+      tally.skipped++
+      const reason = unavailableReason({ status: org.status, isUsIssuer: true, searched: false, filingCount: 0 })
+      orgUpdates.push({
+        id: org.id, name: org.name,
+        latest_raise_usd: null,
+        latest_raise_unavailable_reason: reason,
+        funding_checked_at: now,
+        pipeline_version: PIPELINE,
+      })
+      console.log(`  – ${org.name}: not queried (${org.status}), reason ${reason}`)
+      continue
     }
-    const sorted = Object.fromEntries(Object.keys(out).sort().map(k => [k, out[k]]))
-    writeFileSync(path, JSON.stringify(sorted, null, 2) + '\n')
-    console.log(`✓ verify: ${kept} kept, ${dropped} dropped`)
+
+    if (fresh(org) && hasHistory) { tally.reused++; continue }
+
+    const { rounds, cik, matchKind, aliasSourceUrl, failure, stats } = await resolve(org)
+    if (matchKind === 'alias') tally.aliasMatches++
+
+    if (failure || !rounds.length) {
+      tally.byFailure[failure] = (tally.byFailure[failure] || 0) + 1
+      // A CIK proves the company files with the SEC. Without one, fall back to
+      // the location the database already holds.
+      const isUsIssuer = cik ? true : isUsLocation(org.location) !== false
+      const reason = unavailableReason({
+        status: org.status, isUsIssuer, searched: true, filingCount: stats.filings,
+      })
+      const update = {
+        id: org.id, name: org.name,
+        latest_raise_usd: null,
+        latest_raise_unavailable_reason: reason,
+        cik: cik || null,
+        funding_checked_at: now,
+        pipeline_version: PIPELINE,
+      }
+      // A company that used to resolve and now definitively does not was
+      // matched to the wrong issuer. Leaving the old total standing keeps a
+      // figure on the chart that this run just established we cannot source, so
+      // retire it along with its rounds. A fetch_error never triggers this: a
+      // network blip is not evidence about a company.
+      if (org.total_raised_usd != null && retiresStoredFigure(failure)) {
+        Object.assign(update, {
+          total_raised_usd: null,
+          total_raised_source_url: null,
+          total_raised_retrieved_at: null,
+          total_raised_confidence: 'unverified',
+          latest_raise_date: null,
+          latest_raise_source_url: null,
+          latest_raise_retrieved_at: null,
+          latest_raise_confidence: 'unverified',
+          latest_raise_accession_number: null,
+        })
+        retiredIds.push(org.id)
+        console.log(`  ! ${org.name}: retiring a stored $${usdToM(org.total_raised_usd)}M total — ${failure}`)
+      }
+      orgUpdates.push(update)
+      console.log(`  ✗ ${org.name}: ${failure} (hits ${stats.hits}, matches ${stats.matches}) -> ${reason}`)
+      await sleep(200)
+      continue
+    }
+
+    tally.resolved++
+    if (rounds.some(r => r.amountBasis === 'offering')) tally.offeringBasis++
+
+    const total = totalRaised(rounds)
+    const latest = latestRaise({ status: org.status, rounds, isUsIssuer: true, searched: true })
+    const totalSourceUrl = aliasSourceUrl || rounds[rounds.length - 1].sourceUrl
+
+    orgUpdates.push({
+      id: org.id, name: org.name,
+      total_raised_usd: total,
+      total_raised_source_url: totalSourceUrl,
+      total_raised_retrieved_at: now,
+      total_raised_confidence: 'filing_verified',
+      latest_raise_usd: latest.amountUsd,
+      latest_raise_date: latest.date || null,
+      latest_raise_source_url: latest.round?.sourceUrl || null,
+      latest_raise_retrieved_at: latest.amountUsd ? now : null,
+      latest_raise_confidence: latest.amountUsd ? 'filing_verified' : 'unverified',
+      latest_raise_accession_number: latest.round?.accession || null,
+      latest_raise_unavailable_reason: latest.reason,
+      latest_raise_date_basis: 'filing_date',
+      cik,
+      funding_checked_at: now,
+      pipeline_version: PIPELINE,
+    })
+
+    for (const r of rounds) {
+      roundRows.push({
+        organization_id: org.id,
+        amount_usd: r.amountUsd,
+        round_date: r.date,
+        date_basis: 'filing_date',
+        round_type: null,               // Form D does not name the round
+        source: 'edgar_form_d',
+        source_url: r.sourceUrl,
+        accession_number: r.accession,
+        confidence: r.amountBasis === 'sold' ? 'filing_verified' : 'press_reported',
+        retrieved_at: now,
+        last_updated: now,
+        pipeline_version: PIPELINE,
+      })
+    }
+
+
+    const flag = matchKind === 'alias' ? ' [alias]' : ''
+    console.log(`  ✓ ${org.name}${flag}: $${usdToM(total)}M across ${rounds.length} round(s)` +
+      `${latest.amountUsd ? `, latest $${usdToM(latest.amountUsd)}M ${latest.date}` : `, latest ${latest.reason}`}`)
+    await sleep(200)
+  }
+
+  // ── Report ────────────────────────────────────────────────────────────────
+  console.log('\n─── run summary ───')
+  console.log(`resolved:        ${tally.resolved}`)
+  console.log(`reused (fresh):  ${tally.reused}`)
+  console.log(`not queried:     ${tally.skipped}`)
+  console.log(`alias matches:   ${tally.aliasMatches}`)
+  console.log(`rounds found:    ${roundRows.length}`)
+  if (retiredIds.length) console.log(`figures retired: ${retiredIds.length}`)
+  if (tally.offeringBasis) {
+    console.log(`offering basis:  ${tally.offeringBasis} company/companies have a round priced off ` +
+      'totalOfferingAmount because nothing was sold yet')
+  }
+  console.log('failures:')
+  for (const [code, n] of Object.entries(tally.byFailure).sort((a, b) => b[1] - a[1])) {
+    console.log(`  ${String(code).padEnd(18)} ${n}`)
+  }
+  const attempted = tally.resolved + Object.values(tally.byFailure).reduce((a, b) => a + b, 0)
+  console.log(`\nmatch rate this run: ${tally.resolved}/${attempted} ` +
+    `(${attempted ? Math.round((tally.resolved / attempted) * 100) : 0}%)`)
+
+  if (!COMMIT) {
+    console.log('\nDry run. Nothing written. Re-run with --commit to apply.')
     return
   }
 
-  const companies = await loadCompanies()
-  const out = {}
-  let resolved = 0, reused = 0, checked = 0
-  for (const c of companies) {
-    if (!FORCE && fresh(prev[c.name])) { out[c.name] = prev[c.name]; reused++; continue }
-    checked++
-    let r = await resolve(c.name)
-    const founded = parseInt(c.founded, 10)
-    // Reject a wrong entity: filings predating the company's founding = namesake.
-    if (r && founded && r.latestDate && new Date(r.latestDate).getUTCFullYear() < founded) r = null
-    if (r && r.total > 0) {
-      out[c.name] = { total: r.total, latestAmount: r.latestAmount, latestDate: r.latestDate, rounds: r.rounds, source: 'sec', checkedAt: new Date().toISOString() }
-      resolved++
-      console.log(`  ✓ ${c.name}: ~$${r.total}M · latest $${r.latestAmount}M (${r.latestDate})`)
-    } else {
-      out[c.name] = { source: 'none', checkedAt: new Date().toISOString() }
-    }
-    await sleep(200)
+  // ── Write ─────────────────────────────────────────────────────────────────
+  // Retired rounds go first. If the run dies between the two writes, the result
+  // is an organization with no total and no rounds, which is merely incomplete.
+  // The other order leaves rounds behind that nothing points at.
+  if (retiredIds.length) {
+    const { error } = await sb.from('funding_rounds').delete().in('organization_id', retiredIds)
+    if (error) { console.error('\nfunding_rounds delete failed:', error.message); process.exit(1) }
+    console.log(`  retired the rounds of ${retiredIds.length} organization(s)`)
   }
-  // Deterministic key order.
-  const sorted = Object.fromEntries(Object.keys(out).sort().map(k => [k, out[k]]))
-  writeFileSync(path, JSON.stringify(sorted, null, 2) + '\n')
-  console.log(`✓ funding.json: ${Object.keys(out).length} companies (${resolved} resolved this run, ${reused} reused, ${checked} checked)`)
+  let n = 0
+  for (let i = 0; i < orgUpdates.length; i += 100) {
+    const chunk = orgUpdates.slice(i, i + 100)
+    const { error } = await sb.from('organizations').upsert(chunk, { onConflict: 'id' })
+    if (error) { console.error('\norganizations upsert failed:', error.message); process.exit(1) }
+    n += chunk.length
+    process.stdout.write(`\r  organizations ${n}/${orgUpdates.length}`)
+  }
+  let m = 0
+  for (let i = 0; i < roundRows.length; i += 100) {
+    const chunk = roundRows.slice(i, i + 100)
+    const { error } = await sb.from('funding_rounds')
+      .upsert(chunk, { onConflict: 'organization_id,accession_number' })
+    if (error) { console.error('\nfunding_rounds upsert failed:', error.message); process.exit(1) }
+    m += chunk.length
+    process.stdout.write(`\r  funding_rounds ${m}/${roundRows.length}`)
+  }
+
+  console.log(`\n✓ wrote ${orgUpdates.length} organizations and ${roundRows.length} rounds`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })

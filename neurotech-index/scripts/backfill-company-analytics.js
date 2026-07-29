@@ -34,8 +34,6 @@ import Anthropic from '@anthropic-ai/sdk'
 const __dir = dirname(fileURLToPath(import.meta.url))
 const OUT = resolve(__dir, '../public/company-analytics')
 const CHECKED = join(OUT, '_checked.json')
-const FUNDING = resolve(__dir, '../src/data/funding.json')
-const CURATED = resolve(__dir, '../src/data/companies-funding.json')
 const FORCE = process.argv.includes('--force')
 const FUNDED_ONLY = process.argv.includes('--funded')
 const LIMIT = Number((process.argv.find(a => a.startsWith('--limit=')) || '').split('=')[1]) || 0
@@ -159,7 +157,8 @@ async function loadCompanies() {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
   const all = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from('organizations').select('id,name,description,location,website').eq('type', 'company').range(from, from + 999)
+    const { data, error } = await sb.from('organizations')
+      .select('id,name,description,location,website,total_raised_usd').eq('type', 'company').range(from, from + 999)
     if (error) throw new Error(error.message)
     all.push(...data)
     if (data.length < 1000) break
@@ -179,15 +178,11 @@ async function run() {
   const fresh = t => t && (Date.now() - new Date(t)) / 864e5 < STALE_DAYS
 
   let companies = await loadCompanies()
-  if (FUNDED_ONLY) {
-    const sec = JSON.parse(readFileSync(FUNDING, 'utf8'))
-    const cur = JSON.parse(readFileSync(CURATED, 'utf8'))
-    const funded = new Set([
-      ...Object.entries(sec).filter(([, v]) => (v.total || 0) > 0).map(([k]) => k),
-      ...Object.keys(cur),
-    ])
-    companies = companies.filter(c => funded.has(c.name))
-  }
+  // "Funded" now means the organizations table holds a sourced total for it.
+  // This used to be read from two committed JSON files and matched by name,
+  // which is the merge the funding work replaced; the column is the same fact
+  // without the name matching.
+  if (FUNDED_ONLY) companies = companies.filter(c => c.total_raised_usd != null)
   if (ONLY) companies = companies.filter(c => c.name.toLowerCase().includes(ONLY))
   if (LIMIT) companies = companies.slice(0, LIMIT)
   console.log(`Indexing publications for ${companies.length} companies…`)

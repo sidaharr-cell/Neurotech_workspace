@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
-      contents: write   # allows committing the refreshed funding.json
+      contents: write   # allows committing the refreshed data snapshots
 
     steps:
       - name: Checkout repo
@@ -55,7 +55,40 @@ jobs:
       - name: Refresh company funding (SEC EDGAR, all companies — incremental)
         working-directory: neurotech-index
         continue-on-error: true
-        run: node scripts/backfill-funding.js
+        # --commit is required since Phase 2: the script is dry-run by default so
+        # a local run can never write to production by accident.
+        run: node scripts/backfill-funding.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # The three cheap backfills below re-apply facts that are derived from
+      # committed decision files or from records already in the database, so they
+      # take seconds and are idempotent. They run nightly so the dataset repairs
+      # itself: on 29 Jul 2026 the companies backfill deleted and re-inserted
+      # every company row and took the whole funding dataset with it, and nothing
+      # in this workflow would have restored it. See
+      # docs/funding-data-loss-2026-07-29.md.
+      - name: Re-apply company status (SEC ticker file + curated filings)
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-org-status.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Re-apply inclusion decisions and modality
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-inclusion.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Re-derive furthest stage (openFDA + ClinicalTrials.gov)
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-stage.js --commit
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -85,8 +118,7 @@ jobs:
         run: |
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add neurotech-index/src/data/funding.json \
-                  neurotech-index/src/data/notable.json \
+          git add neurotech-index/src/data/notable.json \
                   neurotech-index/scripts/data/neurotechx-industry.json \
                   neurotech-index/scripts/data/neurotechx-academic-labs.json \
                   neurotech-index/public/company-analytics
