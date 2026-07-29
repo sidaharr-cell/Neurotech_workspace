@@ -248,6 +248,399 @@
   "NeuroFlow": { "decision": "exclude", "evidence": "description",
     "reason": "Behavioral-health care-coordination platform for providers. Workflow and engagement software. It tracks patients, not the nervous system." },
 
+  "BrainCheck": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Digital cognitive assessment used by healthcare and athletic organisations. Measures cognitive function directly, same basis as Linus Health." },
+
+  "Luminopia": { "decision": "include", "modality": "digital_therapeutic", "evidence": "description",
+    "basis": "Prescription binocular visual therapy for amblyopia, a disorder of visual cortical development. A digital therapeutic for a neurological indication." },
+
+  "Cadence Neuroscience": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Implanted device therapy for epilepsy and central pain." },
+
+  "Synaptive Medical": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "BrightMatter neurosurgical imaging and tractography, mapping white-matter tracts for planning and navigation." },
+
+  "Empatica": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wrist-worn physiological monitoring including FDA-cleared seizure detection. Measures a neurological event as it happens." },
+
+  "Cervel Neurotech": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Multi-coil non-invasive deep brain neuromodulation." },
+
+  "Intento": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Functional electrical stimulation restoring motor function after stroke." },
+
+  "Oculogica": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "EyeBox detects brain injury from patterns of abnormal eye movement, which is a readout of cranial nerve and brainstem control." },
+
+  "NeoSensory": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Sensory substitution wristband translating sound into patterned skin vibration, delivered through the somatosensory system." },
+
+  "Motif Neurotech": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Minimally invasive battery-free brain stimulator for treatment-resistant depression." },
+
+  "Brain Scientific": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Clinical-grade neurological diagnostic devices, including a pre-gelled EEG headset." },
+
+  "MYOMO": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Powered brace driven by the wearer’s own myoelectric signals, so the peripheral nervous system is the control input." },
+
+  "Sana Health": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Wearable audiovisual neuromodulation for insomnia and chronic nerve pain." },
+
+  "Burl Concepts": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Portable ultrasound for stroke detection in the field. Same category as Neural Analytics and NovaSignal." },
+
+  "Wearable Devices": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Non-invasive neural wristband reading peripheral nerve signals to control devices. A BCI, but not an implanted one." },
+
+  "Helius Medical Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "PoNS translingual neurostimulation for gait deficit." },
+
+  "Neurable": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Everyday EEG headphones measuring cortical activity for focus and cognitive tracking. A non-invasive BCI." },
+
+  "NeuroVision Imaging": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Retinal imaging for early detection of neurodegenerative disease. The retina is central nervous system tissue, so this images the nervous system itself." },
+
+  "Cerebrotech Medical Systems": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Non-invasive monitoring of brain fluid shift after stroke or traumatic brain injury." },
+
+  "NovaSignal": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Robotic transcranial ultrasound measuring cerebral blood flow. Same basis as Neural Analytics." },
+
+  "Viz.AI": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Deep learning on brain scans to identify stroke. Neurological imaging software, same category as iSchemaView." },
+
+  "Rhaeos": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wearable thermal biosensor measuring cerebrospinal fluid flow through a hydrocephalus shunt, non-invasively." },
+
+  "Cerephex": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "RINCE non-invasive brain stimulation." },
+
+  "Neurosity": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Wearable EEG device and applications driven by measured brain activity. A non-invasive BCI." },
+
+  "Sway Medical": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "FDA-cleared balance and cognitive assessment. Measures sensorimotor and cognitive function." },
+
+  "Axonia Medical": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Tissue-engineered nerve grafts for nerve repair. The product is nervous tissue, so it interfaces with the nervous system as directly as anything here." },
+
+  "Ellipsis Health": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Speech analysis as a digital biomarker for behavioural health screening. Included on measurement, same basis as Mindstrong." },
+
+  "Emotiv": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "EEG headsets for research and applied neuroscience. Measures cortical activity; a non-invasive BCI rather than an implanted one." },
+
+  "Jan Medical": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Head-worn sensing of brain motion for the diagnosis of brain disorders." },
+
+  "CereScan": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Functional brain imaging services. Images the nervous system directly." },
+
+  "SpeechVive": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Wearable device treating hypophonia in Parkinson’s by driving the Lombard reflex, an involuntary auditory-motor loop." },
+
+  "Otoharmonics Corporation": { "decision": "include", "modality": "digital_therapeutic", "evidence": "description",
+    "basis": "Customised sound therapy for tinnitus, targeting the maladaptive auditory neural activity that produces the percept." },
+
+  "NeuroRecovery Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Spinal stimulation devices to restore function after paralysis." },
+
+  "PainQx": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Objective measurement of chronic pain from brain electrical activity." },
+
+  "BrainSpec": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Magnetic resonance spectroscopy analysis of brain metabolites. Neurological imaging software." },
+
+  "NQ Medical": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Digital biomarkers of neurological disease from interaction data. Included on measurement, same basis as Mindstrong." },
+
+  "ni2o": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "Brain implant and neural analytics for neurodegenerative disease." },
+
+  "Cerora": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Point-of-care neuro-diagnostics for concussion and Alzheimer’s, built on measured brain activity." },
+
+  "EyeGuide": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Eye-movement tracking for brain health monitoring, a readout of oculomotor control." },
+
+  "Highland Instruments": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "ElectroSonic Stimulation for non-invasive brain stimulation." },
+
+  "Hoolest Performance Technologies": { "decision": "include", "modality": "neuromodulation", "evidence": "company_site",
+    "basis": "VeRelief non-invasive vagus nerve stimulation. The stored description is marketing copy; the product page is the grounds." },
+
+  "Junebrain": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "Wearable retinal imaging for monitoring multiple sclerosis. The retina is central nervous system tissue." },
+
+  "Ectron": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Electroconvulsive therapy devices, which induce a therapeutic seizure directly in the brain." },
+
+  "Nexalin Technology": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Transcranial electrical stimulation for anxiety, insomnia and depression." },
+
+  "Deep Brain Innovations": { "decision": "include", "modality": "neuromodulation", "evidence": "clinical_trial",
+    "basis": "Temporally optimised patterned deep brain stimulation for Parkinson’s, per NCT04390867. The stored description is unusable; the trial is the grounds." },
+
+  "InVivo Therapeutics": { "decision": "include", "modality": "other", "evidence": "description",
+    "basis": "Implanted polymer scaffold placed in the injured spinal cord to support regeneration." },
+
+  "WhisperSom Corporation": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Personalised neurostimulation to prevent or treat sleep apnea events." },
+
+  "Neural Dynamics Technologies LLC": { "decision": "include", "modality": "implanted_bci", "evidence": "description",
+    "basis": "High-density silicon probes implanted to record neural activity." },
+
+  "NeuroPrex": { "decision": "include", "modality": "neuromodulation", "evidence": "description",
+    "basis": "Non-invasive magnetic stimulation for major depression and other neurological disorders." },
+
+  "Cognetivity Neurosciences": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
+    "basis": "AI cognitive assessment for early detection of impairment and dementia. Same basis as Linus Health." },
+
+  "PathAI": { "decision": "exclude", "evidence": "description",
+    "reason": "AI pathology for research and pharma. A general-purpose platform, not specific to the nervous system." },
+
+  "Solera Health": { "decision": "exclude", "evidence": "description",
+    "reason": "A benefit network connecting patients, payers and providers. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "Happify": { "decision": "exclude", "evidence": "description",
+    "reason": "Evidence-based emotional health and mindfulness exercises. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "NICO": { "decision": "exclude", "evidence": "description",
+    "reason": "Minimally invasive neurosurgery access and tissue-removal instruments. Surgical hardware. It is used on the nervous system but does not interface with, measure, or modulate it." },
+
+  "HiNT": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Integrated Diagnostics": { "decision": "exclude", "evidence": "description",
+    "reason": "Molecular diagnostic products. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "Brain+": { "decision": "exclude", "evidence": "description",
+    "reason": "Ayla, a digital tool helping care teams deliver Cognitive Stimulation Therapy. The therapy is a recognised dementia intervention, but the product delivers it to staff rather than to the nervous system. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "ProMIS Neurosciences": { "decision": "exclude", "evidence": "description",
+    "reason": "Therapeutic antibodies for misfolded protein diseases. A drug or biologic developer, which the inclusion rule excludes." },
+
+  "Alector": { "decision": "exclude", "evidence": "description",
+    "reason": "Biotech developing Alzheimer’s therapeutics. A drug or biologic developer, which the inclusion rule excludes." },
+
+  "VerAvanti": { "decision": "exclude", "evidence": "description",
+    "reason": "Scanning fibre endoscope aimed at interventional cardiology. Neither the target nor the indication is neurological." },
+
+  "Banyan Biomarkers": { "decision": "exclude", "evidence": "description",
+    "reason": "Blood test to aid evaluation of concussion. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "Quadrant Biosciences": { "decision": "exclude", "evidence": "description",
+    "reason": "Saliva-based epigenetic diagnostics for autism and concussion. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "EndoShape": { "decision": "exclude", "evidence": "description",
+    "reason": "Shape-memory polymer devices for peripheral, non-vascular and neurovascular indications. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Transverse Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "POINT-GUARD cerebral embolic protection. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Cerevast Therapeutics": { "decision": "exclude", "evidence": "description",
+    "reason": "SonoLysis ultrasound for acute ischemic stroke and vascular disease. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Catalyte": { "decision": "exclude", "evidence": "description",
+    "reason": "AI to identify software engineering talent. Not a health product at all. A general-purpose platform, not specific to the nervous system." },
+
+  "Reverse Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Revascularisation devices for acute ischemic stroke. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Level Ex": { "decision": "exclude", "evidence": "description",
+    "reason": "Video games that teach clinical technique to physicians. A general-purpose platform, not specific to the nervous system." },
+
+  "Learn to Live, Inc.": { "decision": "exclude", "evidence": "description",
+    "reason": "Online CBT-based programmes for depression, stress and anxiety. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Rethink Autism": { "decision": "exclude", "evidence": "description",
+    "reason": "Web-based ABA treatment platform with video modelling. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Cognoptix, Inc.": { "decision": "exclude", "evidence": "description",
+    "reason": "Eye test detecting amyloid in the lens. The lens is not neural tissue, which is what separates this from retinal imaging. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "Posit Science": { "decision": "exclude", "evidence": "description",
+    "reason": "Brain training programmes for cognitive performance. Training, not measurement, and not a prescription therapeutic. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Pulsar Vascular": { "decision": "exclude", "evidence": "description",
+    "reason": "PulseRider aneurysm neck reconstruction device. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Ischemia Care": { "decision": "exclude", "evidence": "description",
+    "reason": "Blood tests stratifying ischemic stroke and TIA. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "Solace Lifesciences": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Mitokinin": { "decision": "exclude", "evidence": "description",
+    "reason": "Medicinal chemistry generating kinetin analogs. A drug or biologic developer, which the inclusion rule excludes." },
+
+  "Vycor Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Brain access and retraction devices for neurosurgery. Surgical hardware. It is used on the nervous system but does not interface with, measure, or modulate it." },
+
+  "Redivus Health": { "decision": "exclude", "evidence": "description",
+    "reason": "Clinical decision support software for medical errors. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "Yobe Inc.": { "decision": "exclude", "evidence": "description",
+    "reason": "Audio signal processing for communications. A general-purpose platform, not specific to the nervous system." },
+
+  "NovaRay Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "Digital cardiac x-ray imaging. Neither the target nor the indication is neurological." },
+
+  "NeuroVasc Technologies": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Senaptec": { "decision": "exclude", "evidence": "description",
+    "reason": "Sensorimotor assessment and training for athletic performance. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "CloudMedx Inc": { "decision": "exclude", "evidence": "description",
+    "reason": "Healthcare AI for affordability and standardisation. A general-purpose platform, not specific to the nervous system." },
+
+  "Harland Medical Systems": { "decision": "exclude", "evidence": "description",
+    "reason": "Surface coating services for medical devices. A general-purpose platform, not specific to the nervous system." },
+
+  "NeXtGen Biologics": { "decision": "exclude", "evidence": "description",
+    "reason": "ECM biomaterial products. A general-purpose platform, not specific to the nervous system." },
+
+  "Shine": { "decision": "exclude", "evidence": "description",
+    "reason": "Self-care app and community for anxiety and depression. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "myStrength": { "decision": "exclude", "evidence": "description",
+    "reason": "Digital programmes for mental health and substance use. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "TeachTown": { "decision": "exclude", "evidence": "description",
+    "reason": "Computer-aided instruction and video modelling for autism. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Spinal Singularity": { "decision": "exclude", "evidence": "description",
+    "reason": "Connected Catheter for bladder management. A urological device; the neurogenic cause of the bladder dysfunction is not what it interfaces with." },
+
+  "Goally Inc.": { "decision": "exclude", "evidence": "description",
+    "reason": "Behaviour therapy platform building executive functioning skills. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Floreo": { "decision": "exclude", "evidence": "description",
+    "reason": "Virtual reality social and communication therapy. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "BioROSA Technologies": { "decision": "exclude", "evidence": "description",
+    "reason": "Biologically-based diagnostic for autism spectrum disorders. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "Prevent Biometrics": { "decision": "exclude", "evidence": "description",
+    "reason": "Instrumented mouthguard measuring head impacts. It measures force applied to the skull, not the nervous system." },
+
+  "MyndYou": { "decision": "exclude", "evidence": "description",
+    "reason": "AI aiding clinicians in delivering cognitive care to seniors. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "MindMate": { "decision": "exclude", "evidence": "description",
+    "reason": "App to reduce the risk of cognitive decline through games and tracking. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "BioStream Technologies": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Stimulus": { "decision": "exclude", "evidence": "description",
+    "reason": "Cognitive stimulation and rehabilitation exercises. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Gripable": { "decision": "exclude", "evidence": "description",
+    "reason": "Grip-based digital therapy games for physical rehabilitation. Measures grip force, not nervous system activity." },
+
+  "NextStep Robotics": { "decision": "exclude", "evidence": "description",
+    "reason": "Robotic gait therapy for foot drop. Rehabilitation robotics acting on the limb rather than on the nervous system." },
+
+  "Cellino Biotech": { "decision": "exclude", "evidence": "description",
+    "reason": "Laser and nanotechnology for stem cell gene editing. A general-purpose platform, not specific to the nervous system." },
+
+  "Blackfynn": { "decision": "exclude", "evidence": "description",
+    "reason": "Cloud data management for neuroscience research. Infrastructure for people studying the nervous system, not a product that touches it. A general-purpose platform, not specific to the nervous system." },
+
+  "Jintronix": { "decision": "exclude", "evidence": "description",
+    "reason": "Virtual reality rehabilitation exercises." },
+
+  "Dakim": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Buyology": { "decision": "exclude", "evidence": "description",
+    "reason": "Neuromarketing consultancy measuring purchase drivers. A general-purpose platform, not specific to the nervous system." },
+
+  "NeuroSave": { "decision": "exclude", "evidence": "description",
+    "reason": "Rapid therapeutic hypothermia for ischemic brain injury. A thermal intervention on the body; it neither measures nor modulates neural signalling." },
+
+  "Endomedix": { "decision": "exclude", "evidence": "description",
+    "reason": "Surgical hemostat for neurosurgery and spine surgery. Surgical hardware. It is used on the nervous system but does not interface with, measure, or modulate it." },
+
+  "TheraCell": { "decision": "exclude", "evidence": "description",
+    "reason": "Stereotactic transplantation of neurons and therapeutic cells, which is a cell therapy. A drug or biologic developer, which the inclusion rule excludes." },
+
+  "RIST Neurovascular": { "decision": "exclude", "evidence": "description",
+    "reason": "Neurovascular devices. A blood-vessel device; same reasoning as Conformal Medical, MIVI Neuroscience and Silk Road Medical." },
+
+  "Think-Now": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "People Power Company": { "decision": "exclude", "evidence": "description",
+    "reason": "B2B software for home care. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "Resonance Medical": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored description is about machine tool automation and metrology, which does not match a medical company. The record looks conflated and needs review before any decision." },
+
+  "Monarch Teaching Technologies": { "decision": "exclude", "evidence": "description",
+    "reason": "Software for children with autism and communication disorders. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Montage Healthcare Solutions": { "decision": "exclude", "evidence": "description",
+    "reason": "Data mining and performance measurement for radiology. A general-purpose platform, not specific to the nervous system." },
+
+  "Medical Technologies International": { "decision": "exclude", "evidence": "description",
+    "reason": "Non-invasive detection and monitoring of atherosclerotic vascular disease." },
+
+  "Brain Parade": { "decision": "exclude", "evidence": "description",
+    "reason": "Mobile learning tools for children with autism. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Youper": { "decision": "exclude", "evidence": "description",
+    "reason": "AI chatbot for emotional health. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "SMART Brain Aging": { "decision": "exclude", "evidence": "description",
+    "reason": "Brain exercise programmes to mitigate cognitive decline. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Litesprite": { "decision": "exclude", "evidence": "description",
+    "reason": "Mobile games for managing stress, anxiety and chronic conditions. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Biobeats": { "decision": "exclude", "evidence": "description",
+    "reason": "AI products for mental health. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "Therabracelet": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Infiniteach": { "decision": "exclude", "evidence": "description",
+    "reason": "Digital learning platform for children with autism. Educational or behavioural software. It teaches or coaches; it does not measure or modulate the nervous system." },
+
+  "Neuromore": { "decision": "exclude", "evidence": "description",
+    "reason": "Biometrics from consumer wearables for mental performance. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "eMind Science": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "deCervo": { "decision": "exclude", "evidence": "description",
+    "reason": "The stored record does not describe a product that interfaces with, measures, or modulates the nervous system. Revisit if a better record appears." },
+
+  "Kogent Surgical": { "decision": "exclude", "evidence": "description",
+    "reason": "Neurosurgical instruments. Surgical hardware. It is used on the nervous system but does not interface with, measure, or modulate it." },
+
+  "BlackBox Biometrics": { "decision": "exclude", "evidence": "description",
+    "reason": "Blast and impact sensors for soldiers. Measures exposure, not the nervous system." },
+
+  "Pacifica Labs": { "decision": "exclude", "evidence": "description",
+    "reason": "App for managing stress and anxiety. Consumer or workplace wellness software, not a prescription digital therapeutic for a diagnosed indication." },
+
+  "CIS Biotech": { "decision": "exclude", "evidence": "description",
+    "reason": "Disease-associated biomarkers and assays. A biomarker assay. Same reasoning as Octave Bioscience and BRAINBox Solutions: a marker of a neurological disease is not the nervous system." },
+
+  "EpiFinder": { "decision": "exclude", "evidence": "description",
+    "reason": "Screening software that reasons over reported symptoms for epilepsy diagnosis. It analyses a clinical history, not a signal from the nervous system. Care delivery or clinical workflow software. It coordinates people, not signals." },
+
+  "Vitruvian Biomedical": { "decision": "exclude", "evidence": "description",
+    "reason": "Biotechnology product development across stages. A drug or biologic developer, which the inclusion rule excludes." },
+
+  "Recovr": { "decision": "exclude", "evidence": "description",
+    "reason": "Virtual therapy games for stroke recovery." },
+
   "Atomwise": { "decision": "exclude", "evidence": "description",
     "reason": "AI drug-discovery platform. Excluded twice over: it develops drugs, and it is a general-purpose discovery platform not specific to the nervous system." },
 

@@ -1,6 +1,7 @@
-# Phase 5: the capital-versus-stage scatter is not shippable yet
+# Phase 5: the capital-versus-stage scatter
 
-**Status: not built. The data does not support the claim the chart exists to make.**
+**Status: shipped 29 Jul 2026, with a banded axis. The data does not support the
+claim the chart was commissioned to make, and the chart says so.**
 
 The Phase 5 brief says:
 
@@ -72,18 +73,46 @@ Note also that `preclinical`, `ce_marked` and `commercial` are never derived
 (see `scripts/lib/stage.js`), so the ladder is missing both ends. Nothing in the
 ingested sources supports them.
 
-## What would make this shippable
+## What shipped
 
-1. **Split the axis.** Plot clinical stage and regulatory authorization
-   separately, or restrict the scatter to one pathway. Comparing capital across
-   companies on the same route is a real question; comparing across routes is
-   not.
-2. **More points.** 44 is thin for a scatter with colour and size channels. The
-   ceiling today is 46: only 90 companies have an evidence-backed stage and 205
-   a sourced total. Stage coverage is the binding constraint, and it is limited
-   by device records and trial links, not by classification work.
-3. **Re-test after either.** The measurement above is a script that takes about
-   a minute to re-run; do not ship on the assumption that more data will move it.
+`src/components/CapitalStageScatter.jsx`, with the axis **banded** rather than
+ordered end to end. Clinical evidence (`first_in_human` → `feasibility` →
+`pivotal`) and FDA authorisation (`de_novo_granted` → `cleared_510k` →
+`approved_pma`) are drawn as two separate groups with a rule between them.
+Position is comparable within a band and meaningless across it, and the caption
+says exactly that.
+
+Everything else follows the original brief: linear X on total raised, colour by
+modality, point area by trailing 24-month capital, hover naming both axis values,
+click through to the organization, and only records whose `stage_evidence_type`
+is not `none`.
+
+After the 131 outstanding inclusion decisions were written on 29 Jul, the set
+reached 45 companies and the split measurement became clear:
+
+| slice | n | Spearman rho | 95% CI |
+|---|---|---|---|
+| both bands on one axis | 45 | -0.210 | [-0.47, 0.09] |
+| clinical band only | 19 | **+0.354** | [-0.12, 0.70] |
+| authorisation band only | 26 | undefined | all 26 sit at `cleared_510k` |
+
+The sign flips once the pathways are separated, which is the clearest possible
+demonstration that the -0.21 was the axis and not the field. The authorisation
+band has no variance at all to correlate against.
+
+So the honest reading, and the one the chart's caption carries: within the
+clinical path capital and maturity are weakly and positively related, on a sample
+too small to call; in the authorisation band the question cannot be asked yet.
+
+## What would still improve it
+
+**More points, specifically more stages.** Stage coverage is the binding
+constraint, not classification: 205 companies have a sourced total and 113 an
+inclusion decision, but only 90 have an evidence-backed stage, and the
+intersection is 45. That is limited by device records and trial links.
+
+Re-run the measurement rather than assuming more data moved it. It takes about a
+minute.
 
 ## What not to do
 

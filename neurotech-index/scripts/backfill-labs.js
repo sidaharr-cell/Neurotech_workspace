@@ -1,6 +1,7 @@
 /**
  * backfill-labs.js — ingest neurotech research labs into the `organizations`
- * table as type='lab' (the single owner of all lab rows). One-time / re-runnable.
+ * table as type='lab' (the single owner of all lab rows). Re-runnable: upserts
+ * by deterministic id, then prunes rows no source mentions any more.
  *   node --env-file=.env scripts/backfill-labs.js
  *
  * Two sources, unioned and deduped by normalized lab name:
@@ -17,6 +18,7 @@ import { dirname, resolve } from 'node:path'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
 import { classify } from '../src/lib/classify.js'
 import { fetchSharedView } from './lib/airtable.js'
+import { uuidv5 } from './lib/uuid.js'
 
 const __dir = dirname(fileURLToPath(import.meta.url))
 const ACADEMIC_SHARE = 'shrWbISXIhaOKKUvz'
@@ -89,7 +91,9 @@ async function fetchProjects(term, offset) {
 }
 
 async function run() {
-  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  const ALLOW_SHRINK = process.argv.includes('--allow-shrink')
+
+const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
   const labs = new Map() // key: pi|org
   for (const term of TERMS) {
     for (let offset = 0; offset < 600; offset += 200) {
@@ -151,18 +155,59 @@ async function run() {
     const k = normLabName(r.name)
     if (k && !byKey.has(k)) byKey.set(k, r)
   }
-  // Classify every row so facet columns are populated on insert.
-  const rows = [...byKey.values()].map(r => ({ ...r, ...classify(r, 'organizations') }))
+  // Classify every row so facet columns are populated, and give each one an id
+  // derived from its name.
+  //
+  // Labs used to be inserted with no id at all, so Postgres minted a fresh
+  // gen_random_uuid() on every nightly rebuild and every /lab/:id URL broke
+  // overnight. Companies solved this long ago with a deterministic UUIDv5; labs
+  // simply never got the same treatment. Deriving the id from the normalised
+  // name makes it stable, which is also what lets this script upsert instead of
+  // deleting and re-inserting.
+  //
+  // This changes every existing lab id ONCE. Links shared before this ran will
+  // not resolve; from here they are permanent.
+  const rows = [...byKey.values()].map(r => ({
+    id: uuidv5(`lab:${normLabName(r.name)}`),
+    ...r,
+    ...classify(r, 'organizations'),
+  }))
   console.log(`Total ${rows.length} labs after dedup (${rows.filter(r => r.in_scope).length} classified in-scope)`)
 
-  await sb.from('organizations').delete().eq('type', 'lab')
+  // Upsert, never delete-and-insert. See docs/funding-data-loss-2026-07-29.md:
+  // the companies script did exactly that and destroyed every column another
+  // pipeline owned on those rows. Labs carry no funding today, but the table has
+  // more than one owner and the rule is the same.
   let ok = 0
   for (let i = 0; i < rows.length; i += 500) {
-    const { error } = await sb.from('organizations').insert(rows.slice(i, i + 500))
-    if (error) console.warn('lab insert error:', error.message)
+    const { error } = await sb.from('organizations').upsert(rows.slice(i, i + 500), { onConflict: 'id' })
+    if (error) console.warn('lab upsert error:', error.message)
     else ok += Math.min(500, rows.length - i)
   }
-  console.log(`✓ Labs backfill complete — ${ok.toLocaleString()} labs`)
+
+  const live = new Set(rows.map(r => r.id))
+  const existing = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('organizations')
+      .select('id').eq('type', 'lab').range(from, from + 999)
+    if (error) { console.warn('prune read failed:', error.message); break }
+    existing.push(...data)
+    if (data.length < 1000) break
+  }
+  const stale = existing.filter(o => !live.has(o.id)).map(o => o.id)
+  // Same floor as the companies backfill: a source set that has collapsed is a
+  // broken source, not a real shrink, and must not empty the table.
+  if (!ALLOW_SHRINK && existing.length && rows.length < existing.length * 0.6) {
+    console.error(`\n✗ Refusing to prune. Built ${rows.length} lab rows against ${existing.length} stored. ` +
+      'That is a source problem. The upserts above are applied; nothing was deleted. ' +
+      'Pass --allow-shrink if this shrink is intended.')
+    process.exit(1)
+  }
+  for (let i = 0; i < stale.length; i += 200) {
+    const { error } = await sb.from('organizations').delete().in('id', stale.slice(i, i + 200))
+    if (error) console.warn('prune delete failed:', error.message)
+  }
+  console.log(`✓ Labs backfill complete — ${ok.toLocaleString()} upserted, ${stale.length} pruned`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })
