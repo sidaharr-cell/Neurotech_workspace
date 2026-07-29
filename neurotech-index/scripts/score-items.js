@@ -28,7 +28,7 @@ import { subfieldFor } from '../src/lib/subfields.js'
 import { fdCeilingFor } from '../src/lib/frontier-coverage.js'
 import { validate } from '../src/lib/validate.js'
 import { compose, tagsFor, horizonFor } from '../src/lib/compose.js'
-import { buildPrompt, applyCeilings, SCORING_TOOL, RUBRIC_VERSION } from './lib/score.js'
+import { buildPrompt, applyCeilings, SCORING_TOOL, RUBRIC_VERSION, parseToolScores } from './lib/score.js'
 import { GRANULARITY_CAPS } from './lib/caps.js'
 
 const COMMIT = process.argv.includes('--commit')
@@ -67,8 +67,20 @@ export async function scoreOne(anthropic, { extraction, item, entityType, subfie
   const raw = resp.content?.find(c => c.type === 'tool_use')?.input
   if (!raw) return null
 
+  // 2a. salvage, then REFUSE what is still malformed. A dimension that arrived
+  // as an unparseable string used to read as score undefined, compose to 0, and
+  // pass silently: 8 of 48 items in the first run scored zero that way. Scoring
+  // 0 is a real verdict and must never be the residue of a parse failure.
+  const dims = entityType === 'trial' ? ['GAP', 'GATE', 'METH'] : ['FD', 'LV', 'TR']
+  const { scores: parsed, recovered, malformed } = parseToolScores(raw, dims)
+  if (malformed.length) {
+    const err = new Error(`malformed tool output for ${malformed.join(', ')}`)
+    err.malformed = malformed
+    throw err
+  }
+
   // 3. cap
-  const { scores: capped, capped: ceilingsApplied } = applyCeilings(raw, { fdCeiling, granularityCap })
+  const { scores: capped, capped: ceilingsApplied } = applyCeilings(parsed, { fdCeiling, granularityCap })
 
   // 4. validate
   const forValidation = {
@@ -92,6 +104,7 @@ export async function scoreOne(anthropic, { extraction, item, entityType, subfie
 
   const tags = tagsFor(validated)
   return {
+    recovered,
     row: {
       item_type: extraction.item_type,
       item_id: item.id,
@@ -216,18 +229,29 @@ async function run() {
 
   // ── 2-5 ───────────────────────────────────────────────────────────────────
   const rows = [], allResets = []
-  let failed = 0
+  let failed = 0, malformedCount = 0, recoveredCount = 0
   for (let i = 0; i < work.length; i += CONCURRENCY) {
     const chunk = work.slice(i, i + CONCURRENCY)
     const out = await Promise.all(chunk.map(async w => {
-      try { return await scoreOne(anthropic, w) }
-      catch (err) { failed++; if (failed <= 3) console.error(`\n  ! ${w.item.id}: ${err.status || ''} ${err.message}`); return null }
+      try { const r = await scoreOne(anthropic, w); if (r?.recovered) recoveredCount++; return r }
+      catch (err) {
+        failed++
+        if (err.malformed) malformedCount++
+        if (failed <= 3) console.error(`\n  ! ${w.item.id}: ${err.status || ''} ${err.message}`)
+        return null
+      }
     }))
     for (const r of out) if (r) { rows.push(r.row); allResets.push(...r.resets) }
     process.stdout.write(`\r  scored ${rows.length}/${work.length}${failed ? ` (${failed} failed)` : ''}`)
   }
   process.stdout.write('\n')
 
+  if (malformedCount) {
+    console.log(`\n  ! ${malformedCount} item(s) REFUSED for malformed tool output rather than scored 0.`)
+  }
+  if (recoveredCount) {
+    console.log(`  · ${recoveredCount} item(s) had folded tool output salvaged.`)
+  }
   report(rows, allResets)
 
   if (!COMMIT) { console.log('\nDry run. Nothing written. Re-run with --commit.'); return }
