@@ -209,7 +209,9 @@ async function run() {
     return
   }
 
-  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  const ALLOW_SHRINK = process.argv.includes('--allow-shrink')
+
+const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
   // Upsert, never delete-and-insert.
   //
@@ -254,11 +256,12 @@ async function run() {
   // other direction. A shrink that large is a broken source until a human says
   // otherwise.
   const SHRINK_FLOOR = 0.6
-  if (existing.length && rows.length < existing.length * SHRINK_FLOOR) {
+  if (!ALLOW_SHRINK && existing.length && rows.length < existing.length * SHRINK_FLOOR) {
     console.error(`\n✗ Refusing to prune. Built ${rows.length} rows from the sources but the database ` +
       `holds ${existing.length} companies, a drop of ` +
       `${Math.round((1 - rows.length / existing.length) * 100)}%. That is a source problem, not a ` +
-      'real shrink. The upserts above are applied; nothing was deleted.')
+      'real shrink. The upserts above are applied; nothing was deleted. ' +
+      'Pass --allow-shrink if this shrink is intended.')
     process.exit(1)
   }
 

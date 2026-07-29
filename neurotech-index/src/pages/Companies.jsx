@@ -4,9 +4,10 @@ import { MapPin, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
 import FacetSidebar from '../components/FacetSidebar'
 import FundingChart from '../components/FundingChart'
+import CapitalStageScatter from '../components/CapitalStageScatter'
 import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
 import { useUrlFacets } from '../lib/useUrlFacets'
-import { fmtMonthYear } from '../lib/fundingBoard'
+import { fmtMonthYear, getFundingBoard } from '../lib/fundingBoard'
 
 const PAGE_SIZE = 20
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
@@ -79,7 +80,15 @@ export default function Companies() {
   const [counts, setCounts] = useState({})          // per-org device/trial counts
   const [facetCts, setFacetCts] = useState(null)    // per-facet-value result counts
   const [loading, setLoading] = useState(false)
+  const [board, setBoard] = useState(null)          // funding rows, shared by both charts
   const debounce = useRef(null)
+
+  // One query feeds the funding chart and the capital-versus-stage scatter.
+  useEffect(() => {
+    let alive = true
+    getFundingBoard().then(b => { if (alive) setBoard(b) }).catch(() => {})
+    return () => { alive = false }
+  }, [])
 
   // Per-facet-value counts, scoped to the current organization type.
   useEffect(() => {
@@ -124,7 +133,8 @@ export default function Companies() {
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>}
       />
 
-      <FundingChart />
+      <FundingChart board={board} />
+      <CapitalStageScatter board={board} />
 
       <div className="mb-6">
         <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Filter by organization type</div>

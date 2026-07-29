@@ -83,6 +83,40 @@ export const STAGE_LABELS = {
 export const stageRank = s => (s === 'withdrawn' ? 99 : STAGE_ORDER.indexOf(s) + 1)
 
 /**
+ * The stage ladder is two ladders.
+ *
+ * `first_in_human` → `feasibility` → `pivotal` is progress through clinical
+ * evidence. `de_novo_granted` → `cleared_510k` → `approved_pma` is a market
+ * authorisation. stage_rank() orders them in one sequence, which a range filter
+ * needs, but they are different routes: a cleared 510(k) device is not a later
+ * stage of a pivotal trial, it is a different regulatory path taken by a
+ * different kind of product.
+ *
+ * Plotting them on one axis manufactures a trend. 510(k) is the cheaper route,
+ * so it is crowded with smaller companies, and putting it above `pivotal`
+ * produces a negative capital-versus-maturity correlation that is an artifact of
+ * the axis and not a fact about neurotech. Measured 29 Jul 2026: rho = -0.21
+ * across all 45 records, but +0.35 within the clinical path alone.
+ *
+ * So the scatter bands them and never compares across the divide.
+ */
+export const STAGE_BANDS = [
+  { id: 'clinical', label: 'Clinical evidence', stages: ['first_in_human', 'feasibility', 'pivotal'] },
+  { id: 'regulatory', label: 'FDA authorisation', stages: ['de_novo_granted', 'cleared_510k', 'approved_pma'] },
+]
+
+/** Rows the scatter can honestly plot: a sourced total and a stage that came
+ *  from a real record. A stage with no evidence is not a position on any axis. */
+export function scatterPoints(rows = []) {
+  const placed = new Map()
+  for (const b of STAGE_BANDS) b.stages.forEach((s, i) => placed.set(s, { band: b.id, within: i }))
+  return rows
+    .filter(r => r.total > 0 && r.furthestStage && placed.has(r.furthestStage)
+      && r.stageEvidenceType && r.stageEvidenceType !== 'none')
+    .map(r => ({ ...r, ...placed.get(r.furthestStage) }))
+}
+
+/**
  * What goes in the cell where `n/a` used to be. `short` renders in the column,
  * `long` on hover. `unverified` is a work-queue state and must never reach the
  * chart, so it reads as "Not checked" rather than pretending to be a finding.

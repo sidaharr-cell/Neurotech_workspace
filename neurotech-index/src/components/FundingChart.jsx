@@ -60,9 +60,12 @@ function rowLabel(row) {
   return parts.join('. ')
 }
 
-export default function FundingChart({ limit = 20 }) {
-  const [board, setBoard] = useState(null)
-  const [loading, setLoading] = useState(true)
+/** `board` lets a page fetch once and share it with the scatter. Left out, the
+ *  chart fetches for itself and stays a drop-in component. */
+export default function FundingChart({ limit = 20, board: given = null }) {
+  const [fetched, setFetched] = useState(null)
+  const [loading, setLoading] = useState(!given)
+  const board = given || fetched
   const [sort, setSort] = useState(DEFAULT_SORT)
   const [statuses, setStatuses] = useState(DEFAULT_STATUS_FILTER)
   const [modalities, setModalities] = useState([])
@@ -70,12 +73,13 @@ export default function FundingChart({ limit = 20 }) {
   const [asTable, setAsTable] = useState(false)
 
   useEffect(() => {
+    if (given) return
     let live = true
     getFundingBoard()
-      .then(b => { if (live) { setBoard(b); setLoading(false) } })
+      .then(b => { if (live) { setFetched(b); setLoading(false) } })
       .catch(() => { if (live) setLoading(false) })
     return () => { live = false }
-  }, [])
+  }, [given])
 
   const data = useMemo(
     () => (board ? rankFunding(board.rows, { sort, limit, statuses, modalities, stageMin }) : []),
