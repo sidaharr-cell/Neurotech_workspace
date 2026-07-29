@@ -1043,3 +1043,20 @@ export async function getFrontierProposals({ status = 'pending' } = {}) {
   if (error) return []
   return data || []
 }
+
+/**
+ * Axis pairs the field treats as a tradeoff, for a subfield or all of them.
+ * FD 4 (spec 5.1.1) is the only score that reads these: an item that improves
+ * one axis without regressing its pair has collapsed the tradeoff. A 4 must cite
+ * `why_binding`, so it is returned rather than summarised away.
+ */
+export async function getAxisPairs({ subfield = null, includeSuperseded = false } = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_axis_pairs')
+    .select('id,subfield,axis_a,axis_b,axis_a_type,axis_b_type,why_binding,strength,source_url,notes,superseded_by,last_updated')
+  if (!includeSuperseded) q = q.is('superseded_by', null)
+  if (subfield) q = q.in('subfield', arr(subfield))
+  const { data, error } = await q.order('subfield').order('axis_a')
+  if (error) return []
+  return data || []
+}
