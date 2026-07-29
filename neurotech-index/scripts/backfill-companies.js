@@ -244,6 +244,24 @@ async function run() {
     existing.push(...data)
     if (data.length < 1000) break
   }
+  // Refuse to prune on a suspiciously small source set.
+  //
+  // The Airtable fetch falls back to the committed snapshot when it throws, but
+  // a truncated response that returns 200 does not throw: it looks like a small
+  // company list, and the success path then refreshes the snapshot with it. That
+  // would make this prune delete most of the database, which is the same class
+  // of accident as the delete-and-insert this replaced, arrived at from the
+  // other direction. A shrink that large is a broken source until a human says
+  // otherwise.
+  const SHRINK_FLOOR = 0.6
+  if (existing.length && rows.length < existing.length * SHRINK_FLOOR) {
+    console.error(`\n✗ Refusing to prune. Built ${rows.length} rows from the sources but the database ` +
+      `holds ${existing.length} companies, a drop of ` +
+      `${Math.round((1 - rows.length / existing.length) * 100)}%. That is a source problem, not a ` +
+      'real shrink. The upserts above are applied; nothing was deleted.')
+    process.exit(1)
+  }
+
   const stale = existing.filter(o => !live.has(o.id))
   const staleFunded = stale.filter(o => o.total_raised_usd != null)
   if (staleFunded.length) {
