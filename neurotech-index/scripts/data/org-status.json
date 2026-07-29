@@ -28,6 +28,9 @@
     "effective_date": "2023-04-07",
     "source_url": "https://www.sec.gov/Archives/edgar/data/1835567/000183556723000020/pear-20230405.htm",
     "note": "8-K Item 1.03 Bankruptcy or Receivership: voluntary chapter 11 petition filed 7 Apr 2023 by Pear Therapeutics, Inc. and Pear Therapeutics (US), Inc. Form 25-NSE followed on 2 May 2023.",
-    "cik": "0001835567"
+    "cik": "0001835567",
+    "was_publicly_traded": true,
+    "listing_source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001835567&type=25-NSE",
+    "listing_note": "Class A common stock traded on Nasdaq as PEAR, and warrants as PEARW, per the cover page of the 8-K above. The registrant is the former Thimble Point Acquisition Corp. Its private-only total is therefore partial, and the chart marks it."
   }
 }

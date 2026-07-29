@@ -134,8 +134,8 @@
   "Rune Labs": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "fda_device",
     "basis": "StrivePD platform measuring Parkinson's motor state from wearable and deep brain stimulation data. FDA 510(k) cleared, K213519." },
 
-  "BRAINBox Solutions": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "company_site",
-    "basis": "Traumatic brain injury diagnostic pairing blood biomarkers with tablet-based neurocognitive testing. The neurocognitive half measures nervous system function directly." },
+  "BRAINBox Solutions": { "decision": "exclude", "evidence": "company_site",
+    "reason": "mTBI diagnostic pairing blood biomarkers with neurocognitive testing. Excluded with Octave Bioscience: a marker of a neurological disease is not the nervous system itself." },
 
   "Mindstrong": { "decision": "include", "modality": "diagnostics_imaging", "evidence": "description",
     "basis": "Digital biomarkers deriving continuous objective measures of cognition and mood. Included on the measurement platform, not on the virtual care arm." },
@@ -180,5 +180,5 @@
     "reason": "Molecular imaging agents for oncology, cardiology, stroke and diabetes. A general imaging-agent platform, not nervous-system specific." },
 
   "Octave Bioscience": { "decision": "exclude", "evidence": "description",
-    "reason": "Blood-based molecular diagnostics for multiple sclerosis. Measures biomarkers of a neurological disease rather than the nervous system itself. The closest call in this file; flip it if diagnostics for neurological disease should count." }
+    "reason": "Blood-based molecular diagnostics for multiple sclerosis. Measures biomarkers of a neurological disease rather than the nervous system itself. Reviewed 28 Jul 2026 and confirmed out, with BRAINBox Solutions." }
 }
