@@ -12,7 +12,8 @@
     "seed": "node --env-file-if-exists=.env scripts/seed.js",
     "test": "vitest run",
     "validate:funding": "node --env-file-if-exists=.env scripts/validate-funding.js",
-    "verify:funding": "node --env-file-if-exists=.env scripts/verify-funding.js"
+    "verify:funding": "node --env-file-if-exists=.env scripts/verify-funding.js",
+    "verify:cron": "node --env-file-if-exists=.env scripts/verify-cron.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",

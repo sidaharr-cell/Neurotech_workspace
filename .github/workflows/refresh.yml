@@ -135,3 +135,20 @@ jobs:
             echo "push attempt $i lost a race, retrying..."; sleep 5
           done
           echo "::error::could not push data update after 3 attempts"; exit 1
+
+      # The last word, and deliberately NOT continue-on-error.
+      #
+      # Every other step tolerates failure so one dead API cannot stop the rest,
+      # which is right, but it means the workflow reports success almost
+      # unconditionally. On 29 Jul 2026 it reported success while deleting the
+      # entire funding dataset: each pipeline did exactly what it was told, and
+      # nothing checked whether the rows another pipeline owned had survived.
+      #
+      # This step fails the run when the table has collapsed, so the alarm is
+      # the workflow going red rather than somebody noticing weeks later.
+      - name: Verify the run destroyed nothing
+        working-directory: neurotech-index
+        run: node scripts/verify-cron.js
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
