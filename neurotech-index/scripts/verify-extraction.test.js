@@ -91,11 +91,18 @@ describe('the false positives the first acceptance run produced', () => {
     expect(numberInSource('-3.54', 'effect was − 3.54 overall')).toBe(true)
   })
 
+  it('matches a p-value written without its leading zero', () => {
+    // Journals routinely write "P = .06"; the extractor writes back "0.06".
+    expect(numberInSource('0.06', 'the profound hearing loss group (P = .06). The')).toBe(true)
+    expect(numberInSource('0.04', 'reached statistical significance (P = .04).')).toBe(true)
+  })
+
   it('still rejects a genuinely invented value', () => {
     // The fixes must not turn the check into a rubber stamp.
     expect(numberInSource('512', 'the array had 128 channels')).toBe(false)
     expect(numberInSource('-9.9', 'age (t = - 3.17, p = 0.002)')).toBe(false)
     expect(numberInSource('7', 'seen in the four subjects')).toBe(false)
+    expect(numberInSource('0.07', 'significance (P = .04).')).toBe(false)
   })
 })
 

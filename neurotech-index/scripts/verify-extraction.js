@@ -85,6 +85,9 @@ export function normalizeSource(source) {
     .replace(/[−–—]/g, '-')        // unicode minus and dashes
     .replace(/(^|[\s(=,:])-\s+(?=[\d.])/g, '$1-') // "= - 3.54" -> "= -3.54"
     .replace(/,(?=\d{3}\b)/g, '')                 // thousands separators
+    // "P = .06" -> also expose "0.06". Journals routinely drop the leading zero
+    // on p-values, and the extractor correctly writes them back in.
+    .replace(/(^|[^\d.])\.(\d+)/g, (m, pre, digits) => `${pre}.${digits} 0.${digits}`)
     .replace(/\b([a-z]+)\b/gi, (w, word) => {
       const v = NUMBER_WORDS[word.toLowerCase()]
       return v === undefined ? w : `${w} ${v}`     // keep the word, add the digit

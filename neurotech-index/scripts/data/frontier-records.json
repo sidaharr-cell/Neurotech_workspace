@@ -1224,19 +1224,19 @@
     },
     "bci-noninvasive-performance-motor-imagery-eeg-classification-accurac": {
       "subfield": "BCI_NONINVASIVE",
-      "axis": "Motor imagery EEG classification accuracy, cross-subject zero-calibration, binary/multi-class tasks",
+      "axis": "Motor imagery EEG classification accuracy, stroke patient / general MI datasets",
       "axis_type": "performance",
-      "current_value": "85.75 %",
+      "current_value": "94.27 %",
       "held_by": {
         "type": "papers",
-        "id": "4613333b-a8b8-446d-969e-c5b676456b09"
+        "id": "cc12d58f-9e72-4df6-b944-4c2e3ba9fa53"
       },
       "established_date": "2026-01-01",
       "confidence": "single-group",
       "source": "derived",
-      "source_url": "https://doi.org/10.1080/10255842.2025.2457122",
-      "notes": "Promoted from a mined proposal. Best of 6 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Diagonal loading common spatial patterns with Pearson correlation coefficient based feature selection for efficient motor imagery classification.\" (2026, Computer methods in biomechanics and biomedical engineering). Extracted from the abstract; conditions as stated: Stroke patients' dataset (data-3), motor imagery EEG classification. Promotional language present and disregarded: outperform the accuracy achieved by any state-of-the-art techniques. Candidate only; not a record until reviewed.",
-      "_proposal_id": "d93861c1-a1c6-5f02-a859-8163cf825d51"
+      "source_url": "https://doi.org/10.1109/JBHI.2025.3622255",
+      "notes": "Promoted from a mined proposal. Best of 6 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A Novel Grasping Robot Control Method Using Motion Execution BCI Combining Knowledge Reasoning.\" (2026, IEEE journal of biomedical and health informatics). Extracted from the abstract; conditions as stated: 15 healthy subjects and 2 patients. Promotional language present and disregarded: novel, precise, effectiveness. Candidate only; not a record until reviewed.",
+      "_proposal_id": "8f7e0a11-e7e5-5224-8761-1a4144d33979"
     },
     "bci-noninvasive-performance-eeg-based-emotion-valence-arousal-domina": {
       "subfield": "BCI_NONINVASIVE",
@@ -1304,7 +1304,7 @@
     },
     "closed-loop-epilepsy-performance-seizure-prediction-classification-accura": {
       "subfield": "CLOSED_LOOP_EPILEPSY",
-      "axis": "Seizure prediction/classification accuracy, RNS/EEG biomarker-based forecasting or classification (ROC AUC / PR AUC / AUC score)",
+      "axis": "seizure prediction/classification accuracy (ROC/PR AUC), RNS biomarkers, multi-day forecasting",
       "axis_type": "performance",
       "current_value": "79.44 %",
       "held_by": {
@@ -1640,7 +1640,7 @@
     },
     "focused-ultrasound-performance-tremor-improvement-post-fus-treatment-es": {
       "subfield": "FOCUSED_ULTRASOUND",
-      "axis": "Tremor improvement post-FUS treatment, essential tremor patients, short/medium term",
+      "axis": "tremor improvement post-FUS treatment, essential tremor patients",
       "axis_type": "performance",
       "current_value": "81 %",
       "held_by": {
@@ -1656,7 +1656,7 @@
     },
     "focused-ultrasound-scale-cohort-size-demonstrated-for-fus-dbs-tre": {
       "subfield": "FOCUSED_ULTRASOUND",
-      "axis": "Cohort size demonstrated for FUS/DBS treatment or database analysis",
+      "axis": "cohort size demonstrated for FUS/DBS tremor treatment",
       "axis_type": "scale",
       "current_value": "600,000 patients",
       "held_by": {
@@ -1667,7 +1667,7 @@
       "confidence": "single-group",
       "source": "derived",
       "source_url": "https://doi.org/10.1016/j.clineuro.2026.109479",
-      "notes": "Promoted from a mined proposal. Best of 6 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The current landscape of sex-based disparities in surgical treatment of essential tremor and Parkinson's disease amidst MRgFUS adoption.\" (2026, Clinical neurology and neurosurgery). Extracted from the abstract; conditions as stated: TriNetX database, 07/2005-06/2025. Promotional language present and disregarded: newer, less invasive, large. Candidate only; not a record until reviewed.",
+      "notes": "Promoted from a mined proposal. Best of 7 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The current landscape of sex-based disparities in surgical treatment of essential tremor and Parkinson's disease amidst MRgFUS adoption.\" (2026, Clinical neurology and neurosurgery). Extracted from the abstract; conditions as stated: TriNetX database, 07/2005-06/2025. Promotional language present and disregarded: newer, less invasive, large. Candidate only; not a record until reviewed.",
       "_proposal_id": "13830cd2-8535-5f49-a0ad-570a64c7a0e9"
     },
     "focused-ultrasound-longevity-chronic-implant-device-stability-duratio": {
@@ -1957,6 +1957,1750 @@
       "source_url": "https://doi.org/10.25259/SNI_432_2025",
       "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Functional recovery after bilateral globus pallidus internus deep brain stimulation in primary dystonia: A prospective clinical evaluation.\" (2026, Surgical neurology international). Extracted from the abstract; conditions as stated: Baseline vs 6 months postoperatively, p < 0.001. Promotional language present and disregarded: disabling, established, significant, broader benefits. Candidate only; not a record until reviewed.",
       "_proposal_id": "dd546bb2-b231-5eb9-b092-c13a713fcedd"
+    },
+    "invasive-bci-intracortical-performance-classification-accuracy-offline-non-huma": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "classification accuracy, offline, non-human primate, center-out cursor task, motor cortex multi-unit recordings",
+      "axis_type": "performance",
+      "current_value": "0.936 accuracy (proportion)",
+      "held_by": {
+        "type": "papers",
+        "id": "3741c41b-e0fa-49d0-a9bb-657840e3d6c0"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fnins.2026.1714738",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Classifying motion states from neural activity of non-human primates for brain-computer interfaces.\" (2026, Frontiers in neuroscience). Extracted from the abstract; conditions as stated: offline evaluation, non-human primate 1, center-out cursor task, premotor and primary motor cortex multi-unit recordings. Promotional language present and disregarded: promising, reliably, consistently improved. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c05f4dac-04fa-506c-bf96-aaab6be55e33"
+    },
+    "invasive-bci-intracortical-performance-classification-accuracy-non-human-primat": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "classification accuracy, non-human primate, 3-class spatial grasping task",
+      "axis_type": "performance",
+      "current_value": "0.930 ± 0.023 accuracy",
+      "held_by": {
+        "type": "papers",
+        "id": "78c34c15-50b0-4de9-896d-099d761e7910"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1088/1741-2552/ae6bf1",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Dual-VCT: A dual-branch VMD-CNN-transformer model for local field potentials decoding.\" (2026, Journal of neural engineering). Extracted from the abstract; conditions as stated: non-human primate experiments, 3-class spatial grasping task. Promotional language present and disregarded: novel, core innovation, significantly outperformed, high-performance, strong cross-task robustness. Candidate only; not a record until reviewed.",
+      "_proposal_id": "412b7592-64f9-53cd-a895-cfd319e09ebd"
+    },
+    "invasive-bci-intracortical-performance-decoding-correlation-non-human-primate-f": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "decoding correlation, non-human primate, finger point-to-point tracking task",
+      "axis_type": "performance",
+      "current_value": "0.910 ± 0.023 correlation coefficient",
+      "held_by": {
+        "type": "papers",
+        "id": "78c34c15-50b0-4de9-896d-099d761e7910"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1088/1741-2552/ae6bf1",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Dual-VCT: A dual-branch VMD-CNN-transformer model for local field potentials decoding.\" (2026, Journal of neural engineering). Extracted from the abstract; conditions as stated: non-human primate experiments, finger point-to-point tracking task. Promotional language present and disregarded: novel, core innovation, significantly outperformed, high-performance, strong cross-task robustness. Candidate only; not a record until reviewed.",
+      "_proposal_id": "3ef3d213-bd9a-59db-aa68-e0e8955b12ac"
+    },
+    "invasive-bci-intracortical-scale-channel-count-intracortical-array": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "channel count, intracortical array",
+      "axis_type": "scale",
+      "current_value": "128 channels",
+      "held_by": {
+        "type": "papers",
+        "id": "872fec89-22a2-47b9-951b-018e83e9a327"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3390/mi17030301",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A Comb-Shaped Flexible Microelectrode Array for Simultaneous Multi-Scale Cortical Recording.\" (2026, Micromachines). Extracted from the abstract; conditions as stated: comb-shaped flexible micro-electrode array. Promotional language present and disregarded: high-resolution, high-fidelity, significant potential, significantly reducing. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d632bed1-b56b-5055-a61d-d8a59afe58ec"
+    },
+    "invasive-bci-intracortical-longevity-chronic-implantation-lifetime-human-ibci": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "chronic implantation lifetime, human iBCI, intracortical array",
+      "axis_type": "longevity",
+      "current_value": "41 months",
+      "held_by": {
+        "type": "papers",
+        "id": "8413ba14-fe88-4af2-9741-8bd2272aee96"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1227/ons.0000000000002067",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Chronic Implantation of Planar Microelectrode Arrays as a Brain-Computer Interface: A Technical Note and Operational Workflow.\" (2026, Operative neurosurgery (Hagerstown, Md.)). Extracted from the abstract; conditions as stated: patient MB. Promotional language present and disregarded: stable, high-fidelity, reliable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "b71c15b6-f316-5fbc-8783-dd1f7a65aac3"
+    },
+    "invasive-bci-intracortical-longevity-peri-implant-tissue-response-profiling-d": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "peri-implant tissue response profiling duration, rodent motor cortex",
+      "axis_type": "longevity",
+      "current_value": "3, 25, and 50 days",
+      "held_by": {
+        "type": "papers",
+        "id": "d2692b12-005c-40f4-a1f8-9bd625f1ca4c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/glia.70148",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Single-Nucleus Transcriptomics Reveals Microglial State Transitions and Astrocytic Trajectory Divergence During Glial Remodeling Induced by Intracortical Electrode Implantation.\" (2026, Glia). Extracted from the abstract; conditions as stated: rat motor cortex tissue, peri-implant microenvironment. Promotional language present and disregarded: crucially. Candidate only; not a record until reviewed.",
+      "_proposal_id": "659b0602-910c-5049-a9a7-ec14f577fcc6"
+    },
+    "invasive-bci-intracortical-scale-cohort-size-human-clinical-ibci-trial": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "cohort size, human clinical iBCI trial",
+      "axis_type": "scale",
+      "current_value": "2 participants",
+      "held_by": {
+        "type": "papers",
+        "id": "ccc975e9-e9d6-4e40-ab66-ecaf45455bc4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.64898/2026.06.16.732398",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Intracortical BCI Performance is Robust to Changes in Attentional Load During Dual-Tasking.\" (2026, bioRxiv : the preprint server for biology). Extracted from the abstract; conditions as stated: enrolled in long-term clinical trial of iBCI device. Promotional language present and disregarded: High performance, robust. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d131457d-a6ff-5f0a-a801-e8b773194e5e"
+    },
+    "invasive-bci-intracortical-performance-processing-latency-neural-decoding-hardw": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "processing latency, neural decoding hardware implementation",
+      "axis_type": "performance",
+      "current_value": "6 ms",
+      "held_by": {
+        "type": "papers",
+        "id": "edb2d5f2-a659-4cd1-b086-18360aabaae0"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s42003-026-10144-9",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Low-power differencing feature extracts spiking-band activities for high-performance intracortical brain-computer interfaces.\" (2026, Communications biology). Extracted from the abstract; conditions as stated: FPGA/MCU hardware implementation, 10-second neural recordings. Promotional language present and disregarded: superior performance, breakthrough solution, exceptional efficiency, exceptional computational efficiency, orders-of-magnitude improvements, next-generation. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c083eedf-200f-5cd4-a787-a7aa638eae19"
+    },
+    "invasive-bci-intracortical-cost-power-consumption-neural-decoding-hardwa": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "power consumption, neural decoding hardware implementation",
+      "axis_type": "cost",
+      "current_value": "3 mW",
+      "held_by": {
+        "type": "papers",
+        "id": "edb2d5f2-a659-4cd1-b086-18360aabaae0"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s42003-026-10144-9",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Low-power differencing feature extracts spiking-band activities for high-performance intracortical brain-computer interfaces.\" (2026, Communications biology). Extracted from the abstract; conditions as stated: FPGA/MCU hardware implementation. Promotional language present and disregarded: superior performance, breakthrough solution, exceptional efficiency, exceptional computational efficiency, orders-of-magnitude improvements, next-generation. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7538642c-5a25-501c-b690-1278d6763887"
+    },
+    "invasive-bci-intracortical-invasiveness-time-to-implant-related-wound-breakdown": {
+      "subfield": "INVASIVE_BCI_INTRACORTICAL",
+      "axis": "time to implant-related wound breakdown complication, human iBCI",
+      "axis_type": "invasiveness",
+      "current_value": "15 months",
+      "held_by": {
+        "type": "papers",
+        "id": "8413ba14-fe88-4af2-9741-8bd2272aee96"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1227/ons.0000000000002067",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Chronic Implantation of Planar Microelectrode Arrays as a Brain-Computer Interface: A Technical Note and Operational Workflow.\" (2026, Operative neurosurgery (Hagerstown, Md.)). Extracted from the abstract; conditions as stated: patient MB, post-implantation. Promotional language present and disregarded: stable, high-fidelity, reliable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "feae6036-70d4-5fd2-9e08-dbae55ea4ede"
+    },
+    "invasive-bci-ecog-scale-electrode-count-in-high-density-ecog-gri": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Electrode count in high-density ECoG grids used for decoding",
+      "axis_type": "scale",
+      "current_value": "64 to 128 electrodes",
+      "held_by": {
+        "type": "papers",
+        "id": "ddde5522-760c-4735-8961-eb1b951610cd"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.clinph.2026.2111940",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Optimal positioning and size of high-density electrocorticography grids for speech brain-computer interfaces.\" (2026, Clinical neurophysiology : official journal of the International Federation of Clinical Neurophysiology). Extracted from the abstract; conditions as stated: high-density ECoG grids used across participants. Promotional language present and disregarded: Significant progress, high word classification accuracy, sufficient. Candidate only; not a record until reviewed.",
+      "_proposal_id": "b0ebb73d-daf9-5f65-9b96-e10921f1f259"
+    },
+    "invasive-bci-ecog-performance-word-gesture-classification-accuracy-clo": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Word/gesture classification accuracy, closed-set decoding, ECoG/implanted interfaces",
+      "axis_type": "performance",
+      "current_value": "98.7 %",
+      "held_by": {
+        "type": "papers",
+        "id": "2f103782-a063-4578-9796-a4544ec76a91"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://arxiv.org/abs/2607.05590",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"DBNN: Neural Spike Classification Using a Deep Binarized Neural Network\" (2026). Extracted from the abstract; conditions as stated: synthetic and in-vivo datasets. Promotional language present and disregarded: first DBNN designed for real-time neural spike sorting, excellent balance, extremely low hardware cost, favorable trade-off. Candidate only; not a record until reviewed.",
+      "_proposal_id": "9ec88f47-07bc-515d-bc1f-c300772f867c"
+    },
+    "invasive-bci-ecog-longevity-chronic-bci-nightmode-use-duration-als-u": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Chronic BCI/nightmode use duration, ALS user, long-term implant",
+      "axis_type": "longevity",
+      "current_value": "1.5 years",
+      "held_by": {
+        "type": "papers",
+        "id": "a2db49e3-2909-4510-b6f5-e03190efd385"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41598-026-44228-7",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Implanted brain-computer interface functionality during nighttime in late-stage amyotrophic lateral sclerosis.\" (2026, Scientific reports). Extracted from the abstract; conditions as stated: ALS BCI user, long-term nightmode use. Promotional language present and disregarded: hold promise, reliable, reliably, underscores the importance. Candidate only; not a record until reviewed.",
+      "_proposal_id": "f3e08c8e-7598-562d-a5c5-f04042ec5a8b"
+    },
+    "invasive-bci-ecog-invasiveness-number-of-contacts-per-implanted-periphe": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Number of contacts per implanted peripheral nerve electrode",
+      "axis_type": "invasiveness",
+      "current_value": "16 contacts",
+      "held_by": {
+        "type": "papers",
+        "id": "d21526b1-e80f-4cea-a267-7744b904e3fc"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1186/s12984-026-01986-9",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Mind the gap: the temporal discrimination threshold of tactile sensation from implanted peripheral nerve stimulation.\" (2026, Journal of neuroengineering and rehabilitation). Extracted from the abstract; conditions as stated: extraneural electrodes implanted around median, ulnar, and/or radial nerves. Promotional language present and disregarded: crucial, important, critical. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d425c492-bef2-5b0f-81b4-1071772fd915"
+    },
+    "invasive-bci-ecog-performance-on-chip-power-consumption-neural-signal": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "On-chip power consumption, neural signal processing ASIC/FPGA",
+      "axis_type": "performance",
+      "current_value": "51 nW",
+      "held_by": {
+        "type": "papers",
+        "id": "d1830969-03a7-437a-88e0-83132ae2c2e9"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3390/brainsci16020141",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"NeuroGator: A Low-Power Gating System for Asynchronous BCI Based on LFP Brain State Estimation.\" (2026, Brain sciences). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: next-generation, robust paradigm, effectively resolves. Candidate only; not a record until reviewed.",
+      "_proposal_id": "0c50ec58-cf20-5fd9-a0d0-0d731b567aaf"
+    },
+    "invasive-bci-ecog-manufacturability-silicon-area-of-neural-processing-asic": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Silicon area of neural processing ASIC",
+      "axis_type": "manufacturability",
+      "current_value": "0.006 mm2",
+      "held_by": {
+        "type": "papers",
+        "id": "d1830969-03a7-437a-88e0-83132ae2c2e9"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3390/brainsci16020141",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"NeuroGator: A Low-Power Gating System for Asynchronous BCI Based on LFP Brain State Estimation.\" (2026, Brain sciences). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: next-generation, robust paradigm, effectively resolves. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c1708110-7d90-5d63-be6f-4e68b62ac2a6"
+    },
+    "invasive-bci-ecog-scale-coverage-area-of-flexible-ecog-arrays-ov": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Coverage area of flexible ECoG arrays over curved brain surface",
+      "axis_type": "scale",
+      "current_value": ">80 square centimeters",
+      "held_by": {
+        "type": "papers",
+        "id": "5d5afc76-3e19-4f3f-a336-180b12482957"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1126/sciadv.aee2752",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Electronics with switchable flexibility for 3D conforming neural interfaces.\" (2026, Science advances). Extracted from the abstract; conditions as stated: curved brain surfaces, in vivo implantation. Promotional language present and disregarded: unique advantages, high-quality. Candidate only; not a record until reviewed.",
+      "_proposal_id": "607b6c09-9334-5628-9f6d-f0ce24f3978a"
+    },
+    "invasive-bci-ecog-manufacturability-feedthrough-density-hermetic-implant-enc": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Feedthrough density, hermetic implant encapsulation",
+      "axis_type": "manufacturability",
+      "current_value": "250 contacts/cm",
+      "held_by": {
+        "type": "papers",
+        "id": "bb69c52d-a4c5-40a5-b034-b033d2161109"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/jbm.b.70040",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Establishment of High Channel-Count Packaging in Active Implantable Medical Devices for Neuroprosthesis.\" (2026, Journal of biomedical materials research. Part B, Applied biomaterials). Extracted from the abstract; conditions as stated: hermetic encapsulation approach. Promotional language present and disregarded: robust, illustrative example. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e753b457-7347-5b88-959b-ab26c9e7a2d2"
+    },
+    "invasive-bci-ecog-performance-movement-completion-rate-real-time-motor": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Movement completion rate, real-time motor decoding via implanted neuromusculoskeletal interface",
+      "axis_type": "performance",
+      "current_value": "20 to 60 %",
+      "held_by": {
+        "type": "papers",
+        "id": "ff994161-3008-40b1-8a2a-108ecdb40d9c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1109/TNSRE.2026.3680643",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Toward Simultaneous Neurostimulation and Prosthetic Control: Real-Time Filtering of Amplitude-Modulated Stimulation Artifacts From Implanted Electrode Signals.\" (2026, IEEE transactions on neural systems and rehabilitation engineering : a publication of the IEEE Engineering in Medicine and Biology Society). Extracted from the abstract; conditions as stated: real-time motion classification task, fixed stimulation, single participant with implanted neuromusculoskeletal interface. Promotional language present and disregarded: longstanding barrier, advanced closed-loop, robust. Candidate only; not a record until reviewed.",
+      "_proposal_id": "6cc94aec-2d4c-5cdc-b958-d2d86a94e61a"
+    },
+    "invasive-bci-ecog-performance-interface-impedance-between-electronics": {
+      "subfield": "INVASIVE_BCI_ECOG",
+      "axis": "Interface impedance between electronics and electrode",
+      "axis_type": "performance",
+      "current_value": "< 5 mΩ",
+      "held_by": {
+        "type": "papers",
+        "id": "bb69c52d-a4c5-40a5-b034-b033d2161109"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/jbm.b.70040",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Establishment of High Channel-Count Packaging in Active Implantable Medical Devices for Neuroprosthesis.\" (2026, Journal of biomedical materials research. Part B, Applied biomaterials). Extracted from the abstract; conditions as stated: between connection pad of electronics and electrode. Promotional language present and disregarded: robust, illustrative example. Candidate only; not a record until reviewed.",
+      "_proposal_id": "8d37b802-a878-5ed3-820b-00c32426017d"
+    },
+    "bci-minimally-invasive-longevity-accelerated-soak-test-lifetime-in-pbs-at": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Accelerated soak-test lifetime in PBS at 57°C, flexible/implantable microelectrodes",
+      "axis_type": "longevity",
+      "current_value": "1.5 years",
+      "held_by": {
+        "type": "papers",
+        "id": "18a02c70-976b-4d48-8755-f6a623362056"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/smtd.202501720",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Long-Term Stable Neural Interfaces with Nanoporous Graphene Electrodes and Hybrid Polyimide-Aluminium Oxide Encapsulation.\" (2025, Small methods). Extracted from the abstract; conditions as stated: flexible interdigitated electrodes, accelerated aging in PBS at 57°C. Promotional language present and disregarded: great promise, next-generation, successful integration, chronically stable, key technology advancement, long-term stable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d7b17fc1-304f-5bb3-b653-0cd56ddfcafd"
+    },
+    "bci-minimally-invasive-longevity-chronic-tissue-inflammation-assessment-w": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Chronic tissue inflammation assessment window, animal model post-implantation",
+      "axis_type": "longevity",
+      "current_value": "30 days",
+      "held_by": {
+        "type": "papers",
+        "id": "babb2871-41e9-464a-afc6-37de4caedeb5"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.64898/2026.06.24.26355847",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A Minimally Invasive, Suturable Platform for Brain Monitoring.\" (2026, medRxiv : the preprint server for health sciences). Extracted from the abstract; conditions as stated: animal model, post-implantation histology. Promotional language present and disregarded: unobtrusive, high-fidelity, minimally invasive, new modality. Candidate only; not a record until reviewed.",
+      "_proposal_id": "76b9f4d9-7007-5f1e-92e7-9bcc8ee42120"
+    },
+    "bci-minimally-invasive-invasiveness-microelectrode-diameter-implantable-neur": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Microelectrode diameter, implantable neural probe",
+      "axis_type": "invasiveness",
+      "current_value": "200 μm",
+      "held_by": {
+        "type": "papers",
+        "id": "c37f0faa-f3c9-4592-8956-7ee4fea82d42"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1021/acssensors.4c02461",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Brain-Computer Interface and Electrochemical Sensor Based on Boron-Nitrogen Co-Doped Graphene-Diamond Microelectrode for EEG and Dopamine Detection.\" (2025, ACS sensors). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: developed for the first time, excellent repeatability, reproducibility, and stability. Candidate only; not a record until reviewed.",
+      "_proposal_id": "617a96f4-e7c4-54cb-bb81-6177d35d4c56"
+    },
+    "bci-minimally-invasive-invasiveness-patient-preference-for-invasiveness-leve": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Patient preference for invasiveness level of BCI, survey of people with MS",
+      "axis_type": "invasiveness",
+      "current_value": "15 participants (n)",
+      "held_by": {
+        "type": "papers",
+        "id": "aa9280a7-ee66-41ed-a4df-184cdbff82c4"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1371/journal.pone.0319811",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Towards developing brain-computer interfaces for people with Multiple Sclerosis.\" (2025, PloS one). Extracted from the abstract; conditions as stated: online survey of people with MS. Promotional language present and disregarded: severely disabling, widespread interest, crucial, higher performing. Candidate only; not a record until reviewed.",
+      "_proposal_id": "15d50d45-4be8-515c-b333-507a59b1154e"
+    },
+    "bci-minimally-invasive-performance-electrode-impedance-reduction-signal-rec": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Electrode impedance reduction, signal recording vs conventional technique",
+      "axis_type": "performance",
+      "current_value": "67 %",
+      "held_by": {
+        "type": "papers",
+        "id": "091fc2e7-2014-4873-ad91-3bb8e80689c6"
+      },
+      "established_date": "2023-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1109/TNSRE.2023.3311750",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2023); only the year is indexed, so the month and day are not meaningful. Reported in \"A Real-Time Non-Implantation Bi-Directional Brain-Computer Interface Solution Without Stimulation Artifacts.\" (2023, IEEE transactions on neural systems and rehabilitation engineering : a publication of the IEEE Engineering in Medicine and Biology Society). Extracted from the abstract; conditions as stated: 18 points, signal recording experiments, compared to conventional technique. Promotional language present and disregarded: novel solution, vast potential applications, significantly improved. Candidate only; not a record until reviewed.",
+      "_proposal_id": "4b6828ce-addd-5af0-9085-431a320a2921"
+    },
+    "bci-minimally-invasive-performance-signal-to-noise-ratio-eeg-evoked-potenti": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Signal-to-noise ratio, EEG/evoked potential recordings",
+      "axis_type": "performance",
+      "current_value": "9 dB",
+      "held_by": {
+        "type": "papers",
+        "id": "c37f0faa-f3c9-4592-8956-7ee4fea82d42"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1021/acssensors.4c02461",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Brain-Computer Interface and Electrochemical Sensor Based on Boron-Nitrogen Co-Doped Graphene-Diamond Microelectrode for EEG and Dopamine Detection.\" (2025, ACS sensors). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: developed for the first time, excellent repeatability, reproducibility, and stability. Candidate only; not a record until reviewed.",
+      "_proposal_id": "a14a154d-25fa-518e-8669-d8c2bd10873f"
+    },
+    "bci-minimally-invasive-performance-charge-injection-durability-biphasic-pul": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Charge injection durability, biphasic pulse stimulation",
+      "axis_type": "performance",
+      "current_value": "1 billion pulses",
+      "held_by": {
+        "type": "papers",
+        "id": "18a02c70-976b-4d48-8755-f6a623362056"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/smtd.202501720",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Long-Term Stable Neural Interfaces with Nanoporous Graphene Electrodes and Hybrid Polyimide-Aluminium Oxide Encapsulation.\" (2025, Small methods). Extracted from the abstract; conditions as stated: very high charge density stimulation. Promotional language present and disregarded: great promise, next-generation, successful integration, chronically stable, key technology advancement, long-term stable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "38a62aed-8c4a-5c23-a361-77f0897a09c6"
+    },
+    "bci-minimally-invasive-scale-eeg-headband-channel-count": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "EEG headband channel count",
+      "axis_type": "scale",
+      "current_value": "8 channels",
+      "held_by": {
+        "type": "papers",
+        "id": "c37f0faa-f3c9-4592-8956-7ee4fea82d42"
+      },
+      "established_date": "2025-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1021/acssensors.4c02461",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2025); only the year is indexed, so the month and day are not meaningful. Reported in \"Brain-Computer Interface and Electrochemical Sensor Based on Boron-Nitrogen Co-Doped Graphene-Diamond Microelectrode for EEG and Dopamine Detection.\" (2025, ACS sensors). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: developed for the first time, excellent repeatability, reproducibility, and stability. Candidate only; not a record until reviewed.",
+      "_proposal_id": "696160f5-aa8b-5f56-bf9d-bdecacf12f0b"
+    },
+    "bci-minimally-invasive-manufacturability-fabrication-assembly-implantation-protoc": {
+      "subfield": "BCI_MINIMALLY_INVASIVE",
+      "axis": "Fabrication/assembly/implantation protocol duration",
+      "axis_type": "manufacturability",
+      "current_value": "3 weeks",
+      "held_by": {
+        "type": "papers",
+        "id": "2b26e8de-ac4c-4157-9611-bb26c4a9087a"
+      },
+      "established_date": "2023-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41596-023-00824-9",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2023); only the year is indexed, so the month and day are not meaningful. Reported in \"Self-assembled ultraflexible probes for long-term neural recordings and neuromodulation.\" (2023, Nature protocols). Extracted from the abstract; conditions as stated: protocol timeline. Promotional language present and disregarded: next-generation, ultraflexible, precise, reliable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "70007bf8-2d19-5e3e-ae40-4be71ffaa651"
+    },
+    "bci-noninvasive-performance-eeg-based-attention-relaxation-or-affect": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "EEG-based attention/relaxation or affective state classification accuracy",
+      "axis_type": "performance",
+      "current_value": "99.80 %",
+      "held_by": {
+        "type": "papers",
+        "id": "856c4667-aa71-4f37-bd49-5a0c0c7f8645"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fnins.2026.1810609",
+      "notes": "Promoted from a mined proposal. Best of 7 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A dual-branch network with brain region-constrained attention for EEG emotion recognition.\" (2026, Frontiers in neuroscience). Extracted from the abstract; conditions as stated: DREAMER dataset, subject-dependent, 10-fold cross-validation. Promotional language present and disregarded: novel, high-performance, more interpretable, new theoretical perspective. Candidate only; not a record until reviewed.",
+      "_proposal_id": "53c75a4d-9098-5fb8-b265-7b0ee954bb51"
+    },
+    "bci-noninvasive-performance-f1-score-eeg-state-task-classification": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "F1-score, EEG state/task classification",
+      "axis_type": "performance",
+      "current_value": "0.93 score",
+      "held_by": {
+        "type": "papers",
+        "id": "ccde320c-1a06-4773-8337-e21acb4f4170"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3791/70700",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"SET Net A Hybrid Deep Learning Framework For EEG Based Attention Relaxation Classification In Brain Computer Interface Applications.\" (2026, Journal of visualized experiments : JoVE). Extracted from the abstract; conditions as stated: EEG-based attention-relaxation state classification. Promotional language present and disregarded: new, hybrid, enhanced, scalable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "ea0c6982-58fe-5145-8b51-79ce3e725178"
+    },
+    "bci-noninvasive-performance-roc-auc-eeg-based-classification-models": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "ROC-AUC, EEG-based classification models",
+      "axis_type": "performance",
+      "current_value": "0.98 score",
+      "held_by": {
+        "type": "papers",
+        "id": "ccde320c-1a06-4773-8337-e21acb4f4170"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3791/70700",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"SET Net A Hybrid Deep Learning Framework For EEG Based Attention Relaxation Classification In Brain Computer Interface Applications.\" (2026, Journal of visualized experiments : JoVE). Extracted from the abstract; conditions as stated: EEG-based attention-relaxation state classification. Promotional language present and disregarded: new, hybrid, enhanced, scalable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c79eed00-2aed-5b13-92af-c3a22e73e50b"
+    },
+    "bci-noninvasive-performance-functional-task-classification-accuracy": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Functional task classification accuracy, assistive BCI conditions, healthy participants",
+      "axis_type": "performance",
+      "current_value": "90 %",
+      "held_by": {
+        "type": "papers",
+        "id": "d5eb4cec-7e13-4b49-91c1-c70cffe67bf9"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3390/s26123924",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Multimodal EEG-EMG and FEM-Based Adaptive Control of Passive Upper-Limb Exoskeletons.\" (2026, Sensors (Basel, Switzerland)). Extracted from the abstract; conditions as stated: 10 healthy participants, three functional tasks (screwing, moving the box, lifting the box), five assistive conditions. Promotional language present and disregarded: adaptive, real-time applicability, advance, safe, energy-efficient. Candidate only; not a record until reviewed.",
+      "_proposal_id": "71c009ae-a3ed-5ea8-a953-e3cbd0e5c5ee"
+    },
+    "bci-noninvasive-performance-correlation-of-decoded-signal-with-behav": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Correlation of decoded signal with behavior/task performance",
+      "axis_type": "performance",
+      "current_value": "0.864 r",
+      "held_by": {
+        "type": "papers",
+        "id": "3927aa20-6b39-4667-b9e5-5932799c3df3"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://arxiv.org/abs/2605.18897",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cross-Subject Intracranial EEG Reconstruction from Scalp Recordings Using Multi-Scale Cross-Attention Transformers\" (2026). Extracted from the abstract; conditions as stated: highly observable sensorimotor regions. Promotional language present and disregarded: substantially better, outperforming. Candidate only; not a record until reviewed.",
+      "_proposal_id": "58412b33-7677-5dd5-95ab-0b80f1ff471b"
+    },
+    "bci-noninvasive-performance-real-time-bci-inference-latency": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Real-time BCI inference latency",
+      "axis_type": "performance",
+      "current_value": "below 180 ms",
+      "held_by": {
+        "type": "papers",
+        "id": "d5eb4cec-7e13-4b49-91c1-c70cffe67bf9"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3390/s26123924",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Multimodal EEG-EMG and FEM-Based Adaptive Control of Passive Upper-Limb Exoskeletons.\" (2026, Sensors (Basel, Switzerland)). Extracted from the abstract; conditions as stated: real-time operation. Promotional language present and disregarded: adaptive, real-time applicability, advance, safe, energy-efficient. Candidate only; not a record until reviewed.",
+      "_proposal_id": "6eb02fd3-7bd1-5fb8-a9f5-2413f7033d69"
+    },
+    "bci-noninvasive-performance-real-time-gameplay-success-rate-post-val": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Real-time gameplay success rate, post-validation BCI pilot",
+      "axis_type": "performance",
+      "current_value": "73 %",
+      "held_by": {
+        "type": "papers",
+        "id": "4be6d1bd-c01f-401d-8714-6fc9499db01d"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1186/s12984-026-01969-w",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Improving motor imagery decoding methods for an EEG-based mobile brain-computer interface in the context of the 2024 Cybathlon.\" (2026, Journal of neuroengineering and rehabilitation). Extracted from the abstract; conditions as stated: post-Cybathlon validation with original pilot and an additional participant, real-time gameplay. Promotional language present and disregarded: significant promise, step towards bridging the gap. Candidate only; not a record until reviewed.",
+      "_proposal_id": "1fcabf0e-998d-53e9-a788-ef0f7bc6ceb8"
+    },
+    "bci-noninvasive-performance-clinical-motor-rehabilitation-outcome-im": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Clinical motor rehabilitation outcome improvement, BCI vs control, stroke trials",
+      "axis_type": "performance",
+      "current_value": "13.40 points",
+      "held_by": {
+        "type": "papers",
+        "id": "d551608a-69d1-4141-94e3-fe7f144aae78"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fneur.2026.1880696",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Closed-loop motor imagery brain-computer interface-assisted training for upper limb rehabilitation after subacute stroke: clinical and electroencephalographic outcomes from a randomized pilot trial.\" (2026, Frontiers in neurology). Extracted from the abstract; conditions as stated: 95% CI, 10.71-16.08; p < 0.001; BCI vs control group. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7960cf1e-54a1-50ad-b56b-0452cca89233"
+    },
+    "bci-noninvasive-scale-largest-cohort-demonstrated-subacute-str": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Largest cohort demonstrated, subacute stroke BCI trials",
+      "axis_type": "scale",
+      "current_value": "42 patients",
+      "held_by": {
+        "type": "papers",
+        "id": "384f205f-af32-4ab7-87d6-4bb561a9b4f8"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1109/TNSRE.2025.3625222",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Multimodal Behavioral Data Predict Stroke Patient's Response to BCI Treatment Through Explainable AI.\" (2026, IEEE transactions on neural systems and rehabilitation engineering : a publication of the IEEE Engineering in Medicine and Biology Society). Extracted from the abstract; conditions as stated: subacute stroke patients with lower-limb motor impairment. Promotional language present and disregarded: holds promise, core role, precision medicine. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e44e43d3-9aa9-56a0-b73c-c3cc5911f529"
+    },
+    "bci-noninvasive-scale-ieeg-channel-count-evaluated-in-decoding": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "iEEG channel count evaluated in decoding benchmarks",
+      "axis_type": "scale",
+      "current_value": "1,282 channels",
+      "held_by": {
+        "type": "papers",
+        "id": "3927aa20-6b39-4667-b9e5-5932799c3df3"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://arxiv.org/abs/2605.18897",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cross-Subject Intracranial EEG Reconstruction from Scalp Recordings Using Multi-Scale Cross-Attention Transformers\" (2026). Extracted from the abstract; conditions as stated: two public datasets, leave-one-subject-out cross-validation. Promotional language present and disregarded: substantially better, outperforming. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e054b0af-6801-5123-8f78-d2c84c4c5276"
+    },
+    "bci-noninvasive-longevity-training-duration-motor-imagery-based-ha": {
+      "subfield": "BCI_NONINVASIVE",
+      "axis": "Training duration, motor imagery-based hand rehabilitation program",
+      "axis_type": "longevity",
+      "current_value": "4 weeks",
+      "held_by": {
+        "type": "papers",
+        "id": "d551608a-69d1-4141-94e3-fe7f144aae78"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fneur.2026.1880696",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Closed-loop motor imagery brain-computer interface-assisted training for upper limb rehabilitation after subacute stroke: clinical and electroencephalographic outcomes from a randomized pilot trial.\" (2026, Frontiers in neurology). Extracted from the abstract; conditions as stated: dose-matched motor imagery-based hand training. Candidate only; not a record until reviewed.",
+      "_proposal_id": "f120aeeb-7b89-5a54-81a7-5f43f352a324"
+    },
+    "closed-loop-epilepsy-performance-responder-rate-to-neurostimulation-for-s": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "responder rate to neurostimulation for seizure reduction (>=50% reduction)",
+      "axis_type": "performance",
+      "current_value": "83.3 %",
+      "held_by": {
+        "type": "papers",
+        "id": "c372c5c8-4812-4fab-bf68-9f607e723873"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/epi4.70181",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, higher is better. 4 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Centromedian nucleus targeting in the pediatric population treated with thalamic responsive neurostimulation for drug-resistant epilepsy.\" (2026, Epilepsia open). Extracted from the abstract; conditions as stated: 10 out of 12 pediatric patients with extra-temporal multifocal or generalized DRE treated with RNS. Promotional language present and disregarded: robust response, most challenging, high-accuracy. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c06194cd-bb96-5626-9e26-b89dca934456"
+    },
+    "closed-loop-epilepsy-scale-cohort-case-series-size-for-device-impla": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "cohort/case-series size for device implantation studies",
+      "axis_type": "scale",
+      "current_value": "32 patients",
+      "held_by": {
+        "type": "papers",
+        "id": "c6b0def6-6924-416e-8119-3c28d53aa22e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1227/ons.0000000000001604",
+      "notes": "Promoted from a mined proposal. Best of 5 comparable candidate(s) on this axis, higher is better. 2 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cyanoacrylate Adhesive With Titanium Plate Fixation for Deep Brain Stimulation Leads: A Case Series and Technical Note.\" (2026, Operative neurosurgery (Hagerstown, Md.)). Extracted from the abstract; conditions as stated: Patients with medication-refractory Parkinson disease or parkinsonism who underwent DBS surgery with this fixation technique. Promotional language present and disregarded: highly effective, novel technique, esthetically superior, cost-efficient, favorable safety profile, viable future standard. Candidate only; not a record until reviewed.",
+      "_proposal_id": "539de8f7-cc61-5c41-8523-218bca7ae680"
+    },
+    "closed-loop-epilepsy-invasiveness-electrode-lead-fixation-stability-withou": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "electrode/lead fixation stability without migration or mechanical failure",
+      "axis_type": "invasiveness",
+      "current_value": "32 of 32 patients",
+      "held_by": {
+        "type": "papers",
+        "id": "c6b0def6-6924-416e-8119-3c28d53aa22e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1227/ons.0000000000001604",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cyanoacrylate Adhesive With Titanium Plate Fixation for Deep Brain Stimulation Leads: A Case Series and Technical Note.\" (2026, Operative neurosurgery (Hagerstown, Md.)). Extracted from the abstract; conditions as stated: Over follow-up period. Promotional language present and disregarded: highly effective, novel technique, esthetically superior, cost-efficient, favorable safety profile, viable future standard. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d837bb25-6b1d-5f59-9e4a-ba8236fafc17"
+    },
+    "closed-loop-epilepsy-invasiveness-implantation-depth-of-electrode-array-be": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "implantation depth of electrode array below skull surface",
+      "axis_type": "invasiveness",
+      "current_value": "43 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "b1394d13-8bef-4cd3-bb4f-89e077323025"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1088/1741-2552/ae7764",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Transcranial acoustoelectric imaging (tABI) of seizure activity in human head model with neuronavigation.\" (2026, Journal of neural engineering). Extracted from the abstract; conditions as stated: human skull filled with conductive agarose gel, artificial current waveform segments from normal and seizure activity. Promotional language present and disregarded: new method, unmet need. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c02fccce-22dc-58f8-b5f2-ee7f233d7591"
+    },
+    "closed-loop-epilepsy-performance-spatial-targeting-accuracy-of-electrode": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "spatial targeting accuracy of electrode contacts within target nucleus",
+      "axis_type": "performance",
+      "current_value": "95.8 %",
+      "held_by": {
+        "type": "papers",
+        "id": "c372c5c8-4812-4fab-bf68-9f607e723873"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/epi4.70181",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Centromedian nucleus targeting in the pediatric population treated with thalamic responsive neurostimulation for drug-resistant epilepsy.\" (2026, Epilepsia open). Extracted from the abstract; conditions as stated: 23 out of 24 CM-processed electrodes, based on patient-specific thalamus segmentation. Promotional language present and disregarded: robust response, most challenging, high-accuracy. Candidate only; not a record until reviewed.",
+      "_proposal_id": "47500e01-a672-56f3-8c93-1e2be4f09408"
+    },
+    "closed-loop-epilepsy-performance-spatial-resolution-of-transcranial-acous": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "spatial resolution of transcranial acoustic/ultrasound-based imaging localization",
+      "axis_type": "performance",
+      "current_value": "5 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "b1394d13-8bef-4cd3-bb4f-89e077323025"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1088/1741-2552/ae7764",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Transcranial acoustoelectric imaging (tABI) of seizure activity in human head model with neuronavigation.\" (2026, Journal of neural engineering). Extracted from the abstract; conditions as stated: activation patterns correlated with different current waveforms. Promotional language present and disregarded: new method, unmet need. Candidate only; not a record until reviewed.",
+      "_proposal_id": "22ba67b1-e430-5cab-a8e4-47644f3c6543"
+    },
+    "closed-loop-epilepsy-performance-snr-enhancement-via-signal-processing-wi": {
+      "subfield": "CLOSED_LOOP_EPILEPSY",
+      "axis": "SNR enhancement via signal processing (Wiener filter) on ictal waveform detection",
+      "axis_type": "performance",
+      "current_value": "16.9 dB",
+      "held_by": {
+        "type": "papers",
+        "id": "b1394d13-8bef-4cd3-bb4f-89e077323025"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1088/1741-2552/ae7764",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Transcranial acoustoelectric imaging (tABI) of seizure activity in human head model with neuronavigation.\" (2026, Journal of neural engineering). Extracted from the abstract; conditions as stated: at 6.4 mA of current. Promotional language present and disregarded: new method, unmet need. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d2eb954b-3ae9-5aed-988e-1819869b2e3d"
+    },
+    "dbs-performance-nmss-gastrointestinal-domain-score-impro": {
+      "subfield": "DBS",
+      "axis": "NMSS gastrointestinal domain score improvement, PD, STN-DBS, pooled studies",
+      "axis_type": "performance",
+      "current_value": "-1.46 mean difference",
+      "held_by": {
+        "type": "papers",
+        "id": "4311143c-3620-475b-9329-d8b21afde82f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.neurom.2025.07.005",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Impact of Subthalamic Nucleus Deep Brain Stimulation on Gastrointestinal Symptoms and Gastric Emptying in Parkinson's Disease: A Systematic Review and Meta-Analysis.\" (2026, Neuromodulation : journal of the International Neuromodulation Society). Extracted from the abstract; conditions as stated: 95% CI: [-2.34, -0.57], p = 0.001; six months post-DBS. Promotional language present and disregarded: significant, sustained benefits. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c8798d84-2361-5574-afb6-d75d882e9bc2"
+    },
+    "dbs-performance-motor-symptom-improvement-updrs-uhdrs-bf": {
+      "subfield": "DBS",
+      "axis": "Motor symptom improvement (UPDRS/UHDRS/BFMDRS), chronic DBS follow-up, movement disorders",
+      "axis_type": "performance",
+      "current_value": "72.7 %",
+      "held_by": {
+        "type": "papers",
+        "id": "4f921dd4-3efb-4746-b31a-feb3d42e017e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.neurom.2025.10.070",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Subthalamic Deep Brain Stimulation for Chorea-Acanthocytosis: A Single-Center Case Series.\" (2026, Neuromodulation : journal of the International Neuromodulation Society). Extracted from the abstract; conditions as stated: EFU, <3 months, p=0.0033. Promotional language present and disregarded: safe and effective, sustained relief, viable therapeutic target. Candidate only; not a record until reviewed.",
+      "_proposal_id": "810de73f-14bb-5d95-b82d-8caea2a976d7"
+    },
+    "dbs-performance-oscillatory-neuron-coherence-with-sympto": {
+      "subfield": "DBS",
+      "axis": "Oscillatory neuron coherence with symptom-related background activity, PD, intraoperative recording",
+      "axis_type": "performance",
+      "current_value": "95.0 %",
+      "held_by": {
+        "type": "papers",
+        "id": "4365e57d-5fe9-4580-bb7e-7669fc78a1a2"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.brainres.2026.150224",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Patterns of subthalamic synchronized oscillatory neurons are characteristics of motor subtypes of Parkinson's disease.\" (2026, Brain research). Extracted from the abstract; conditions as stated: of total oscillatory neurons. Promotional language present and disregarded: strongest correlation. Candidate only; not a record until reviewed.",
+      "_proposal_id": "08011d5b-8238-563b-85a5-9f6198a76677"
+    },
+    "dbs-scale-cohort-size-demonstrating-dbs-capability": {
+      "subfield": "DBS",
+      "axis": "Cohort size demonstrating DBS capability, patients",
+      "axis_type": "scale",
+      "current_value": "405 patients",
+      "held_by": {
+        "type": "papers",
+        "id": "482006a2-8d17-48f0-bd69-9723e11b380d"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1212/CPJ.0000000000200605",
+      "notes": "Promoted from a mined proposal. Best of 7 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Long-Term Outcomes of Subthalamic Nucleus and Globus Pallidus Interna Deep Brain Stimulation for Young-Onset Parkinson Disease.\" (2026, Neurology. Clinical practice). Extracted from the abstract; conditions as stated: single-center retrospective chart review, Jan 1999-Oct 2023, adult YOPD patients treated with STN or GPi DBS. Promotional language present and disregarded: large cohort, high volume. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c9abe3ea-5637-59de-ba28-51c85ba08f9f"
+    },
+    "dbs-performance-tremor-habituation-rate-dbs-essential-tr": {
+      "subfield": "DBS",
+      "axis": "Tremor habituation rate, DBS, essential tremor/VIM",
+      "axis_type": "performance",
+      "current_value": "0 to 73.3 %",
+      "held_by": {
+        "type": "papers",
+        "id": "4c1bb0dc-4df1-437d-8401-615353b0a50c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/mdc3.70302",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Late-Onset Ataxia after Thalamic Deep Brain Stimulation for Tremor Linked to Therapy Escape.\" (2026, Movement disorders clinical practice). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: well-established, strong statistical relationship. Candidate only; not a record until reviewed.",
+      "_proposal_id": "fc146537-6210-5e42-9961-a967384eabd5"
+    },
+    "dbs-invasiveness-rate-of-ataxia-development-vim-dbs-for-t": {
+      "subfield": "DBS",
+      "axis": "Rate of ataxia development, VIM DBS for tremor",
+      "axis_type": "invasiveness",
+      "current_value": "30 patients",
+      "held_by": {
+        "type": "papers",
+        "id": "4c1bb0dc-4df1-437d-8401-615353b0a50c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/mdc3.70302",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Late-Onset Ataxia after Thalamic Deep Brain Stimulation for Tremor Linked to Therapy Escape.\" (2026, Movement disorders clinical practice). Extracted from the abstract; conditions as stated: out of 61 patients. Promotional language present and disregarded: well-established, strong statistical relationship. Candidate only; not a record until reviewed.",
+      "_proposal_id": "b112a301-c190-55d0-b060-6877819d0c4c"
+    },
+    "sensory-prosthetics-invasiveness-electrode-array-insertion-depth-from-lat": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Electrode array insertion depth from lateral cochlear wall, CT-measured, cochlear implant",
+      "axis_type": "invasiveness",
+      "current_value": "1.91 to 3.61 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "4223f54e-ae1e-485f-93b0-cf15f3984b9c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1097/MAO.0000000000004961",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Spatial Analysis of Electrode Proximity to Lateral Wall and Its Impact on ECAP Amplitudes: An OTOPLAN-Based Study.\" (2026, Otology & neurotology : official publication of the American Otological Society, American Neurotology Society [and] European Academy of Otology and Neurotology). Extracted from the abstract; conditions as stated: measured via OTOPLAN from high-resolution CT scans. Promotional language present and disregarded: clinically actionable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "16a0d7a6-f6b1-5e57-9379-41b0a11bcf5d"
+    },
+    "sensory-prosthetics-performance-discriminative-power-c-statistic-of-ci-c": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Discriminative power (C statistic) of CI candidacy classification models",
+      "axis_type": "performance",
+      "current_value": "0.83 C statistic",
+      "held_by": {
+        "type": "papers",
+        "id": "417bfc85-a05b-4db0-99b3-a242c8265f28"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1001/jamaoto.2025.4882",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cochlear Implant Candidacy Support Tool Using Conjunctive Consolidation.\" (2026, JAMA otolaryngology-- head & neck surgery). Extracted from the abstract; conditions as stated: 95% CI, 0.81-0.85. Promotional language present and disregarded: clear gradient, strong discriminative power, strong model discrimination, simple, clinically intuitive. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c7c83ae1-41bd-5254-8b0c-7ab44cb6e76b"
+    },
+    "sensory-prosthetics-performance-correlation-between-electrode-cochlea-di": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Correlation between electrode-cochlea distance/SMRT and speech perception outcomes, cochlear implant users",
+      "axis_type": "performance",
+      "current_value": "0.72 Spearman rho",
+      "held_by": {
+        "type": "papers",
+        "id": "88dee6a5-a968-4509-bd03-b36a4243529b"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1097/MAO.0000000000004843",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Relationship of a Nonspeech Auditory Test With Speech Recognition Performance in Adult Cochlear Implant Candidates: An Exploratory Study.\" (2026, Otology & neurotology : official publication of the American Otological Society, American Neurotology Society [and] European Academy of Otology and Neurotology). Extracted from the abstract; conditions as stated: n=11, P=0.012. Candidate only; not a record until reviewed.",
+      "_proposal_id": "18dd036c-d3bc-5d99-a314-4d1df8812b70"
+    },
+    "sensory-prosthetics-performance-number-of-high-quality-visual-cortex-ele": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Number of high-quality visual cortex electrodes mapped per subject, intracortical visual prosthesis",
+      "axis_type": "performance",
+      "current_value": "73-91 electrodes",
+      "held_by": {
+        "type": "papers",
+        "id": "896a4d4e-e2e7-4078-b60f-199f26429c9c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.brs.2025.103019",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Large-scale mapping of artificial perceptions for neuroprostheses using spontaneous neuronal activity in macaque and human visual cortex.\" (2026, Brain stimulation). Extracted from the abstract; conditions as stated: each of 3 blind human volunteers. Promotional language present and disregarded: rapid, largely automated. Candidate only; not a record until reviewed.",
+      "_proposal_id": "dfe80256-fe8d-5ae8-8546-96a937f7d3b3"
+    },
+    "sensory-prosthetics-scale-number-of-implanted-recording-electrodes": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Number of implanted recording electrodes per subject, visual cortex array",
+      "axis_type": "scale",
+      "current_value": "896 electrodes",
+      "held_by": {
+        "type": "papers",
+        "id": "896a4d4e-e2e7-4078-b60f-199f26429c9c"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.brs.2025.103019",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Large-scale mapping of artificial perceptions for neuroprostheses using spontaneous neuronal activity in macaque and human visual cortex.\" (2026, Brain stimulation). Extracted from the abstract; conditions as stated: two sighted monkeys. Promotional language present and disregarded: rapid, largely automated. Candidate only; not a record until reviewed.",
+      "_proposal_id": "cdc343d3-5ee7-56e0-afc6-433af2d5b97f"
+    },
+    "sensory-prosthetics-cost-total-personnel-cost-of-ci-perioperative": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Total personnel cost of CI perioperative care pathway, per recipient",
+      "axis_type": "cost",
+      "current_value": "254.45 USD",
+      "held_by": {
+        "type": "papers",
+        "id": "8a43fe36-5ca2-4100-be41-8e77c1e9d9ec"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/ohn.70155",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Optimizing Cochlear Implant Care: A Time-Driven Activity-Based Costing (TDABC) Analysis of Audiologist and Otolaryngologist Workflow.\" (2026, Otolaryngology--head and neck surgery : official journal of American Academy of Otolaryngology-Head and Neck Surgery). Extracted from the abstract; conditions as stated: 2 tertiary academic CI centers, 2023-2024. Candidate only; not a record until reviewed.",
+      "_proposal_id": "bc67383e-3b8a-52e7-a86e-f57cce2b5750"
+    },
+    "sensory-prosthetics-manufacturability-total-clinician-audiologist-time-for-ci": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Total clinician/audiologist time for CI perioperative care pathway, per recipient",
+      "axis_type": "manufacturability",
+      "current_value": "2.6 hours",
+      "held_by": {
+        "type": "papers",
+        "id": "8a43fe36-5ca2-4100-be41-8e77c1e9d9ec"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/ohn.70155",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Optimizing Cochlear Implant Care: A Time-Driven Activity-Based Costing (TDABC) Analysis of Audiologist and Otolaryngologist Workflow.\" (2026, Otolaryngology--head and neck surgery : official journal of American Academy of Otolaryngology-Head and Neck Surgery). Extracted from the abstract; conditions as stated: 2 tertiary academic CI centers, 2023-2024. Candidate only; not a record until reviewed.",
+      "_proposal_id": "c556aa7d-1f8d-5042-bc87-ec6b099c414e"
+    },
+    "sensory-prosthetics-manufacturability-sensor-sensitivity-variability-across-fa": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Sensor sensitivity variability across fabricated units, UmboMic microphone",
+      "axis_type": "manufacturability",
+      "current_value": "Less than 6 dB",
+      "held_by": {
+        "type": "papers",
+        "id": "38c983cf-5793-4db2-83cd-5e04e808f40e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1007/s10162-026-01039-x",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The UmboMic: Characterization and Testing of a Middle Ear Microphone.\" (2026, Journal of the Association for Research in Otolaryngology : JARO). Extracted from the abstract; conditions as stated: across seven individual sensors, indicating fabrication repeatability. Promotional language present and disregarded: promising advancement, very good microphone performances, high sensitivity, extensive testing. Candidate only; not a record until reviewed.",
+      "_proposal_id": "9510108b-380b-5c49-8bc1-cbe7c779998c"
+    },
+    "sensory-prosthetics-performance-equivalent-input-noise-implantable-acous": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Equivalent input noise, implantable acoustic sensor, 100 Hz-7 kHz",
+      "axis_type": "performance",
+      "current_value": "32.4 dB SPL",
+      "held_by": {
+        "type": "papers",
+        "id": "38c983cf-5793-4db2-83cd-5e04e808f40e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1007/s10162-026-01039-x",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The UmboMic: Characterization and Testing of a Middle Ear Microphone.\" (2026, Journal of the Association for Research in Otolaryngology : JARO). Extracted from the abstract; conditions as stated: measured from 100 Hz to 7 kHz. Promotional language present and disregarded: promising advancement, very good microphone performances, high sensitivity, extensive testing. Candidate only; not a record until reviewed.",
+      "_proposal_id": "47250265-5bb7-5921-a50b-4940682a7afb"
+    },
+    "sensory-prosthetics-scale-cohort-size-demonstrating-ci-candidacy-o": {
+      "subfield": "SENSORY_PROSTHETICS",
+      "axis": "Cohort size demonstrating CI candidacy/outcome capability, adult cochlear implant recipients",
+      "axis_type": "scale",
+      "current_value": "156 participants",
+      "held_by": {
+        "type": "papers",
+        "id": "89917fa4-9375-49fe-a0d4-d16bde1394d4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41598-026-49062-5",
+      "notes": "Promoted from a mined proposal. Best of 5 comparable candidate(s) on this axis, higher is better. 2 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Sociodemographic disparities and clinical predictors of cochlear implant quality of life: evidence from Saudi Arabia.\" (2026, Scientific reports). Extracted from the abstract; conditions as stated: CI users and parents/guardians recruited via digital rehabilitation networks in Saudi Arabia, cross-sectional observational study. Promotional language present and disregarded: critical outcome measure, Notably. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e3f72a3c-f2f5-5b7c-aee7-3778ace3e274"
+    },
+    "spinal-cord-stim-and-bypass-longevity-chronic-device-functional-lifetime-impla": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "chronic device functional lifetime, implanted electrode, in vivo animal models",
+      "axis_type": "longevity",
+      "current_value": "over 6 weeks",
+      "held_by": {
+        "type": "papers",
+        "id": "b0de2475-d6a8-48ca-aaa5-6de5bc2e0ae2"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.mtbio.2026.103018",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Customized ultra-flexible and adhesive spinal cord stimulation electrode for chronic pain management.\" (2026, Materials today. Bio). Extracted from the abstract; conditions as stated: mouse chronic pain models. Promotional language present and disregarded: innovative, exceptional stability, robust analgesic effects, sustained efficacy, promising, exceptional biocompatibility. Candidate only; not a record until reviewed.",
+      "_proposal_id": "1050c572-2a66-59c0-81ff-eca7486674dd"
+    },
+    "spinal-cord-stim-and-bypass-performance-duration-of-persistent-analgesic-effect": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "duration of persistent analgesic effect after single stimulation session, neuropathic/SCI pain rodent models",
+      "axis_type": "performance",
+      "current_value": "over 1.5 h",
+      "held_by": {
+        "type": "papers",
+        "id": "b0de2475-d6a8-48ca-aaa5-6de5bc2e0ae2"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.mtbio.2026.103018",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Customized ultra-flexible and adhesive spinal cord stimulation electrode for chronic pain management.\" (2026, Materials today. Bio). Extracted from the abstract; conditions as stated: spinal cord injury, sciatic nerve injury, and diabetic neuropathic pain mouse models. Promotional language present and disregarded: innovative, exceptional stability, robust analgesic effects, sustained efficacy, promising, exceptional biocompatibility. Candidate only; not a record until reviewed.",
+      "_proposal_id": "3e5f2895-49b3-50bf-b0cf-e68ff57e4ee0"
+    },
+    "spinal-cord-stim-and-bypass-longevity-duration-of-sustained-clinical-benefit-a": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "duration of sustained clinical benefit after spinal stimulation intervention, chronic human patients",
+      "axis_type": "longevity",
+      "current_value": "6 months",
+      "held_by": {
+        "type": "papers",
+        "id": "2ecee31c-51b9-4eb9-a02c-f22a86c3cbdf"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/ana.78026",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Cuneiform Nucleus Stimulation Can Assist Gait Training to Promote Locomotor Recovery in Individuals With Incomplete Tetraplegia.\" (2026, Annals of neurology). Extracted from the abstract; conditions as stated: chronic tetraplegia patients. Promotional language present and disregarded: first, bench-to-bedside translation. Candidate only; not a record until reviewed.",
+      "_proposal_id": "3b1eef28-ef44-5d22-8eff-0fed5153d75a"
+    },
+    "spinal-cord-stim-and-bypass-scale-cohort-size-demonstrating-epidural-spina": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "cohort size demonstrating epidural/spinal stimulation capability, chronic SCI/tetraplegia patients",
+      "axis_type": "scale",
+      "current_value": "5 subjects",
+      "held_by": {
+        "type": "papers",
+        "id": "d5b78ae2-b489-451f-ab71-0f392d7d01d3"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1080/10790268.2025.2517935",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Spinal epidural electrical stimulation for the recovery of motor function in lower limbs after spinal cord injury: A pilot study.\" (2026, The journal of spinal cord medicine). Extracted from the abstract; conditions as stated: chronic spinal cord injury, tertiary care spine surgery center. Promotional language present and disregarded: highly desirable, significant improvement. Candidate only; not a record until reviewed.",
+      "_proposal_id": "59b4dee8-0ddf-5f08-8d22-7dc43a19f124"
+    },
+    "spinal-cord-stim-and-bypass-performance-number-of-subjects-achieving-functional": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "number of subjects achieving functional motor gains with epidural stimulation, chronic SCI",
+      "axis_type": "performance",
+      "current_value": "4 subjects",
+      "held_by": {
+        "type": "papers",
+        "id": "d5b78ae2-b489-451f-ab71-0f392d7d01d3"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1080/10790268.2025.2517935",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Spinal epidural electrical stimulation for the recovery of motor function in lower limbs after spinal cord injury: A pilot study.\" (2026, The journal of spinal cord medicine). Extracted from the abstract; conditions as stated: with epidural stimulation. Promotional language present and disregarded: highly desirable, significant improvement. Candidate only; not a record until reviewed.",
+      "_proposal_id": "748a8cf7-3b57-5383-a3a2-d849215ac0a7"
+    },
+    "spinal-cord-stim-and-bypass-performance-time-to-reduction-in-muscle-tone-spastic": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "time to reduction in muscle tone/spasticity after SCS implantation",
+      "axis_type": "performance",
+      "current_value": "48 h",
+      "held_by": {
+        "type": "papers",
+        "id": "a6e6554e-f24d-4a39-ab4c-25b1f2e52e05"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fnhum.2026.1754152",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Lumbar enlargement spinal cord stimulation for severe spasticity and motor function improvement after traumatic brain injury: a case report.\" (2026, Frontiers in human neuroscience). Extracted from the abstract; conditions as stated: after trial and permanent SCS implantation at lumbar enlargement. Promotional language present and disregarded: successful, marked reduction, fundamentally improved, significant functional gains. Candidate only; not a record until reviewed.",
+      "_proposal_id": "1a7fd90c-825f-5ea3-ab26-33748326dfaa"
+    },
+    "spinal-cord-stim-and-bypass-performance-lower-limb-spasticity-severity-mas-grade": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "lower-limb spasticity severity, MAS grade, pre/post SCS implantation",
+      "axis_type": "performance",
+      "current_value": "2 MAS grade",
+      "held_by": {
+        "type": "papers",
+        "id": "a6e6554e-f24d-4a39-ab4c-25b1f2e52e05"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fnhum.2026.1754152",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Lumbar enlargement spinal cord stimulation for severe spasticity and motor function improvement after traumatic brain injury: a case report.\" (2026, Frontiers in human neuroscience). Extracted from the abstract; conditions as stated: within 48 h of SCS implantation. Promotional language present and disregarded: successful, marked reduction, fundamentally improved, significant functional gains. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e56b9ce2-7662-5086-ada9-1c3553854f74"
+    },
+    "spinal-cord-stim-and-bypass-longevity-duration-of-rehabilitation-training-prog": {
+      "subfield": "SPINAL_CORD_STIM_AND_BYPASS",
+      "axis": "duration of rehabilitation/training program, spinal stimulation adjunct therapy",
+      "axis_type": "longevity",
+      "current_value": "8 months",
+      "held_by": {
+        "type": "papers",
+        "id": "a6e6554e-f24d-4a39-ab4c-25b1f2e52e05"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.3389/fnhum.2026.1754152",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Lumbar enlargement spinal cord stimulation for severe spasticity and motor function improvement after traumatic brain injury: a case report.\" (2026, Frontiers in human neuroscience). Extracted from the abstract; conditions as stated: 58-year-old male, tetraplegia following traumatic brain injury. Promotional language present and disregarded: successful, marked reduction, fundamentally improved, significant functional gains. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7dca26aa-3fb9-58a2-92e5-09a1da899eea"
+    },
+    "peripheral-cranial-nerve-stim-performance-responder-rate-50-symptom-reduction-urin": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Responder rate, ≥50% symptom reduction, urinary/fecal incontinence therapy, chronic stimulation",
+      "axis_type": "performance",
+      "current_value": "64 %",
+      "held_by": {
+        "type": "papers",
+        "id": "11c4b520-d5ab-4e65-984f-5c33286df49f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1007/s10151-026-03379-5",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, higher is better. 2 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Posterior tibial neurostimulation for faecal incontinence in community-dwelling older adults: long-term outcomes and predictors of response.\" (2026, Techniques in coloproctology). Extracted from the abstract; conditions as stated: end of treatment. Promotional language present and disregarded: minimally invasive. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7ffda85a-e919-532d-a2bf-e65a3aabcacd"
+    },
+    "peripheral-cranial-nerve-stim-invasiveness-adverse-device-effect-rate-implanted-per": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Adverse device effect rate, implanted peripheral/cranial nerve stimulators",
+      "axis_type": "invasiveness",
+      "current_value": "10 events",
+      "held_by": {
+        "type": "papers",
+        "id": "dc2cb4fc-1610-4645-8945-d25569346409"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.eclinm.2026.103802",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, lower is better. 3 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Transcutaneous spinal cord stimulation plus locomotor training versus sham-stimulation plus locomotor training in chronic spinal cord injury (eWALK): a multicentre, triple-blind, randomised, sham-controlled trial.\" (2026, EClinicalMedicine). Extracted from the abstract; conditions as stated: across both groups, 12-week period. Candidate only; not a record until reviewed.",
+      "_proposal_id": "b3e6f2ba-04b2-5b16-ac57-0f32d0781a2b"
+    },
+    "peripheral-cranial-nerve-stim-scale-largest-implanted-cohort-demonstrated-pe": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Largest implanted cohort demonstrated, peripheral/cranial nerve stimulation devices",
+      "axis_type": "scale",
+      "current_value": "151 participants",
+      "held_by": {
+        "type": "papers",
+        "id": "995676c6-a550-4493-a450-d493c998c4e4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1007/s00192-026-06538-2",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 3 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Impact of Revi® Implantable Tibial Neuromodulation on Quality of Life in Patients with Urgency Urinary Incontinence.\" (2026, International urogynecology journal). Extracted from the abstract; conditions as stated: Subfascial implantation of Revi System. Promotional language present and disregarded: effective and safe, clinically meaningful and sustainable, Notably, appreciable therapeutic benefit. Candidate only; not a record until reviewed.",
+      "_proposal_id": "9c10f35f-49fb-5b63-9e64-e81c4c8ba070"
+    },
+    "peripheral-cranial-nerve-stim-performance-incontinence-severity-score-improvement": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Incontinence severity score improvement, pre- vs post-stimulation, St. Mark's/Wexner scale",
+      "axis_type": "performance",
+      "current_value": "16.0 score (13-18)",
+      "held_by": {
+        "type": "papers",
+        "id": "35e7f490-e3ee-448c-a4d5-d46267d6e7ec"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1111/nmo.70225",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Dorsal Genital Nerve Stimulation in Patients With Fecal Incontinence and Fecal Urgency: A Feasibility Study With the Novel UCon Neurostimulator.\" (2026, Neurogastroenterology and motility). Extracted from the abstract; conditions as stated: n = 26, baseline. Promotional language present and disregarded: novel. Candidate only; not a record until reviewed.",
+      "_proposal_id": "72114cb8-a2c6-5211-910f-a8323ce9d646"
+    },
+    "peripheral-cranial-nerve-stim-performance-sensory-threshold-volume-change-anorecta": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Sensory threshold volume change, anorectal manometry, post-stimulation",
+      "axis_type": "performance",
+      "current_value": "20 cc",
+      "held_by": {
+        "type": "papers",
+        "id": "fbb0a8d3-8198-48ef-b0df-03fe12e5bd38"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/jpn3.70388",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Transcutaneous sacral neurostimulation in children with fecal incontinence.\" (2026, Journal of pediatric gastroenterology and nutrition). Extracted from the abstract; conditions as stated: posttreatment manometry, p < 0.001. Promotional language present and disregarded: effective, favorable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "48e06e1b-454c-54b7-88cf-55b38377b973"
+    },
+    "peripheral-cranial-nerve-stim-performance-increase-in-respiratory-drive-inspirator": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Increase in respiratory drive (inspiratory flow/tidal volume/minute ventilation) with phrenic/peripheral nerve stimulation vs baseline",
+      "axis_type": "performance",
+      "current_value": "173 %",
+      "held_by": {
+        "type": "papers",
+        "id": "bacd2b33-eece-4a9d-b142-b537e2cd3a22"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1093/annalsats/aaoag079",
+      "notes": "Promoted from a mined proposal. Best of 5 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Phrenic nerve stimulation enhances upper airway patency during drug-induced sleep endoscopy in OSA.\" (2026, Annals of the American Thoracic Society). Extracted from the abstract; conditions as stated: sequential PNS at end-expiration to inspiration. Promotional language present and disregarded: novel. Candidate only; not a record until reviewed.",
+      "_proposal_id": "37168ea3-e565-540d-b448-cb352b5f854c"
+    },
+    "peripheral-cranial-nerve-stim-performance-motor-functional-restoration-after-chron": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Motor/functional restoration after chronic DBS-like peripheral stimulation in dystonia, pre- vs post-op",
+      "axis_type": "performance",
+      "current_value": "95% to 10% %",
+      "held_by": {
+        "type": "papers",
+        "id": "c8c1d7cb-8ad8-412e-adc6-135a1c4d2c8f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.25259/SNI_432_2025",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Functional recovery after bilateral globus pallidus internus deep brain stimulation in primary dystonia: A prospective clinical evaluation.\" (2026, Surgical neurology international). Extracted from the abstract; conditions as stated: Baseline vs 6 months postoperatively, p < 0.001. Promotional language present and disregarded: disabling, established, significant, broader benefits. Candidate only; not a record until reviewed.",
+      "_proposal_id": "fda9d874-291c-5131-89a8-1a58ce515fb3"
+    },
+    "peripheral-cranial-nerve-stim-performance-primary-efficacy-non-response-rate-chron": {
+      "subfield": "PERIPHERAL_CRANIAL_NERVE_STIM",
+      "axis": "Primary efficacy non-response rate, chronic sacral neuromodulation, 24 months",
+      "axis_type": "performance",
+      "current_value": "20 participants",
+      "held_by": {
+        "type": "papers",
+        "id": "995676c6-a550-4493-a450-d493c998c4e4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1007/s00192-026-06538-2",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Impact of Revi® Implantable Tibial Neuromodulation on Quality of Life in Patients with Urgency Urinary Incontinence.\" (2026, International urogynecology journal). Extracted from the abstract; conditions as stated: 24 months. Promotional language present and disregarded: effective and safe, clinically meaningful and sustainable, Notably, appreciable therapeutic benefit. Candidate only; not a record until reviewed.",
+      "_proposal_id": "a7b8639e-bc8f-5a31-850e-f4d688a88a7a"
+    },
+    "decoding-algorithms-performance-language-decoding-quality-vs-baseline-fm": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Language decoding quality vs baseline, fMRI narrative reconstruction, subject UTS03",
+      "axis_type": "performance",
+      "current_value": "0.200 score",
+      "held_by": {
+        "type": "papers",
+        "id": "cfb440f8-eed3-4299-803c-f57f5ff52f7d"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://arxiv.org/abs/2607.12079",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The Capacity of Thought: Benchmarking Llama 3.2 in Semantic fMRI Neural Language Decoding and Improving the Huth Encoding-Model Baseline\" (2026). Extracted from the abstract; conditions as stated: mean across three held-out narratives, subject UTS03. Promotional language present and disregarded: core challenge, complementary investigations, high-capacity. Candidate only; not a record until reviewed.",
+      "_proposal_id": "dbfc0115-2d1b-5921-941d-194e20b119ad"
+    },
+    "decoding-algorithms-performance-ranking-classification-decoding-accuracy": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Ranking/classification decoding accuracy, fMRI-based decoding models",
+      "axis_type": "performance",
+      "current_value": "> 70 %",
+      "held_by": {
+        "type": "papers",
+        "id": "83c4d152-8f50-450a-a842-a36beec11994"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1152/jn.00563.2025",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Deep Learning Reveals Cross-Modal Neural Representations of Auditory and Visual Mental Imagery in MEG.\" (2026, Journal of neurophysiology). Extracted from the abstract; conditions as stated: 18 right-handed participants, subject-specific classification, visual imagery task. Promotional language present and disregarded: unique window, Notably. Candidate only; not a record until reviewed.",
+      "_proposal_id": "10c5fb73-7ebd-5676-bb0e-17e269ccb20e"
+    },
+    "decoding-algorithms-performance-functional-mri-spatial-resolution-acquis": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Functional MRI spatial resolution, acquisition protocol",
+      "axis_type": "performance",
+      "current_value": "1.8 mm isotropic",
+      "held_by": {
+        "type": "papers",
+        "id": "cf19e33a-620c-466e-98db-7906bafb9efc"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41597-026-07885-x",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A 5.0 T Ultra-High-Field fMRI Dataset for Naturalistic Visual Scene Processing.\" (2026, Scientific data). Extracted from the abstract; conditions as stated: functional data acquisition. Promotional language present and disregarded: important goal, standardized resource. Candidate only; not a record until reviewed.",
+      "_proposal_id": "20611d2b-c6a0-5033-b125-4e822e575f9c"
+    },
+    "decoding-algorithms-scale-recording-stimulation-channel-count-impl": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Recording/stimulation channel count, implantable BCI device",
+      "axis_type": "scale",
+      "current_value": "60 channels",
+      "held_by": {
+        "type": "papers",
+        "id": "07acacdd-70df-4b14-8448-bfb93ce4bec1"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.brs.2025.103013",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A wireless, 60-channel, AI-enabled neurostimulation platform.\" (2026, Brain stimulation). Extracted from the abstract; conditions as stated: cranially mounted implant device design. Promotional language present and disregarded: Smart, unifies, high-density, real-time, establish a preclinical foundation. Candidate only; not a record until reviewed.",
+      "_proposal_id": "e8f1e4fc-77c4-5311-9f95-c03525f29f56"
+    },
+    "decoding-algorithms-scale-cohort-size-participants-in-decoding-stu": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Cohort size, participants in decoding studies",
+      "axis_type": "scale",
+      "current_value": "18 participants",
+      "held_by": {
+        "type": "papers",
+        "id": "83c4d152-8f50-450a-a842-a36beec11994"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1152/jn.00563.2025",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Deep Learning Reveals Cross-Modal Neural Representations of Auditory and Visual Mental Imagery in MEG.\" (2026, Journal of neurophysiology). Extracted from the abstract; conditions as stated: right-handed participants performing auditory and visual imagery tasks. Promotional language present and disregarded: unique window, Notably. Candidate only; not a record until reviewed.",
+      "_proposal_id": "70c60d08-33ff-5e97-a621-4530496f1e52"
+    },
+    "decoding-algorithms-scale-stimulus-image-dataset-scale-fmri-natura": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Stimulus image dataset scale, fMRI naturalistic image decoding",
+      "axis_type": "scale",
+      "current_value": "10,000 images",
+      "held_by": {
+        "type": "papers",
+        "id": "cf19e33a-620c-466e-98db-7906bafb9efc"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41597-026-07885-x",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A 5.0 T Ultra-High-Field fMRI Dataset for Naturalistic Visual Scene Processing.\" (2026, Scientific data). Extracted from the abstract; conditions as stated: across the dataset. Promotional language present and disregarded: important goal, standardized resource. Candidate only; not a record until reviewed.",
+      "_proposal_id": "dcb81bc6-7e56-50ef-878c-c738be3da026"
+    },
+    "decoding-algorithms-longevity-gait-training-duration-prior-to-prosthes": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Gait training duration prior to prosthesis control testing",
+      "axis_type": "longevity",
+      "current_value": "2 day",
+      "held_by": {
+        "type": "papers",
+        "id": "6a6e8424-fee7-4fd1-a41d-9aa199aff525"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1093/pnasnexus/pgaf413",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Continuous volitional control of a bionic leg supports diverse walking patterns in both agonist-antagonist muscle interface and bone-anchored prosthesis users.\" (2026, PNAS nexus). Extracted from the abstract; conditions as stated: before prosthesis control tests. Promotional language present and disregarded: preliminary study, state of the art, opens new avenues, generalizable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "86fa7518-43a1-518f-a5f0-77d2d45e0441"
+    },
+    "decoding-algorithms-scale-field-wide-publication-and-patent-output": {
+      "subfield": "DECODING_ALGORITHMS",
+      "axis": "Field-wide publication and patent output volume, BCI domain, 2015-2025",
+      "axis_type": "scale",
+      "current_value": "11,346 articles",
+      "held_by": {
+        "type": "papers",
+        "id": "33d15ecf-64dd-45c9-bcf0-08f500b4ccd5"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.2196/95902",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Scientific and Technological Developments in Brain-Computer Interfaces: A Dual Bibliometric Analysis of Articles and Patents.\" (2026, JMIR rehabilitation and assistive technologies). Extracted from the abstract; conditions as stated: published 2015 to 2025, retrieved from Web of Science. Promotional language present and disregarded: rapid translation, profound societal implications, critically overlooking, rapidly expanding, strategically differentiated. Candidate only; not a record until reviewed.",
+      "_proposal_id": "ce7fbdfa-fb9a-50e4-89c2-1860859f917e"
+    },
+    "imaging-and-recording-hardware-performance-dbs-lead-radial-targeting-error-stereota": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "DBS lead radial targeting error, stereotactic implantation procedures",
+      "axis_type": "performance",
+      "current_value": "0-1.6 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "b044230f-922a-490a-a68c-97ca48635bc7"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1159/000549337",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Stereotactic Accuracy and Technique Utilizing the SmartFrame OR Platform with Stereotactic Navigation and Cone Beam CT Image-Guided Forward Projection.\" (2026, Stereotactic and functional neurosurgery). Extracted from the abstract; conditions as stated: all procedures. Promotional language present and disregarded: submillimeter accuracy, scalable solution. Candidate only; not a record until reviewed.",
+      "_proposal_id": "38bd486c-0155-55c6-85be-9ade23c1caf4"
+    },
+    "imaging-and-recording-hardware-longevity-chronic-implant-functional-duration-chro": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "Chronic implant functional duration, chronic implanted devices, minimal tissue effects",
+      "axis_type": "longevity",
+      "current_value": "1 year",
+      "held_by": {
+        "type": "papers",
+        "id": "cf9cbb61-2aac-420a-aee6-10bfecd5bd3e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1126/sciadv.aee9688",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Implantable bioelectronic outlet.\" (2026, Science advances). Extracted from the abstract; conditions as stated: implanted, chronic, minimal tissue effects. Promotional language present and disregarded: reliable, long-term, high-fidelity, robust, scalable, durable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "85f9214c-b90d-5363-9b03-c4524025c1e2"
+    },
+    "imaging-and-recording-hardware-performance-scs-responder-rate-50-pain-reduction-chr": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "SCS responder rate (>=50% pain reduction), chronic back and leg pain, up to 36 months follow-up",
+      "axis_type": "performance",
+      "current_value": "68 to 92 %",
+      "held_by": {
+        "type": "papers",
+        "id": "496fe921-93bb-456b-a9b0-5640e691c77a"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1111/papr.70166",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Efficacy of Closed Loop Spinal Cord Stimulation for Chronic Back and Leg Pain: A Systematic Review.\" (2026, Pain practice : the official journal of World Institute of Pain). Extracted from the abstract; conditions as stated: chronic back and leg pain, across follow-up periods up to 36 months, four eligible studies. Promotional language present and disregarded: superiority, durable, growing evidence. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7e123eb7-d52c-510e-863b-7d4fbef666ca"
+    },
+    "imaging-and-recording-hardware-performance-scs-high-responder-rate-80-pain-reductio": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "SCS high-responder rate (>=80% pain reduction), chronic back and leg pain, up to 36 months follow-up",
+      "axis_type": "performance",
+      "current_value": "50 to 60 %",
+      "held_by": {
+        "type": "papers",
+        "id": "496fe921-93bb-456b-a9b0-5640e691c77a"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1111/papr.70166",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Efficacy of Closed Loop Spinal Cord Stimulation for Chronic Back and Leg Pain: A Systematic Review.\" (2026, Pain practice : the official journal of World Institute of Pain). Extracted from the abstract; conditions as stated: chronic back and leg pain, across follow-up periods up to 36 months, four eligible studies. Promotional language present and disregarded: superiority, durable, growing evidence. Candidate only; not a record until reviewed.",
+      "_proposal_id": "3f1681f5-4550-5fdc-a598-f08459063b4b"
+    },
+    "focused-ultrasound-performance-segmentation-accuracy-for-vim-targeting": {
+      "subfield": "FOCUSED_ULTRASOUND",
+      "axis": "segmentation accuracy for VIM targeting, DSC/sDSC on HCP dataset",
+      "axis_type": "performance",
+      "current_value": "0.62 +- 0.15 DSC",
+      "held_by": {
+        "type": "papers",
+        "id": "00711d8d-2d46-4534-85ad-b076513e3018"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/41647224/",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"DeLTA-BIT: an open-source probabilistic tractography-based deep learning framework for thalamic targeting in functional neurological disorders.\" (2026, ArXiv). Extracted from the abstract; conditions as stated: internal validation on HCP dataset. Promotional language present and disregarded: novel, growing interest, well-established. Candidate only; not a record until reviewed.",
+      "_proposal_id": "d57a2a6c-b737-57b8-9e89-3533fb06414e"
+    },
+    "focused-ultrasound-longevity-ipg-replacement-interval-chronic-implant": {
+      "subfield": "FOCUSED_ULTRASOUND",
+      "axis": "IPG replacement interval, chronic implant",
+      "axis_type": "longevity",
+      "current_value": "2.3 ± 0.7 years",
+      "held_by": {
+        "type": "papers",
+        "id": "e188df06-fd81-416b-b74b-91d494a8032e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1016/j.neurom.2025.06.005",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The Risk of Bacterial Colonization Increases With Multiple Replacements of Implanted Pulse Generators for Deep Brain Stimulation.\" (2026, Neuromodulation : journal of the International Neuromodulation Society). Extracted from the abstract; conditions as stated: Patients undergoing two consecutive IPG replacements at a tertiary health care center. Promotional language present and disregarded: revolutionized. Candidate only; not a record until reviewed.",
+      "_proposal_id": "24fb8cf3-d194-54c8-9d2d-5c82df37e1c0"
+    },
+    "focused-ultrasound-longevity-implant-stability-duration-with-minimal": {
+      "subfield": "FOCUSED_ULTRASOUND",
+      "axis": "implant stability duration with minimal inflammation, in vivo nanostimulator",
+      "axis_type": "longevity",
+      "current_value": "14 weeks",
+      "held_by": {
+        "type": "papers",
+        "id": "c85c4b9e-4c59-40c6-aaf8-41cb2c0b50f4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/adma.202420447",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Ultrasound Active Piezoelectric Nanostimulators for Long-Acting Wireless Deep Brain Electric Stimulation to Inhibit Epileptic Seizures.\" (2026, Advanced materials (Deerfield Beach, Fla.)). Extracted from the abstract; conditions as stated: implanted in hippocampal CA1 via stereotactic microinjection, in vivo. Promotional language present and disregarded: effective, minimally invasive, precisely and effectively activate, great promise. Candidate only; not a record until reviewed.",
+      "_proposal_id": "b62423e0-e4ba-578b-80b1-8b1ea0d673ee"
+    },
+    "focused-ultrasound-performance-lateral-focus-size-fus-beam-steering-foc": {
+      "subfield": "FOCUSED_ULTRASOUND",
+      "axis": "lateral focus size, FUS beam steering/focusing",
+      "axis_type": "performance",
+      "current_value": "4 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "eb14e4fe-5b81-4d30-be7a-c73c55e6a76b"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1177/21580014251362816",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"A New Versatile System for 3D Steered LIFU Based on 2D Matrix Arrays.\" (2026, Brain connectivity). Extracted from the abstract; conditions as stated: 3D beam steering and focusing. Promotional language present and disregarded: promising, versatile, new. Candidate only; not a record until reviewed.",
+      "_proposal_id": "087d4d8d-e3ca-50c5-aaaf-eb0bd6224fcf"
+    },
+    "interface-materials-longevity-chronic-recording-implantation-duration": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "chronic recording/implantation duration, in vivo",
+      "axis_type": "longevity",
+      "current_value": "550 d",
+      "held_by": {
+        "type": "papers",
+        "id": "c9e06c71-4360-4dff-8fd2-65acae9ad47f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1073/pnas.2532840123",
+      "notes": "Promoted from a mined proposal. Best of 4 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"An exceptionally conductive hydrogel for all-organic, ultraflexible, and chronic neural interfaces.\" (2026, Proceedings of the National Academy of Sciences of the United States of America). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: long-standing trade-off, superior electrical performance, ultraflexible, exceptional signal quality, highest. Candidate only; not a record until reviewed.",
+      "_proposal_id": "78e0a866-c4b0-57ce-9f24-7f54df3cf1fb"
+    },
+    "interface-materials-performance-electrode-impedance-sis-coated-electrode": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "electrode impedance, SIS-coated electrodes",
+      "axis_type": "performance",
+      "current_value": "2.20 ± 0.67 kΩ",
+      "held_by": {
+        "type": "papers",
+        "id": "70176e86-b890-4f9b-9455-8b7d8402c1c4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1021/acsomega.6c00323",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Using Electrospinning Technique for Rapid Preparation of BDNF-Releasing Electrode Array of Cochlear Implant: An In Vitro Study.\" (2026, ACS omega). Extracted from the abstract; conditions as stated: SIS protocol, n = 23. Promotional language present and disregarded: superior performance, significantly enhanced, rapid, ultrafast, promising clinical translation prospects, clinically adaptable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "cc414624-3262-5ecd-a273-d1ad90f73905"
+    },
+    "interface-materials-longevity-dbs-lead-implantation-duration-before-ex": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "DBS lead implantation duration before explantation, human patient",
+      "axis_type": "longevity",
+      "current_value": "15 years",
+      "held_by": {
+        "type": "papers",
+        "id": "54edb832-54f9-484c-894c-e80e9a2c4dca"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/mdc3.70714",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The Biological Fate of DBS Leads After 15 Years of Stimulation.\" (2026, Movement disorders clinical practice). Extracted from the abstract; conditions as stated: Bilateral GPi DBS leads in a patient with DYT-1 dystonia, implanted at age 8. Promotional language present and disregarded: striking, extensive. Candidate only; not a record until reviewed.",
+      "_proposal_id": "04f1553d-ff4f-5304-b13e-3bd86cebbfae"
+    },
+    "interface-materials-manufacturability-coating-time-electrospinning-fabrication": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "coating time, electrospinning fabrication of CI electrodes",
+      "axis_type": "manufacturability",
+      "current_value": "<3 min",
+      "held_by": {
+        "type": "papers",
+        "id": "70176e86-b890-4f9b-9455-8b7d8402c1c4"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1021/acsomega.6c00323",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Using Electrospinning Technique for Rapid Preparation of BDNF-Releasing Electrode Array of Cochlear Implant: An In Vitro Study.\" (2026, ACS omega). Extracted from the abstract; conditions as stated: electrospinning technique. Promotional language present and disregarded: superior performance, significantly enhanced, rapid, ultrafast, promising clinical translation prospects, clinically adaptable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "363e75ce-5ad3-54ea-9d97-e031a1456cea"
+    },
+    "interface-materials-invasiveness-array-probe-thickness-ecog": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "array/probe thickness, ECoG",
+      "axis_type": "invasiveness",
+      "current_value": "9 µm",
+      "held_by": {
+        "type": "papers",
+        "id": "c9e06c71-4360-4dff-8fd2-65acae9ad47f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1073/pnas.2532840123",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"An exceptionally conductive hydrogel for all-organic, ultraflexible, and chronic neural interfaces.\" (2026, Proceedings of the National Academy of Sciences of the United States of America). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: long-standing trade-off, superior electrical performance, ultraflexible, exceptional signal quality, highest. Candidate only; not a record until reviewed.",
+      "_proposal_id": "fd824e6e-29e5-5a7f-ab40-febfb5dd1415"
+    },
+    "interface-materials-performance-in-plane-electrical-conductivity-conduct": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "in-plane electrical conductivity, conductive hydrogel",
+      "axis_type": "performance",
+      "current_value": "2,512 S cm",
+      "held_by": {
+        "type": "papers",
+        "id": "c9e06c71-4360-4dff-8fd2-65acae9ad47f"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1073/pnas.2532840123",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"An exceptionally conductive hydrogel for all-organic, ultraflexible, and chronic neural interfaces.\" (2026, Proceedings of the National Academy of Sciences of the United States of America). Extracted from the abstract; conditions as stated: not stated. Promotional language present and disregarded: long-standing trade-off, superior electrical performance, ultraflexible, exceptional signal quality, highest. Candidate only; not a record until reviewed.",
+      "_proposal_id": "be45e4fa-e4bc-5c9d-a559-15810daf64b4"
+    },
+    "interface-materials-performance-decoding-classification-accuracy-eeg-emo": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "decoding/classification accuracy, EEG emotional state classification",
+      "axis_type": "performance",
+      "current_value": "95 %",
+      "held_by": {
+        "type": "papers",
+        "id": "9a960844-b7ad-4052-906d-c1e17dc046ed"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/adma.202521208",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"An Enthalpy-Entropy Compensated Ionogel With a Broadband Viscoelastic Plateau for Non-Invasive and High-Fidelity Neurointerfaces.\" (2026, Advanced materials (Deerfield Beach, Fla.)). Extracted from the abstract; conditions as stated: classifying eight distinct emotional states. Promotional language present and disregarded: central challenge, high-fidelity, broadband, generalizable, high-precision. Candidate only; not a record until reviewed.",
+      "_proposal_id": "fa2f0c53-20b9-53e4-a216-2d2b06498068"
+    },
+    "interface-materials-performance-cathodic-current-density-threshold-for-t": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "cathodic current density threshold for tissue lesioning, platinum electrodes, invertebrate models",
+      "axis_type": "performance",
+      "current_value": "< 100 µA/cm",
+      "held_by": {
+        "type": "papers",
+        "id": "60cd8f09-1038-45eb-add8-611e1c85c202"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/advs.202523797",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"The Faraday Scalpel: Electrochemical Nerve Lesioning Mechanisms Studied in Invertebrate Models.\" (2026, Advanced science (Weinheim, Baden-Wurttemberg, Germany)). Extracted from the abstract; conditions as stated: invertebrate models (leech and locust), platinum electrodes. Promotional language present and disregarded: novel, critical. Candidate only; not a record until reviewed.",
+      "_proposal_id": "88ac3bff-6dc6-5270-9b5d-09f7da8c530b"
+    },
+    "interface-materials-performance-leachate-degradation-product-decrease-ov": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "leachate/degradation product decrease over prolonged simulated implantation, polymer probes in brain phantom, 180 days at 37°C",
+      "axis_type": "performance",
+      "current_value": "43.1 %",
+      "held_by": {
+        "type": "papers",
+        "id": "01c30ba7-c852-441e-ba42-79d7e31c0d87"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41598-026-46292-5",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Screening for compounds released from deep brain stimulation probes by contact with a brain simulant.\" (2026, Scientific reports). Extracted from the abstract; conditions as stated: After contact with simulant, 180 days at 37 °C. Candidate only; not a record until reviewed.",
+      "_proposal_id": "a6e03496-c07b-52f6-b6a7-6baaa54a719a"
+    },
+    "interface-materials-longevity-simulated-implantation-contact-duration": {
+      "subfield": "INTERFACE_MATERIALS",
+      "axis": "simulated implantation contact duration, polymer probes in brain phantom, 37°C",
+      "axis_type": "longevity",
+      "current_value": "180 days",
+      "held_by": {
+        "type": "papers",
+        "id": "01c30ba7-c852-441e-ba42-79d7e31c0d87"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1038/s41598-026-46292-5",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Screening for compounds released from deep brain stimulation probes by contact with a brain simulant.\" (2026, Scientific reports). Extracted from the abstract; conditions as stated: 37 °C. Candidate only; not a record until reviewed.",
+      "_proposal_id": "df74d57a-e901-5442-a562-5fefff046c1e"
+    },
+    "imaging-and-recording-hardware-performance-dbs-radial-targeting-error-stereotactic": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "DBS radial targeting error, stereotactic electrode placement",
+      "axis_type": "performance",
+      "current_value": "0-1.6 mm",
+      "held_by": {
+        "type": "papers",
+        "id": "b044230f-922a-490a-a68c-97ca48635bc7"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1159/000549337",
+      "notes": "Promoted from a mined proposal. Best of 3 comparable candidate(s) on this axis, lower is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Stereotactic Accuracy and Technique Utilizing the SmartFrame OR Platform with Stereotactic Navigation and Cone Beam CT Image-Guided Forward Projection.\" (2026, Stereotactic and functional neurosurgery). Extracted from the abstract; conditions as stated: all procedures. Promotional language present and disregarded: submillimeter accuracy, scalable solution. Candidate only; not a record until reviewed.",
+      "_proposal_id": "38bd486c-0155-55c6-85be-9ade23c1caf4"
+    },
+    "imaging-and-recording-hardware-longevity-chronic-implant-device-functional-durati": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "Chronic implant device functional duration, implanted chronic device",
+      "axis_type": "longevity",
+      "current_value": "1 year",
+      "held_by": {
+        "type": "papers",
+        "id": "cf9cbb61-2aac-420a-aee6-10bfecd5bd3e"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "claimed-only",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1126/sciadv.aee9688",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Implantable bioelectronic outlet.\" (2026, Science advances). Extracted from the abstract; conditions as stated: implanted, chronic, minimal tissue effects. Promotional language present and disregarded: reliable, long-term, high-fidelity, robust, scalable, durable. Candidate only; not a record until reviewed.",
+      "_proposal_id": "85f9214c-b90d-5363-9b03-c4524025c1e2"
+    },
+    "imaging-and-recording-hardware-performance-neurostimulation-responder-rate-for-chro": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "Neurostimulation responder rate for chronic pain, SCS therapy, up to 36 months follow-up",
+      "axis_type": "performance",
+      "current_value": "68 to 92 %",
+      "held_by": {
+        "type": "papers",
+        "id": "496fe921-93bb-456b-a9b0-5640e691c77a"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1111/papr.70166",
+      "notes": "Promoted from a mined proposal. Best of 2 comparable candidate(s) on this axis, higher is better. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Efficacy of Closed Loop Spinal Cord Stimulation for Chronic Back and Leg Pain: A Systematic Review.\" (2026, Pain practice : the official journal of World Institute of Pain). Extracted from the abstract; conditions as stated: chronic back and leg pain, across follow-up periods up to 36 months, four eligible studies. Promotional language present and disregarded: superiority, durable, growing evidence. Candidate only; not a record until reviewed.",
+      "_proposal_id": "7e123eb7-d52c-510e-863b-7d4fbef666ca"
+    },
+    "imaging-and-recording-hardware-scale-number-of-electrodes-contacts-implanted": {
+      "subfield": "IMAGING_AND_RECORDING_HARDWARE",
+      "axis": "Number of electrodes/contacts implanted per patient cohort, invasive neuromonitoring",
+      "axis_type": "scale",
+      "current_value": "64 electrodes",
+      "held_by": {
+        "type": "papers",
+        "id": "50c96846-40d5-463c-84af-6beabd7cb544"
+      },
+      "established_date": "2026-01-01",
+      "confidence": "single-group",
+      "source": "derived",
+      "source_url": "https://doi.org/10.1002/epi.70217",
+      "notes": "Promoted from a mined proposal. Best of 1 comparable candidate(s) on this axis, higher is better. 1 candidate(s) had units that could not be reconciled and were excluded. Grouping was model-assisted; the winning value was selected arithmetically. established_date is the source paper's publication YEAR (2026); only the year is indexed, so the month and day are not meaningful. Reported in \"Intracranial electroencephalographic approaches in the intensive care unit: Safety, feasibility, and coverage.\" (2026, Epilepsia). Extracted from the abstract; conditions as stated: across 30 patients. Promotional language present and disregarded: large-scale, durable, conceptual framework. Candidate only; not a record until reviewed.",
+      "_proposal_id": "0ba709e7-7334-5c26-b76c-5c375ac6c895"
     }
   }
 }
