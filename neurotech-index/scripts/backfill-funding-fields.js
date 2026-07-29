@@ -45,7 +45,9 @@ const COMMIT = process.argv.includes('--commit')
 const STAMP = 'funding-phase1'
 const CHUNK = 200
 
-const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+// Built inside run(), not at module scope, so the pure helpers below can be
+// imported by a test that has no credentials.
+let sb = null
 
 // The full set of columns this script is allowed to write. Anything not on this
 // list is a fact about a company and is not ours to invent.
@@ -59,7 +61,7 @@ const READ = 'id,name,display_name,capital_scope,total_raised_confidence,' +
   'latest_raise_confidence,latest_raise_unavailable_reason,latest_raise_usd,stage_evidence_type'
 
 /** The row's initialised form, or null when it already has every default. */
-function initialise(r) {
+export function initialise(r) {
   const patch = {}
   if (r.display_name == null) patch.display_name = r.name
   if (r.capital_scope == null) patch.capital_scope = 'private_only'
@@ -75,11 +77,11 @@ function initialise(r) {
 }
 
 /** Refuse to send anything outside WRITABLE, whatever a future edit adds. */
-function assertSafe(rows) {
+export function assertSafe(rows) {
   for (const row of rows) {
     for (const k of Object.keys(row)) {
-      if (!WRITABLE.has(k)) throw new Error(`refusing to write disallowed column "${k}"`)
       if (/_usd$/.test(k)) throw new Error(`refusing to write a dollar amount in "${k}"`)
+      if (!WRITABLE.has(k)) throw new Error(`refusing to write disallowed column "${k}"`)
     }
   }
 }
@@ -100,6 +102,7 @@ async function run() {
     console.error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required.')
     process.exit(1)
   }
+  sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
   const rows = []
   for (let from = 0; ; from += 1000) {
@@ -149,4 +152,8 @@ async function run() {
   console.log(`\n✓ initialised ${written} rows. No dollar amount was written.`)
 }
 
-run().catch(e => { console.error(e); process.exit(1) })
+// Only run when invoked directly. Importing this file (from a test) must not
+// touch the database.
+if (process.argv[1] && process.argv[1].endsWith('backfill-funding-fields.js')) {
+  run().catch(e => { console.error(e); process.exit(1) })
+}
