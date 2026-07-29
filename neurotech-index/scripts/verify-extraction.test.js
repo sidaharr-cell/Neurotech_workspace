@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { checkableNumbers, numberInSource, assertedNumbers } from './verify-extraction.js'
+import {
+  checkableNumbers, numberInSource, assertedNumbers, normalizeSource,
+} from './verify-extraction.js'
 
 describe('checkableNumbers ignores what proves nothing', () => {
   it('keeps real measurements', () => {
@@ -66,5 +68,44 @@ describe('assertedNumbers collects everything the extraction commits to', () => 
 
   it('survives a null demonstrated', () => {
     expect(assertedNumbers({ demonstrated: null, quantitative_results: [] })).toEqual([])
+  })
+})
+
+describe('the false positives the first acceptance run produced', () => {
+  // Each of these was reported as an invented value. The extractor had read all
+  // three correctly; the checker was wrong. Real strings from real abstracts.
+  it('matches a sign separated from its digits by a space', () => {
+    const src = 'lesion volume (t(68) = - 3.54, p = 0.0008), and age'
+    expect(numberInSource('-3.54', src)).toBe(true)
+  })
+
+  it('matches a sign separated by a space after an equals', () => {
+    expect(numberInSource('-3.17', 'age (t = - 3.17, p = 0.002) were identified')).toBe(true)
+  })
+
+  it('matches a count the abstract spells out in words', () => {
+    expect(numberInSource('4', 'seen in the four subjects receiving the device')).toBe(true)
+  })
+
+  it('matches a unicode minus', () => {
+    expect(numberInSource('-3.54', 'effect was − 3.54 overall')).toBe(true)
+  })
+
+  it('still rejects a genuinely invented value', () => {
+    // The fixes must not turn the check into a rubber stamp.
+    expect(numberInSource('512', 'the array had 128 channels')).toBe(false)
+    expect(numberInSource('-9.9', 'age (t = - 3.17, p = 0.002)')).toBe(false)
+    expect(numberInSource('7', 'seen in the four subjects')).toBe(false)
+  })
+})
+
+describe('normalizeSource', () => {
+  it('keeps the spelled word alongside the digit it adds', () => {
+    expect(normalizeSource('four subjects')).toContain('four')
+    expect(normalizeSource('four subjects')).toContain('4')
+  })
+
+  it('does not corrupt ordinary prose', () => {
+    expect(normalizeSource('the array had 128 channels')).toContain('128 channels')
   })
 })
