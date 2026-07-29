@@ -195,6 +195,9 @@ create table if not exists frontier_record_proposals (
   -- The item that triggered the proposal, same polymorphic shape as held_by.
   item_type      text,
   item_id        uuid,
+  -- Where the proposed value can be checked. A reviewer cannot promote a
+  -- proposal they cannot verify, so this is as required here as on a record.
+  source_url     text,
 
   -- Spec 8 rule 6: a proposal below `demonstrated` is discarded, never queued.
   -- Recorded here so a rejected proposal explains itself in the table.

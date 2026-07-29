@@ -19,7 +19,7 @@
  * company ids are derived. Editing an entry revises the record it already owns;
  * renaming a key creates a second record rather than renaming the first.
  */
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
@@ -147,6 +147,8 @@ async function run() {
   if (!entries.length) {
     console.log('No records in scripts/data/frontier-records.json.')
     console.log('Populating it is Phase 2 (record bootstrap), which is manual domain work.')
+    // Proposals are a separate file and can still be loaded.
+    if (COMMIT) await loadProposals(sb)
     return
   }
   const allKeys = entries.map(([k]) => k)
@@ -247,6 +249,8 @@ async function run() {
     `${entries.length - creates.length - revisions.length} unchanged.`)
 
   if (!COMMIT) {
+    const pending = proposalsInFile()
+    if (pending) console.log(`${pending} mined proposal(s) waiting in scripts/data/frontier-proposals.json.`)
     console.log('\nDry run. Nothing written. Re-run with --commit to apply.')
     return
   }
@@ -267,6 +271,82 @@ async function run() {
     if (error) { console.error('change log insert failed:', error.message); process.exit(1) }
   }
   console.log(`✓ wrote ${toWrite.length} record(s), ${supersedes.length} supersede(s), ${changeRows.length} change log row(s).`)
+
+  await loadProposals(sb)
+}
+
+/**
+ * Load the mined candidates in scripts/data/frontier-proposals.json into
+ * frontier_record_proposals as PENDING rows.
+ *
+ * Only ever inserts. A proposal a human has already reviewed keeps its verdict:
+ * re-running the miner must not resurrect something that was rejected, which an
+ * upsert would do silently.
+ */
+const PROPOSALS_PATH = () => join(__dirname, 'data/frontier-proposals.json')
+
+/** How many mined proposals are sitting in the file, for the dry-run report. */
+export function proposalsInFile() {
+  const path = PROPOSALS_PATH()
+  if (!existsSync(path)) return 0
+  try {
+    const file = JSON.parse(readFileSync(path, 'utf8'))
+    return Object.keys(file.proposals || {}).filter(k => !k.startsWith('_')).length
+  } catch { return 0 }
+}
+
+export async function loadProposals(sb) {
+  const path = PROPOSALS_PATH()
+  if (!existsSync(path)) return
+  const file = JSON.parse(readFileSync(path, 'utf8'))
+  const entries = Object.entries(file.proposals || {}).filter(([k]) => !k.startsWith('_'))
+  if (!entries.length) return
+
+  const rows = []
+  const rejected = []
+  for (const [key, p] of entries) {
+    if (!SUBFIELD_IDS.includes(p.subfield)) { rejected.push(`${key}: subfield "${p.subfield}"`); continue }
+    if (!p.proposed_value || !p.axis || !p.axis_type) { rejected.push(`${key}: incomplete`); continue }
+    rows.push({
+      id: uuidv5(`proposal:${key}`),
+      subfield: p.subfield,
+      axis: p.axis,
+      axis_type: p.axis_type,
+      indication: p.indication || null,
+      proposed_value: p.proposed_value,
+      item_type: p.item_type || null,
+      item_id: p.item_id || null,
+      source_url: p.source_url || null,
+      evidence_grade: p.evidence_grade || null,
+      rubric_version: p.rubric_version || null,
+      rationale: p.rationale || null,
+      status: 'pending',
+    })
+  }
+  if (rejected.length) {
+    console.log(`\n${rejected.length} proposal(s) skipped as malformed:`)
+    for (const r of rejected.slice(0, 10)) console.log(`  ✗ ${r}`)
+  }
+
+  // Anything already in the table keeps whatever verdict it has.
+  const known = new Set()
+  const ids = rows.map(r => r.id)
+  for (let i = 0; i < ids.length; i += 200) {
+    const { data, error } = await sb.from('frontier_record_proposals')
+      .select('id').in('id', ids.slice(i, i + 200))
+    if (error) { console.error('proposal read failed:', error.message); return }
+    for (const r of data) known.add(r.id)
+  }
+  const fresh = rows.filter(r => !known.has(r.id))
+  if (!fresh.length) {
+    console.log(`\n${rows.length} proposal(s) in the file, all already loaded.`)
+    return
+  }
+  for (let i = 0; i < fresh.length; i += 100) {
+    const { error } = await sb.from('frontier_record_proposals').insert(fresh.slice(i, i + 100))
+    if (error) { console.error('proposal insert failed:', error.message); return }
+  }
+  console.log(`✓ loaded ${fresh.length} new pending proposal(s) (${known.size} already present).`)
 }
 
 // Importable for tests; only runs the pipeline when invoked directly.
