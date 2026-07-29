@@ -29,7 +29,20 @@
  * are issued directly rather than through the view so the check does not depend
  * on the view being exposed to PostgREST.
  */
+import { readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+/** Companies ruled OUT of the neurotech set, each with a written reason. They
+ *  carry no inclusion_basis by design, which is what keeps them off the chart. */
+const EXCLUDED = new Set(
+  Object.entries(JSON.parse(readFileSync(join(__dirname, 'data/inclusion-basis.json'), 'utf8')))
+    .filter(([k, v]) => !k.startsWith('_') && v.decision === 'exclude')
+    .map(([k]) => k),
+)
 
 const url = process.env.SUPABASE_URL
 const key = process.env.SUPABASE_SERVICE_KEY
@@ -71,18 +84,27 @@ const RULES = [
       .or('stage_evidence_type.is.null,stage_evidence_type.eq.none'),
   },
   {
-    id: 'missing_inclusion_basis',
-    detail: 'a record that can reach the chart has no inclusion_basis',
+    id: 'missing_inclusion_decision',
+    detail: 'a record that can reach the chart has neither an inclusion_basis nor a recorded exclusion',
     // Scoped to the biggest raisers rather than every funded record. A chart of
     // 20 draws from the top of this ordering, so this is the set where an
     // undefended inclusion is actually visible to a reader. The long tail of
     // funded records is listed by scripts/verify-funding.js as work, not failed
     // here as an error. Phase 3's query layer must additionally refuse to chart
     // a record with no basis, which is what makes this scope safe.
+    //
+    // An excluded company legitimately has no inclusion_basis: that absence is
+    // what keeps it off the chart. Checking only the column therefore failed on
+    // Atomwise and the other four deliberate exclusions, which is a check that
+    // goes red for doing the right thing. What must never happen is a funded
+    // record nobody has ruled on either way, so the decision file counts.
     run: () => sb.from('organizations').select('id,name,total_raised_usd,inclusion_basis')
       .not('total_raised_usd', 'is', null)
       .order('total_raised_usd', { ascending: false }).limit(30)
-      .then(res => ({ ...res, data: res.data?.filter(r => !r.inclusion_basis) })),
+      .then(res => ({
+        ...res,
+        data: res.data?.filter(r => !r.inclusion_basis && !EXCLUDED.has(r.name)),
+      })),
   },
   {
     id: 'round_without_source',

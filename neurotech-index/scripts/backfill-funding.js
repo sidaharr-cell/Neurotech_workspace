@@ -47,6 +47,7 @@ import { createClient } from '@supabase/supabase-js'
 import {
   matchIssuer, shouldQueryFormD, latestRaise, unavailableReason, classifyFailure,
   clusterRounds, totalRaised, parseFilingXml, filingDocUrl, filingIndexUrl, isUsLocation,
+  retiresStoredFigure,
 } from './lib/funding.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -249,6 +250,7 @@ async function run() {
   const tally = { resolved: 0, reused: 0, skipped: 0, byFailure: {}, aliasMatches: 0, offeringBasis: 0 }
   const orgUpdates = []
   const roundRows = []
+  const retiredIds = []   // figures withdrawn this run; their rounds go too
   const nextLegacy = { ...legacy }
   const now = new Date().toISOString()
 
@@ -284,13 +286,35 @@ async function run() {
       const reason = unavailableReason({
         status: org.status, isUsIssuer, searched: true, filingCount: stats.filings,
       })
-      orgUpdates.push({
+      const update = {
         id: org.id, name: org.name,
         latest_raise_usd: null,
         latest_raise_unavailable_reason: reason,
         cik: cik || null,
         pipeline_version: PIPELINE,
-      })
+      }
+      // A company that used to resolve and now definitively does not was
+      // matched to the wrong issuer. Leaving the old total standing keeps a
+      // figure on the chart that this run just established we cannot source, so
+      // retire it along with its rounds. A fetch_error never triggers this: a
+      // network blip is not evidence about a company.
+      if (org.total_raised_usd != null && retiresStoredFigure(failure)) {
+        Object.assign(update, {
+          total_raised_usd: null,
+          total_raised_source_url: null,
+          total_raised_retrieved_at: null,
+          total_raised_confidence: 'unverified',
+          latest_raise_date: null,
+          latest_raise_source_url: null,
+          latest_raise_retrieved_at: null,
+          latest_raise_confidence: 'unverified',
+          latest_raise_accession_number: null,
+        })
+        retiredIds.push(org.id)
+        delete nextLegacy[org.name]
+        console.log(`  ! ${org.name}: retiring a stored $${usdToM(org.total_raised_usd)}M total — ${failure}`)
+      }
+      orgUpdates.push(update)
       nextLegacy[org.name] = { source: 'none', failure, checkedAt: now }
       console.log(`  ✗ ${org.name}: ${failure} (hits ${stats.hits}, matches ${stats.matches}) -> ${reason}`)
       await sleep(200)
@@ -363,6 +387,7 @@ async function run() {
   console.log(`not queried:     ${tally.skipped}`)
   console.log(`alias matches:   ${tally.aliasMatches}`)
   console.log(`rounds found:    ${roundRows.length}`)
+  if (retiredIds.length) console.log(`figures retired: ${retiredIds.length}`)
   if (tally.offeringBasis) {
     console.log(`offering basis:  ${tally.offeringBasis} company/companies have a round priced off ` +
       'totalOfferingAmount because nothing was sold yet')
@@ -383,6 +408,14 @@ async function run() {
   }
 
   // ── Write ─────────────────────────────────────────────────────────────────
+  // Retired rounds go first. If the run dies between the two writes, the result
+  // is an organization with no total and no rounds, which is merely incomplete.
+  // The other order leaves rounds behind that nothing points at.
+  if (retiredIds.length) {
+    const { error } = await sb.from('funding_rounds').delete().in('organization_id', retiredIds)
+    if (error) { console.error('\nfunding_rounds delete failed:', error.message); process.exit(1) }
+    console.log(`  retired the rounds of ${retiredIds.length} organization(s)`)
+  }
   let n = 0
   for (let i = 0; i < orgUpdates.length; i += 100) {
     const chunk = orgUpdates.slice(i, i + 100)

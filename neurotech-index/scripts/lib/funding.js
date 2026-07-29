@@ -15,8 +15,19 @@
 /** Issuer names that are never the operating company itself. */
 const BAD_ISSUER = /\b(spv|fund|trust|partners|capital|ventures|holdings|series|lp|l\.p\.)\b/i
 
-/** Legal-entity words, dropped before comparing two names. */
-const LEGAL = /\b(inc|incorporated|llc|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|ag|sa|bv|nv|oy|ab|as|srl|spa|pbc|holdings|group|the)\b/gi
+/**
+ * Legal-entity words, dropped before comparing two names.
+ *
+ * `group` and `holdings` are deliberately NOT in this list, though they look
+ * like they belong. They are name-distinguishing words, not legal suffixes:
+ * dropping them let our "AURA", a robotics company in Madrid, match EDGAR's
+ * "Aura Group, Inc." of Boston and take $205M of another company's money onto
+ * the chart at rank 3. "Inc" tells you nothing about which company you have;
+ * "Group" does. A genuine "X Group" still matches "X Group Inc", because the
+ * word survives on both sides, and a genuine rename is asserted with a source in
+ * scripts/data/company-aliases.json rather than inferred from string shape.
+ */
+const LEGAL = /\b(inc|incorporated|llc|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|ag|sa|bv|nv|oy|ab|as|srl|spa|pbc|the)\b/gi
 
 /** Trailing corporate-structure phrases that a filer adds and a database does
  *  not: "Neuros Medical Inc, a Delaware corporation" and the like. */
@@ -163,6 +174,16 @@ export const FAILURE = {
   FOUNDED_MISMATCH: 'founded_mismatch',   // filings predate the company: a namesake
   FETCH_ERROR: 'fetch_error',             // network or parse failure
 }
+
+/**
+ * Failures that are a finding about the company rather than a problem with the
+ * run. If a company that once resolved now lands on one of these, the stored
+ * figure was wrong and must be retired: the matcher was corrected, or the name
+ * changed, or it was always a namesake. FETCH_ERROR is excluded, because a
+ * network blip must never delete a sourced figure.
+ */
+const DEFINITIVE = new Set([FAILURE.NO_HITS, FAILURE.NAME_MISMATCH, FAILURE.FOUNDED_MISMATCH])
+export const retiresStoredFigure = failure => DEFINITIVE.has(failure)
 
 /**
  * Classify an empty result. Kept separate from the fetching so the reason a

@@ -36,6 +36,19 @@ describe('issuer name matching', () => {
     expect(matchIssuer('Axonics Modulation Technologies', 'Axonics, Inc.', ['Axonics'])).toBe('alias')
   })
 
+  it('does not drop "Group" or "Holdings" to force a match', () => {
+    // This one reached production. Our AURA is a robotics company in Madrid;
+    // EDGAR's "Aura Group, Inc." is in Boston. Treating "Group" as a legal
+    // suffix made them one company and put $205M of Aura Group's money on the
+    // chart at rank 3, above Saluda Medical.
+    expect(matchIssuer('AURA', 'Aura Group, Inc.')).toBe(null)
+    expect(matchIssuer('Kernel', 'Kernel Holdings Corp')).toBe(null)
+    // A company that really is a "Group" still matches its own filings.
+    expect(matchIssuer('Aura Group', 'Aura Group, Inc.')).toBe('exact')
+    // And the legal suffixes that carry no information still come off.
+    expect(matchIssuer('Saluda Medical', 'Saluda Medical Inc  (CIK 0001679788)')).toBe('exact')
+  })
+
   it('does not treat a shared stem as a match', () => {
     // The rule that would find Axonics by dropping generic words also matches
     // these two, which are different companies. Hence the explicit alias list.
