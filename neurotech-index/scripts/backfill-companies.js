@@ -1,6 +1,7 @@
 /**
  * backfill-companies.js — ingest neurotech companies into the `organizations`
- * table as type='company'. One-time / re-runnable (delete + insert).
+ * table as type='company'. Re-runnable: upserts by deterministic id, then prunes
+ * rows no source list mentions any more.
  *   node --env-file=.env scripts/backfill-companies.js
  *
  * Sources (union, deduped by normalized name; curated wins on conflict):
@@ -13,7 +14,8 @@
  *
  * Each row is classified through the same deterministic classifier every other
  * ingest uses (facet_* columns) and given device-class focus_areas. Funding is
- * NOT written here — it lives in the client-side overlay (companyFunding.js).
+ * NOT written here — it is owned by scripts/backfill-funding.js, on columns this
+ * script must therefore leave alone.
  * rank_score orders the list: funded companies first (log-scaled by $ raised),
  * then everything else by a small quality signal.
  */
@@ -208,17 +210,56 @@ async function run() {
   }
 
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
-  const { error: delErr } = await sb.from('organizations').delete().eq('type', 'company')
-  if (delErr) { console.error('delete failed:', delErr.message); process.exit(1) }
 
+  // Upsert, never delete-and-insert.
+  //
+  // This script used to `delete().eq('type','company')` and re-insert. That was
+  // safe while this script was the only writer of a company row and the ids were
+  // deterministic. It stopped being safe the moment migration 008 put funding on
+  // this table: the nightly run silently destroyed every column written by the
+  // funding pipeline, and funding_rounds.organization_id cascades, so it took
+  // 629 sourced rounds with it. Observed 29 Jul 2026, wiping 205 totals, 90
+  // stages, 63 inclusion decisions and every status.
+  //
+  // An upsert only touches the columns in the payload, so anything another
+  // pipeline owns survives. Companies that leave the source lists are pruned
+  // below rather than by wiping the table first.
   let ok = 0
   for (let i = 0; i < rows.length; i += 500) {
     const chunk = rows.slice(i, i + 500)
-    const { error } = await sb.from('organizations').insert(chunk)
-    if (error) console.warn(`insert error @${i}:`, error.message)
+    const { error } = await sb.from('organizations').upsert(chunk, { onConflict: 'id' })
+    if (error) console.warn(`upsert error @${i}:`, error.message)
     else ok += chunk.length
   }
-  console.log(`✓ Companies backfill complete — ${ok.toLocaleString()} companies`)
+
+  // Prune: company rows that no source list mentions any more. Done by id
+  // difference rather than a blanket delete, so a row is only removed when it
+  // has genuinely left the sources.
+  const live = new Set(rows.map(r => r.id))
+  const existing = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('organizations')
+      .select('id,name,total_raised_usd').eq('type', 'company').range(from, from + 999)
+    if (error) { console.warn('prune read failed:', error.message); break }
+    existing.push(...data)
+    if (data.length < 1000) break
+  }
+  const stale = existing.filter(o => !live.has(o.id))
+  const staleFunded = stale.filter(o => o.total_raised_usd != null)
+  if (staleFunded.length) {
+    // Deleting these would discard sourced funding, so say so rather than doing
+    // it quietly. A company that has left the source lists but has filings on
+    // record is a curation question, not a cleanup.
+    console.log(`\n⚠ ${staleFunded.length} company/companies left the source lists but carry a funding figure. Kept:`)
+    for (const o of staleFunded.slice(0, 10)) console.log(`    ${o.name}`)
+  }
+  const removable = stale.filter(o => o.total_raised_usd == null).map(o => o.id)
+  for (let i = 0; i < removable.length; i += 200) {
+    const { error } = await sb.from('organizations').delete().in('id', removable.slice(i, i + 200))
+    if (error) console.warn('prune delete failed:', error.message)
+  }
+
+  console.log(`✓ Companies backfill complete — ${ok.toLocaleString()} upserted, ${removable.length} pruned`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })
