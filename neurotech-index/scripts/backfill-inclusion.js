@@ -31,6 +31,15 @@ async function run() {
   }
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
+  // Migration 010 adds inclusion_decision, which is what lets the database tell
+  // "nobody has looked at this" from "we looked and the answer was no". Probe
+  // for it so this script works either side of the migration.
+  const probe = await sb.from('organizations').select('inclusion_decision').limit(1)
+  const hasDecision = !probe.error
+  if (!hasDecision) {
+    console.log('· migration 010 not applied; recording the basis only, not the decision.\n')
+  }
+
   const file = JSON.parse(readFileSync(join(__dirname, 'data/inclusion-basis.json'), 'utf8'))
   const entries = Object.entries(file).filter(([k]) => !k.startsWith('_'))
 
@@ -43,7 +52,7 @@ async function run() {
 
   const names = entries.map(([n]) => n)
   const { data: orgs, error } = await sb.from('organizations')
-    .select('id,name,inclusion_basis,modality').eq('type', 'company').in('name', names)
+    .select('id,name,inclusion_basis,modality' + (hasDecision ? ',inclusion_decision' : '')).eq('type', 'company').in('name', names)
   if (error) { console.error('read failed:', error.message); process.exit(1) }
   const byName = Object.fromEntries(orgs.map(o => [o.name, o]))
 
@@ -65,10 +74,21 @@ async function run() {
           inclusion_basis: null,
           modality: null,
           modality_secondary: null,
+          ...(hasDecision ? { inclusion_decision: 'exclude' } : {}),
           pipeline_version: PIPELINE,
         })
         revoked++
         console.log(`  ↩ ${name}: was included, now excluded — clearing its basis. ${d.reason}`)
+      } else if (hasDecision && org.inclusion_decision !== 'exclude') {
+        // No basis to clear, but the ruling itself is worth storing: it is what
+        // stops the validation view flagging a deliberate exclusion as an
+        // undecided record.
+        updates.push({
+          id: org.id, name: org.name,
+          inclusion_decision: 'exclude',
+          pipeline_version: PIPELINE,
+        })
+        console.log(`  ✗ ${name}: ${d.reason}`)
       } else {
         console.log(`  ✗ ${name}: ${d.reason}`)
       }
@@ -80,6 +100,7 @@ async function run() {
       inclusion_basis: d.basis,
       modality: d.modality || null,
       modality_secondary: d.modality_secondary || null,
+      ...(hasDecision ? { inclusion_decision: 'include' } : {}),
       pipeline_version: PIPELINE,
     })
     console.log(`  ✓ ${name} [${d.modality}] ${d.basis}`)
