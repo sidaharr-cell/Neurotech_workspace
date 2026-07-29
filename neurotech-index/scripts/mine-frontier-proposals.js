@@ -50,6 +50,11 @@ const argOf = (flag, fallback) => {
 const ONLY = argOf('--subfield', null)
 const LIMIT = Number(argOf('--limit', 16))
 const MODEL = 'claude-sonnet-5'
+// Year window. Phase 5 needs a baseline mined ONLY from pre-2016 sources, so no
+// post-window knowledge enters the set a 2016-2019 item is compared against.
+const YEAR_MIN = Number(argOf('--year-min', 2018))
+const YEAR_MAX = argOf('--year-max', null) ? Number(argOf('--year-max', null)) : null
+const PROPOSAL_TAG = argOf('--tag', null)
 const RUBRIC_VERSION = '1.0'
 
 const AXIS_TYPES = ['performance', 'longevity', 'invasiveness', 'scale',
@@ -254,7 +259,8 @@ async function run() {
   for (let from = 0; from < 60000; from += 1000) {
     const { data, error } = await sb.from('papers')
       .select('id,title,abstract,year,doi,url,source_url,journal,facet_function,facet_access,facet_application')
-      .eq('in_scope', true).gte('year', 2018).range(from, from + 999)
+      .eq('in_scope', true).gte('year', YEAR_MIN)
+      .lte('year', YEAR_MAX ?? 9999).range(from, from + 999)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     if (!data.length) break
     papers.push(...data)
@@ -317,9 +323,10 @@ async function run() {
       for (const r of results) {
         // One proposal per (paper, axis, metric). The key is deterministic so a
         // re-run updates rather than duplicates.
-        const key = proposalKey(p.id, subfield, r.axis_type, r.metric)
+        const key = `${PROPOSAL_TAG ? PROPOSAL_TAG + ':' : ''}${proposalKey(p.id, subfield, r.axis_type, r.metric)}`
         proposals[key] = {
           subfield,
+          ...(PROPOSAL_TAG ? { tag: PROPOSAL_TAG } : {}),
           axis: `${r.metric.trim()}${r.conditions ? `, ${String(r.conditions).trim()}` : ''}`.slice(0, 300),
           axis_type: r.axis_type,
           proposed_value: valueString(r),
