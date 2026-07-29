@@ -29,6 +29,24 @@ describe('a well-formed record passes', () => {
     }))).toEqual([])
   })
 
+  it('accepts an evidence record with no subfield', () => {
+    // An evidence axis is keyed and retrieved by indication (spec 7.1.2), and
+    // the trial holding it usually has no derivable subfield. Omitting one beats
+    // inventing one.
+    expect(errorsFor({
+      axis_type: 'evidence', indication: 'epilepsy',
+      axis: 'strongest interventional evidence, epilepsy',
+      current_value: 'randomized parallel-assignment trial, n = 191, completed 2014',
+      established_date: '2014-05-01', confidence: 'single-group',
+      source_url: 'https://clinicaltrials.gov/study/NCT00264810',
+    })).toEqual([])
+  })
+
+  it('requires a subfield on every other axis type', () => {
+    expect(errorsFor(valid({ subfield: undefined })).join())
+      .toMatch(/subfield is required on every axis type except evidence/)
+  })
+
   it('accepts a manual-only subfield, which is the point of keeping them', () => {
     expect(errorsFor(valid({ subfield: 'INTERFACE_MATERIALS' }))).toEqual([])
     expect(errorsFor(valid({ subfield: 'FOCUSED_ULTRASOUND' }))).toEqual([])

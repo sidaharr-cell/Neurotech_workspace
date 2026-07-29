@@ -44,7 +44,12 @@ create extension if not exists "pgcrypto";
 create table if not exists frontier_records (
   id                uuid primary key default gen_random_uuid(),
 
-  subfield          text not null,
+  -- Nullable ONLY for evidence records. A capability axis belongs to a subfield
+  -- and is retrieved by it. An evidence axis belongs to an INDICATION and is
+  -- retrieved by that (spec 7.1.2), and the trial holding it often has no
+  -- derivable subfield: only 20.7% of news_feed rows carry facets specific
+  -- enough to place. Forcing one would mean inventing it. Enforced below.
+  subfield          text,
   partition_version text,           -- src/lib/subfields.js PARTITION_VERSION
 
   axis              text not null,  -- 'decoded words per minute, chronic, ALS'
@@ -101,6 +106,11 @@ create table if not exists frontier_records (
   constraint frontier_indication_coherent_ck check (
     (axis_type = 'evidence' and indication is not null)
     or (axis_type <> 'evidence' and indication is null)
+  ),
+  -- Every capability axis belongs to a subfield. Only an evidence axis may
+  -- omit one, because it is keyed and retrieved by indication instead.
+  constraint frontier_subfield_required_ck check (
+    subfield is not null or axis_type = 'evidence'
   ),
   constraint frontier_version_ck check (record_version >= 1),
   -- A record cannot supersede itself.

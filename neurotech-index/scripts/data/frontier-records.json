@@ -45,7 +45,6 @@
     "than none, because every item in that subfield would then be scored against a",
     "number nobody can source."
   ],
-
   "_example": {
     "_comment": [
       "Shape reference only. NOT a record, and skipped by the loader like every",
@@ -57,13 +56,916 @@
     "axis_type": "<performance | longevity | invasiveness | scale | regulatory | manufacturability | cost | evidence>",
     "indication": "<one of INDICATION_IDS, only when axis_type is evidence>",
     "current_value": "<the value, with units in the string>",
-    "held_by": { "type": "papers", "id": "<uuid of the NeuroBase item holding it>" },
+    "held_by": {
+      "type": "papers",
+      "id": "<uuid of the NeuroBase item holding it>"
+    },
     "established_date": "<YYYY-MM-DD>",
     "confidence": "<replicated | single-group | claimed-only>",
     "source_url": "<link to the paper, registry entry, or regulatory decision>",
     "notes": "<anything a reviewer needs, including why this axis is drawn this way>",
     "supersedes": "<key of the record this one beats, omitted unless it beats one>"
   },
-
-  "records": {}
+  "records": {
+    "evidence-amputation": {
+      "axis": "strongest interventional evidence, Amputation",
+      "axis_type": "evidence",
+      "indication": "amputation",
+      "current_value": "randomized, parallel assignment, double masking, n = 28, completed 2019-01-28",
+      "held_by": {
+        "type": "news_feed",
+        "id": "9ca90d35-b395-47dc-9765-09768b94c601"
+      },
+      "established_date": "2019-01-28",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01996254",
+      "notes": "NCT01996254, sponsor SPR Therapeutics, Inc.. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 39 indexed trial(s) for this indication, 15 of which had design fields retrieved and 3 of which are finished on the same rung across 3 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-spinal-cord-injury": {
+      "axis": "strongest interventional evidence, Spinal cord injury",
+      "axis_type": "evidence",
+      "indication": "spinal_cord_injury",
+      "current_value": "randomized, factorial assignment, Phase 4, single masking, n = 360, completed 2013-05",
+      "held_by": {
+        "type": "news_feed",
+        "id": "225818c7-a838-49b5-9c9d-75dadffba581"
+      },
+      "established_date": "2013-05-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00745095",
+      "notes": "NCT00745095, sponsor US Department of Veterans Affairs. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 680 indexed trial(s) for this indication, 65 of which had design fields retrieved and 8 of which are finished on the same rung across 7 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-spasticity": {
+      "axis": "strongest interventional evidence, Spasticity",
+      "axis_type": "evidence",
+      "indication": "spasticity",
+      "current_value": "randomized, parallel assignment, Phase 4, single masking, n = 60, unknown, started 2013-02",
+      "held_by": {
+        "type": "news_feed",
+        "id": "7d223cf0-0f93-4cc5-907d-9a69185a0077"
+      },
+      "established_date": "2013-02-01",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01786005",
+      "notes": "NCT01786005, sponsor Russian Academy of Medical Sciences. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 67 indexed trial(s) for this indication, 15 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-neuropathic-pain": {
+      "axis": "strongest interventional evidence, Neuropathic pain",
+      "axis_type": "evidence",
+      "indication": "neuropathic_pain",
+      "current_value": "randomized, parallel assignment, Phase 3, triple masking, n = 300, completed 2020-12-28",
+      "held_by": {
+        "type": "news_feed",
+        "id": "fa6af264-bc12-4ffe-a93e-f6f357e86da1"
+      },
+      "established_date": "2020-12-28",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03901352",
+      "notes": "NCT03901352, sponsor Daiichi Sankyo Co., Ltd.. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 219 indexed trial(s) for this indication, 21 of which had design fields retrieved and 4 of which are finished on the same rung across 4 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-obesity": {
+      "axis": "strongest interventional evidence, Obesity",
+      "axis_type": "evidence",
+      "indication": "obesity",
+      "current_value": "randomized, parallel assignment, Phase 4, open label, n = 38, completed 2025-10-28",
+      "held_by": {
+        "type": "news_feed",
+        "id": "141a0f21-0a5d-43c4-aeac-ff4994e75f2d"
+      },
+      "established_date": "2025-10-28",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT06027567",
+      "notes": "NCT06027567, sponsor Rigmor Højland Jensen. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 57 indexed trial(s) for this indication, 15 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-schizophrenia": {
+      "axis": "strongest interventional evidence, Schizophrenia",
+      "axis_type": "evidence",
+      "indication": "schizophrenia",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, double masking, n = 20, unknown, started 2008-10",
+      "held_by": {
+        "type": "news_feed",
+        "id": "8ebb991e-a205-4b4e-a384-2a19f99d0af0"
+      },
+      "established_date": "2008-10-01",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00564096",
+      "notes": "NCT00564096, sponsor BeerYaakov Mental Health Center. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 120 indexed trial(s) for this indication, 15 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-cluster-headache": {
+      "axis": "strongest interventional evidence, Cluster headache",
+      "axis_type": "evidence",
+      "indication": "cluster_headache",
+      "current_value": "randomized, crossover assignment, triple masking, n = 150, completed 2014-10",
+      "held_by": {
+        "type": "news_feed",
+        "id": "8b1d9eaf-f98f-4b1f-82be-ada3949c37a7"
+      },
+      "established_date": "2014-10-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01792817",
+      "notes": "NCT01792817, sponsor ElectroCore INC. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 17 indexed trial(s) for this indication, 11 of which had design fields retrieved and 6 of which are finished on the same rung across 4 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-gastroparesis": {
+      "axis": "strongest interventional evidence, Gastroparesis",
+      "axis_type": "evidence",
+      "indication": "gastroparesis",
+      "current_value": "randomized, crossover assignment, quadruple masking, n = 87, results posted 2009-03",
+      "held_by": {
+        "type": "news_feed",
+        "id": "108a18dc-4773-4653-858e-1ca3126ae893"
+      },
+      "established_date": "2009-03-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00157755",
+      "notes": "NCT00157755, sponsor MedtronicNeuro. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 18 indexed trial(s) for this indication, 8 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-alzheimers-disease": {
+      "axis": "strongest interventional evidence, Alzheimer's disease",
+      "axis_type": "evidence",
+      "indication": "alzheimers_disease",
+      "current_value": "randomized, parallel assignment, Phase 4, quadruple masking, n = 20, completed 2019-07",
+      "held_by": {
+        "type": "news_feed",
+        "id": "91baf622-6849-4cc3-b8a9-b3e1a52e6ab6"
+      },
+      "established_date": "2019-07-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02190084",
+      "notes": "NCT02190084, sponsor Central Arkansas Veterans Healthcare System. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 125 indexed trial(s) for this indication, 17 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-dementia": {
+      "axis": "strongest interventional evidence, Dementia",
+      "axis_type": "evidence",
+      "indication": "dementia",
+      "current_value": "randomized, parallel assignment, Phase 3, single masking, n = 73, completed 2026-02-09",
+      "held_by": {
+        "type": "news_feed",
+        "id": "229709aa-9aba-4777-968a-ee89b7bb7ac2"
+      },
+      "established_date": "2026-02-09",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT05894954",
+      "notes": "NCT05894954, sponsor Alzheimer's Prevention and Reversal Project, Inc.. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 46 indexed trial(s) for this indication, 10 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-mild-cognitive-impairment": {
+      "axis": "strongest interventional evidence, Mild cognitive impairment",
+      "axis_type": "evidence",
+      "indication": "mild_cognitive_impairment",
+      "current_value": "randomized, parallel assignment, Phase 3, single masking, n = 73, completed 2026-02-09",
+      "held_by": {
+        "type": "news_feed",
+        "id": "229709aa-9aba-4777-968a-ee89b7bb7ac2"
+      },
+      "established_date": "2026-02-09",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT05894954",
+      "notes": "NCT05894954, sponsor Alzheimer's Prevention and Reversal Project, Inc.. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 162 indexed trial(s) for this indication, 16 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-hearing-loss": {
+      "axis": "strongest interventional evidence, Hearing loss",
+      "axis_type": "evidence",
+      "indication": "hearing_loss",
+      "current_value": "randomized, crossover assignment, Phase 4, open label, n = 32, completed 2009-05",
+      "held_by": {
+        "type": "news_feed",
+        "id": "49f30971-6d1f-4ec4-abab-df916aec1e26"
+      },
+      "established_date": "2009-05-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00205881",
+      "notes": "NCT00205881, sponsor Advanced Bionics. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 447 indexed trial(s) for this indication, 14 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-stroke": {
+      "axis": "strongest interventional evidence, Stroke",
+      "axis_type": "evidence",
+      "indication": "stroke",
+      "current_value": "randomized, parallel assignment, Phase 3, double masking, n = 304, completed 2023-08-18",
+      "held_by": {
+        "type": "news_feed",
+        "id": "3a889522-02b9-48f0-ae3d-78a4edef8d40"
+      },
+      "established_date": "2023-08-18",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT06437626",
+      "notes": "NCT06437626, sponsor Pharmasoft. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 628 indexed trial(s) for this indication, 49 of which had design fields retrieved and 5 of which are finished on the same rung across 5 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-epilepsy": {
+      "axis": "strongest interventional evidence, Epilepsy",
+      "axis_type": "evidence",
+      "indication": "epilepsy",
+      "current_value": "randomized, parallel assignment, Phase 3, double masking, n = 240, completed 2011-05",
+      "held_by": {
+        "type": "news_feed",
+        "id": "94e9bdb0-2841-48fc-b9a9-eef44b20e854"
+      },
+      "established_date": "2011-05-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00264810",
+      "notes": "NCT00264810, sponsor NeuroPace. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 264 indexed trial(s) for this indication, 17 of which had design fields retrieved and 4 of which are finished on the same rung across 4 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-neurogenic-bladder": {
+      "axis": "strongest interventional evidence, Neurogenic bladder",
+      "axis_type": "evidence",
+      "indication": "neurogenic_bladder",
+      "current_value": "randomized, parallel assignment, triple masking, n = 50, completed 2023-04-20",
+      "held_by": {
+        "type": "news_feed",
+        "id": "b1838731-26ae-46b5-b747-7542e64ecc41"
+      },
+      "established_date": "2023-04-20",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04074616",
+      "notes": "NCT04074616, sponsor The University of Texas Health Science Center, Houston. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 33 indexed trial(s) for this indication, 11 of which had design fields retrieved and 4 of which are finished on the same rung across 4 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-substance-use-disorder": {
+      "axis": "strongest interventional evidence, Substance use disorder",
+      "axis_type": "evidence",
+      "indication": "substance_use_disorder",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, quadruple masking, n = 36, completed 2025-04-20",
+      "held_by": {
+        "type": "news_feed",
+        "id": "b5c961a0-61ae-4fa5-ada5-e5839c90e69d"
+      },
+      "established_date": "2025-04-20",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04325659",
+      "notes": "NCT04325659, sponsor Johns Hopkins University. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 137 indexed trial(s) for this indication, 16 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-bipolar-disorder": {
+      "axis": "strongest interventional evidence, Bipolar disorder",
+      "axis_type": "evidence",
+      "indication": "bipolar_disorder",
+      "current_value": "randomized, crossover assignment, Phase 4, triple masking, n = 40, completed 2011-07",
+      "held_by": {
+        "type": "news_feed",
+        "id": "35328294-3bdb-4744-af8e-3face51312ae"
+      },
+      "established_date": "2011-07-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00186758",
+      "notes": "NCT00186758, sponsor St. Joseph's Healthcare Hamilton. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 52 indexed trial(s) for this indication, 12 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-major-depressive-disorder": {
+      "axis": "strongest interventional evidence, Major depressive disorder",
+      "axis_type": "evidence",
+      "indication": "major_depressive_disorder",
+      "current_value": "randomized, parallel assignment, Phase 4, triple masking, n = 331, completed 2010-02",
+      "held_by": {
+        "type": "news_feed",
+        "id": "c84fa685-a24c-4f6e-806d-9ea6f2d1bd29"
+      },
+      "established_date": "2010-02-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00305565",
+      "notes": "NCT00305565, sponsor Cyberonics, Inc.. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 467 indexed trial(s) for this indication, 47 of which had design fields retrieved and 5 of which are finished on the same rung across 5 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-suicidal-ideation": {
+      "axis": "strongest interventional evidence, Suicidal ideation",
+      "axis_type": "evidence",
+      "indication": "suicidal_ideation",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, quadruple masking, n = 2, terminated, started 2024-06-30",
+      "held_by": {
+        "type": "news_feed",
+        "id": "216a502f-7824-4005-9c81-5b8e20280064"
+      },
+      "established_date": "2024-06-30",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT06462820",
+      "notes": "NCT06462820, sponsor Magnus Medical. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 18 indexed trial(s) for this indication, 14 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-overactive-bladder": {
+      "axis": "strongest interventional evidence, Overactive bladder",
+      "axis_type": "evidence",
+      "indication": "overactive_bladder",
+      "current_value": "randomized, parallel assignment, Phase 3, open label, n = 386, completed 2016-07",
+      "held_by": {
+        "type": "news_feed",
+        "id": "f0d04c83-e56a-4827-8a07-4c4c0e44babf"
+      },
+      "established_date": "2016-07-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01502956",
+      "notes": "NCT01502956, sponsor NICHD Pelvic Floor Disorders Network. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 104 indexed trial(s) for this indication, 19 of which had design fields retrieved and 5 of which are finished on the same rung across 4 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-low-back-pain": {
+      "axis": "strongest interventional evidence, Low back pain",
+      "axis_type": "evidence",
+      "indication": "low_back_pain",
+      "current_value": "randomized, parallel assignment, Phase 4, open label, n = 278, completed 2017-06-20",
+      "held_by": {
+        "type": "news_feed",
+        "id": "edc582a6-f14f-4119-ae7a-ffbc89edbeb2"
+      },
+      "established_date": "2017-06-20",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01697358",
+      "notes": "NCT01697358, sponsor MedtronicNeuro. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 191 indexed trial(s) for this indication, 17 of which had design fields retrieved and 5 of which are finished on the same rung across 5 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-post-traumatic-stress-disorder": {
+      "axis": "strongest interventional evidence, Post-traumatic stress disorder",
+      "axis_type": "evidence",
+      "indication": "post_traumatic_stress_disorder",
+      "current_value": "randomized, parallel assignment, Phase 3, single masking, n = 56, completed 2019-09-21",
+      "held_by": {
+        "type": "news_feed",
+        "id": "19104cbe-2323-46bd-a616-9f9245ac97f5"
+      },
+      "established_date": "2019-09-21",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02992899",
+      "notes": "NCT02992899, sponsor Emory University. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 85 indexed trial(s) for this indication, 17 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-cerebral-palsy": {
+      "axis": "strongest interventional evidence, Cerebral palsy",
+      "axis_type": "evidence",
+      "indication": "cerebral_palsy",
+      "current_value": "randomized, factorial assignment, Phase 2/Phase 3, triple masking, n = 64, unknown, started 2010-08",
+      "held_by": {
+        "type": "news_feed",
+        "id": "38516027-a549-4ae0-9518-d46ebc6fa6e1"
+      },
+      "established_date": "2010-08-01",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01189058",
+      "notes": "NCT01189058, sponsor University of Calgary. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 73 indexed trial(s) for this indication, 16 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-traumatic-brain-injury": {
+      "axis": "strongest interventional evidence, Traumatic brain injury",
+      "axis_type": "evidence",
+      "indication": "traumatic_brain_injury",
+      "current_value": "randomized, parallel assignment, Phase 3, quadruple masking, n = 606, completed 2015-05",
+      "held_by": {
+        "type": "news_feed",
+        "id": "817d0746-f22c-41d3-b67b-7d0e355744d5"
+      },
+      "established_date": "2015-05-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00987454",
+      "notes": "NCT00987454, sponsor Australian and New Zealand Intensive Care Research Centre. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 120 indexed trial(s) for this indication, 17 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-fibromyalgia": {
+      "axis": "strongest interventional evidence, Fibromyalgia",
+      "axis_type": "evidence",
+      "indication": "fibromyalgia",
+      "current_value": "randomized, crossover assignment, Phase 2/Phase 3, quadruple masking, n = 27, completed 2017-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "a9428bb9-a2d2-485e-8ddd-7eb9bd6b148b"
+      },
+      "established_date": "2017-01-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02639533",
+      "notes": "NCT02639533, sponsor Hospital de Clinicas de Porto Alegre. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 56 indexed trial(s) for this indication, 11 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-autonomic-dysfunction": {
+      "axis": "strongest interventional evidence, Autonomic dysfunction",
+      "axis_type": "evidence",
+      "indication": "autonomic_dysfunction",
+      "current_value": "randomized, parallel assignment, single masking, n = 529, completed 2023-12-21",
+      "held_by": {
+        "type": "news_feed",
+        "id": "633018ad-8814-4a78-b4d7-c4b58cb51891"
+      },
+      "established_date": "2023-12-21",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04141891",
+      "notes": "NCT04141891, sponsor University of Colorado, Denver. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 37 indexed trial(s) for this indication, 13 of which had design fields retrieved and 5 of which are finished on the same rung across 5 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-parkinsons-disease": {
+      "axis": "strongest interventional evidence, Parkinson's disease",
+      "axis_type": "evidence",
+      "indication": "parkinsons_disease",
+      "current_value": "randomized, parallel assignment, Phase 4, open label, n = 51, completed 2024-01-26",
+      "held_by": {
+        "type": "news_feed",
+        "id": "062e59b7-5622-4a9e-907d-bc19733a931b"
+      },
+      "established_date": "2024-01-26",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02480803",
+      "notes": "NCT02480803, sponsor Academisch Medisch Centrum - Universiteit van Amsterdam (AMC-UvA). Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 719 indexed trial(s) for this indication, 23 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-obsessive-compulsive-disorder": {
+      "axis": "strongest interventional evidence, Obsessive-compulsive disorder",
+      "axis_type": "evidence",
+      "indication": "obsessive_compulsive_disorder",
+      "current_value": "randomized, parallel assignment, Phase 4, double masking, n = 27, results posted 2024-12-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "96d82e55-3c0b-4723-9832-bcd34b497b66"
+      },
+      "established_date": "2024-12-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00640133",
+      "notes": "NCT00640133, sponsor Butler Hospital. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 113 indexed trial(s) for this indication, 16 of which had design fields retrieved and 3 of which are finished on the same rung across 3 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-locked-in-syndrome": {
+      "axis": "strongest interventional evidence, Locked-in syndrome",
+      "axis_type": "evidence",
+      "indication": "locked_in_syndrome",
+      "current_value": "randomized, parallel assignment, quadruple masking, n = 72, not yet recruiting, started 2025-11-30",
+      "held_by": {
+        "type": "news_feed",
+        "id": "40128a3f-a7ad-4b96-953e-7f208ec747b7"
+      },
+      "established_date": "2025-11-30",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT07257601",
+      "notes": "NCT07257601, sponsor Zhujiang Hospital. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 16 indexed trial(s) for this indication, 15 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-amyotrophic-lateral-sclerosis": {
+      "axis": "strongest interventional evidence, Amyotrophic lateral sclerosis",
+      "axis_type": "evidence",
+      "indication": "amyotrophic_lateral_sclerosis",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, triple masking, n = 40, completed 2013-11",
+      "held_by": {
+        "type": "news_feed",
+        "id": "0c986347-05f3-4f02-b288-0a5b817ca98d"
+      },
+      "established_date": "2013-11-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01825551",
+      "notes": "NCT01825551, sponsor Tehran University of Medical Sciences. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 120 indexed trial(s) for this indication, 29 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-multiple-sclerosis": {
+      "axis": "strongest interventional evidence, Multiple sclerosis",
+      "axis_type": "evidence",
+      "indication": "multiple_sclerosis",
+      "current_value": "randomized, parallel assignment, Phase 3, single masking, n = 100, active not recruiting, started 2018-03-21",
+      "held_by": {
+        "type": "news_feed",
+        "id": "6f00c128-ab6d-40a5-9a9a-c0f4837fe8b9"
+      },
+      "established_date": "2018-03-21",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03477500",
+      "notes": "NCT03477500, sponsor Haukeland University Hospital. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 98 indexed trial(s) for this indication, 15 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-essential-tremor": {
+      "axis": "strongest interventional evidence, Essential tremor",
+      "axis_type": "evidence",
+      "indication": "essential_tremor",
+      "current_value": "randomized, crossover assignment, Phase 4, open label, n = 56, completed 2017-04",
+      "held_by": {
+        "type": "news_feed",
+        "id": "9e120896-16eb-46d3-add5-8efc53dd9901"
+      },
+      "established_date": "2017-04-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02495883",
+      "notes": "NCT02495883, sponsor University of California, San Diego. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 105 indexed trial(s) for this indication, 10 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-autism-spectrum-disorder": {
+      "axis": "strongest interventional evidence, Autism spectrum disorder",
+      "axis_type": "evidence",
+      "indication": "autism_spectrum_disorder",
+      "current_value": "randomized, crossover assignment, Phase 3, triple masking, n = 25, completed 2019-12-19",
+      "held_by": {
+        "type": "news_feed",
+        "id": "405b7c7e-7ba4-4a58-8cda-bc7c65774227"
+      },
+      "established_date": "2019-12-19",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03640156",
+      "notes": "NCT03640156, sponsor KU Leuven. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 53 indexed trial(s) for this indication, 14 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-adhd": {
+      "axis": "strongest interventional evidence, Attention deficit hyperactivity disorder",
+      "axis_type": "evidence",
+      "indication": "adhd",
+      "current_value": "randomized, crossover assignment, Phase 2/Phase 3, single masking, n = 192, completed 2016-05-13",
+      "held_by": {
+        "type": "news_feed",
+        "id": "78eeeecc-2e19-46d1-a992-27bdb51cf426"
+      },
+      "established_date": "2016-05-13",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01344044",
+      "notes": "NCT01344044, sponsor National Healthcare Group, Singapore. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 31 indexed trial(s) for this indication, 13 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-dystonia": {
+      "axis": "strongest interventional evidence, Dystonia",
+      "axis_type": "evidence",
+      "indication": "dystonia",
+      "current_value": "randomized, parallel assignment, Phase 4, double masking, n = 70, completed 2020-06",
+      "held_by": {
+        "type": "news_feed",
+        "id": "2a5149a6-c947-4f02-81b3-f6b4e9cc65a9"
+      },
+      "established_date": "2020-06-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02263417",
+      "notes": "NCT02263417, sponsor Beijing Pins Medical Co., Ltd. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 121 indexed trial(s) for this indication, 16 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-blindness": {
+      "axis": "strongest interventional evidence, Blindness and low vision",
+      "axis_type": "evidence",
+      "indication": "blindness",
+      "current_value": "randomized, parallel assignment, Phase 3, double masking, n = 244, completed 2013-06",
+      "held_by": {
+        "type": "news_feed",
+        "id": "4049a171-1157-4bd7-aae3-168b5ff29b69"
+      },
+      "established_date": "2013-06-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01396057",
+      "notes": "NCT01396057, sponsor Novartis Pharmaceuticals. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 19 indexed trial(s) for this indication, 13 of which had design fields retrieved and 3 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-chronic-pain": {
+      "axis": "strongest interventional evidence, Chronic pain",
+      "axis_type": "evidence",
+      "indication": "chronic_pain",
+      "current_value": "randomized, crossover assignment, Phase 4, single masking, n = 22, completed 2015-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "172a8538-397e-4377-be58-b8a13ea6df79"
+      },
+      "established_date": "2015-01-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02265848",
+      "notes": "NCT02265848, sponsor The Center for Clinical Research, Winston-Salem, NC. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 232 indexed trial(s) for this indication, 18 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-complex-regional-pain-syndrome": {
+      "axis": "strongest interventional evidence, Complex regional pain syndrome",
+      "axis_type": "evidence",
+      "indication": "complex_regional_pain_syndrome",
+      "current_value": "randomized, crossover assignment, Phase 4, single masking, n = 22, completed 2015-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "172a8538-397e-4377-be58-b8a13ea6df79"
+      },
+      "established_date": "2015-01-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02265848",
+      "notes": "NCT02265848, sponsor The Center for Clinical Research, Winston-Salem, NC. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 31 indexed trial(s) for this indication, 13 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-neurogenic-bowel": {
+      "axis": "strongest interventional evidence, Neurogenic bowel",
+      "axis_type": "evidence",
+      "indication": "neurogenic_bowel",
+      "current_value": "randomized, crossover assignment, Phase 2/Phase 3, single masking, n = 4, results posted 2016-12-19",
+      "held_by": {
+        "type": "news_feed",
+        "id": "d7773f01-f476-4161-bcd6-8e00bc78f3b1"
+      },
+      "established_date": "2016-12-19",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02163187",
+      "notes": "NCT02163187, sponsor Memorial Sloan Kettering Cancer Center. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 43 indexed trial(s) for this indication, 15 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-tetraplegia": {
+      "axis": "strongest interventional evidence, Tetraplegia",
+      "axis_type": "evidence",
+      "indication": "tetraplegia",
+      "current_value": "randomized, crossover assignment, Phase 2/Phase 3, double masking, n = 13, completed 2010-12",
+      "held_by": {
+        "type": "news_feed",
+        "id": "08acf63c-830f-484e-9a83-24fe85341039"
+      },
+      "established_date": "2010-12-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00656149",
+      "notes": "NCT00656149, sponsor University of Alberta. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 88 indexed trial(s) for this indication, 26 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-anxiety-disorder": {
+      "axis": "strongest interventional evidence, Anxiety disorder",
+      "axis_type": "evidence",
+      "indication": "anxiety_disorder",
+      "current_value": "randomized, parallel assignment, Phase 4, double masking, n = 150, not yet recruiting, started 2026-09",
+      "held_by": {
+        "type": "news_feed",
+        "id": "6f95b09c-e264-442f-bded-cd7a32f23a9e"
+      },
+      "established_date": "2026-09-01",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT07651956",
+      "notes": "NCT07651956, sponsor Icahn School of Medicine at Mount Sinai. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 91 indexed trial(s) for this indication, 14 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-retinitis-pigmentosa": {
+      "axis": "strongest interventional evidence, Retinitis pigmentosa",
+      "axis_type": "evidence",
+      "indication": "retinitis_pigmentosa",
+      "current_value": "randomized, parallel assignment, single masking, n = 529, completed 2023-12-21",
+      "held_by": {
+        "type": "news_feed",
+        "id": "633018ad-8814-4a78-b4d7-c4b58cb51891"
+      },
+      "established_date": "2023-12-21",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04141891",
+      "notes": "NCT04141891, sponsor University of Colorado, Denver. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 43 indexed trial(s) for this indication, 15 of which had design fields retrieved and 4 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-macular-degeneration": {
+      "axis": "strongest interventional evidence, Macular degeneration",
+      "axis_type": "evidence",
+      "indication": "macular_degeneration",
+      "current_value": "randomized, parallel assignment, Phase 3, double masking, n = 448, completed 2023-08-22",
+      "held_by": {
+        "type": "news_feed",
+        "id": "e8cdd23e-9655-4ab6-a7af-f204793e1129"
+      },
+      "established_date": "2023-08-22",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04435366",
+      "notes": "NCT04435366, sponsor IVERIC bio, Inc.. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 92 indexed trial(s) for this indication, 17 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-treatment-resistant-depression": {
+      "axis": "strongest interventional evidence, Treatment-resistant depression",
+      "axis_type": "evidence",
+      "indication": "treatment_resistant_depression",
+      "current_value": "randomized, parallel assignment, quadruple masking, n = 6800, recruiting, started 2019-09-26",
+      "held_by": {
+        "type": "news_feed",
+        "id": "94aedb0c-e7cc-4305-98a9-3d5e3d7bc460"
+      },
+      "established_date": "2019-09-26",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03887715",
+      "notes": "NCT03887715, sponsor LivaNova. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 87 indexed trial(s) for this indication, 13 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-disorders-of-consciousness": {
+      "axis": "strongest interventional evidence, Disorders of consciousness",
+      "axis_type": "evidence",
+      "indication": "disorders_of_consciousness",
+      "current_value": "randomized, parallel assignment, triple masking, n = 180, enrolling by invitation, started 2022-04-13",
+      "held_by": {
+        "type": "news_feed",
+        "id": "4fdd8c15-8ded-4e31-b1af-2780562a08ff"
+      },
+      "established_date": "2022-04-13",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT05682248",
+      "notes": "NCT05682248, sponsor Xuanwu Hospital, Beijing. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 36 indexed trial(s) for this indication, 13 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-paralysis": {
+      "axis": "strongest interventional evidence, Paralysis",
+      "axis_type": "evidence",
+      "indication": "paralysis",
+      "current_value": "randomized, parallel assignment, triple masking, n = 66, completed 2016-07",
+      "held_by": {
+        "type": "news_feed",
+        "id": "861a0b90-10ba-4431-8c76-ef9a35c5ade9"
+      },
+      "established_date": "2016-07-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01352910",
+      "notes": "NCT01352910, sponsor University Hospital, Rouen. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 43 indexed trial(s) for this indication, 16 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-paraplegia": {
+      "axis": "strongest interventional evidence, Paraplegia",
+      "axis_type": "evidence",
+      "indication": "paraplegia",
+      "current_value": "randomized, parallel assignment, open label, n = 29, completed 2011-12",
+      "held_by": {
+        "type": "news_feed",
+        "id": "d53e263b-9313-459f-a1e4-378522b5a41c"
+      },
+      "established_date": "2011-12-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00270855",
+      "notes": "NCT00270855, sponsor VA Office of Research and Development. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 28 indexed trial(s) for this indication, 13 of which had design fields retrieved and 4 of which are finished on the same rung across 3 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-tinnitus": {
+      "axis": "strongest interventional evidence, Tinnitus",
+      "axis_type": "evidence",
+      "indication": "tinnitus",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, double masking, n = 100, completed 2014-02",
+      "held_by": {
+        "type": "news_feed",
+        "id": "fe544ce7-3f3b-449c-a9a0-ea97bb6d374f"
+      },
+      "established_date": "2014-02-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01541969",
+      "notes": "NCT01541969, sponsor Nottingham University Hospitals NHS Trust. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 57 indexed trial(s) for this indication, 13 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-heart-failure": {
+      "axis": "strongest interventional evidence, Heart failure",
+      "axis_type": "evidence",
+      "indication": "heart_failure",
+      "current_value": "randomized, parallel assignment, Phase 4, single masking, n = 40, completed 2014-11",
+      "held_by": {
+        "type": "news_feed",
+        "id": "77032e17-a520-482d-92d6-6693498bbe8f"
+      },
+      "established_date": "2014-11-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT02903225",
+      "notes": "NCT02903225, sponsor Universidad de la Republica. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 46 indexed trial(s) for this indication, 12 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-obstructive-sleep-apnea": {
+      "axis": "strongest interventional evidence, Obstructive sleep apnea",
+      "axis_type": "evidence",
+      "indication": "obstructive_sleep_apnea",
+      "current_value": "randomized, parallel assignment, single masking, n = 529, completed 2023-12-21",
+      "held_by": {
+        "type": "news_feed",
+        "id": "633018ad-8814-4a78-b4d7-c4b58cb51891"
+      },
+      "established_date": "2023-12-21",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04141891",
+      "notes": "NCT04141891, sponsor University of Colorado, Denver. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 29 indexed trial(s) for this indication, 11 of which had design fields retrieved and 3 of which are finished on the same rung across 3 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-migraine": {
+      "axis": "strongest interventional evidence, Migraine",
+      "axis_type": "evidence",
+      "indication": "migraine",
+      "current_value": "randomized, crossover assignment, Phase 3, triple masking, n = 22, completed 2024-08-29",
+      "held_by": {
+        "type": "news_feed",
+        "id": "0e77d170-72d9-4492-acda-ba1499746282"
+      },
+      "established_date": "2024-08-29",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT05102591",
+      "notes": "NCT05102591, sponsor University of Calgary. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 90 indexed trial(s) for this indication, 10 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-tourette-syndrome": {
+      "axis": "strongest interventional evidence, Tourette syndrome",
+      "axis_type": "evidence",
+      "indication": "tourette_syndrome",
+      "current_value": "randomized, parallel assignment, Phase 3, double masking, n = 20, completed 2016-12",
+      "held_by": {
+        "type": "news_feed",
+        "id": "4391ae3c-8fc6-4088-ad11-ac320112c794"
+      },
+      "established_date": "2016-12-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00478842",
+      "notes": "NCT00478842, sponsor Assistance Publique - Hôpitaux de Paris. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 31 indexed trial(s) for this indication, 13 of which had design fields retrieved and 2 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-spinal-muscular-atrophy": {
+      "axis": "strongest interventional evidence, Spinal muscular atrophy",
+      "axis_type": "evidence",
+      "indication": "spinal_muscular_atrophy",
+      "current_value": "randomized, crossover assignment, Phase 2/Phase 3, triple masking, n = 11, completed 2015-09",
+      "held_by": {
+        "type": "news_feed",
+        "id": "bd9c14d9-35db-46c7-a4f6-35f961055713"
+      },
+      "established_date": "2015-09-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01645787",
+      "notes": "NCT01645787, sponsor Columbia University. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 16 indexed trial(s) for this indication, 10 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-dysphagia": {
+      "axis": "strongest interventional evidence, Dysphagia",
+      "axis_type": "evidence",
+      "indication": "dysphagia",
+      "current_value": "randomized, parallel assignment, Phase 2, single masking, n = 10, completed 2011-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "92c78bb6-872e-4d15-a8c8-a220b4ecc401"
+      },
+      "established_date": "2011-01-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT00376506",
+      "notes": "NCT00376506, sponsor National Institute of Neurological Disorders and Stroke (NINDS). Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 28 indexed trial(s) for this indication, 14 of which had design fields retrieved and 3 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-aphasia": {
+      "axis": "strongest interventional evidence, Aphasia",
+      "axis_type": "evidence",
+      "indication": "aphasia",
+      "current_value": "randomized, parallel assignment, Phase 3, quadruple masking, n = 20, completed 2020-10-20",
+      "held_by": {
+        "type": "news_feed",
+        "id": "908d5ebd-b823-4f29-bebf-c09515daf4fb"
+      },
+      "established_date": "2020-10-20",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04134416",
+      "notes": "NCT04134416, sponsor University of Malaga. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 39 indexed trial(s) for this indication, 13 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-insomnia": {
+      "axis": "strongest interventional evidence, Insomnia",
+      "axis_type": "evidence",
+      "indication": "insomnia",
+      "current_value": "randomized, crossover assignment, Phase 4, triple masking, n = 200, active not recruiting, started 2020-10-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "cf6e3613-c95f-4624-8da3-62beead9f99b"
+      },
+      "established_date": "2020-10-01",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT04627480",
+      "notes": "NCT04627480, sponsor ProofPilot. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 32 indexed trial(s) for this indication, 12 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-huntingtons-disease": {
+      "axis": "strongest interventional evidence, Huntington's disease",
+      "axis_type": "evidence",
+      "indication": "huntingtons_disease",
+      "current_value": "randomized, parallel assignment, single masking, n = 64, completed 2023-12-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "0683616a-3171-4ec3-bafa-3d21e5ff16c4"
+      },
+      "established_date": "2023-12-01",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT05769972",
+      "notes": "NCT05769972, sponsor Fundació Institut de Recerca de l'Hospital de la Santa Creu i Sant Pau. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 9 indexed trial(s) for this indication, 8 of which had design fields retrieved and 3 of which are finished on the same rung across 2 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-phantom-limb-pain": {
+      "axis": "strongest interventional evidence, Phantom limb pain",
+      "axis_type": "evidence",
+      "indication": "phantom_limb_pain",
+      "current_value": "randomized, parallel assignment, double masking, n = 28, completed 2019-01-28",
+      "held_by": {
+        "type": "news_feed",
+        "id": "9ca90d35-b395-47dc-9765-09768b94c601"
+      },
+      "established_date": "2019-01-28",
+      "confidence": "replicated",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT01996254",
+      "notes": "NCT01996254, sponsor SPR Therapeutics, Inc.. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 19 indexed trial(s) for this indication, 14 of which had design fields retrieved and 3 of which are finished on the same rung across 3 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-dysarthria": {
+      "axis": "strongest interventional evidence, Dysarthria",
+      "axis_type": "evidence",
+      "indication": "dysarthria",
+      "current_value": "randomized, parallel assignment, Phase 2/Phase 3, double masking, n = 20, unknown, started 2024-11-18",
+      "held_by": {
+        "type": "news_feed",
+        "id": "16a79fb2-3ff1-4d3c-960d-468ff313b5ba"
+      },
+      "established_date": "2024-11-18",
+      "confidence": "claimed-only",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03676439",
+      "notes": "NCT03676439, sponsor Sociedad Argenttina de Neuromodulación. Rung \"randomized_controlled_late_phase\" (tier 5 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 8 indexed trial(s) for this indication, 7 of which had design fields retrieved and 0 of which are finished on the same rung across 0 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    },
+    "evidence-anorexia-nervosa": {
+      "axis": "strongest interventional evidence, Anorexia nervosa",
+      "axis_type": "evidence",
+      "indication": "anorexia_nervosa",
+      "current_value": "randomized, parallel assignment, quadruple masking, n = 43, completed 2021-02-01",
+      "held_by": {
+        "type": "news_feed",
+        "id": "62d397a9-baf2-4994-a3c6-21e89f45d422"
+      },
+      "established_date": "2021-02-01",
+      "confidence": "single-group",
+      "source": "clinicaltrials",
+      "source_url": "https://clinicaltrials.gov/study/NCT03273205",
+      "notes": "NCT03273205, sponsor Silvie Ceresnakova. Rung \"randomized_controlled\" (tier 4 of 5) of the ladder in scripts/seed-evidence-records.js, selected from 18 indexed trial(s) for this indication, 14 of which had design fields retrieved and 1 of which are finished on the same rung across 1 sponsor(s). Per-indication, NOT per intervention class: see the header of scripts/seed-evidence-records.js. Derived from registry fields only; no design judgement was applied."
+    }
+  }
 }
