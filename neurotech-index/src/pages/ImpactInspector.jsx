@@ -86,8 +86,13 @@ export default function ImpactInspector() {
         <Row label="horizon">{score.horizon || <em className="text-ink-soft">not set</em>}</Row>
         {score.reason_from_template && (
           <Row label="note">
-            This sentence is a template built from the tags. The model produced rubric
-            vocabulary twice, so validator rule 7 fell back rather than surfacing it.
+            {score.model
+              // Model path: the fallback fired because rule 7 caught something.
+              ? 'This sentence is a template built from the tags. The model produced rubric vocabulary, so validator rule 7 fell back rather than surfacing it.'
+              // Deterministic path: there is no prose to fall back FROM. Saying a
+              // model produced rubric vocabulary here would send whoever is
+              // debugging a bad ordering looking for a model that never ran.
+              : 'This sentence is built from the registry fields, not written by a model. The deterministic scorer has no prose to fall back from.'}
           </Row>
         )}
       </section>
@@ -150,7 +155,12 @@ export default function ImpactInspector() {
       <section>
         <h2 className="font-display text-lg mb-2">What capped it</h2>
         <Row label="fd_ceiling">
-          {score.fd_ceiling} — from record coverage in this subfield
+          {score.fd_ceiling == null
+            // Trials score GAP/GATE/METH and have no FD, so a blank here is
+            // "not applicable" rather than "ceiling of zero". Rendering the bare
+            // value read as the latter.
+            ? <em className="text-ink-soft">not applicable on this rubric</em>
+            : <>{score.fd_ceiling} — from record coverage in this subfield</>}
         </Row>
         <Row label="input_granularity">{score.input_granularity}</Row>
         {(score.ceilings_applied || []).length > 0 ? (
