@@ -158,7 +158,7 @@ export default function Trials() {
           histogram={histogram}
           year={year}
           onYear={setYear}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS)} required />}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required />}
           extras={[
             { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },
             { label: 'Status', value: status, onChange: setStatus, options: TRIAL_STATUS, allLabel: 'Any status' },
@@ -169,7 +169,7 @@ export default function Trials() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS)} required /></div>
+            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required /></div>
           </div>
 
           {loading ? (

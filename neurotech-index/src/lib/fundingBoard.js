@@ -53,13 +53,36 @@ export const STATUS_LABELS = {
   defunct: 'Defunct',
 }
 
+/**
+ * The column stores the enum. These are the words a reader sees, and they are
+ * display-only: renaming one is not a migration.
+ *
+ * `digital_therapeutic` reads as "Prescription therapy" rather than "Digital
+ * therapeutic". The stored name is the industry term, and it names the delivery
+ * medium while leaving out the part that decides membership: every company in
+ * it sells a prescription treatment cleared for a neurological or psychiatric
+ * indication. It is also not all software. Freespira is a breathing sensor,
+ * Otoharmonics is sound, MedRhythms is auditory stimulation with a wearable.
+ */
 export const MODALITY_LABELS = {
   implanted_bci: 'Implanted BCI',
   neuromodulation: 'Neuromodulation',
   diagnostics_imaging: 'Diagnostics and imaging',
-  digital_therapeutic: 'Digital therapeutic',
+  digital_therapeutic: 'Prescription therapy',
   computational_neuro: 'Computational neuroscience',
   other: 'Other',
+}
+
+/** One plain sentence per modality, carried on the filter controls, because a
+ *  two-word label cannot say where its boundary falls. */
+export const MODALITY_DESCRIPTIONS = {
+  implanted_bci: 'Brain-computer interfaces placed inside the skull.',
+  neuromodulation: 'Devices that stimulate nerves or brain tissue, implanted or worn.',
+  diagnostics_imaging: 'Hardware and software that measures or images the nervous system.',
+  digital_therapeutic: 'Prescription treatments delivered through software or sensory stimulus, '
+    + 'cleared for a neurological or psychiatric indication. Not implanted, and not always software.',
+  computational_neuro: 'Modelling and analysis of neural data.',
+  other: 'In scope by the inclusion rule, but not in one of the named groups.',
 }
 
 /** Ordered. Mirrors stage_rank() in supabase/migrations/008-funding.sql and
@@ -240,6 +263,32 @@ export function trailingTotals(rounds = [], cutoff = trailingCutoff()) {
 const desc = key => (a, b) => (b[key] ?? -Infinity) - (a[key] ?? -Infinity)
 
 /**
+ * The filter half of `rankFunding`, without the sort or the limit.
+ *
+ * Exported so a control can ask which of its own values are still reachable
+ * under the *other* filters. Asking the ranked top-N instead answers a
+ * different question: a modality can hold companies the top 20 by capital
+ * never shows, and hiding its filter is what buries them.
+ */
+export function filterFunding(rows, {
+  statuses = DEFAULT_STATUS_FILTER,
+  modalities = null,
+  stageMin = null,
+  stageMax = null,
+} = {}) {
+  const statusOk = r => !statuses || r.status == null || statuses.includes(r.status)
+  const modalityOk = r => !modalities?.length || modalities.includes(r.modality)
+  const stageOk = r => {
+    if (stageMin == null && stageMax == null) return true
+    if (!r.furthestStage) return false
+    const rank = stageRank(r.furthestStage)
+    return (stageMin == null || rank >= stageRank(stageMin))
+        && (stageMax == null || rank <= stageRank(stageMax))
+  }
+  return rows.filter(r => statusOk(r) && modalityOk(r) && stageOk(r))
+}
+
+/**
  * Filter, sort, reselect, and rank.
  *
  * `trailing_24mo` sorts companies with no qualifying round LAST rather than as
@@ -256,17 +305,7 @@ export function rankFunding(rows, {
   stageMin = null,
   stageMax = null,
 } = {}) {
-  const statusOk = r => !statuses || r.status == null || statuses.includes(r.status)
-  const modalityOk = r => !modalities?.length || modalities.includes(r.modality)
-  const stageOk = r => {
-    if (stageMin == null && stageMax == null) return true
-    if (!r.furthestStage) return false
-    const rank = stageRank(r.furthestStage)
-    return (stageMin == null || rank >= stageRank(stageMin))
-        && (stageMax == null || rank <= stageRank(stageMax))
-  }
-
-  let set = rows.filter(r => statusOk(r) && modalityOk(r) && stageOk(r))
+  let set = filterFunding(rows, { statuses, modalities, stageMin, stageMax })
 
   if (sort === 'total_raised') {
     set = set.filter(r => r.total > 0).sort(desc('total'))

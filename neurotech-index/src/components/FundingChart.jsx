@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  getFundingBoard, rankFunding, sortTitle, SORTS, DEFAULT_SORT, DEFAULT_STATUS_FILTER,
+  getFundingBoard, rankFunding, filterFunding, sortTitle, SORTS, DEFAULT_SORT, DEFAULT_STATUS_FILTER,
   STATUS_VALUES, HIDDEN_BY_DEFAULT, STATUS_LABELS, MODALITY_LABELS, STAGE_LABELS,
-  STAGE_ORDER, unavailableLabel, INCLUSION_RULE, MODALITY_COLOR,
+  STAGE_ORDER, unavailableLabel, INCLUSION_RULE, MODALITY_COLOR, MODALITY_DESCRIPTIONS,
   fmtUsd, fmtMonthYear, fmtDay,
 } from '../lib/fundingBoard'
 
@@ -41,7 +41,7 @@ function LatestRaise({ row }) {
     return (
       <>
         <span className="text-ink-soft">{fmtUsd(row.latestAmount)}</span>
-        <span className="text-muted hidden sm:inline"> · {fmtMonthYear(row.latestDate)}</span>
+        <span className="text-muted"> · {fmtMonthYear(row.latestDate)}</span>
       </>
     )
   }
@@ -58,6 +58,21 @@ function rowLabel(row) {
   parts.push(row.furthestStage ? STAGE_LABELS[row.furthestStage] : 'no verified stage')
   if (!row.latestAmount) parts.push(`latest raise: ${unavailableLabel(row).short}`)
   return parts.join('. ')
+}
+
+/** One control per row, label in a fixed-width column so the three rows line up
+ *  down their left edge whatever the controls beside them are. */
+function ControlRow({ label, children }) {
+  return (
+    <div className="flex items-center gap-2 w-max">
+      <span className="w-[72px] shrink-0 uppercase tracking-[0.08em] text-muted/70">
+        {label}
+      </span>
+      {/* nowrap: a narrow screen scrolls this row rather than folding it into
+          two, which is what used to push the rows below it around. */}
+      <div className="flex flex-nowrap items-center gap-1.5">{children}</div>
+    </div>
+  )
 }
 
 /** `board` lets a page fetch once and share it with the scatter. Left out, the
@@ -86,7 +101,27 @@ export default function FundingChart({ limit = 20, board: given = null }) {
     [board, sort, limit, statuses, modalities, stageMin],
   )
 
-  if (loading || !board || !data.length) return null
+  /**
+   * The modalities offered as filters: every one that holds a company under the
+   * other active filters, across the whole board rather than the visible top N.
+   *
+   * Reading them off `data` did two wrong things. It dropped the row the moment
+   * you picked one, because the result then held a single modality. And it
+   * never offered digital therapeutic at all, because none of its six companies
+   * raised enough to enter the top 20 by capital, which is the exact case the
+   * filter is for. A modality with no companies at all is still not offered:
+   * computational neuroscience holds none, and a filter that can only ever
+   * empty the chart is not a filter.
+   */
+  const modalityOptions = useMemo(() => {
+    if (!board) return []
+    const present = new Set(filterFunding(board.rows, { statuses, stageMin }).map(r => r.modality))
+    return Object.keys(MODALITY_LABELS).filter(m => present.has(m) || modalities.includes(m))
+  }, [board, statuses, stageMin, modalities])
+
+  // Held open on an empty result, because the filters that emptied it are the
+  // only way back out of it.
+  if (loading || !board || !board.rows.length) return null
 
   const barOf = r => (sort === 'trailing_24mo' ? r.trailing
     : sort === 'latest_raise_size' ? r.latestAmount : r.total)
@@ -95,25 +130,28 @@ export default function FundingChart({ limit = 20, board: given = null }) {
   const hidden = board.rows.filter(r => HIDDEN_BY_DEFAULT.includes(r.status)).length
   const showingHidden = HIDDEN_BY_DEFAULT.every(s => statuses.includes(s))
   const anyPartial = data.some(r => r.partialTotal)
-  const shownModalities = [...new Set(data.map(r => r.modality).filter(Boolean))]
 
   const toggleModality = m =>
     setModalities(ms => (ms.includes(m) ? ms.filter(x => x !== m) : [...ms, m]))
 
   return (
     <figure className="border border-rule rounded-sm bg-canvas/50 p-5 sm:p-6 mb-10">
-      <figcaption className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="kicker mb-1">Investment</p>
-          <h2 className="font-serif text-xl sm:text-2xl font-semibold text-ink">
-            {sortTitle(sort, data.length)}
-          </h2>
-          <p className="text-[13px] text-muted font-sans mt-1">
-            Private capital only, from SEC Form D filings. Every figure links to the filing it came from.
-          </p>
-        </div>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[11px] font-sans uppercase tracking-[0.08em] text-muted/70 mr-1">Sort</span>
+      <figcaption className="mb-4">
+        <p className="kicker mb-1">Investment</p>
+        <h2 className="font-serif text-xl sm:text-2xl font-semibold text-ink">
+          {data.length ? sortTitle(sort, data.length) : 'Neurotech companies by private capital raised'}
+        </h2>
+        <p className="text-[13px] text-muted font-sans mt-1">
+          Private capital only, from SEC Form D filings. A total is the sum of a company&apos;s
+          filings, so open the company to see each one, or switch to the table for direct links.
+        </p>
+      </figcaption>
+
+      {/* ── Controls ────────────────────────────────────────────────────────
+          Sort, modality and minimum stage each hold a row of their own, in a
+          fixed order. No control moves when the result set changes. */}
+      <div className="mb-3 space-y-2 pb-1 overflow-x-auto text-[11px] font-sans">
+        <ControlRow label="Sort">
           {SORTS.map(s => (
             <button key={s.id} onClick={() => setSort(s.id)} aria-pressed={sort === s.id}
               className={`text-[12px] font-sans px-2.5 py-1 rounded-full border transition-colors ${
@@ -122,40 +160,54 @@ export default function FundingChart({ limit = 20, board: given = null }) {
               {s.label}
             </button>
           ))}
-        </div>
-      </figcaption>
+        </ControlRow>
 
-      {/* ── Filters ─────────────────────────────────────────────────────── */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-sans">
-        {shownModalities.length > 1 && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="uppercase tracking-[0.08em] text-muted/70">Modality</span>
-            {Object.keys(MODALITY_LABELS)
-              .filter(m => shownModalities.includes(m) || modalities.includes(m))
-              .map(m => (
-                <button key={m} onClick={() => toggleModality(m)}
+        {modalityOptions.length > 0 && (
+          <ControlRow label="Modality">
+            {/* The description sits OUTSIDE the button and is referenced, not
+                nested. On the button, `title` would become the accessible name
+                and bury the label; inside it, the text would be absorbed into
+                that name. Referenced, the button is still called "Implanted
+                BCI" and the sentence is read after it. */}
+            {modalityOptions.map(m => (
+              <Fragment key={m}>
+                <button onClick={() => toggleModality(m)}
                   aria-pressed={modalities.includes(m)}
+                  title={MODALITY_DESCRIPTIONS[m]}
+                  aria-label={MODALITY_LABELS[m]}
+                  aria-describedby={`modality-desc-${m}`}
                   className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-sm border transition-colors ${
                     modalities.includes(m) ? 'border-ink text-ink bg-paper' : 'border-rule text-muted hover:border-ink'}`}>
                   <span aria-hidden className="w-2 h-2 rounded-[1px] shrink-0"
                     style={{ background: MODALITY_COLOR[m] }} />
                   {MODALITY_LABELS[m]}
                 </button>
-              ))}
-          </div>
+                <span id={`modality-desc-${m}`} className="sr-only">{MODALITY_DESCRIPTIONS[m]}</span>
+              </Fragment>
+            ))}
+            {modalities.length > 0 && (
+              <button onClick={() => setModalities([])}
+                className="ml-1 text-muted underline decoration-rule underline-offset-2 hover:text-ink">
+                Clear
+              </button>
+            )}
+          </ControlRow>
         )}
 
-        <label className="flex items-center gap-1.5 text-muted">
-          <span className="uppercase tracking-[0.08em] text-muted/70">Min stage</span>
+        <ControlRow label="Min stage">
           <select value={stageMin || ''} onChange={e => setStageMin(e.target.value || null)}
+            aria-label="Minimum verified stage"
             className="bg-paper border border-rule rounded-sm px-1.5 py-0.5 text-[11px] text-ink-soft">
             <option value="">Any</option>
             {STAGE_ORDER.filter(s => s !== 'withdrawn').map(s => (
               <option key={s} value={s}>{STAGE_LABELS[s]}</option>
             ))}
           </select>
-        </label>
+        </ControlRow>
+      </div>
 
+      {/* ── Actions ─────────────────────────────────────────────────────── */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-sans">
         {hidden > 0 && (
           <button
             onClick={() => setStatuses(showingHidden ? DEFAULT_STATUS_FILTER : STATUS_VALUES)}
@@ -172,30 +224,39 @@ export default function FundingChart({ limit = 20, board: given = null }) {
         </button>
       </div>
 
-      {asTable ? <FundingTable rows={data} /> : (
-        <>
-          <div className="flex items-center gap-2 sm:gap-3 pb-1.5 mb-1 border-b border-rule text-[10px] font-sans font-semibold uppercase tracking-[0.08em] text-muted/70">
-            <span className="w-5 sm:w-6 shrink-0" />
-            <span className="w-28 sm:w-52 shrink-0 text-right">Company</span>
+      {!data.length ? (
+        <p className="py-6 text-[13px] font-sans text-muted border-t border-rule">
+          No companies match these filters.
+        </p>
+      ) : asTable ? <FundingTable rows={data} /> : (
+        // Below the min-width the card scrolls sideways. Squeezing instead cost
+        // the bars their length, which is the one thing this chart is read for.
+        // The fixed columns and gaps come to 580px, so the floor is that plus a
+        // 240px bar column: anything narrower scrolls rather than shortens.
+        <div className="overflow-x-auto">
+          <div className="min-w-[820px]">
+          <div className="flex items-center gap-3 pb-1.5 mb-1 border-b border-rule text-[10px] font-sans font-semibold uppercase tracking-[0.08em] text-muted/70">
+            <span className="w-6 shrink-0" />
+            <span className="w-52 shrink-0 text-right">Company</span>
             <span className="flex-1" />
-            <span className="w-28 shrink-0 hidden md:block">Stage</span>
-            <span className="w-14 sm:w-16 shrink-0 text-right">Total</span>
-            <span className="w-16 sm:w-28 shrink-0 text-right">Latest</span>
+            <span className="w-28 shrink-0">Stage</span>
+            <span className="w-16 shrink-0 text-right">Total</span>
+            <span className="w-28 shrink-0 text-right">Latest</span>
           </div>
 
           <div>
             {data.map((r, i) => (
               <Link
                 key={r.id} to={r.href} aria-label={rowLabel(r)}
-                className="flex items-center gap-2 sm:gap-3 py-[3px] rounded-sm group
+                className="flex items-center gap-3 py-[3px] rounded-sm group
                            hover:bg-paper focus:outline-none focus-visible:ring-2
                            focus-visible:ring-accent focus-visible:ring-offset-1">
-                <span className="w-5 sm:w-6 shrink-0 text-right text-[11px] font-mono tabular-nums text-muted/70">
+                <span className="w-6 shrink-0 text-right text-[11px] font-mono tabular-nums text-muted/70">
                   {r.rank}
                 </span>
-                {/* flex-wrap, so a status badge on a narrow screen drops to a
-                    second line instead of pushing the name out of the card. */}
-                <span className="w-28 sm:w-52 shrink-0 flex flex-wrap items-center justify-end gap-x-1.5 min-w-0">
+                {/* flex-wrap, so a long name and its status badge stack rather
+                    than widen the column the rest of the rows are aligned to. */}
+                <span className="w-52 shrink-0 flex flex-wrap items-center justify-end gap-x-1.5 min-w-0">
                   <span aria-hidden className="w-2 h-2 rounded-[1px] shrink-0"
                     style={{ background: MODALITY_COLOR[r.modality] || 'transparent' }}
                     title={MODALITY_LABELS[r.modality] || ''} />
@@ -211,20 +272,21 @@ export default function FundingChart({ limit = 20, board: given = null }) {
                       style={{ width: `${Math.max((barOf(r) / max) * 100, 2)}%`, opacity: 1 - i * 0.018 }} />
                   )}
                 </div>
-                <span className="w-28 shrink-0 hidden md:flex">
+                <span className="w-28 shrink-0 flex">
                   <StageBadge row={r} />
                 </span>
-                <span className="w-14 sm:w-16 shrink-0 text-[12px] font-mono text-ink tabular-nums text-right">
+                <span className="w-16 shrink-0 text-[12px] font-mono text-ink tabular-nums text-right">
                   {fmtUsd(r.total) || '—'}
                   {r.partialTotal && <sup className="text-muted" title="Private capital only">{PARTIAL}</sup>}
                 </span>
-                <span className="w-16 sm:w-28 shrink-0 text-[11px] font-mono tabular-nums text-right">
+                <span className="w-28 shrink-0 text-[11px] font-mono tabular-nums text-right whitespace-nowrap">
                   <LatestRaise row={r} />
                 </span>
               </Link>
             ))}
           </div>
-        </>
+          </div>
+        </div>
       )}
 
       {/* ── Caption ─────────────────────────────────────────────────────── */}
@@ -250,7 +312,9 @@ export default function FundingChart({ limit = 20, board: given = null }) {
 function FundingTable({ rows }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[12px] font-sans border-collapse">
+      {/* min-w over w-full: inside an overflow-x-auto parent, w-full shrinks to
+          the parent and the cells wrap. A min-width overflows and scrolls. */}
+      <table className="w-full min-w-[880px] text-[12px] font-sans border-collapse">
         <caption className="sr-only">
           Neurotech companies by private capital raised, with status, modality, and furthest verified stage.
         </caption>
@@ -262,7 +326,8 @@ function FundingTable({ rows }) {
             <th scope="col" className="py-1.5 pr-2 font-semibold">Modality</th>
             <th scope="col" className="py-1.5 pr-2 font-semibold">Stage</th>
             <th scope="col" className="py-1.5 pr-2 font-semibold text-right">Total</th>
-            <th scope="col" className="py-1.5 font-semibold text-right">Latest raise</th>
+            <th scope="col" className="py-1.5 pr-2 font-semibold text-right">Latest raise</th>
+            <th scope="col" className="py-1.5 font-semibold">Source</th>
           </tr>
         </thead>
         <tbody>
@@ -286,8 +351,22 @@ function FundingTable({ rows }) {
                 {fmtUsd(r.total) || 'Not available'}
                 {r.partialTotal && <sup className="text-muted">{PARTIAL}</sup>}
               </td>
-              <td className="py-1.5 font-mono tabular-nums text-right">
+              <td className="py-1.5 pr-2 font-mono tabular-nums text-right">
                 <LatestRaise row={r} />
+              </td>
+              {/* The latest raise is one filing, so it links to that filing. The
+                  total is a sum across filings and has no single document, so it
+                  links to the list of them on the company page. */}
+              <td className="py-1.5 text-[11.5px] whitespace-nowrap">
+                {r.latestSourceUrl && r.latestAmount > 0 && (
+                  <a href={r.latestSourceUrl} target="_blank" rel="noreferrer"
+                    className="text-accent hover:underline"
+                    title={`SEC Form D filing for the ${fmtUsd(r.latestAmount)} raise`}>
+                    Latest filing
+                  </a>
+                )}
+                {r.latestSourceUrl && r.latestAmount > 0 && <span className="text-muted"> · </span>}
+                <Link to={r.href} className="text-accent hover:underline">All filings</Link>
               </td>
             </tr>
           ))}

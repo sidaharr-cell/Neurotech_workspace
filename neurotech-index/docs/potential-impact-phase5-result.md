@@ -1,4 +1,4 @@
-# Phase 5 calibration: FAILED
+# Phase 5 calibration: FAILED (four runs)
 
 Run 29 July 2026. Rubric 1.0, extractor extract-1.0, model claude-sonnet-5.
 
@@ -226,3 +226,85 @@ diagnosis is now precise about what is known and what is not:
 
 The scores are now persisted, so the next diagnostic costs a query rather than a
 full re-run.
+
+---
+
+# Run 4, 30 July 2026: the trial arm, deterministic. Passed, then did not.
+
+`scripts/run-calibration-trials.js`. No model calls, no API cost. Rubric
+`1.0-det`, stored under run label `retro-trials-det`.
+
+The frozen holdout turned out to be trials end to end: all 24 reference items
+and all 325 negatives sit in `news_feed` with a registry design block. So the
+whole of spec 12 could be re-run for free against the deterministic scorer that
+actually powers the Trials tab, using `scoreTrial()` itself rather than a copy.
+
+Runs 1 to 3 are void regardless. They ran with the evidence multiplier pinned at
+0.40 (the "primary anti-hype control" of spec 5.3, inert) and with unordered
+pagination in `run-calibration.js`. Both were fixed afterwards, and neither fix
+came from looking at a calibration result.
+
+## The numbers, which look like a pass
+
+```
+holdout verified   reference 05f555607f1c284f (24), negative 90cefddd1ad255e3 (325)
+2016 baseline      21 evidence records, 21 indications
+peer pool          3,002 of 8,345 trials registered on or before 2019-12-31
+scored             349 of 349
+```
+
+| Metric | Value | Reading |
+|---|---|---|
+| Rank-order AUC, P(reference > negative) | **0.824** over 7,800 pairs | well above chance |
+| Recall at top decile | 10 of 24 — 41.7% | 4.15x lift, p = 2.1e-5 |
+| Negative case: negatives in top decile | 25 of 325 — 7.7% | below the 10% chance gives |
+| Median reference rank | 40 of 349 | 11th percentile |
+| Scoring zero | 3 of 24 reference vs 207 of 325 negative | strong separation |
+| Marker/impact correlation | 0 by construction | nothing on this path reads prose |
+
+Recall reads low against spec 12's example ("all five that mattered plus fifteen
+that did not") because the decile holds 35 slots for 24 reference items, so it is
+structurally capped far below 1.0. The lift and the AUC are the readable numbers.
+
+## Why it is not a pass
+
+Two checks against the live corpus, run before flipping the flag:
+
+**1. The head of the live sort is not neurotechnology.** 12 of the top 20 were
+sedation drug comparisons, endometrial cancer surgery, intravitreal eye
+injections, postpartum hemorrhage, semaglutide. The scorer ranks trial design
+quality, and the best-designed trials in this corpus are well-funded pharma
+trials the ingest swept in. Nothing is wrong with the ranking; it is ranking the
+wrong population.
+
+**2. The reference list is not neurotechnology either.** Only 5 of the 24
+reference items name a neurotech modality in their intervention. The rest are a
+prostate cancer radioligand, oxytocin for autism, risankizumab, Coenzyme Q10 for
+Gulf War Illness, several intravitreal injections. The list was built
+automatically from "trials that posted results", and that selected the same
+well-resourced drug trials.
+
+So the AUC is real and largely measures **which trials are well-resourced enough
+to complete and report**. The confound named in spec 12 and in this document's
+earlier runs is not a caveat on the result; it is most of the result.
+
+## What would fix it
+
+Gating the corpus to trials whose *intervention* names a neurotech modality
+fixes the head of the sort immediately. Verified on the live set: the top twelve
+become taVNS, tDCS, rTMS, VNS, spinal cord stimulation, a neurostimulation
+device for insomnia. 3,834 of 8,345 trials survive that gate.
+
+But the same gate leaves **5 reference items**, which cannot calibrate anything.
+A five-item answer key supports no recall statistic worth reporting.
+
+The blocker is therefore open decision 3: a reference list of trials that
+mattered *to neurotechnology*, built by someone with domain knowledge. That is
+not more code, and no amount of rescoring substitutes for it.
+
+## State
+
+`FLAGS.POTENTIAL_IMPACT` stays off. `FLAGS.POTENTIAL_IMPACT_ENTITIES` is
+`['trial']`, so if the flag is enabled for inspection the sort appears only where
+the corpus is fully scored. Research stays excluded on coverage: 600 of ~80,000
+papers scored, 183 of those at zero.
