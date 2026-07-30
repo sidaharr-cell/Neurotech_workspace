@@ -1,0 +1,2535 @@
+{
+  "_readme": [
+    "Phase 5 retro-holdout, FROZEN. Spec 12 step 5 requires this to be built",
+    "before anyone sees the scores, so the evaluation refuses to run if these",
+    "hashes stop matching.",
+    "",
+    "The reference list is built from outcomes that POSTDATE the window and",
+    "were decided by other parties: FDA decisions after 2019, whether the item",
+    "still holds a 2026 frontier record, and trials that completed with posted",
+    "results. No model judged what mattered. See scripts/lib/retro.js for why",
+    "that constraint is not negotiable.",
+    "",
+    "LIMITATION, reported with every result: this can only see what left an",
+    "institutional trace. It is biased toward commercialised and regulated work",
+    "and blind to a method that quietly became standard. A domain expert list",
+    "built blind to the scores would be strictly better and should replace it."
+  ],
+  "window": {
+    "start": 2016,
+    "end": 2019
+  },
+  "built_at": "2026-07-29T22:52:11.506Z",
+  "corpus_size": 12357,
+  "attention_cut": 5,
+  "reference": {
+    "count": 24,
+    "hash": "05f555607f1c284f",
+    "frozen_ids": [
+      "052303b8-ed70-4bb1-85a9-77f198f7d43d",
+      "0d1c674b-6536-41f7-90e5-22599c7bc266",
+      "19104cbe-2323-46bd-a616-9f9245ac97f5",
+      "3a889522-02b9-48f0-ae3d-78a4edef8d40",
+      "405b7c7e-7ba4-4a58-8cda-bc7c65774227",
+      "4ab78c81-e673-4775-b994-826c5dc79b19",
+      "57e483dd-8483-4e67-a787-735f94b27747",
+      "5a480784-d68b-44d6-8830-f1f02602e02d",
+      "62d397a9-baf2-4994-a3c6-21e89f45d422",
+      "633018ad-8814-4a78-b4d7-c4b58cb51891",
+      "6b15bcf9-d739-4d08-a1cb-36c019e54509",
+      "6de1a9ea-40ba-4032-858b-29d82d35b9f7",
+      "6f00c128-ab6d-40a5-9a9a-c0f4837fe8b9",
+      "6fe37a4d-23c0-427e-a5b9-1537ca199202",
+      "76ce1329-9bdc-489b-a516-1d2ca20e3f11",
+      "8550ea1e-fcb7-481d-a41f-beafb88d555c",
+      "908d5ebd-b823-4f29-bebf-c09515daf4fb",
+      "94aedb0c-e7cc-4305-98a9-3d5e3d7bc460",
+      "9b8535e9-1fa0-4910-bb01-b322fd0fd9bf",
+      "b1838731-26ae-46b5-b747-7542e64ecc41",
+      "bd2ac099-54f0-4f89-9d61-03508b60ab3c",
+      "db096c5f-d25f-4638-8a52-f023c22a1f1f",
+      "fa6af264-bc12-4ffe-a93e-f6f357e86da1",
+      "fe3aced2-5ac5-46b3-851a-b1dd2868bac5"
+    ],
+    "entries": [
+      {
+        "id": "052303b8-ed70-4bb1-85a9-77f198f7d43d",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "0d1c674b-6536-41f7-90e5-22599c7bc266",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "19104cbe-2323-46bd-a616-9f9245ac97f5",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "still holds a 2026 frontier record",
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "3a889522-02b9-48f0-ae3d-78a4edef8d40",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record",
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "405b7c7e-7ba4-4a58-8cda-bc7c65774227",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "4ab78c81-e673-4775-b994-826c5dc79b19",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "57e483dd-8483-4e67-a787-735f94b27747",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "5a480784-d68b-44d6-8830-f1f02602e02d",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "62d397a9-baf2-4994-a3c6-21e89f45d422",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "633018ad-8814-4a78-b4d7-c4b58cb51891",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "6b15bcf9-d739-4d08-a1cb-36c019e54509",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "6de1a9ea-40ba-4032-858b-29d82d35b9f7",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "6f00c128-ab6d-40a5-9a9a-c0f4837fe8b9",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "6fe37a4d-23c0-427e-a5b9-1537ca199202",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "76ce1329-9bdc-489b-a516-1d2ca20e3f11",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "8550ea1e-fcb7-481d-a41f-beafb88d555c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "908d5ebd-b823-4f29-bebf-c09515daf4fb",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "94aedb0c-e7cc-4305-98a9-3d5e3d7bc460",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "9b8535e9-1fa0-4910-bb01-b322fd0fd9bf",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "b1838731-26ae-46b5-b747-7542e64ecc41",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record"
+        ]
+      },
+      {
+        "id": "bd2ac099-54f0-4f89-9d61-03508b60ab3c",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "db096c5f-d25f-4638-8a52-f023c22a1f1f",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "fa6af264-bc12-4ffe-a93e-f6f357e86da1",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reasons": [
+          "still holds a 2026 frontier record",
+          "Phase 3/4 trial completed with results posted"
+        ]
+      },
+      {
+        "id": "fe3aced2-5ac5-46b3-851a-b1dd2868bac5",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reasons": [
+          "Phase 3/4 trial completed with results posted"
+        ]
+      }
+    ]
+  },
+  "negative": {
+    "count": 325,
+    "hash": "90cefddd1ad255e3",
+    "frozen_ids": [
+      "003d818b-d367-4895-a53f-8c00c0b0c4ef",
+      "0134796a-9c90-462b-9395-f78c2d618b7f",
+      "016b027f-9bb6-4ae3-ae22-eaf896d065eb",
+      "04342ab3-135c-40be-a9c6-768b6dc2bc91",
+      "05260ee7-bec6-4361-843f-06b371ccb9fa",
+      "0550bb07-46c6-4cc0-a4a8-0bad9736d247",
+      "060cc041-3704-4801-803a-5477c0224116",
+      "061d80ab-bd1d-4004-a3fc-754a1d237856",
+      "071917e4-7cf8-4169-a012-8446c3585abf",
+      "074ab2e5-8bb8-447c-a937-f1b37f9f7005",
+      "083aedd9-ee8c-4ba0-b21f-9057f2644a35",
+      "090fe14c-8849-43ad-b16a-a481434437a6",
+      "09c2d7fe-7f81-49ee-89e2-dc339cbbab72",
+      "0a0a190a-60bd-41f1-81da-b19842442dd4",
+      "0a3065b3-4d7d-4211-9538-82d3e5a58e5c",
+      "0d0b5773-68cc-49c4-98d0-0044ea0b70ad",
+      "0d54977e-e4cd-4679-a5ef-6e1580ba4659",
+      "0d5c2dac-5683-408e-94de-89da05490450",
+      "0daaafae-7d73-427f-b223-e5ef8ceb7d00",
+      "0dd7b33e-ed4a-4ecf-9734-dbd6b0521288",
+      "0eac7403-24a4-4219-90b8-6400ffdabb97",
+      "118eb899-46e7-4516-be37-d11a40193eb7",
+      "123908be-097e-4369-bf0d-d06b4bfdc9c3",
+      "14298e79-5d48-464e-8809-0600eefdfab9",
+      "16796861-db04-4b98-a210-64a07d6873cd",
+      "16fb0d70-ada7-4ff8-b438-a78489fdf698",
+      "17fbcbe3-aa6c-4571-94bb-81df514b8410",
+      "18a3ef1c-8074-466b-9f20-67f5dbc9940d",
+      "1a371017-abc8-4fcb-bebc-239dd757b6e1",
+      "1ab0b1fd-0ba5-4020-9f26-15f28248f80f",
+      "1b387933-7c5a-4745-a83f-87955c7b771e",
+      "1b74cdf8-e570-4a93-b155-073144de9ce5",
+      "1e0810a2-6b89-4fcb-8bd1-36cff8db32b7",
+      "21a400cb-66d2-4cd2-896a-4c74b6856a90",
+      "21abe997-5c23-411c-82a9-53cacc154dd5",
+      "226235f9-d8fa-477f-b188-dc36d9789f26",
+      "2266d74f-f792-4aae-82d3-e2340d71fee5",
+      "227ea392-88c9-4434-ac1a-11415a3ba272",
+      "230b3c37-cc79-41f4-b6ad-d0ac7f84aa4b",
+      "23b34eb9-494c-468e-b6de-18430b8ca3f5",
+      "24736eb3-687b-492c-b027-fb0d0f053f37",
+      "24f474c1-ff4c-4e31-9862-59f9a6436368",
+      "26c63d65-909d-4aea-a606-2f45b2eb1983",
+      "2727fbb3-d385-4e61-99ee-02e6ee722a56",
+      "27d55116-21f8-4218-be34-f40688a54b4a",
+      "280702f4-2bea-4efd-828e-62982a351e57",
+      "28b3d885-b6c1-4f95-8cf4-0e6eadc7522d",
+      "28de2eef-0005-44a0-8ada-9a033d0f8f42",
+      "2952ca51-4275-4099-826d-6a43e4a99302",
+      "2ae30466-810d-4ccb-b259-63cedc22729c",
+      "2bc11dcc-e96a-4615-942a-429092a5a4b9",
+      "2cbbe65d-2972-464d-9b0e-30dd63b38d01",
+      "2dce108d-e0fa-4b81-8a24-57071d46b47d",
+      "30c90ab4-781c-4c58-b5e9-554017dadc64",
+      "32495a39-f700-4eda-b8b3-7310a08790ea",
+      "33605053-9c40-47b2-81c4-744ec181c06f",
+      "3451fd10-c37a-4a91-a697-3c82cf57798a",
+      "3581d2f7-b4df-4058-99f1-2d1a5131c467",
+      "3588e4d7-8c50-4caf-a7f7-3e562a017e0f",
+      "363e0941-b7f6-4caf-b639-561ff8557b67",
+      "367065a9-ffc1-4dc2-bcb4-594d5b9b9812",
+      "36771cef-d263-411a-8644-3c0fa8c10cb8",
+      "37179583-a62e-4f97-a4ce-fff54c0723a9",
+      "37264c2e-c7fa-4d84-b696-3adbff9f2450",
+      "395f0895-bca2-488d-912e-0bf05fac0ea4",
+      "397146fc-6aa1-4142-a518-3d8a783fe070",
+      "3c6f655e-917a-49c1-82b5-ad59a335d7e4",
+      "3d1fc3d6-247c-43cb-bc5a-fcb03b855905",
+      "3f92d5aa-2973-483b-a759-ffa2aa0a5d0c",
+      "3ffafddb-bd2e-4ba4-8a30-7b7795106003",
+      "405be304-e368-4c62-a40b-3a736a6845b1",
+      "4063f899-43e6-4ce6-bbe5-f7c48e5f0d24",
+      "42510da0-4a2c-49a5-a73f-d2aee8fb8ddd",
+      "425ee231-0b5d-4696-99fc-60c9faa0c3b3",
+      "439859ec-de64-47d9-9140-aa190c9ad5f4",
+      "44d32457-f5cc-45db-a1f4-abaf6a6d8c04",
+      "459b5053-308b-47f7-8d72-fafb51b27e17",
+      "468b58b5-be14-430e-b71f-c5ba66409f4c",
+      "46ab7e90-17d4-4b4b-9790-188295cecd8a",
+      "48050bd5-c799-4f62-9330-53789a7279b4",
+      "48497099-1968-406f-8b0c-5e8cae5bd337",
+      "485b4736-fe40-4f02-8941-11f685da3900",
+      "4874ba6d-816c-459d-a7ab-b5ca4303f0bc",
+      "4897481a-115d-48e1-b349-0811398a75c8",
+      "49532f29-02ed-454b-8ed7-ab9d6d7fee7a",
+      "495eb093-08bb-4238-a097-9b38fd3c9be0",
+      "4b1f85a2-1630-4fe4-9b43-f2e455403993",
+      "4c7d7956-c9ce-489a-85bd-1ca6b9a00e69",
+      "4deeb564-6442-40f3-b216-b23c00f3085c",
+      "4f15bc6a-8fa2-4024-aec0-d41ed736c156",
+      "4f73cf52-4ecf-42ae-8ab4-6387abdfd8dc",
+      "4f7ef9c4-61a7-49f9-b5dc-dddafa324cc0",
+      "5023a96d-a151-40cc-abae-43210ebb07ef",
+      "50311020-52d1-4036-8d73-7a7127d363eb",
+      "50c4d128-18cc-452d-8232-937d6bbb8b20",
+      "50e66cc8-37cd-470c-94f9-809dcd9a5b13",
+      "50ea1398-2c8f-49b2-b490-1413a7056954",
+      "517eb64f-9fa9-4608-bea9-677045f566ad",
+      "5192ffbc-c496-4246-aa56-abb9497474df",
+      "52012f34-2d92-4583-8240-d7189285cf90",
+      "52909f9c-8b05-4bd5-b6d6-9c51f4ee6f05",
+      "52a3a64e-90f8-43f2-b343-47e62cb5e755",
+      "540cf955-e568-4412-9706-38a5ff9a0096",
+      "5630d969-81aa-44ae-8518-4542c9b8dde7",
+      "5843129b-2160-4565-8abe-02358a96fd72",
+      "584fb526-734c-45b7-8920-d70ca745aa17",
+      "58b1911e-7a6c-43ce-8d7c-501a0a4a8d62",
+      "59c44943-ed75-43e2-a084-d7ec1e7b5141",
+      "5b04add4-b495-4ea5-87fb-aa33cad0ad08",
+      "5d049e3f-81cd-430a-8806-7f8ca5b5477a",
+      "5e305304-c759-4e27-b32c-8ebae65a0e00",
+      "5e59c821-1a54-4ec0-915f-c0ff6fabf51f",
+      "5eb17f7c-6864-43cb-a06f-46360a7bc617",
+      "5fe39e8a-9482-4e47-9800-01652dddd8d4",
+      "6073265b-f3b0-40c6-b2f3-adda216efa04",
+      "6177ca00-3b6f-4bcd-bf34-6c37856495b1",
+      "62125415-6162-4ced-a413-ea6923d5bece",
+      "628fd641-d79c-4e8e-8806-8bc2aa106762",
+      "6303eb98-ad47-4715-99ad-5004b545d5ab",
+      "63230c89-5162-4453-93a5-e9c08595d4e8",
+      "634ec7ab-2f24-4926-ae44-b406eb6dd239",
+      "640ef8da-2527-4d6b-a12e-d3e6a683ede1",
+      "641c3d27-7e33-4958-aa70-37926098070b",
+      "666ccfd5-8eb4-4ddc-955e-6b78cd118987",
+      "673d1026-a2c2-4ad1-8003-fdeaceb33ac7",
+      "68d5a1c1-c3dd-4077-8c64-a3cd20e17724",
+      "6a877ba2-1fa7-4a8a-b455-4f978639f7cf",
+      "6ae6493c-05cb-4b78-835e-89948893e19c",
+      "6be9380e-1151-4ae6-9f80-312d5e015d50",
+      "6d8a0acb-67f7-4268-8eb4-722be5e7e9cc",
+      "6e775a2f-b2d9-494d-81c2-0aeb1e313c9e",
+      "6fb36fdc-1613-454a-9a44-93124d78d416",
+      "6fe1c052-2bee-432f-8f2d-5093ca63be53",
+      "709b4f3f-bcf3-45e4-a0f3-ca9e6e98ca32",
+      "731b1f26-d678-41bb-9ad8-b33396491cf3",
+      "742b995a-5231-4098-a33c-20848752eb7a",
+      "74dadf2a-c8aa-47c1-95d9-79899caf9e31",
+      "75209633-d038-40ad-bbab-794995ea8202",
+      "758c0cb6-8cc3-4892-94a6-9c7b608532ab",
+      "75d7bf2e-274d-463e-a3ad-d46042d51fc6",
+      "767a8fe8-a29c-495c-a0ea-30d61496014e",
+      "7741a76c-046f-4617-8184-0b83f68c6da8",
+      "77729235-ca68-4fb7-be7e-8bde984c6260",
+      "77af6d2f-0afd-4854-bfff-24e0800877e8",
+      "78f73aa4-845d-4494-9122-92c80896c7bd",
+      "791973d2-bd36-466c-9cd5-9e6ef50ad78b",
+      "7946e8d9-7c4d-4409-8201-c097897f125b",
+      "79a129bf-9d28-4e27-bd39-9d7015de62d7",
+      "7be286d4-17f7-44dc-bad9-dcc0624f7212",
+      "7c92c0c5-2853-470b-8155-53e28b474693",
+      "7d509365-0e74-4a5c-ae9b-3ae76e0d65e6",
+      "7dd8297c-637f-4989-a3ab-94b8ec8f017b",
+      "7e4cf5a9-02c1-4ded-bc59-18d6393e2252",
+      "7e640892-3c87-418f-b9f1-6b913731037f",
+      "7ec53ae1-300b-4525-8508-ebd8a2b7ff55",
+      "8053e24d-611c-4054-aee3-cce9d372d6fe",
+      "80da4c16-2f65-4150-895d-9b4fb62f8c11",
+      "83933bfb-90ac-442b-b5f7-6152eb5c9134",
+      "84b3effa-7921-4f22-9e0d-1006c788da14",
+      "8682a8d8-79f9-4f93-af5c-8d2498c5596d",
+      "86e5b751-74a9-43cf-93e6-be47a1f6efbb",
+      "894c0cfd-4a58-4d57-8d25-d12c20a8f5ea",
+      "89d4be72-598a-4aad-8e4f-9a61dc10769f",
+      "8a30efa9-9336-471f-865f-499219cc07ad",
+      "8c224fc2-8e47-4cf2-b475-c2a53f6fb1c7",
+      "8c9ac75d-76be-46d3-b8fc-81209e1e807d",
+      "8d081349-0100-455f-98b5-41184cf2bc8b",
+      "8d772ac0-9d98-408b-b0b5-1bf71e60cbb0",
+      "8d772c73-f0d9-4863-9017-d8396c13913b",
+      "8dd7fd8f-942d-4e17-ac92-8cd40450f5a5",
+      "8df0805f-63a4-41d8-af83-8069d8597c21",
+      "8e033e2d-c92b-454d-8654-fd2e4c40d707",
+      "8e1d24c8-3c36-45ee-a3ee-54e89c526bec",
+      "8e673245-bfad-4528-95d0-019191bef81c",
+      "8f54615c-d84c-408f-9d31-bc6ced23cf6a",
+      "8f572aa5-6864-4be6-a878-181a2e57973d",
+      "8fc544e3-5cd5-4bd6-a2b0-b57a86921628",
+      "8ff83186-eede-4f76-ace7-63e54c2ab1f0",
+      "9014788c-637c-45ca-9ff0-299d561a0335",
+      "912e9514-2234-406c-92a3-3473d05a334c",
+      "9135d51a-0ef6-4e83-a826-ce10a339c739",
+      "920e6492-5812-4677-b5a7-294ca7fbdc2d",
+      "949f995e-1791-4883-be6a-6924e5bb8775",
+      "96083031-ab09-49a3-806e-5911953ab2b9",
+      "9642821e-b8b7-4e78-bc5e-411fb617f921",
+      "975d6c97-1036-4c30-a66a-5fdf49a45a5f",
+      "98581302-6bc6-4c18-9cdc-ecddeb41a6c5",
+      "998b6a56-ea9c-49bb-8caf-6954ec7e61d5",
+      "9be36bde-7822-40cb-8186-11ffdcf169e0",
+      "9c234648-b98e-42ec-b9eb-9f9fd36f1b8c",
+      "9cb88740-d03b-4188-9a5c-0a30bbdae163",
+      "9cd487c7-8fbe-42cb-99ea-ff0afa25a592",
+      "9d4e7b60-49d8-4811-83bb-aaf05eacaf78",
+      "9dfaffba-5985-4c14-84e9-2da5c81096be",
+      "9e76da60-202a-475e-9284-5f65b39532e6",
+      "9ecf6bd5-7549-4181-acbb-cd5d23df7150",
+      "9f735b65-9573-4896-b72e-a209037c10c4",
+      "a00d7abe-844c-438f-8250-40c577f57e3b",
+      "a0ad5ac9-ff8c-48f9-a624-5c1ab0d1ad18",
+      "a1202dfe-5ff8-44a8-9266-f3a625144e7e",
+      "a1f65c30-0c11-4b39-85dc-0df346ebbe88",
+      "a28e6e3c-7884-4fb2-8834-3881d89d84e1",
+      "a2b8a4c7-15d0-40aa-a45b-3cef1c324d6e",
+      "a391d69f-700b-4c8e-b754-012a5e068a60",
+      "a42acb3d-2705-4f10-ab2f-2247653cb75e",
+      "a440a640-b40a-4d37-b1aa-61f4db734074",
+      "a4d19929-cde7-4833-a3a4-ba16138b3daf",
+      "a507374f-1460-4780-ad15-aee75c0d8b44",
+      "a52dc2b7-c89e-4bd2-83de-ec0b3dab92a6",
+      "a5bb147b-0383-40c6-a4c5-dedf59bf637b",
+      "a6e0eede-5e06-42e8-9196-28c8a35de6a3",
+      "a6f62b1d-1a63-4df0-b1c9-377f6dbeb141",
+      "a80adab7-b5f2-45a9-bf75-5be431f6a3ce",
+      "a94dbfb4-5758-4ae3-8753-d68c06fa2cb3",
+      "a9c6f547-c617-41cb-a887-0a8284204243",
+      "ab42f3ba-f60c-434d-a218-728e593e2490",
+      "ac9e1639-1fa0-47f7-b233-7c19c88e02a1",
+      "acef3151-654e-47f1-a9d0-3dcacc261754",
+      "ae6ffc4e-8ada-4235-ad0b-6ddefa80ecff",
+      "af0b7d28-6271-4092-9b05-0ebfd290f4f2",
+      "af9cffe6-d426-4736-9f5b-dc589653c655",
+      "afe61968-4af7-478d-8226-e4568fe9126b",
+      "b1267606-345c-4fd4-b216-ab855e2f1161",
+      "b1602533-ded4-4e91-96ec-2493802174f6",
+      "b2b2ad05-f377-493b-ad0c-d3c847f3f221",
+      "b33d30d1-2d32-4a23-865e-e06c3c10c152",
+      "b36b636f-f81a-4068-9023-6d458cdf42ce",
+      "b44213cc-ee67-4b16-9bca-187d60addee1",
+      "b5583067-33b1-4eb1-b728-67032e5a3909",
+      "b5d3e12d-20b8-49dc-8d2b-b9a39403bc39",
+      "b5e4ffcd-d523-4909-a15a-1bfb8d53f0b5",
+      "b5e6af73-ba22-4bd4-95fd-dc2b475e5ed2",
+      "b6e6a8ca-ce31-4c35-a896-86a873132522",
+      "b7e0f034-e2e9-4185-ba76-9eaa029f7745",
+      "b822ad90-0b98-45b9-b495-b80ca50e0ffd",
+      "b8720b16-654e-49b4-a4a0-b68284f135a3",
+      "ba52caff-27c6-4551-80d1-d5d32c41bdf6",
+      "bbdee4e4-b1c2-4d86-8c9b-7214837f85fe",
+      "bc02b5b3-0cd3-4d27-bd80-9a2ed55a2594",
+      "bc1d76e9-16be-479c-876b-bf97a1c6092b",
+      "bc717f6f-23ea-406e-ab55-2ef6db7e653c",
+      "bcefb0b1-64d5-446d-8e27-e82a794ea6c4",
+      "be0c10c3-48de-48f2-9909-574f294d9588",
+      "be3ac983-0063-40f7-b4e8-881a9726073f",
+      "bec8a239-c456-4f8e-88b6-a551e4647575",
+      "bf47fa26-1656-42ec-b29e-fde1721e6441",
+      "c004d85f-782d-4741-a14a-06fb251782ef",
+      "c0a079d6-5905-4d51-a5d6-5867e3d7a10f",
+      "c0d7b01e-8951-44d7-9ace-7e68b5553a88",
+      "c26d01db-0e69-48b0-ae24-cb33cb58c9ec",
+      "c2a0d33f-784e-4cb7-9977-6664b06d7f4e",
+      "c2eafa38-bee6-4031-82fc-57a1f4be027d",
+      "c3d5fb64-c8cd-4ad1-a8fc-03bc1ad1075f",
+      "c3e9bd51-2261-439b-82c9-f7fcbc705b2e",
+      "c3fbb926-ace5-479a-8ff9-74675f1e96a9",
+      "c4076385-bfa9-4c1e-a670-165d023f09a6",
+      "c4ba4704-de6c-4e39-862a-b9516f954d43",
+      "c4f6e261-1a1b-49b1-9708-891166687971",
+      "c58b796d-fc67-46ae-95be-ec9a2abbf382",
+      "c813f4a8-b539-4f8f-bb13-a3663d23ee0d",
+      "c896e0ca-29bd-49ea-bf1a-0ad6a4983f9c",
+      "ccfa13e0-2837-414d-acbc-aae66bd13eb6",
+      "cd8235e8-5c31-4b4c-a718-c3ec1bb668c9",
+      "cdb660d5-b47f-40fa-903e-e7f2a55b09b3",
+      "ced7d430-ec27-4a33-baa7-a88eeaf1dc82",
+      "ceeb8177-5d9a-484e-b477-f05f2b16e7f2",
+      "ceebfd42-4afa-4180-85b0-96eecb7798d7",
+      "cf51a1fa-81ab-4c82-b8cd-e91473d46682",
+      "cf93803e-2143-45ed-864c-5b9ef4233c5d",
+      "d11dd1b9-8307-498d-a591-cfc928109520",
+      "d21c0095-5ee6-4cb4-ae73-9f10683b8333",
+      "d288d8fa-df82-4258-bbc5-b5f6ef50cbc2",
+      "d2c61f2b-c016-4d60-9547-e5540c80b0e8",
+      "d3108569-c55e-4147-8232-a8b52c80ff61",
+      "d62e20cc-7551-4c5a-b378-b699441930f1",
+      "d6ffe270-66a6-48ba-b12a-866e3184882e",
+      "d77c5f4e-d847-4472-9c69-fe2e8ad9276b",
+      "d787e4a8-a6bb-48be-bf5b-a02c33d0eaa6",
+      "d81a802d-3de4-437e-a47a-28bfa52015bd",
+      "d8606d22-f824-44ec-95dc-9658754a9502",
+      "d863ecfc-fc97-44dd-88bc-03d744f953c6",
+      "d87247e3-a5b5-421e-bb8e-533a7b5157ce",
+      "d99cf918-f5e1-4ec8-a0e3-44e95c201572",
+      "d9a44e60-664a-41ab-99d7-c7aa8021f862",
+      "da5c14e5-55a0-4dd4-bde8-6ac5cb0d3ebe",
+      "dce50d47-799b-4019-9dff-7d79a54f0b14",
+      "de2dc87e-ac2d-426e-a5d8-023e9f152031",
+      "dec53f9b-4765-465c-9222-1212d59aed4c",
+      "e0425f2d-7d96-4e7d-bf23-25e41cfdb014",
+      "e1990194-ad8e-47ee-b004-6a127d22097d",
+      "e1e9277e-9d49-4e4d-833a-91b987331d9f",
+      "e473888e-3242-4a16-ade0-d7e21e3f7d69",
+      "e4a84c92-0a76-4876-8940-71cc6bb5a912",
+      "e5cea174-7ff3-4157-bc61-db4df8faa6e3",
+      "e7088ea9-5118-458a-839e-1a03642694ed",
+      "e72fd55d-2fe1-4365-8226-bdc57afaa632",
+      "e7b368bb-df38-4854-9dcc-941fd1e89792",
+      "e8593d9c-c0a3-48cb-854c-7c2543129428",
+      "e9437ae4-d4da-4a7a-81ab-fa3229337abe",
+      "ea23d271-3a7e-4e65-821b-a2a7c5e232c0",
+      "ebca70f9-a56f-433e-8624-e366ee60e7c8",
+      "ebfe705e-42db-4ec9-8109-c54ec46979fd",
+      "ec77f8d1-5cce-486a-b3d2-0c1157296640",
+      "ecee19f0-19ff-4961-a000-e07042f4fbb5",
+      "eda6eb03-1f60-4b05-aa1e-ae78c346f62d",
+      "ee493763-20e6-4257-abaf-09a06f8cbfc7",
+      "f15a348f-dc88-4785-865c-fa82a02eb904",
+      "f1d2eec0-3550-4907-b879-20950d936f58",
+      "f2086ec8-fe0b-4a52-a639-6e64ebd18cef",
+      "f49e8961-5479-4446-bf45-58f1841eb261",
+      "f536e8d4-2963-4156-9a96-92bec3e58a87",
+      "f5484950-493b-4fbf-8982-285575779922",
+      "f5d2cb50-0064-4984-8aaa-25289b52a8ef",
+      "f6588a06-571f-49da-840e-c43bc90f562f",
+      "f6b33760-1cf7-4e60-aa52-c5c5278b5a3f",
+      "f81acddb-8321-462d-b053-a6d9951eeb6b",
+      "f82281f5-4aa0-49e7-939f-1f51eaecd135",
+      "f83bed9c-5fe2-4f63-9d1b-d95a7451979b",
+      "f9c23eb6-4d92-4248-832f-10eabf245179",
+      "f9c569f0-5587-411d-adc0-46e6e39a1994",
+      "fa597c75-9918-4c67-b647-3bc4d0ea4b3f",
+      "fc815911-b48d-413e-8768-8e2f62002c62",
+      "fd4183a4-1670-40f6-a2f4-9bdf08668050",
+      "fdd2c97a-0638-4391-ad5a-1a149f530449",
+      "fde95a58-d8d8-4b17-ae55-5cd4f424ccfd"
+    ],
+    "entries": [
+      {
+        "id": "003d818b-d367-4895-a53f-8c00c0b0c4ef",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0134796a-9c90-462b-9395-f78c2d618b7f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "016b027f-9bb6-4ae3-ae22-eaf896d065eb",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "04342ab3-135c-40be-a9c6-768b6dc2bc91",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "05260ee7-bec6-4361-843f-06b371ccb9fa",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0550bb07-46c6-4cc0-a4a8-0bad9736d247",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "060cc041-3704-4801-803a-5477c0224116",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "061d80ab-bd1d-4004-a3fc-754a1d237856",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "071917e4-7cf8-4169-a012-8446c3585abf",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "074ab2e5-8bb8-447c-a937-f1b37f9f7005",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "083aedd9-ee8c-4ba0-b21f-9057f2644a35",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "090fe14c-8849-43ad-b16a-a481434437a6",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "09c2d7fe-7f81-49ee-89e2-dc339cbbab72",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0a0a190a-60bd-41f1-81da-b19842442dd4",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0a3065b3-4d7d-4211-9538-82d3e5a58e5c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0d0b5773-68cc-49c4-98d0-0044ea0b70ad",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0d54977e-e4cd-4679-a5ef-6e1580ba4659",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0d5c2dac-5683-408e-94de-89da05490450",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0daaafae-7d73-427f-b223-e5ef8ceb7d00",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0dd7b33e-ed4a-4ecf-9734-dbd6b0521288",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "0eac7403-24a4-4219-90b8-6400ffdabb97",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "118eb899-46e7-4516-be37-d11a40193eb7",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "123908be-097e-4369-bf0d-d06b4bfdc9c3",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "14298e79-5d48-464e-8809-0600eefdfab9",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "16796861-db04-4b98-a210-64a07d6873cd",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "16fb0d70-ada7-4ff8-b438-a78489fdf698",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "17fbcbe3-aa6c-4571-94bb-81df514b8410",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "18a3ef1c-8074-466b-9f20-67f5dbc9940d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "1a371017-abc8-4fcb-bebc-239dd757b6e1",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "1ab0b1fd-0ba5-4020-9f26-15f28248f80f",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "1b387933-7c5a-4745-a83f-87955c7b771e",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "1b74cdf8-e570-4a93-b155-073144de9ce5",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "1e0810a2-6b89-4fcb-8bd1-36cff8db32b7",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "21a400cb-66d2-4cd2-896a-4c74b6856a90",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "21abe997-5c23-411c-82a9-53cacc154dd5",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "226235f9-d8fa-477f-b188-dc36d9789f26",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2266d74f-f792-4aae-82d3-e2340d71fee5",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "227ea392-88c9-4434-ac1a-11415a3ba272",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "230b3c37-cc79-41f4-b6ad-d0ac7f84aa4b",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "23b34eb9-494c-468e-b6de-18430b8ca3f5",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "24736eb3-687b-492c-b027-fb0d0f053f37",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "24f474c1-ff4c-4e31-9862-59f9a6436368",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "26c63d65-909d-4aea-a606-2f45b2eb1983",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2727fbb3-d385-4e61-99ee-02e6ee722a56",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "27d55116-21f8-4218-be34-f40688a54b4a",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "280702f4-2bea-4efd-828e-62982a351e57",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "28b3d885-b6c1-4f95-8cf4-0e6eadc7522d",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "28de2eef-0005-44a0-8ada-9a033d0f8f42",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2952ca51-4275-4099-826d-6a43e4a99302",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2ae30466-810d-4ccb-b259-63cedc22729c",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2bc11dcc-e96a-4615-942a-429092a5a4b9",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2cbbe65d-2972-464d-9b0e-30dd63b38d01",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "2dce108d-e0fa-4b81-8a24-57071d46b47d",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "30c90ab4-781c-4c58-b5e9-554017dadc64",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "32495a39-f700-4eda-b8b3-7310a08790ea",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "33605053-9c40-47b2-81c4-744ec181c06f",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3451fd10-c37a-4a91-a697-3c82cf57798a",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3581d2f7-b4df-4058-99f1-2d1a5131c467",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3588e4d7-8c50-4caf-a7f7-3e562a017e0f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "363e0941-b7f6-4caf-b639-561ff8557b67",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "367065a9-ffc1-4dc2-bcb4-594d5b9b9812",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "36771cef-d263-411a-8644-3c0fa8c10cb8",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "37179583-a62e-4f97-a4ce-fff54c0723a9",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "37264c2e-c7fa-4d84-b696-3adbff9f2450",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "395f0895-bca2-488d-912e-0bf05fac0ea4",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "397146fc-6aa1-4142-a518-3d8a783fe070",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3c6f655e-917a-49c1-82b5-ad59a335d7e4",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3d1fc3d6-247c-43cb-bc5a-fcb03b855905",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3f92d5aa-2973-483b-a759-ffa2aa0a5d0c",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "3ffafddb-bd2e-4ba4-8a30-7b7795106003",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "405be304-e368-4c62-a40b-3a736a6845b1",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4063f899-43e6-4ce6-bbe5-f7c48e5f0d24",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "42510da0-4a2c-49a5-a73f-d2aee8fb8ddd",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "425ee231-0b5d-4696-99fc-60c9faa0c3b3",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "439859ec-de64-47d9-9140-aa190c9ad5f4",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "44d32457-f5cc-45db-a1f4-abaf6a6d8c04",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "459b5053-308b-47f7-8d72-fafb51b27e17",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "468b58b5-be14-430e-b71f-c5ba66409f4c",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "46ab7e90-17d4-4b4b-9790-188295cecd8a",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "48050bd5-c799-4f62-9330-53789a7279b4",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "48497099-1968-406f-8b0c-5e8cae5bd337",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "485b4736-fe40-4f02-8941-11f685da3900",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4874ba6d-816c-459d-a7ab-b5ca4303f0bc",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4897481a-115d-48e1-b349-0811398a75c8",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "49532f29-02ed-454b-8ed7-ab9d6d7fee7a",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "495eb093-08bb-4238-a097-9b38fd3c9be0",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4b1f85a2-1630-4fe4-9b43-f2e455403993",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4c7d7956-c9ce-489a-85bd-1ca6b9a00e69",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4deeb564-6442-40f3-b216-b23c00f3085c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4f15bc6a-8fa2-4024-aec0-d41ed736c156",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4f73cf52-4ecf-42ae-8ab4-6387abdfd8dc",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "4f7ef9c4-61a7-49f9-b5dc-dddafa324cc0",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5023a96d-a151-40cc-abae-43210ebb07ef",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "50311020-52d1-4036-8d73-7a7127d363eb",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "50c4d128-18cc-452d-8232-937d6bbb8b20",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "50e66cc8-37cd-470c-94f9-809dcd9a5b13",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "50ea1398-2c8f-49b2-b490-1413a7056954",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "517eb64f-9fa9-4608-bea9-677045f566ad",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5192ffbc-c496-4246-aa56-abb9497474df",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "52012f34-2d92-4583-8240-d7189285cf90",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "52909f9c-8b05-4bd5-b6d6-9c51f4ee6f05",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "52a3a64e-90f8-43f2-b343-47e62cb5e755",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "540cf955-e568-4412-9706-38a5ff9a0096",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5630d969-81aa-44ae-8518-4542c9b8dde7",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5843129b-2160-4565-8abe-02358a96fd72",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "584fb526-734c-45b7-8920-d70ca745aa17",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "58b1911e-7a6c-43ce-8d7c-501a0a4a8d62",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "59c44943-ed75-43e2-a084-d7ec1e7b5141",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5b04add4-b495-4ea5-87fb-aa33cad0ad08",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5d049e3f-81cd-430a-8806-7f8ca5b5477a",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5e305304-c759-4e27-b32c-8ebae65a0e00",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5e59c821-1a54-4ec0-915f-c0ff6fabf51f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5eb17f7c-6864-43cb-a06f-46360a7bc617",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "5fe39e8a-9482-4e47-9800-01652dddd8d4",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6073265b-f3b0-40c6-b2f3-adda216efa04",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6177ca00-3b6f-4bcd-bf34-6c37856495b1",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "62125415-6162-4ced-a413-ea6923d5bece",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "628fd641-d79c-4e8e-8806-8bc2aa106762",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6303eb98-ad47-4715-99ad-5004b545d5ab",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "63230c89-5162-4453-93a5-e9c08595d4e8",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "634ec7ab-2f24-4926-ae44-b406eb6dd239",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "640ef8da-2527-4d6b-a12e-d3e6a683ede1",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "641c3d27-7e33-4958-aa70-37926098070b",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "666ccfd5-8eb4-4ddc-955e-6b78cd118987",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "673d1026-a2c2-4ad1-8003-fdeaceb33ac7",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "68d5a1c1-c3dd-4077-8c64-a3cd20e17724",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6a877ba2-1fa7-4a8a-b455-4f978639f7cf",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6ae6493c-05cb-4b78-835e-89948893e19c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6be9380e-1151-4ae6-9f80-312d5e015d50",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6d8a0acb-67f7-4268-8eb4-722be5e7e9cc",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6e775a2f-b2d9-494d-81c2-0aeb1e313c9e",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6fb36fdc-1613-454a-9a44-93124d78d416",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "6fe1c052-2bee-432f-8f2d-5093ca63be53",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "709b4f3f-bcf3-45e4-a0f3-ca9e6e98ca32",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "731b1f26-d678-41bb-9ad8-b33396491cf3",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "742b995a-5231-4098-a33c-20848752eb7a",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "74dadf2a-c8aa-47c1-95d9-79899caf9e31",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "75209633-d038-40ad-bbab-794995ea8202",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "758c0cb6-8cc3-4892-94a6-9c7b608532ab",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "75d7bf2e-274d-463e-a3ad-d46042d51fc6",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "767a8fe8-a29c-495c-a0ea-30d61496014e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7741a76c-046f-4617-8184-0b83f68c6da8",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "77729235-ca68-4fb7-be7e-8bde984c6260",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "77af6d2f-0afd-4854-bfff-24e0800877e8",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "78f73aa4-845d-4494-9122-92c80896c7bd",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "791973d2-bd36-466c-9cd5-9e6ef50ad78b",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7946e8d9-7c4d-4409-8201-c097897f125b",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "79a129bf-9d28-4e27-bd39-9d7015de62d7",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7be286d4-17f7-44dc-bad9-dcc0624f7212",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7c92c0c5-2853-470b-8155-53e28b474693",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7d509365-0e74-4a5c-ae9b-3ae76e0d65e6",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7dd8297c-637f-4989-a3ab-94b8ec8f017b",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7e4cf5a9-02c1-4ded-bc59-18d6393e2252",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7e640892-3c87-418f-b9f1-6b913731037f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "7ec53ae1-300b-4525-8508-ebd8a2b7ff55",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8053e24d-611c-4054-aee3-cce9d372d6fe",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "80da4c16-2f65-4150-895d-9b4fb62f8c11",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "83933bfb-90ac-442b-b5f7-6152eb5c9134",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "84b3effa-7921-4f22-9e0d-1006c788da14",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8682a8d8-79f9-4f93-af5c-8d2498c5596d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "86e5b751-74a9-43cf-93e6-be47a1f6efbb",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "894c0cfd-4a58-4d57-8d25-d12c20a8f5ea",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "89d4be72-598a-4aad-8e4f-9a61dc10769f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8a30efa9-9336-471f-865f-499219cc07ad",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8c224fc2-8e47-4cf2-b475-c2a53f6fb1c7",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8c9ac75d-76be-46d3-b8fc-81209e1e807d",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8d081349-0100-455f-98b5-41184cf2bc8b",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8d772ac0-9d98-408b-b0b5-1bf71e60cbb0",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8d772c73-f0d9-4863-9017-d8396c13913b",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8dd7fd8f-942d-4e17-ac92-8cd40450f5a5",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8df0805f-63a4-41d8-af83-8069d8597c21",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8e033e2d-c92b-454d-8654-fd2e4c40d707",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8e1d24c8-3c36-45ee-a3ee-54e89c526bec",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8e673245-bfad-4528-95d0-019191bef81c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8f54615c-d84c-408f-9d31-bc6ced23cf6a",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8f572aa5-6864-4be6-a878-181a2e57973d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8fc544e3-5cd5-4bd6-a2b0-b57a86921628",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "8ff83186-eede-4f76-ace7-63e54c2ab1f0",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9014788c-637c-45ca-9ff0-299d561a0335",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "912e9514-2234-406c-92a3-3473d05a334c",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9135d51a-0ef6-4e83-a826-ce10a339c739",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "920e6492-5812-4677-b5a7-294ca7fbdc2d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "949f995e-1791-4883-be6a-6924e5bb8775",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "96083031-ab09-49a3-806e-5911953ab2b9",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9642821e-b8b7-4e78-bc5e-411fb617f921",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "975d6c97-1036-4c30-a66a-5fdf49a45a5f",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "98581302-6bc6-4c18-9cdc-ecddeb41a6c5",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "998b6a56-ea9c-49bb-8caf-6954ec7e61d5",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9be36bde-7822-40cb-8186-11ffdcf169e0",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9c234648-b98e-42ec-b9eb-9f9fd36f1b8c",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9cb88740-d03b-4188-9a5c-0a30bbdae163",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9cd487c7-8fbe-42cb-99ea-ff0afa25a592",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9d4e7b60-49d8-4811-83bb-aaf05eacaf78",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9dfaffba-5985-4c14-84e9-2da5c81096be",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9e76da60-202a-475e-9284-5f65b39532e6",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9ecf6bd5-7549-4181-acbb-cd5d23df7150",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "9f735b65-9573-4896-b72e-a209037c10c4",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a00d7abe-844c-438f-8250-40c577f57e3b",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a0ad5ac9-ff8c-48f9-a624-5c1ab0d1ad18",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a1202dfe-5ff8-44a8-9266-f3a625144e7e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a1f65c30-0c11-4b39-85dc-0df346ebbe88",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a28e6e3c-7884-4fb2-8834-3881d89d84e1",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a2b8a4c7-15d0-40aa-a45b-3cef1c324d6e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a391d69f-700b-4c8e-b754-012a5e068a60",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a42acb3d-2705-4f10-ab2f-2247653cb75e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a440a640-b40a-4d37-b1aa-61f4db734074",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a4d19929-cde7-4833-a3a4-ba16138b3daf",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a507374f-1460-4780-ad15-aee75c0d8b44",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a52dc2b7-c89e-4bd2-83de-ec0b3dab92a6",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a5bb147b-0383-40c6-a4c5-dedf59bf637b",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a6e0eede-5e06-42e8-9196-28c8a35de6a3",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a6f62b1d-1a63-4df0-b1c9-377f6dbeb141",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a80adab7-b5f2-45a9-bf75-5be431f6a3ce",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a94dbfb4-5758-4ae3-8753-d68c06fa2cb3",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "a9c6f547-c617-41cb-a887-0a8284204243",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ab42f3ba-f60c-434d-a218-728e593e2490",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ac9e1639-1fa0-47f7-b233-7c19c88e02a1",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "acef3151-654e-47f1-a9d0-3dcacc261754",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ae6ffc4e-8ada-4235-ad0b-6ddefa80ecff",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "af0b7d28-6271-4092-9b05-0ebfd290f4f2",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "af9cffe6-d426-4736-9f5b-dc589653c655",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "afe61968-4af7-478d-8226-e4568fe9126b",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b1267606-345c-4fd4-b216-ab855e2f1161",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b1602533-ded4-4e91-96ec-2493802174f6",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b2b2ad05-f377-493b-ad0c-d3c847f3f221",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b33d30d1-2d32-4a23-865e-e06c3c10c152",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b36b636f-f81a-4068-9023-6d458cdf42ce",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b44213cc-ee67-4b16-9bca-187d60addee1",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b5583067-33b1-4eb1-b728-67032e5a3909",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b5d3e12d-20b8-49dc-8d2b-b9a39403bc39",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b5e4ffcd-d523-4909-a15a-1bfb8d53f0b5",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b5e6af73-ba22-4bd4-95fd-dc2b475e5ed2",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b6e6a8ca-ce31-4c35-a896-86a873132522",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b7e0f034-e2e9-4185-ba76-9eaa029f7745",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b822ad90-0b98-45b9-b495-b80ca50e0ffd",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "b8720b16-654e-49b4-a4a0-b68284f135a3",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ba52caff-27c6-4551-80d1-d5d32c41bdf6",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bbdee4e4-b1c2-4d86-8c9b-7214837f85fe",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bc02b5b3-0cd3-4d27-bd80-9a2ed55a2594",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bc1d76e9-16be-479c-876b-bf97a1c6092b",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bc717f6f-23ea-406e-ab55-2ef6db7e653c",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bcefb0b1-64d5-446d-8e27-e82a794ea6c4",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "be0c10c3-48de-48f2-9909-574f294d9588",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "be3ac983-0063-40f7-b4e8-881a9726073f",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bec8a239-c456-4f8e-88b6-a551e4647575",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "bf47fa26-1656-42ec-b29e-fde1721e6441",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c004d85f-782d-4741-a14a-06fb251782ef",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c0a079d6-5905-4d51-a5d6-5867e3d7a10f",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c0d7b01e-8951-44d7-9ace-7e68b5553a88",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c26d01db-0e69-48b0-ae24-cb33cb58c9ec",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c2a0d33f-784e-4cb7-9977-6664b06d7f4e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c2eafa38-bee6-4031-82fc-57a1f4be027d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c3d5fb64-c8cd-4ad1-a8fc-03bc1ad1075f",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c3e9bd51-2261-439b-82c9-f7fcbc705b2e",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c3fbb926-ace5-479a-8ff9-74675f1e96a9",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c4076385-bfa9-4c1e-a670-165d023f09a6",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c4ba4704-de6c-4e39-862a-b9516f954d43",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c4f6e261-1a1b-49b1-9708-891166687971",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c58b796d-fc67-46ae-95be-ec9a2abbf382",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c813f4a8-b539-4f8f-bb13-a3663d23ee0d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "c896e0ca-29bd-49ea-bf1a-0ad6a4983f9c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ccfa13e0-2837-414d-acbc-aae66bd13eb6",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "cd8235e8-5c31-4b4c-a718-c3ec1bb668c9",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "cdb660d5-b47f-40fa-903e-e7f2a55b09b3",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ced7d430-ec27-4a33-baa7-a88eeaf1dc82",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ceeb8177-5d9a-484e-b477-f05f2b16e7f2",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ceebfd42-4afa-4180-85b0-96eecb7798d7",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "cf51a1fa-81ab-4c82-b8cd-e91473d46682",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "cf93803e-2143-45ed-864c-5b9ef4233c5d",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d11dd1b9-8307-498d-a591-cfc928109520",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d21c0095-5ee6-4cb4-ae73-9f10683b8333",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d288d8fa-df82-4258-bbc5-b5f6ef50cbc2",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d2c61f2b-c016-4d60-9547-e5540c80b0e8",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d3108569-c55e-4147-8232-a8b52c80ff61",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d62e20cc-7551-4c5a-b378-b699441930f1",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d6ffe270-66a6-48ba-b12a-866e3184882e",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d77c5f4e-d847-4472-9c69-fe2e8ad9276b",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d787e4a8-a6bb-48be-bf5b-a02c33d0eaa6",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d81a802d-3de4-437e-a47a-28bfa52015bd",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d8606d22-f824-44ec-95dc-9658754a9502",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d863ecfc-fc97-44dd-88bc-03d744f953c6",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d87247e3-a5b5-421e-bb8e-533a7b5157ce",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d99cf918-f5e1-4ec8-a0e3-44e95c201572",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "d9a44e60-664a-41ab-99d7-c7aa8021f862",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "da5c14e5-55a0-4dd4-bde8-6ac5cb0d3ebe",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "dce50d47-799b-4019-9dff-7d79a54f0b14",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "de2dc87e-ac2d-426e-a5d8-023e9f152031",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "dec53f9b-4765-465c-9222-1212d59aed4c",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e0425f2d-7d96-4e7d-bf23-25e41cfdb014",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e1990194-ad8e-47ee-b004-6a127d22097d",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e1e9277e-9d49-4e4d-833a-91b987331d9f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e473888e-3242-4a16-ade0-d7e21e3f7d69",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e4a84c92-0a76-4876-8940-71cc6bb5a912",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e5cea174-7ff3-4157-bc61-db4df8faa6e3",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e7088ea9-5118-458a-839e-1a03642694ed",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e72fd55d-2fe1-4365-8226-bdc57afaa632",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e7b368bb-df38-4854-9dcc-941fd1e89792",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e8593d9c-c0a3-48cb-854c-7c2543129428",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "e9437ae4-d4da-4a7a-81ab-fa3229337abe",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ea23d271-3a7e-4e65-821b-a2a7c5e232c0",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ebca70f9-a56f-433e-8624-e366ee60e7c8",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ebfe705e-42db-4ec9-8109-c54ec46979fd",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ec77f8d1-5cce-486a-b3d2-0c1157296640",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ecee19f0-19ff-4961-a000-e07042f4fbb5",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "eda6eb03-1f60-4b05-aa1e-ae78c346f62d",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "ee493763-20e6-4257-abaf-09a06f8cbfc7",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f15a348f-dc88-4785-865c-fa82a02eb904",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f1d2eec0-3550-4907-b879-20950d936f58",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f2086ec8-fe0b-4a52-a639-6e64ebd18cef",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f49e8961-5479-4446-bf45-58f1841eb261",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f536e8d4-2963-4156-9a96-92bec3e58a87",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f5484950-493b-4fbf-8982-285575779922",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f5d2cb50-0064-4984-8aaa-25289b52a8ef",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f6588a06-571f-49da-840e-c43bc90f562f",
+        "item_type": "news_feed",
+        "year": 2019,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f6b33760-1cf7-4e60-aa52-c5c5278b5a3f",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f81acddb-8321-462d-b053-a6d9951eeb6b",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f82281f5-4aa0-49e7-939f-1f51eaecd135",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f83bed9c-5fe2-4f63-9d1b-d95a7451979b",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f9c23eb6-4d92-4248-832f-10eabf245179",
+        "item_type": "news_feed",
+        "year": 2018,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "f9c569f0-5587-411d-adc0-46e6e39a1994",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "fa597c75-9918-4c67-b647-3bc4d0ea4b3f",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "fc815911-b48d-413e-8768-8e2f62002c62",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "fd4183a4-1670-40f6-a2f4-9bdf08668050",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "fdd2c97a-0638-4391-ad5a-1a149f530449",
+        "item_type": "news_feed",
+        "year": 2016,
+        "reason": "covered at the time, no subsequent outcome"
+      },
+      {
+        "id": "fde95a58-d8d8-4b17-ae55-5cd4f424ccfd",
+        "item_type": "news_feed",
+        "year": 2017,
+        "reason": "covered at the time, no subsequent outcome"
+      }
+    ]
+  }
+}
