@@ -40,6 +40,11 @@ const argOf = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 && pr
 const ONLY = argOf('--subfield', null)
 const AXES_PER_SUBFIELD = Number(argOf('--axes', 5))
 const MODEL = 'claude-sonnet-5'
+// Restrict promotion to proposals whose SOURCE paper predates a year. Phase 5's
+// 2016 baseline must be built only from pre-2016 evidence: without this the
+// winning value on an axis can come from a 2023 paper, which then carries a 2023
+// established_date and is filtered straight back out of the baseline.
+const SOURCE_YEAR_MAX = argOf('--source-year-max', null) ? Number(argOf('--source-year-max', null)) : null
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
 // ── Value parsing ───────────────────────────────────────────────────────────
@@ -341,10 +346,19 @@ async function run() {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
-  const { data: pending, error } = await sb.from('frontier_record_proposals')
-    .select('id,subfield,axis,axis_type,proposed_value,item_type,item_id,evidence_grade,rationale,source_url')
-    .eq('status', 'pending')
-  if (error) { console.error('read failed:', error.message); process.exit(1) }
+  // PAGINATED. PostgREST caps an unpaginated select at 1000 rows, so the first
+  // retro run silently saw 1000 of 1242 proposals and four subfields reported
+  // zero candidates because theirs sat past the cutoff.
+  const pending = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await sb.from('frontier_record_proposals')
+      .select('id,subfield,axis,axis_type,proposed_value,item_type,item_id,evidence_grade,rationale,source_url')
+      .eq('status', 'pending').range(from, from + 999)
+    if (error) { console.error('read failed:', error.message); process.exit(1) }
+    if (!data.length) break
+    pending.push(...data)
+    if (data.length < 1000) break
+  }
   console.log(`${pending.length} pending proposal(s).`)
 
   const targets = (ONLY ? [ONLY] : SUBFIELD_IDS).filter(s => pending.some(p => p.subfield === s))
@@ -358,6 +372,15 @@ async function run() {
   for (let i = 0; i < paperIds.length; i += 200) {
     const { data } = await sb.from('papers').select('id,year').in('id', paperIds.slice(i, i + 200))
     for (const r of data || []) yearById[r.id] = r.year
+  }
+
+  if (SOURCE_YEAR_MAX) {
+    const before = pending.length
+    for (let i = pending.length - 1; i >= 0; i--) {
+      const y = yearById[pending[i].item_id]
+      if (!y || y > SOURCE_YEAR_MAX) pending.splice(i, 1)
+    }
+    console.log(`restricted to sources from ${SOURCE_YEAR_MAX} or earlier: ${pending.length} of ${before} proposal(s)`)
   }
 
   const records = {}
