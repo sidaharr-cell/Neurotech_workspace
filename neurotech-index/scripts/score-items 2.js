@@ -153,14 +153,10 @@ export async function scoreOne(anthropic, { extraction, item, entityType, subfie
   }
 }
 
-// PAGINATED WITH AN EXPLICIT ORDER. Postgres does not guarantee a stable row
-// order across .range() calls without ORDER BY, so pages overlap and gap:
-// a deterministic run produced 301 duplicate trial rows and 212 duplicate
-// research rows that way, while silently missing others.
 async function pageAll(sb, table, select, filt = q => q) {
   const out = []
   for (let f = 0; ; f += 1000) {
-    const { data, error } = await filt(sb.from(table).select(select)).order('id').range(f, f + 999)
+    const { data, error } = await filt(sb.from(table).select(select)).range(f, f + 999)
     if (error) {
       console.error(`${table}: ${error.message}`)
       if (/schema cache|does not exist/i.test(error.message)) console.error('Apply migrations 013 and 015 first.')
