@@ -1060,3 +1060,120 @@ export async function getAxisPairs({ subfield = null, includeSuperseded = false 
   if (error) return []
   return data || []
 }
+
+// ── Potential impact, Phase 6 ────────────────────────────────────────────────
+// SHIPPED BEHIND A FLAG. Spec section 0: "Ship behind a flag until Phase 5
+// (calibration) passes", and Phase 5 has NOT passed
+// (docs/potential-impact-phase5-result.md). So this must not become a tab's
+// default sort, and the legacy sort stays in place until it does.
+//
+// Spec 9.1 governs what may be read from here by a page: the ORDER, the single
+// plain sentence in user_facing_reason, the closed tag set, and the horizon.
+// Never potential_impact, never a dimension, never the multiplier. A number the
+// user cannot interpret invites false precision about a judgement this system
+// has explicitly said it cannot make precisely.
+
+/** Is the flagged sort available at all? False when nothing has been scored. */
+export async function potentialImpactReady() {
+  if (!supabase) return false
+  const { count, error } = await supabase.from('impact_scores')
+    .select('id', { count: 'exact' }).eq('run_label', 'live').limit(1)
+  return !error && (count || 0) > 0
+}
+
+const SURFACE_COLS = 'item_type,item_id,entity_type,user_facing_reason,tags,horizon,potential_impact'
+
+/**
+ * Items ordered by potential impact. Returns ids plus the user-facing surface
+ * only; the caller joins to its own rows for titles and links.
+ *
+ * `horizon` filters by translational distance per spec 9.2: near (3-4),
+ * medium (2), long (0-1). It is a toggle rather than a blended list because
+ * "what is close to patients" and "what will matter eventually" are both
+ * coherent asks and one blended list serves neither.
+ */
+export async function getPotentialImpactOrder({
+  entityType = null, horizon = null, limit = 40, runLabel = 'live',
+} = {}) {
+  if (!supabase) return []
+  let q = supabase.from('impact_scores').select(SURFACE_COLS).eq('run_label', runLabel)
+  if (entityType) q = q.in('entity_type', arr(entityType))
+  if (horizon) q = q.eq('horizon', horizon)
+  // Gated items score 0 and must not occupy the head of the list.
+  const { data, error } = await q.gt('potential_impact', 0)
+    .order('potential_impact', { ascending: false }).limit(limit)
+  if (error) return []
+  // potential_impact is deliberately dropped here: spec 9.1 forbids surfacing it,
+  // and stripping it at the data layer means a component cannot render it by
+  // accident.
+  return (data || []).map(({ potential_impact, ...surface }) => surface)
+}
+
+/**
+ * The FULL score for one item, for the internal inspection view (spec 9.3).
+ *
+ * "Hiding the numbers means users cannot self-correct for miscalibration and
+ * their disagreement never becomes legible feedback. The inspection view is now
+ * the only place the rubric is visible. It MUST show the full ImpactScore
+ * object for any item, including every justification, referent, consulted
+ * record, gate, flag, and validation reset."
+ *
+ * Given that Phase 5 failed, this is also the practical necessity: when the
+ * order looks wrong, this is where someone finds out why.
+ */
+export async function getImpactScoreDetail(itemType, itemId, runLabel = 'live') {
+  if (!supabase || !itemId) return null
+  const { data: score, error } = await supabase.from('impact_scores')
+    .select('*').eq('item_type', itemType).eq('item_id', itemId)
+    .eq('run_label', runLabel).maybeSingle()
+  if (error || !score) return null
+
+  const [{ data: resets }, { data: extraction }, { data: records }] = await Promise.all([
+    supabase.from('impact_score_resets').select('*')
+      .eq('item_type', itemType).eq('item_id', itemId).eq('run_label', runLabel),
+    supabase.from('item_extractions').select('*')
+      .eq('item_type', itemType).eq('item_id', itemId).maybeSingle(),
+    (score.frontier_records_consulted || []).length
+      ? supabase.from('frontier_records').select('id,subfield,axis,axis_type,current_value,confidence,source_url')
+        .in('id', score.frontier_records_consulted)
+      : Promise.resolve({ data: [] }),
+  ])
+  return { score, resets: resets || [], extraction: extraction || null, consulted: records || [] }
+}
+
+/**
+ * Spec 13 monitoring. Reviewed monthly; with scores hidden from users this is
+ * the primary drift signal.
+ */
+export async function getImpactMonitoring(runLabel = 'live') {
+  if (!supabase) return null
+  const { data: rows, error } = await supabase.from('impact_scores')
+    .select('entity_type,subfield,path_taken,potential_impact,rhetorical_marker_count,tags,input_granularity,gap_flagged')
+    .eq('run_label', runLabel)
+  if (error || !rows?.length) return null
+  const { data: resets } = await supabase.from('impact_score_resets')
+    .select('rule').eq('run_label', runLabel)
+
+  const tally = (arr2, key) => arr2.reduce((a, r) => { const k = r[key] || 'none'; a[k] = (a[k] || 0) + 1; return a }, {})
+  const top50 = [...rows].sort((a, b) => b.potential_impact - a.potential_impact).slice(0, 50)
+
+  // The single most important number in spec 13.
+  const xs = rows.map(r => r.rhetorical_marker_count || 0)
+  const ys = rows.map(r => r.potential_impact)
+  const n = xs.length
+  const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n
+  let num = 0, dx = 0, dy = 0
+  for (let i = 0; i < n; i++) { const a = xs[i] - mx, b = ys[i] - my; num += a * b; dx += a * a; dy += b * b }
+
+  return {
+    scored: n,
+    entityTypeTop50: tally(top50, 'entity_type'),
+    subfieldTop50: tally(top50, 'subfield'),
+    pathSplit: tally(rows, 'path_taken'),
+    granularity: tally(rows, 'input_granularity'),
+    markerCorrelation: dx && dy ? num / Math.sqrt(dx * dy) : 0,
+    claimRankedInTop50: top50.filter(r => (r.tags || []).includes('No data released')).length,
+    gapFlagged: rows.filter(r => r.gap_flagged).length,
+    resetsByRule: tally(resets || [], 'rule'),
+  }
+}
