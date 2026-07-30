@@ -27,6 +27,11 @@ const argOf = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 && pr
 const SAMPLE = Number(argOf('--sample', 50))
 const TYPE = argOf('--type', null)
 const MODEL = argOf('--model', 'claude-sonnet-5')
+// Recency floor for the shippable slice. The sort applies a 6-year half-life, so
+// scoring the whole archive buys little: an old item is heavily discounted even
+// when it scores well.
+const SINCE_YEAR = Number(argOf('--since-year', 2020))
+const SINCE_ISO = `${SINCE_YEAR}-01-01`
 const CONCURRENCY = 6
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
@@ -112,25 +117,25 @@ export async function loadItems(sb, sampleOverride = null) {
     if (t === 'research') {
       const { data } = await sb.from('papers')
         .select('id,title,abstract,year,doi,url,source_url')
-        .eq('in_scope', true).gte('year', 2020).limit(ALL ? 1000 : per * 3)
+        .eq('in_scope', true).gte('year', SINCE_YEAR).limit(ALL ? 4000 : per * 3)
       for (const r of (data || []).filter(r => (r.abstract || '').length > 200).slice(0, per)) {
         out.push({ item: r, entityType: 'research' })
       }
     } else if (t === 'trial') {
       const { data } = await sb.from('news_feed')
-        .select('id,title,summary,url,metadata').eq('entry_type', 'trial').limit(ALL ? 1000 : per * 3)
+        .select('id,title,summary,url,metadata').eq('entry_type', 'trial').gte('published_at', SINCE_ISO).limit(ALL ? 4000 : per * 3)
       for (const r of (data || []).filter(r => r.metadata?.design).slice(0, per)) {
         out.push({ item: r, entityType: 'trial' })
       }
     } else if (t === 'device') {
       const { data } = await sb.from('devices')
-        .select('id,name,description,url,source_url').eq('in_scope', true).limit(ALL ? 1000 : per * 3)
+        .select('id,name,description,url,source_url').eq('in_scope', true).gte('year', SINCE_YEAR).limit(ALL ? 4000 : per * 3)
       for (const r of (data || []).filter(r => (r.description || '').length > 120).slice(0, per)) {
         out.push({ item: { ...r, title: r.name }, entityType: 'device' })
       }
     } else {
       const { data } = await sb.from('news_feed')
-        .select('id,title,summary,url,metadata').neq('entry_type', 'trial').limit(ALL ? 1000 : per * 3)
+        .select('id,title,summary,url,metadata').neq('entry_type', 'trial').gte('published_at', SINCE_ISO).limit(ALL ? 4000 : per * 3)
       for (const r of (data || []).filter(r => (r.summary || '').length > 150).slice(0, per)) {
         out.push({ item: r, entityType: 'feed' })
       }
