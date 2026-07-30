@@ -461,6 +461,9 @@ export async function getCompanyById(id) {
       .map(r => ({
         date: r.round_date,
         amount: Math.round(r.amount_usd / 1e6),
+        // The rounded figure drives the timeline bars. The exact one is what a
+        // reader adds up to check the total, so it travels alongside.
+        amountUsd: r.amount_usd,
         sourceUrl: r.source_url,
         accession: r.accession_number,
       })),
