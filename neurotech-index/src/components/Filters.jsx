@@ -4,7 +4,7 @@ import {
   FUNCTION, ACCESS, APPLICATION,
   FUNCTION_LABEL, ACCESS_LABEL, APPLICATION_LABEL,
 } from '../lib/facets'
-import { FLAGS } from '../lib/flags'
+import { impactSortAllowed } from '../lib/flags'
 
 /**
  * Filters.jsx — compact dropdown filter control, plus the option sets each page
@@ -49,15 +49,21 @@ export const SORT_DATE = [ // devices: no ranking score, date only
 
 /**
  * The potential-impact sort option, spec 9.2. Appended to a tab's sort list only
- * when FLAGS.POTENTIAL_IMPACT is on, and never as the first entry: spec 11 makes
- * Phase 5 blocking for the DEFAULT sort and Phase 5 has not passed
- * (docs/potential-impact-phase5-result.md). Putting it first would make it the
- * default by position even with the default flag off.
+ * for entity types whose corpus is scored densely enough for the ordering to be
+ * real (src/lib/flags.js), and never as the first entry: the first entry is what
+ * a tab lands on, so putting it first would make it the default by position even
+ * with POTENTIAL_IMPACT_DEFAULT off.
  */
 export const SORT_POTENTIAL_IMPACT = { id: 'impact', label: 'Highest potential impact' }
 
-export function withPotentialImpact(sorts) {
-  if (!FLAGS.POTENTIAL_IMPACT) return sorts
+/**
+ * `entityType` is required. It was optional while the flag was globally off and
+ * nothing could reach this, but an omitted argument now means "offer an unranked
+ * sort on a tab that has no scores", which is the one outcome this gate exists
+ * to prevent. Unknown types get the list back unchanged.
+ */
+export function withPotentialImpact(sorts, entityType) {
+  if (!impactSortAllowed(entityType)) return sorts
   return [...sorts, SORT_POTENTIAL_IMPACT]
 }
 
