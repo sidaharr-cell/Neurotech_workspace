@@ -142,3 +142,64 @@ being scored as though they were well evidenced.
 ## What is not verified
 
 That the ordering is good. That is what Phase 5 was for, and it failed.
+
+---
+
+# Status as of 30 July 2026: an internal tool, deliberately
+
+The decision is to leave the sort off and use it as an inspection tool rather
+than pursue the reference list right now. This is a real status, not a holding
+pattern, so here is how to use it and what it is good for.
+
+## Turning it on locally
+
+```
+VITE_FLAG_POTENTIAL_IMPACT=1   # in neurotech-index/.env
+npm run dev
+```
+
+That enables three things: the "Highest potential impact" sort option on the
+Trials tab, the horizon toggle, and the inspection view. `FLAGS.POTENTIAL_IMPACT`
+reads the environment; `POTENTIAL_IMPACT_ENTITIES` and `POTENTIAL_IMPACT_DEFAULT`
+do not, so no environment variable can widen the sort to Research or make it a
+tab's default. Production has no such variable set.
+
+## The inspection view
+
+`/impact/:itemType/:itemId`, where itemType is `news_feed` or `papers`. It shows
+the full record for one score: composition, every dimension with its
+justification and referent, what was capped and why, the frontier records
+consulted, the claim-against-demonstration pair, and every section 8 validator
+reset. It is the only place rubric vocabulary is allowed to appear.
+
+Both scoring paths render: model rows show the model and its written reason,
+deterministic rows (`rubric_version` `1.0-det`, all trials) say so and show the
+registry-built sentence instead.
+
+## What it is actually good for right now
+
+Reading *why* one trial outranks another, on real records, without spending
+anything. Every trial in the corpus is scored, so any two can be compared.
+
+## What it is not good for
+
+Deciding whether the ordering is correct. The head of the ungated live sort is
+mostly not neurotechnology, and the frozen reference list is mostly not
+neurotechnology either. See `potential-impact-phase5-result.md`, run 4.
+
+## Free to re-run at any time
+
+```
+node --env-file=.env scripts/score-trials-deterministic.js --commit   # rescore all 8,345
+node --env-file=.env scripts/run-calibration-trials.js                # re-measure the holdout
+```
+
+Neither makes a model call. If the rubric changes, both should be re-run.
+
+## The one thing that would change the status
+
+A reference list of 20 to 30 trials from 2016-2019 that mattered *to
+neurotechnology*, built by someone with domain knowledge. Drop the NCT ids or
+titles into a file and `scripts/build-retro-holdout.js` plus
+`run-calibration-trials.js` will do the rest for free. Nothing else on the
+critical path costs money either; this is the only step that costs judgement.
