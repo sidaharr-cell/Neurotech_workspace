@@ -36,3 +36,11 @@ pipeline-*.log
 
 # Dedup reversibility logs (operational artifacts, kept locally)
 dedup-log-*.json
+
+# Duplicate-copy artifacts ("foo 2.js") from file-sync tooling. They are stale
+# copies, never edited, and a `git add -A` sweeps them in silently.
+* 2.js
+* 2.jsx
+* 2.json
+* 2.sql
+* 2.md
