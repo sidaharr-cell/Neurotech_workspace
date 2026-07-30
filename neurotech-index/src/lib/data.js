@@ -281,7 +281,49 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
 // on it, flip to false so we stop filtering on it until the migration is applied.
 let dedupReady = true
 
-export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+
+/**
+ * Ids in potential-impact order, plus the user-facing surface for each.
+ * Used by the search functions when sort === 'impact'.
+ *
+ * Only a recent slice of the corpus is scored, so this returns FEWER ids than a
+ * normal page query would match. That is deliberate and visible: an unscored
+ * item does not belong in a ranking that has never evaluated it, and padding the
+ * tail with unscored rows would imply an ordering that does not exist.
+ */
+async function impactOrdered(entityType, { horizon = null, limit = 500 } = {}) {
+  if (!supabase) return { ids: [], surface: {} }
+  let q = supabase.from('impact_scores')
+    .select('item_id,user_facing_reason,tags,horizon,potential_impact')
+    .eq('run_label', 'live').in('entity_type', arr(entityType)).gt('potential_impact', 0)
+  if (horizon) q = q.eq('horizon', horizon)
+  const { data, error } = await q.order('potential_impact', { ascending: false }).limit(limit)
+  if (error || !data) return { ids: [], surface: {} }
+  const surface = {}
+  for (const r of data) {
+    // potential_impact is read for ordering and never carried into the surface,
+    // per spec 9.1.
+    surface[r.item_id] = { impactReason: r.user_facing_reason, impactTags: r.tags || [], horizon: r.horizon }
+  }
+  return { ids: data.map(r => r.item_id), surface }
+}
+
+/**
+ * Fetch rows by id and return them in the id order given, attaching the
+ * user-facing impact surface. Postgres does not preserve `in()` order, so the
+ * ranking has to be reimposed here or the sort silently becomes arbitrary.
+ */
+async function rowsInImpactOrder(table, cols, ids, surface, page, pageSize) {
+  const slice = ids.slice(page * pageSize, page * pageSize + pageSize)
+  if (!slice.length) return { rows: [], total: ids.length }
+  const { data, error } = await supabase.from(table).select(cols).in('id', slice)
+  if (error) return { rows: [], total: 0 }
+  const byId = Object.fromEntries((data || []).map(r => [r.id, r]))
+  const rows = slice.map(id => (byId[id] ? { ...byId[id], ...surface[id] } : null)).filter(Boolean)
+  return { rows, total: ids.length }
+}
+
+export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', horizon = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
   const minYear = recencyMinYear(recency)
@@ -303,6 +345,13 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     if (dedupReady) b = b.is('canonical_id', null)         // hide merged duplicate versions (Phase 6)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
+  }
+  // Potential impact, spec 9.2. Flagged off by default; see src/lib/flags.js.
+  if (sort === 'impact') {
+    const { ids, surface } = await impactOrdered('research', { horizon })
+    return rowsInImpactOrder('papers',
+      `id,title,authors,journal,year,doi,url,abstract,pubmed_id,source,${FACET_COLS}`,
+      ids, surface, page, pageSize)
   }
   // Default: OpenAlex field-normalized impact, then year. 'newest' sorts by year.
   // Falls back to year order if rank_score isn't in the table yet.
@@ -676,8 +725,13 @@ export async function searchPatents({ query = '', facets = {}, recency = null, y
 }
 
 /** Server-side paginated search over clinical trials (stored in news_feed). */
-export async function searchTrials({ query = '', facets = {}, recency = null, yearRange = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchTrials({ query = '', facets = {}, recency = null, yearRange = null, phase = null, status = null, sort = 'relevant', horizon = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
+  // Potential impact, spec 9.2. Flagged off by default; see src/lib/flags.js.
+  if (sort === 'impact') {
+    const { ids, surface } = await impactOrdered('trial', { horizon })
+    return rowsInImpactOrder('news_feed', '*', ids, surface, page, pageSize)
+  }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
   q = applyFacets(q, facets)
