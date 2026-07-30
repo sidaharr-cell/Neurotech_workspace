@@ -1106,7 +1106,7 @@ export async function getPotentialImpactOrder({
   // potential_impact is deliberately dropped here: spec 9.1 forbids surfacing it,
   // and stripping it at the data layer means a component cannot render it by
   // accident.
-  return (data || []).map(({ potential_impact, ...surface }) => surface)
+  return (data || []).map(({ potential_impact: _hidden, ...surface }) => surface)
 }
 
 /**
