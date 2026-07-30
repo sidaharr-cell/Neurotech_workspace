@@ -48,6 +48,9 @@ const N_NEG = Number(argOf('--negatives', 100))
 const N_BG = Number(argOf('--background', 76))
 const MODEL = argOf('--model', 'claude-sonnet-5')
 const AS_OF = '2019-12-31'
+const RUN_LABEL = argOf('--run-label', 'retro-2016')
+const RESEARCH_ONLY = process.argv.includes('--research-only')
+const COMMIT = process.argv.includes('--commit')
 const CONCURRENCY = 6
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
@@ -139,6 +142,14 @@ async function scoreRetro(anthropic, { item, entityType, subfield, records, axis
 
   return {
     id: item.id, entity_type: entityType, subfield,
+    item_type: entityType === 'research' ? 'papers' : 'news_feed',
+    fd: validated.FD || null, lv: validated.LV || null, tr: validated.TR || null,
+    gap: validated.GAP || null, gate: validated.GATE || null, meth: validated.METH || null,
+    base: composed.base, multiplier: composed.multiplier, recency: composed.recency,
+    evidence_grade: validated.evidence_grade || null,
+    translational_distance: validated.translational_distance ?? null,
+    user_facing_reason: validated.user_facing_reason || null,
+    frontier_records_consulted: forValidation.frontier_records_consulted,
     potential_impact: composed.potential_impact,
     path_taken: composed.path_taken,
     tags: tagsFor(validated),
@@ -199,9 +210,19 @@ async function run() {
     byId[f.id] = { ...f, item_type: 'news_feed', entityType: f.entry_type === 'trial' ? 'trial' : 'feed', recency_date: f.published_at }
   }
 
-  const bgPool = Object.keys(byId).filter(id => !refIds.has(id) && !pickedNeg.includes(id))
-  const picked = [...refIds, ...pickedNeg, ...seededPick(bgPool, N_BG, 7)]
-    .filter(id => byId[id])
+  let picked
+  if (RESEARCH_ONLY) {
+    // Research only. The trial-vs-trial run discriminated "did the sponsor post
+    // results", which no dimension claims to predict. Rhetorical markers live in
+    // paper abstracts, so hype correlation is testable here and not there.
+    const pool = Object.keys(byId).filter(id => byId[id].entityType === 'research')
+    picked = seededPick(pool, N_BG + N_NEG, 11)
+    console.log(`\nRESEARCH-ONLY run: ${picked.length} window papers sampled`)
+  } else {
+    const bgPool = Object.keys(byId).filter(id => !refIds.has(id) && !pickedNeg.includes(id))
+    picked = [...refIds, ...pickedNeg, ...seededPick(bgPool, N_BG, 7)].filter(id => byId[id])
+  }
+  picked = picked.filter(id => byId[id])
   console.log(`\nsample: ${picked.length}  (reference ${[...refIds].filter(i => byId[i]).length}, ` +
     `negative ${pickedNeg.filter(i => byId[i]).length}, background ${picked.length - [...refIds].filter(i => byId[i]).length - pickedNeg.filter(i => byId[i]).length})`)
 
@@ -271,11 +292,63 @@ async function run() {
   console.log(`  P(reference outranks a hyped item): ${auc === null ? 'n/a' : (auc * 100).toFixed(1) + '%'}`)
   console.log(`  (50% is chance. This survives the enrichment; recall does not.)`)
 
+  // ── HYPE CORRELATION, spec 13's "single most important number" ───────────
+  // No reference list and no domain expert needed, which is why this survives
+  // open decision 3 being unresolved. It asks directly whether promotional
+  // language predicts score, which spec 2 forbids.
+  const xs = scored.map(s => s.marker_count)
+  const ys = scored.map(s => s.potential_impact)
+  const n = xs.length
+  const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n
+  let num = 0, dx = 0, dy = 0
+  for (let i = 0; i < n; i++) { const a = xs[i] - mx, b = ys[i] - my; num += a * b; dx += a * a; dy += b * b }
+  const r = dx && dy ? num / Math.sqrt(dx * dy) : 0
+
+  const decile = Math.max(1, Math.ceil(ranked.length / 10))
+  const topMarkers = ranked.slice(0, decile).reduce((a, s) => a + s.marker_count, 0) / decile
+  const restMarkers = ranked.slice(decile).reduce((a, s) => a + s.marker_count, 0) / Math.max(1, ranked.length - decile)
+  const withMarkers = scored.filter(s => s.marker_count > 0)
+  const without = scored.filter(s => s.marker_count === 0)
+  const meanWith = withMarkers.length ? withMarkers.reduce((a, s) => a + s.potential_impact, 0) / withMarkers.length : 0
+  const meanWithout = without.length ? without.reduce((a, s) => a + s.potential_impact, 0) / without.length : 0
+
+  console.log('\nHYPE CORRELATION (spec 13: the single most important number)')
+  console.log(`  marker/impact correlation:        ${r.toFixed(3)}   (target: near zero)`)
+  console.log(`  mean markers, top decile:         ${topMarkers.toFixed(2)}`)
+  console.log(`  mean markers, rest:               ${restMarkers.toFixed(2)}`)
+  console.log(`  mean impact WITH markers:         ${meanWith.toFixed(3)}  (n=${withMarkers.length})`)
+  console.log(`  mean impact WITHOUT markers:      ${meanWithout.toFixed(3)}  (n=${without.length})`)
+  const verdict = Math.abs(r) < 0.15 && topMarkers <= restMarkers * 1.5
+  console.log(`  => ${verdict ? 'PASS: promotional language does not predict score' : 'FAIL: promotional language tracks score'}`)
+
   const paths = {}, ents = {}
   for (const s of scored) { paths[s.path_taken || 'none'] = (paths[s.path_taken || 'none'] || 0) + 1; ents[s.entity_type] = (ents[s.entity_type] || 0) + 1 }
   console.log(`\ncontext: paths ${JSON.stringify(paths)} | entities ${JSON.stringify(ents)}`)
   const zero = scored.filter(s => s.potential_impact === 0).length
   console.log(`zero-scoring items: ${zero}/${scored.length}`)
+
+  if (!COMMIT) { console.log('\nNot stored. Pass --commit to persist under run_label "' + RUN_LABEL + '".'); return }
+  // Store, so asking WHY an item ranked low never costs another full run again.
+  const rows = scored.map(s => ({
+    item_type: s.item_type, item_id: s.id, entity_type: s.entity_type, subfield: s.subfield || null,
+    rubric_version: '1.0', model: MODEL,
+    potential_impact: s.potential_impact, path_taken: s.path_taken,
+    base: s.base, multiplier: s.multiplier, recency: s.recency,
+    fd: s.fd, lv: s.lv, tr: s.tr, gap: s.gap, gate: s.gate, meth: s.meth,
+    translational_distance: s.translational_distance, evidence_grade: s.evidence_grade,
+    evidence_variant: s.entity_type === 'trial' ? 'trial_design' : 'standard',
+    frontier_records_consulted: s.frontier_records_consulted || [],
+    fd_ceiling: s.fd_ceiling, input_granularity: s.granularity,
+    rhetorical_marker_count: s.marker_count,
+    user_facing_reason: s.user_facing_reason, tags: s.tags || [],
+    run_label: RUN_LABEL,
+  }))
+  for (let i = 0; i < rows.length; i += 50) {
+    const { error } = await sb.from('impact_scores')
+      .upsert(rows.slice(i, i + 50), { onConflict: 'item_type,item_id,rubric_version,run_label' })
+    if (error) { console.error('store failed:', error.message); process.exit(1) }
+  }
+  console.log(`\n✓ stored ${rows.length} score(s) under run_label "${RUN_LABEL}".`)
 }
 
 run().catch(e => { console.error(e); process.exit(1) })

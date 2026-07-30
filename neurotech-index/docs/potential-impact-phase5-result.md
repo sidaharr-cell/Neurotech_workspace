@@ -89,3 +89,68 @@ whole run again. Storing them under the existing `run_label` column in
 **Not** recommended: tuning the rubric against this result. The test is known to
 be confounded, and fitting to it would optimise for sponsor reporting behaviour
 rather than for potential impact.
+
+---
+
+# Second run: research-only hype correlation. ALSO FAILED.
+
+Run 29 July 2026, 175 of 180 window research papers scored against the 2016
+baseline. Run label `retro-research`.
+
+This run exists because the first was confounded: 129 of 193 items were trials,
+and the property being discriminated was close to "did the sponsor post results",
+which no dimension claims to predict. Research papers are where rhetorical
+markers live, so hype correlation is testable there and not there.
+
+It also needs NO reference list and NO domain expert, which is why it could run
+while open decision 3 stays unresolved.
+
+```
+marker/impact correlation      0.257     target: near zero
+mean markers, top decile       2.78
+mean markers, rest             1.70      top decile uses 63% more
+mean impact WITH markers       0.325     n=117
+mean impact WITHOUT markers    0.195     n=58     66% higher
+paths: frontier 122, leverage 53   |   zero-scoring 51 of 175
+```
+
+Spec 13 calls this correlation "the single most important number here" and says
+it should sit near zero: "Rising correlation is drift toward vocabulary matching
+and is the single most important number here."
+
+## The mechanism matters, and it is not what it looks like
+
+Rhetorical markers are WITHHELD from the scoring prompt. The model never saw
+them, so it cannot have scored on them directly. Two explanations remain:
+
+**(a) A real correlation in the world.** Papers reporting stronger results may
+also write more promotionally. Under this reading the rubric is fine and the
+correlation is a property of scientific writing.
+
+**(b) Leakage through `claimed`.** The extraction prompt says to record what the
+item asserts "using the item's own framing, including its overstatement if it
+overstates", and `claimed` IS passed to the scorer. So promotional register
+reaches the scoring call after all, just one step removed. The scorer is told to
+score against `demonstrated` and never `claimed`, but the text is in the payload.
+
+These are cheaply distinguishable and the experiment has not been run: score the
+same 175 papers with `claimed` withheld from the scoring payload and compare the
+correlation. If it drops toward zero, the cause is (b) and the fix is to stop
+passing `claimed` to the scorer, keeping it for the gap_flagged check only. If it
+holds near 0.257, the cause is (a) and the rubric is not the problem.
+
+**Until that experiment runs, this is a warning, not a verdict on the rubric.**
+It is still a failure against the spec's stated target, and Phase 5 remains
+blocking either way.
+
+## A second harness defect, found by this run
+
+Storage failed with `invalid input syntax for type integer: "2, "comment":
+"n/a""`. `parseToolScores` validated the dimension blocks but not the scalars, so
+a `translational_distance` carrying the folded remainder of the object reached
+the database. Fixed: scalars are now coerced when recoverable and nulled when
+not, and a bad scalar no longer aborts a run while a bad dimension still does.
+
+Consequence for this run: the correlation above was computed in memory and is
+valid, but nothing was persisted, so the underlying scores are gone and the
+`claimed`-withheld comparison will need a fresh run.

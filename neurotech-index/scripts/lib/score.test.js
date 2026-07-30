@@ -213,3 +213,36 @@ describe('tool-output salvage, from the shape a live run actually produced', () 
     expect(firstJsonObject('{"referent": "he said \\"hi\\"", "score": 1}').score).toBe(1)
   })
 })
+
+describe('scalar fields get the same salvage as the dimension blocks', () => {
+  // A retro run died storing `invalid input syntax for type integer:
+  // "2, "comment": "n/a""` because only the dimensions were validated.
+  const dims = ['FD', 'LV', 'TR']
+  const ok = { FD: { score: 1, referent: 'a' }, LV: { score: 1, referent: 'b' }, TR: { score: 1, referent: 'c' } }
+
+  it('parses a translational_distance with folded junk appended', () => {
+    const { scores } = parseToolScores({ ...ok, translational_distance: '2, "comment": "n/a"' }, dims)
+    expect(scores.translational_distance).toBe(2)
+  })
+
+  it('nulls an unrecoverable translational_distance instead of storing it', () => {
+    for (const v of ['n/a', null, undefined, {}, 9, -1]) {
+      expect(parseToolScores({ ...ok, translational_distance: v }, dims).scores.translational_distance).toBeNull()
+    }
+  })
+
+  it('keeps a clean integer untouched', () => {
+    expect(parseToolScores({ ...ok, translational_distance: 3 }, dims).scores.translational_distance).toBe(3)
+  })
+
+  it('nulls a non-string reason and an out-of-enum uncertainty', () => {
+    const { scores } = parseToolScores({ ...ok, user_facing_reason: { a: 1 }, uncertainty: 'quite' }, dims)
+    expect(scores.user_facing_reason).toBeNull()
+    expect(scores.uncertainty).toBeNull()
+  })
+
+  it('does not report a scalar problem as a malformed DIMENSION', () => {
+    // A bad scalar must not abort the run; a bad dimension must.
+    expect(parseToolScores({ ...ok, translational_distance: 'junk' }, dims).malformed).toEqual([])
+  })
+})
