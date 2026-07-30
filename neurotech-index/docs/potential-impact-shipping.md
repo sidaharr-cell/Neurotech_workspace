@@ -56,7 +56,26 @@ Inspect any scored item at `/impact/<item_type>/<item_id>`, for example
 
 ## Coverage, and what is deliberately absent
 
-- **Research and trials only.** A recent slice was scored, not the whole corpus.
+**676 items are scored.** The intended slice was ~1,600. The scoring run
+exhausted the Anthropic API credit balance partway through, and a 400 for
+insufficient credit is not retryable, so the remainder failed immediately.
+
+The shortfall is NOT random. Extraction rows are read in whatever order Postgres
+returns them, research came first, and credits ran out before trials were
+reached:
+
+| entity | extracted | scored |
+|---|---|---|
+| research | 763 | 600 |
+| feed | 84 | 51 |
+| trial | 761 | **20** |
+| device | 9 | 9 |
+
+So the sort is usable on Research and effectively empty on Trials. Topping the
+trials up needs credit and a re-run of `score-items.js`; extraction is already
+stored, so only the scoring half has to be paid for again.
+
+- **Research is the only well-covered tab.** A recent slice, not the whole corpus.
 - **Devices are excluded on purpose.** Only 6 of 525 in-scope devices from 2020 or
   later carry a description longer than 120 characters; openFDA stores one-line
   product-code sentences. Under the granularity caps that is metadata tier, which
@@ -83,6 +102,31 @@ Inspect any scored item at `/impact/<item_type>/<item_id>`, for example
 4. **Score more of the corpus** once the rubric is settled. Rescoring after a
    rubric change is cheap on extraction, which is stored separately, and
    expensive on scoring.
+
+## Evidence that the evidence multiplier now works
+
+The run before this one had `evidence_grade` as free text, so nearly every value
+fell through to the harshest 0.40 default and spec 5.3's "primary anti-hype
+control" was a near-constant. After constraining it to an enum:
+
+```
+distinct multipliers   0, 0.4, 0.5, 0.65, 0.75, 1.0   (was effectively 0.4 only)
+grades                 124 demonstrated, 200 partial, 282 claimed-only,
+                       13 announced-only, 3 indicative, 2 exploratory,
+                       2 contradicted (gated to zero)
+impact range           0.000 to 5.669                 (was 0.000 to 0.960)
+marker correlation     0.007                          (was about 0.2)
+```
+
+The marker/impact correlation is the number spec 13 calls "the single most
+important here" and wants near zero. At 0.007 on 676 live items it is far closer
+to the target than any retro run managed. That is a genuine improvement and NOT a
+substitute for calibration: it says promotional language does not predict score,
+not that the ordering is right.
+
+50 items carry a null grade, meaning the model returned something unreadable and
+`normalizeGrade` refused to guess. Those take the conservative 0.40 rather than
+being scored as though they were well evidenced.
 
 ## What is verified
 
