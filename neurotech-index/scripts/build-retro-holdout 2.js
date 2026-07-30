@@ -23,14 +23,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const WRITE = process.argv.includes('--write')
 const OUT = join(__dirname, 'data/retro-holdout.json')
 
-// PAGINATED WITH AN EXPLICIT ORDER. Postgres does not guarantee a stable row
-// order across .range() calls without ORDER BY, so pages overlap and gap:
-// a deterministic run produced 301 duplicate trial rows and 212 duplicate
-// research rows that way, while silently missing others.
 async function pageAll(sb, table, select, filt = q => q) {
   const out = []
   for (let f = 0; ; f += 1000) {
-    const { data, error } = await filt(sb.from(table).select(select)).order('id').range(f, f + 999)
+    const { data, error } = await filt(sb.from(table).select(select)).range(f, f + 999)
     if (error) { console.error(`${table}: ${error.message}`); return out }
     if (!data.length) break
     out.push(...data); if (data.length < 1000) break

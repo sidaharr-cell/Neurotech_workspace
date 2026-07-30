@@ -353,7 +353,7 @@ async function run() {
   for (let from = 0; ; from += 1000) {
     const { data, error } = await sb.from('frontier_record_proposals')
       .select('id,subfield,axis,axis_type,proposed_value,item_type,item_id,evidence_grade,rationale,source_url')
-      .eq('status', 'pending').order('id').range(from, from + 999)
+      .eq('status', 'pending').range(from, from + 999)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     if (!data.length) break
     pending.push(...data)

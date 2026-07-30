@@ -51,14 +51,10 @@ const TARGETS = [
  * exist` and told the operator to apply migration 014, which was already
  * applied. Only the target's absence means the migration is missing.
  */
-// PAGINATED WITH AN EXPLICIT ORDER. Postgres does not guarantee a stable row
-// order across .range() calls without ORDER BY, so pages overlap and gap:
-// a deterministic run produced 301 duplicate trial rows and 212 duplicate
-// research rows that way, while silently missing others.
 async function pageAll(sb, table, from, select) {
   const out = []
   for (let offset = 0; ; offset += 1000) {
-    const { data, error } = await sb.from(table).select(select).order('id').range(offset, offset + 999)
+    const { data, error } = await sb.from(table).select(select).range(offset, offset + 999)
     if (error) {
       const missing = /column (\S+) does not exist/i.exec(error.message)?.[1] || ''
       if (missing.includes('legacy_significance')) {

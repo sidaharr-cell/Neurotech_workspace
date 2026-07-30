@@ -260,7 +260,7 @@ async function run() {
     const { data, error } = await sb.from('papers')
       .select('id,title,abstract,year,doi,url,source_url,journal,facet_function,facet_access,facet_application')
       .eq('in_scope', true).gte('year', YEAR_MIN)
-      .lte('year', YEAR_MAX ?? 9999).order('id').range(from, from + 999)
+      .lte('year', YEAR_MAX ?? 9999).range(from, from + 999)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     if (!data.length) break
     papers.push(...data)

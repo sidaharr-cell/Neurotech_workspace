@@ -321,7 +321,7 @@ export async function reconcileChangeLog(sb) {
   const recs = []
   for (let from = 0; ; from += 1000) {
     const { data, error } = await sb.from('frontier_records')
-      .select('id,axis,current_value,record_version').order('id').range(from, from + 999)
+      .select('id,axis,current_value,record_version').range(from, from + 999)
     if (error) return
     if (!data.length) break
     recs.push(...data)
@@ -330,7 +330,7 @@ export async function reconcileChangeLog(sb) {
   const created = new Set()
   for (let from = 0; ; from += 1000) {
     const { data, error } = await sb.from('frontier_record_changes')
-      .select('record_id,field').eq('field', 'created').order('id').range(from, from + 999)
+      .select('record_id,field').eq('field', 'created').range(from, from + 999)
     if (error) return
     if (!data.length) break
     for (const c of data) created.add(c.record_id)

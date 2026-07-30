@@ -1,0 +1,351 @@
+{
+  "_readme": [
+    "Adversarial cases for the eight post-processing validators in section 8 of",
+    "docs/neurobase-potential-impact-build-spec-v1.0.md.",
+    "",
+    "WRITTEN BEFORE THE VALIDATORS EXIST, ON PURPOSE. Phase 4 accepts when 'all",
+    "validation rules in Section 8 fire correctly on constructed adversarial",
+    "cases'. If the cases are written alongside the implementation they inherit",
+    "its blind spots and the acceptance test becomes a mirror. Every case here is",
+    "derived from the SPEC TEXT quoted in `rule_text`, not from any code.",
+    "",
+    "This matters more than usual on this phase. A broken validator does not",
+    "produce a broken-looking score. It produces a normal-looking score for an",
+    "item that should have been reset, and nothing downstream can tell.",
+    "",
+    "Each case gives:",
+    "  rule            which section 8 rule it exercises (1-8)",
+    "  name            what the case is",
+    "  why             what would go wrong if the validator missed it",
+    "  input           the ImpactScore fragment fed to the validator",
+    "  expect          the required outcome after validation",
+    "  expect.reset    the field that must change, and to what",
+    "  expect.unchanged true when the validator must NOT fire",
+    "",
+    "Cases marked `must_not_fire` are as important as the ones that must. A",
+    "validator that resets everything passes every positive case and destroys the",
+    "sort. Roughly half of these exist to catch over-firing."
+  ],
+
+  "rules": {
+    "1": "Any dimension score above 0 with an empty or generic `referent` is reset to 0.",
+    "2": "`LV >= 2` with an empty `beneficiaries` array is reset to 1.",
+    "3": "`GATE >= 2` with an empty or generic `unlocks` array is reset to 1. Maintain a reject list of generic strings (\"advance the field\", \"help patients\", \"improve outcomes\").",
+    "4": "`FD > 0` or `GAP > 0` with an empty `frontier_records_consulted` is reset to 0.",
+    "5": "`FD == 4` without two named paired axes is reset to 3.",
+    "6": "`record_update_proposed` is discarded if evidence grade is below `demonstrated`.",
+    "7": "`user_facing_reason` containing rubric vocabulary (dimension names, \"score\", \"rubric\", \"frontier delta\", \"leverage\") is regenerated. Cap at two attempts, then fall back to a templated sentence from the tags.",
+    "8": "If `claimed` and `demonstrated` diverge materially, set `gap_flagged: true`."
+  },
+
+  "cases": [
+    {
+      "rule": 1,
+      "name": "empty referent on a scoring dimension",
+      "why": "A score with nothing to point at is an unanchored judgement, which is the failure the whole rubric exists to prevent.",
+      "input": { "FD": { "score": 3, "justification": "Opens a new axis.", "referent": "" } },
+      "expect": { "reset": { "FD.score": 0 } }
+    },
+    {
+      "rule": 1,
+      "name": "whitespace-only referent",
+      "why": "An empty string is the obvious case; a validator that only checks for '' misses the one a model actually emits.",
+      "input": { "TR": { "score": 2, "justification": "Transfers across platforms.", "referent": "   " } },
+      "expect": { "reset": { "TR.score": 0 } }
+    },
+    {
+      "rule": 1,
+      "name": "missing referent key entirely",
+      "why": "Absent is not the same as empty, and a validator keyed on `=== ''` lets it through.",
+      "input": { "LV": { "score": 3, "justification": "Removes a bottleneck." } },
+      "expect": { "reset": { "LV.score": 0 } }
+    },
+    {
+      "rule": 1,
+      "name": "generic referent that names nothing",
+      "why": "The spec says empty OR GENERIC. 'the study' points at nothing checkable and is how an unanchored score disguises itself.",
+      "input": { "FD": { "score": 2, "justification": "Moves a record.", "referent": "the study" } },
+      "expect": { "reset": { "FD.score": 0 } }
+    },
+    {
+      "rule": 1,
+      "name": "score of 0 with no referent",
+      "why": "The rule applies only ABOVE 0. Resetting a 0 is harmless but a validator that fires here is not reading the condition.",
+      "input": { "FD": { "score": 0, "justification": "No relationship to any record.", "referent": "" } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 1,
+      "name": "specific quoted referent",
+      "why": "The commonest over-fire: a real referent rejected because it is short.",
+      "input": { "FD": { "score": 3, "justification": "First chronic report.", "referent": "128-channel array, 41 months in vivo" } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 2,
+      "name": "LV 2 with no beneficiaries",
+      "why": "Spec 5.1.2 calls this the anti-hallucination control: if the model cannot name who benefits, it invented the constraint.",
+      "input": { "LV": { "score": 2, "justification": "Relieves a shared constraint.", "referent": "released protocol", "beneficiaries": [] } },
+      "expect": { "reset": { "LV.score": 1 } }
+    },
+    {
+      "rule": 2,
+      "name": "LV 4 with no beneficiaries",
+      "why": "The reset target is 1, not 'one less'. A validator that decrements instead of setting 1 leaves a 3 standing.",
+      "input": { "LV": { "score": 4, "justification": "Changes what is feasible for a device class.", "referent": "open hardware", "beneficiaries": [] } },
+      "expect": { "reset": { "LV.score": 1 } }
+    },
+    {
+      "rule": 2,
+      "name": "LV 2 whose only beneficiary is the authors",
+      "why": "Spec 5.1.2 requires a party OTHER than the authors. Naming yourself is not leverage.",
+      "input": { "LV": { "score": 3, "justification": "Removes our own bottleneck.", "referent": "in-house tool", "beneficiaries": ["the authors"] } },
+      "expect": { "reset": { "LV.score": 1 } }
+    },
+    {
+      "rule": 2,
+      "name": "LV 1 with no beneficiaries",
+      "why": "The rule is LV >= 2. A 1 is defined as a constraint local to the authors, so it needs no external beneficiary.",
+      "input": { "LV": { "score": 1, "justification": "Relieves a local constraint.", "referent": "own rig", "beneficiaries": [] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 2,
+      "name": "LV 3 with a named external beneficiary",
+      "why": "Must survive. Over-firing here removes the entire leverage path, which spec 6 says exists to catch the boring-but-important items.",
+      "input": { "LV": { "score": 3, "justification": "Removes a subfield bottleneck.", "referent": "released fabrication protocol", "beneficiaries": ["academic groups without cleanroom access"] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 3,
+      "name": "GATE 3 with empty unlocks",
+      "why": "Spec 5.2.2 requires the specific approval, pathway, indication or coverage decision at stake.",
+      "input": { "GATE": { "score": 3, "justification": "Establishes a pathway.", "referent": "pivotal design", "unlocks": [] } },
+      "expect": { "reset": { "GATE.score": 1 } }
+    },
+    {
+      "rule": 3,
+      "name": "GATE 2 unlocking 'advance the field'",
+      "why": "Named verbatim in the spec's reject list. This is the canonical generic entry.",
+      "input": { "GATE": { "score": 2, "justification": "Supports approval.", "referent": "endpoint", "unlocks": ["advance the field"] } },
+      "expect": { "reset": { "GATE.score": 1 } }
+    },
+    {
+      "rule": 3,
+      "name": "GATE 4 unlocking 'help patients'",
+      "why": "Second entry in the spec's reject list, at the top of the scale where the damage is largest.",
+      "input": { "GATE": { "score": 4, "justification": "Gates class access.", "referent": "pivotal", "unlocks": ["help patients"] } },
+      "expect": { "reset": { "GATE.score": 1 } }
+    },
+    {
+      "rule": 3,
+      "name": "GATE 3 unlocking 'improve outcomes'",
+      "why": "Third entry in the spec's reject list.",
+      "input": { "GATE": { "score": 3, "justification": "Pathway.", "referent": "trial", "unlocks": ["improve outcomes"] } },
+      "expect": { "reset": { "GATE.score": 1 } }
+    },
+    {
+      "rule": 3,
+      "name": "GATE 3 with one generic and one specific unlock",
+      "why": "A mixed array must survive on the specific entry. Rejecting the whole array because one element is generic destroys a legitimate score.",
+      "input": { "GATE": { "score": 3, "justification": "Predicate for a category.", "referent": "De Novo request", "unlocks": ["help patients", "De Novo classification for closed-loop DBS in dystonia"] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 3,
+      "name": "GATE 4 with a specific coverage decision",
+      "why": "Must survive. The gate path is how pivotal trials rank at all.",
+      "input": { "GATE": { "score": 4, "justification": "First-in-class reimbursement.", "referent": "CMS submission", "unlocks": ["CMS national coverage determination for implanted BCI"] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 4,
+      "name": "FD 2 with no records consulted",
+      "why": "A frontier delta against nothing is not a delta. This is the rule that keeps FD anchored to the record layer.",
+      "input": { "FD": { "score": 2, "justification": "Beats the record.", "referent": "62 wpm" }, "frontier_records_consulted": [] },
+      "expect": { "reset": { "FD.score": 0 } }
+    },
+    {
+      "rule": 4,
+      "name": "GAP 3 with no records consulted",
+      "why": "Spec 5.2.1 states it directly: a GAP above 0 with an empty consulted list is rejected.",
+      "input": { "GAP": { "score": 3, "justification": "First adequately powered test.", "referent": "n = 200" }, "frontier_records_consulted": [] },
+      "expect": { "reset": { "GAP.score": 0 } }
+    },
+    {
+      "rule": 4,
+      "name": "FD 3 on a new axis, records consulted but none matched",
+      "why": "THE SUBTLE ONE. FD 3 means no record existed for this axis. The consulted list is non-empty (the subfield's records were checked) even though none matched. A validator that reads 'no matching record' as 'no records consulted' makes FD 3 permanently unreachable.",
+      "input": { "FD": { "score": 3, "justification": "Opens an axis with no prior record.", "referent": "first chronic charge-density figure" }, "frontier_records_consulted": ["rec-a", "rec-b", "rec-c", "rec-d", "rec-e", "rec-f"] },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 4,
+      "name": "FD 0 with no records consulted",
+      "why": "Spec 7.1.3 says an empty record set is expected and not a failure. FD is already 0; nothing to reset.",
+      "input": { "FD": { "score": 0, "justification": "No record to compare against.", "referent": "" }, "frontier_records_consulted": [] },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 4,
+      "name": "LV 3 with no records consulted",
+      "why": "The rule names FD and GAP only. Leverage does not need a frontier record, and spec 6 depends on the leverage path working when the record layer is empty.",
+      "input": { "LV": { "score": 3, "justification": "Removes a bottleneck.", "referent": "released dataset", "beneficiaries": ["other labs"] }, "frontier_records_consulted": [] },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 5,
+      "name": "FD 4 with no paired axes named",
+      "why": "Spec 5.1.1: a 4 MUST name both paired axes and why the tradeoff was binding.",
+      "input": { "FD": { "score": 4, "justification": "Collapses a tradeoff.", "referent": "1024ch at 5 years", "paired_axes": [] } },
+      "expect": { "reset": { "FD.score": 3 } }
+    },
+    {
+      "rule": 5,
+      "name": "FD 4 naming only one axis",
+      "why": "A tradeoff needs two sides. One named axis is an improvement claim, not a collapse.",
+      "input": { "FD": { "score": 4, "justification": "Improves channel count.", "referent": "1024ch", "paired_axes": ["channel count"] } },
+      "expect": { "reset": { "FD.score": 3 } }
+    },
+    {
+      "rule": 5,
+      "name": "FD 4 naming the same axis twice",
+      "why": "Two entries that are one axis satisfy a naive length check and are still not a pair.",
+      "input": { "FD": { "score": 4, "justification": "Collapses a tradeoff.", "referent": "1024ch", "paired_axes": ["channel count", "channel count"] } },
+      "expect": { "reset": { "FD.score": 3 } }
+    },
+    {
+      "rule": 5,
+      "name": "FD 4 with two named axes",
+      "why": "Must survive, or the top of the frontier scale is unreachable and FD 4 becomes decorative.",
+      "input": { "FD": { "score": 4, "justification": "Improved channel count without the usual loss of chronic viability.", "referent": "1024 channels at 5 years in vivo", "paired_axes": ["channel count", "chronic viability"] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 5,
+      "name": "FD 3 with no paired axes",
+      "why": "The rule applies to FD == 4 only. Requiring a pair at 3 would break 'opens a new axis', which has no pair by definition.",
+      "input": { "FD": { "score": 3, "justification": "Opens a new axis.", "referent": "first figure of its kind", "paired_axes": [] } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 6,
+      "name": "record update proposed on a claimed-only item",
+      "why": "Spec 3.1: claims never update a record. A bad record poisons every later comparison in its subfield.",
+      "input": { "evidence_grade": "claimed-only", "record_update_proposed": { "axis": "channel count", "proposed_value": "4096 channels" } },
+      "expect": { "reset": { "record_update_proposed": null } }
+    },
+    {
+      "rule": 6,
+      "name": "record update proposed on a partial-grade item",
+      "why": "`partial` is below `demonstrated` in the 5.3.1 table, so it is discarded too.",
+      "input": { "evidence_grade": "partial", "record_update_proposed": { "axis": "chronic viability", "proposed_value": "7 years" } },
+      "expect": { "reset": { "record_update_proposed": null } }
+    },
+    {
+      "rule": 6,
+      "name": "record update proposed on an announced-only trial",
+      "why": "The trial-variant equivalent of claimed-only, from the 5.3.2 table.",
+      "input": { "evidence_grade": "announced-only", "record_update_proposed": { "axis": "largest cohort", "proposed_value": "n = 500" } },
+      "expect": { "reset": { "record_update_proposed": null } }
+    },
+    {
+      "rule": 6,
+      "name": "record update proposed on a demonstrated item",
+      "why": "Must survive, or the record layer can never be updated by the pipeline and goes stale. Spec 13 monitors that rate.",
+      "input": { "evidence_grade": "demonstrated", "record_update_proposed": { "axis": "channel count", "proposed_value": "1024 channels" } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 6,
+      "name": "record update proposed on a replicated item",
+      "why": "`replicated` is ABOVE demonstrated. A validator comparing strings rather than rank order can easily discard it.",
+      "input": { "evidence_grade": "replicated", "record_update_proposed": { "axis": "decoding rate", "proposed_value": "78 wpm" } },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+
+    {
+      "rule": 7,
+      "name": "reason containing a dimension name",
+      "why": "Spec 9.1: no dimension names in the user-facing surface. Users would have to learn the rubric to read it.",
+      "input": { "user_facing_reason": "Scores highly on frontier delta because it beats the prior record." },
+      "expect": { "regenerate": true }
+    },
+    {
+      "rule": 7,
+      "name": "reason containing the word score",
+      "why": "Named explicitly in the rule's vocabulary list.",
+      "input": { "user_facing_reason": "The highest score in this subfield this year." },
+      "expect": { "regenerate": true }
+    },
+    {
+      "rule": 7,
+      "name": "reason containing the word rubric",
+      "why": "Named explicitly in the rule's vocabulary list.",
+      "input": { "user_facing_reason": "Meets the rubric threshold for a new direction." },
+      "expect": { "regenerate": true }
+    },
+    {
+      "rule": 7,
+      "name": "reason containing leverage as rubric vocabulary",
+      "why": "Named in the rule. Harder than it looks: see the next case.",
+      "input": { "user_facing_reason": "Ranks on leverage rather than on a frontier movement." },
+      "expect": { "regenerate": true }
+    },
+    {
+      "rule": 7,
+      "name": "reason using leverage as ordinary English",
+      "why": "THE TRAP. A blanket substring ban on 'leverage' rejects a plain-language sentence that is exactly what section 9.2 asks for. The rule bans rubric VOCABULARY, not English words.",
+      "input": { "user_facing_reason": "The technique leverages existing surgical tooling, so no new instrument is needed." },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 7,
+      "name": "a clean plain-language reason",
+      "why": "Taken from the register examples in spec 9.2. Must survive untouched.",
+      "input": { "user_facing_reason": "Roughly doubles reported chronic electrode viability compared with the previous best in this class." },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 7,
+      "name": "regeneration exhausts its two attempts",
+      "why": "The rule caps at two attempts then falls back to a templated sentence from the tags. Without the cap this loops forever on a stubborn model.",
+      "input": { "user_facing_reason": "Frontier delta of 3.", "regeneration_attempts": 2, "tags": ["Opens a new direction"] },
+      "expect": { "fallback_to_template": true }
+    },
+
+    {
+      "rule": 8,
+      "name": "claim with nothing demonstrated",
+      "why": "Spec 5.3.3: if an item announces a capability and shows data for a weaker one, score the weaker and set gap_flagged.",
+      "input": { "claimed": "Restores natural speech.", "demonstrated": null },
+      "expect": { "reset": { "gap_flagged": true } }
+    },
+    {
+      "rule": 8,
+      "name": "claim materially exceeding what was shown",
+      "why": "The substantive case: both fields are populated but they are not the same claim.",
+      "input": { "claimed": "Restores natural speech in people with paralysis.", "demonstrated": "Decoded 62 words per minute from a 50-word vocabulary in one participant." },
+      "expect": { "reset": { "gap_flagged": true } }
+    },
+    {
+      "rule": 8,
+      "name": "claim matching what was shown",
+      "why": "Must NOT fire. If gap_flagged fires on everything it stops distinguishing anything, and the disclosure tags in 9.2 become noise.",
+      "input": { "claimed": "Decoded 62 words per minute in one participant.", "demonstrated": "Decoded 62 words per minute in one participant with ALS." },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    },
+    {
+      "rule": 8,
+      "name": "registered trial that has not reported",
+      "why": "A trial demonstrates nothing yet BY DEFINITION. Spec 5.2.4 handles trial quality through the design-quality grade, not through this flag. Firing here flagged 6 of 8 sampled trials during Phase 3.",
+      "input": { "entity_type": "trial", "claimed": "Will test whether closed-loop stimulation reduces seizure frequency.", "demonstrated": "A randomized sham-controlled design able to establish whether closed-loop stimulation reduces seizure frequency in drug-resistant epilepsy." },
+      "expect": { "unchanged": true, "must_not_fire": true }
+    }
+  ]
+}
