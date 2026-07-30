@@ -13,7 +13,8 @@
     "test": "vitest run",
     "validate:funding": "node --env-file-if-exists=.env scripts/validate-funding.js",
     "verify:funding": "node --env-file-if-exists=.env scripts/verify-funding.js",
-    "verify:cron": "node --env-file-if-exists=.env scripts/verify-cron.js"
+    "verify:cron": "node --env-file-if-exists=.env scripts/verify-cron.js",
+    "verify:frontier": "node --env-file-if-exists=.env scripts/check-frontier-schema.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",

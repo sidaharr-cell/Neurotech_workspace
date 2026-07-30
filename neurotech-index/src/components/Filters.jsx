@@ -4,6 +4,7 @@ import {
   FUNCTION, ACCESS, APPLICATION,
   FUNCTION_LABEL, ACCESS_LABEL, APPLICATION_LABEL,
 } from '../lib/facets'
+import { FLAGS } from '../lib/flags'
 
 /**
  * Filters.jsx — compact dropdown filter control, plus the option sets each page
@@ -45,6 +46,30 @@ export const SORT_DATE = [ // devices: no ranking score, date only
   { id: 'newest', label: 'Newest' },
   { id: 'oldest', label: 'Oldest' },
 ]
+
+/**
+ * The potential-impact sort option, spec 9.2. Appended to a tab's sort list only
+ * when FLAGS.POTENTIAL_IMPACT is on, and never as the first entry: spec 11 makes
+ * Phase 5 blocking for the DEFAULT sort and Phase 5 has not passed
+ * (docs/potential-impact-phase5-result.md). Putting it first would make it the
+ * default by position even with the default flag off.
+ */
+export const SORT_POTENTIAL_IMPACT = { id: 'impact', label: 'Highest potential impact' }
+
+export function withPotentialImpact(sorts) {
+  if (!FLAGS.POTENTIAL_IMPACT) return sorts
+  return [...sorts, SORT_POTENTIAL_IMPACT]
+}
+
+/** Horizon toggle, spec 9.2. A toggle rather than a blended list, because
+ *  "what is close to patients" and "what will matter eventually" are both
+ *  coherent asks and one blended list serves neither. */
+export const HORIZON = [
+  { id: 'near', label: 'Near term' },
+  { id: 'medium', label: 'Medium term' },
+  { id: 'long', label: 'Long term' },
+]
+
 export const TRIAL_PHASE = [
   { id: 'Phase 1', label: 'Phase 1' },
   { id: 'Phase 2', label: 'Phase 2' },

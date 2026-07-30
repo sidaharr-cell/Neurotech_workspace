@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
-import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT } from '../components/Filters'
+import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT, withPotentialImpact } from '../components/Filters'
 import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { KindBadge, ReproBadges } from '../components/PaperSignals'
@@ -124,7 +124,7 @@ export default function Research() {
           histogram={histogram}
           year={year}
           onYear={setYear}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required />}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT)} required />}
           extras={[
             { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
             { label: 'Publication date', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
@@ -136,7 +136,7 @@ export default function Research() {
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
             <div className="flex items-center gap-3">
               {queryItem && <StarButton item={queryItem} />}
-              <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_IMPACT} required /></div>
+              <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT)} required /></div>
             </div>
           </div>
 

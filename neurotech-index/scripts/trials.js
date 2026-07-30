@@ -6,6 +6,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
 import { classify } from '../src/lib/classify.js'
+import { trialDesign } from './lib/trial-design.js'
 
 const UA = 'Mozilla/5.0 (compatible; NeuroBaseBot/1.0; +https://neurobase.app)'
 
@@ -59,6 +60,10 @@ export async function fetchTrials(maxPerTerm = 1600) {
           hasResults: !!s.hasResults,
           conditions, interventions,
           summary: (p.descriptionModule?.briefSummary || '').replace(/\s+/g, ' ').trim(),
+          // Endpoints, arm types and masking. Potential-impact scoring reads
+          // these for METH 3/4 and for the design-quality grade; nothing else
+          // in the app uses them yet. See scripts/lib/trial-design.js.
+          design: trialDesign(s),
           startDate: toIso(p.statusModule?.startDateStruct?.date),
           url: `https://clinicaltrials.gov/study/${nctId}`,
           tags: deriveTags(`${title} ${conditions.join(' ')} ${interventions.join(' ')} ${p.descriptionModule?.briefSummary || ''}`),
@@ -127,6 +132,7 @@ export function trialToRow(t) {
       enrollment: t.enrollment, hasResults: t.hasResults,
       conditions: t.conditions, interventions: t.interventions,
       rankScore: score,
+      ...(t.design ? { design: t.design } : {}),
     },
   }
   return { ...row, ...classify(row, 'trials') }   // facet_* + in_scope + classifier_version
