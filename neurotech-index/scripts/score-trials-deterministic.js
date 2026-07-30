@@ -55,8 +55,17 @@ async function pageAll(sb, table, select, filt = q => q) {
   return out
 }
 
-/** One trial, end to end. Pure: no I/O, no model. */
-export function scoreTrial(trial, evidenceByIndication, peerCounts = {}) {
+/**
+ * One trial, end to end. Pure: no I/O, no model.
+ *
+ * `opts.asOf` exists so the Phase 5 retro can evaluate a 2017 trial as of 2019
+ * rather than as of today, and `opts.runLabel` / `opts.rubricVersion` so those
+ * rows land outside the live sort. They are the ONLY things the calibration
+ * changes: it runs this function, not a copy of it, because a calibration that
+ * measures a parallel implementation measures nothing about what ships.
+ */
+export function scoreTrial(trial, evidenceByIndication, peerCounts = {}, opts = {}) {
+  const { asOf = null, runLabel = RUN_LABEL, rubricVersion = RUBRIC_VERSION } = opts
   const m = trial.metadata || {}
   const design = m.design
   if (!design) return null
@@ -99,13 +108,13 @@ export function scoreTrial(trial, evidenceByIndication, peerCounts = {}) {
   const composed = compose({
     ...validated, entity_type: 'trial',
     recency_date: m.lastChanged || trial.published_at,
-  })
+  }, { asOf })
 
   return {
     row: {
       item_type: 'news_feed', item_id: trial.id, entity_type: 'trial',
       subfield: subfieldFor(trial) || null,
-      rubric_version: RUBRIC_VERSION, model: null,
+      rubric_version: rubricVersion, model: null,
       potential_impact: composed.potential_impact,
       path_taken: composed.path_taken, base: composed.base,
       multiplier: composed.multiplier, recency: composed.recency,
@@ -128,10 +137,10 @@ export function scoreTrial(trial, evidenceByIndication, peerCounts = {}) {
       user_facing_reason: validated.user_facing_reason,
       reason_from_template: true,
       tags: tagsFor(validated), horizon: horizonFor(validated.translational_distance),
-      run_label: RUN_LABEL,
+      run_label: runLabel,
     },
     resets: resets.map(r => ({
-      item_type: 'news_feed', item_id: trial.id, run_label: RUN_LABEL,
+      item_type: 'news_feed', item_id: trial.id, run_label: runLabel,
       rule: r.rule, field: r.field,
       from_value: r.from == null ? null : String(r.from),
       to_value: r.to == null ? null : String(r.to),

@@ -39,8 +39,9 @@ dedup-log-*.json
 
 # Duplicate-copy artifacts ("foo 2.js") from file-sync tooling. They are stale
 # copies, never edited, and a `git add -A` sweeps them in silently.
-* 2.js
-* 2.jsx
-* 2.json
-* 2.sql
-* 2.md
+# Any digit, not just 2: the sync tool went on to produce a set of "foo 3.js".
+* [0-9].js
+* [0-9].jsx
+* [0-9].json
+* [0-9].sql
+* [0-9].md
