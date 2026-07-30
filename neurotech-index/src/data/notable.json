@@ -13,27 +13,10 @@
     "doi": "10.1186/s13062-026-00778-4",
     "url": "https://doi.org/10.1186/s13062-026-00778-4",
     "publishedAt": "2026-05-06",
-    "pctile": 0.99617406,
-    "fwci": 24.994,
+    "pctile": 0.99588614,
+    "fwci": 24.3583,
     "citedBy": 3,
     "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
-  },
-  {
-    "title": "Technologies in clinical neurophysiology for brain-body interfacing: IFCN handbook chapter.",
-    "authors": [
-      "Andrea Cimolato",
-      "Anna Sparapani",
-      "Stanisa Raspopovic"
-    ],
-    "journal": "Clinical Neurophysiology",
-    "pmid": "42115034",
-    "doi": "10.1016/j.clinph.2026.2111913",
-    "url": "https://doi.org/10.1016/j.clinph.2026.2111913",
-    "publishedAt": "2026-05-01",
-    "pctile": 0.99596808,
-    "fwci": 25.6861,
-    "citedBy": 2,
-    "significance": "This handbook establishes clinical neurophysiology as the foundational discipline for developing brain-body interfaces to restore movement and sensation after neurological injury."
   },
   {
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
@@ -61,51 +44,6 @@
     "significance": "This work represents a major milestone in clinical neurotechnology by demonstrating that intracortical BCIs can move beyond laboratory settings into practical independent use. The achievement of naturalistic speech decoding and reliable cursor control with at-home operation and minimal supervision addresses the most critical barrier to clinical adoption: sustained, unsupervised performance in real-world conditions. For neurotech practitioners, this validates the pathway toward implantable BCI systems that genuinely restore communication and digital access for people with severe paralysis."
   },
   {
-    "title": "Fronto-insular circuit mechanisms of accelerated intermittent theta burst stimulation.",
-    "authors": [
-      "Shane B Johnson",
-      "Devin Rocks",
-      "Laura Chalençon",
-      "Kenneth Johnson",
-      "Umair Hassan",
-      "Anisul Arefin",
-      "Gülcan Akgül",
-      "Alexander Donatelle",
-      "Henry Asher",
-      "Immanuel Elbau",
-      "David Estrin",
-      "Rebecca Zhang",
-      "Alexandra Lenz",
-      "Rachel Mikofsky",
-      "Cory Knox",
-      "Rachael Han",
-      "Pooja Suganthan",
-      "Tahrima Chowdhury",
-      "Christine Kuang",
-      "Daniel Shaver",
-      "Parsa Nilchian",
-      "Puja Parekh",
-      "Jacob Roshgadol",
-      "Natalia DeMarco Garcia",
-      "Matthew Wright",
-      "Lindsay Victoria",
-      "Benjamin Zebley",
-      "Joshua Levitz",
-      "Corey J Keller",
-      "Aaron D Boes",
-      "Conor Liston"
-    ],
-    "journal": "Cell",
-    "pmid": "42102818",
-    "doi": "10.1016/j.cell.2026.04.030",
-    "url": "https://doi.org/10.1016/j.cell.2026.04.030",
-    "publishedAt": "2026-05-01",
-    "pctile": 0.99537826,
-    "fwci": 23.8055,
-    "citedBy": 3,
-    "significance": "This paper identifies the specific brain circuits and cellular mechanisms through which accelerated TMS produces rapid antidepressant effects, enabling optimization of depression treatment parameters."
-  },
-  {
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -128,27 +66,10 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99184749,
-    "fwci": 24.6937,
+    "pctile": 0.99164762,
+    "fwci": 24.3583,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
-  },
-  {
-    "title": "Circuit-Targeted TMS for PTSD: Where, When, How, and for Whom?",
-    "authors": [
-      "Ryan D Webler",
-      "Joshua C Brown",
-      "Shan H Siddiqi"
-    ],
-    "journal": "American Journal of Psychiatry",
-    "pmid": "42062813",
-    "doi": "10.1176/appi.ajp.20260231",
-    "url": "https://doi.org/10.1176/appi.ajp.20260231",
-    "publishedAt": "2026-05-01",
-    "pctile": 0.99161135,
-    "fwci": 20.0588,
-    "citedBy": 1,
-    "significance": "I don't have access to the abstract, but based on the title: this paper advances personalized PTSD treatment by defining optimal transcranial magnetic stimulation targeting strategies for specific neural circuits."
   },
   {
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
