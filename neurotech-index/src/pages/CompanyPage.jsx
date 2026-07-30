@@ -75,6 +75,58 @@ function BizProv({ confidence, text }) {
   )
 }
 
+/**
+ * Every Form D behind the total, one row per filing.
+ *
+ * The total is a sum, so it has no single source document. Listing the filings
+ * is the only way a reader can check it: the amounts here add up to the figure
+ * above, and each accession number opens the filing it was read from.
+ */
+function FundingFilings({ rounds }) {
+  const list = [...(rounds || [])].filter(r => r.sourceUrl).sort((a, b) => (a.date < b.date ? 1 : -1))
+  if (!list.length) return null
+  return (
+    <div className="mt-5">
+      <h4 className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2">
+        Filings behind this total
+      </h4>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[420px] text-[12.5px] font-sans border-collapse">
+          <caption className="sr-only">
+            SEC Form D filings this company&apos;s funding total was read from, newest first.
+          </caption>
+          <thead>
+            <tr className="text-[10px] uppercase tracking-[0.08em] text-muted/70 text-left border-b border-rule">
+              <th scope="col" className="py-1.5 pr-3 font-semibold">Filed</th>
+              <th scope="col" className="py-1.5 pr-3 font-semibold text-right">Amount</th>
+              <th scope="col" className="py-1.5 font-semibold">Filing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map(r => (
+              <tr key={r.accession || r.sourceUrl} className="border-b border-rule-soft">
+                <td className="py-1.5 pr-3 font-mono tabular-nums text-muted whitespace-nowrap">
+                  {fmtMonthYear(r.date)}
+                </td>
+                <td className="py-1.5 pr-3 font-mono tabular-nums text-right text-ink whitespace-nowrap">
+                  {r.amountUsd ? `$${r.amountUsd.toLocaleString()}` : 'Undisclosed'}
+                </td>
+                <td className="py-1.5">
+                  <a href={r.sourceUrl} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-accent hover:underline font-mono text-[11.5px]">
+                    {r.accession || 'View on EDGAR'}
+                    <ExternalLink className="w-3 h-3 shrink-0" />
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 /** Funding raised per calendar year, from dated rounds. */
 function FundingTimeline({ rounds }) {
   const byYear = {}
@@ -446,14 +498,18 @@ export default function CompanyPage() {
                 )}
               </div>
               <FundingTimeline rounds={company.fundingRounds} />
+              <FundingFilings rounds={company.fundingRounds} />
               <BizProv confidence={company.fundingSource === 'sec' ? 'high' : 'low'}
                 text={company.fundingSource === 'sec'
                   ? 'SEC EDGAR Form D filings. Private capital only, so a figure for a company that has since listed or been acquired excludes what it raised afterwards. Undisclosed amounts are shown as undisclosed; none are estimated.'
                   : 'Not traceable to an SEC filing. Lower confidence; no amount is estimated.'} />
-              {company.fundingSourceUrl && (
+              {/* The stored URL is the most recent filing, not the source of the
+                  total, which is a sum across all of them. It is only worth
+                  showing when the filing list itself is unavailable. */}
+              {company.fundingSourceUrl && !company.fundingRounds?.some(r => r.sourceUrl) && (
                 <p className="text-[12px] font-sans text-muted mt-1">
                   <a href={company.fundingSourceUrl} target="_blank" rel="noreferrer"
-                    className="text-accent hover:underline">Filing this figure was read from</a>
+                    className="text-accent hover:underline">Most recent filing on record</a>
                 </p>
               )}
             </>
