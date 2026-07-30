@@ -189,7 +189,7 @@ const fmtPairs = pairs => (pairs.length
   : '')
 
 /** Build the exact prompt for an item. Exported so it is testable without a model. */
-export function buildPrompt({ extraction, entityType, records = [], axisPairs = [], fdCeiling = 4 }) {
+export function buildPrompt({ extraction, entityType, records = [], axisPairs = [], fdCeiling = 4, withholdClaimed = false }) {
   const isTrial = entityType === 'trial'
   return SCORING_PROMPT
     .replace('{DIM}', isTrial ? 'GAP' : 'FD')
@@ -197,7 +197,13 @@ export function buildPrompt({ extraction, entityType, records = [], axisPairs = 
     .replace('{records}', fmtRecords(records))
     .replace('{pairs}', isTrial ? '' : fmtPairs(axisPairs))
     .replace('{extraction}', JSON.stringify({
-      claimed: extraction.claimed,
+      // withholdClaimed closes the last channel by which promotional register
+      // can reach the scorer. `claimed` is recorded in the item's own framing
+      // "including its overstatement", so passing it hands the model the
+      // rhetoric that rhetorical_markers was withheld to keep out. Used to test
+      // whether the observed marker/impact correlation is leakage or a real
+      // property of scientific writing.
+      ...(withholdClaimed ? {} : { claimed: extraction.claimed }),
       demonstrated: extraction.demonstrated,
       quantitative_results: extraction.quantitative_results,
       methods_disclosed: extraction.methods_disclosed,

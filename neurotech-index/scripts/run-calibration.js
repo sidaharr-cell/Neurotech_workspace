@@ -51,6 +51,7 @@ const AS_OF = '2019-12-31'
 const RUN_LABEL = argOf('--run-label', 'retro-2016')
 const RESEARCH_ONLY = process.argv.includes('--research-only')
 const COMMIT = process.argv.includes('--commit')
+const WITHHOLD_CLAIMED = process.argv.includes('--withhold-claimed')
 const CONCURRENCY = 6
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
@@ -117,7 +118,7 @@ async function scoreRetro(anthropic, { item, entityType, subfield, records, axis
   const sResp = await withRetry(() => anthropic.messages.create({
     model: MODEL, max_tokens: 2500,
     tools: [SCORING_TOOL(entityType)], tool_choice: { type: 'tool', name: 'record_scores' },
-    messages: [{ role: 'user', content: buildPrompt({ extraction, entityType, records, axisPairs, fdCeiling }) }],
+    messages: [{ role: 'user', content: buildPrompt({ extraction, entityType, records, axisPairs, fdCeiling, withholdClaimed: WITHHOLD_CLAIMED }) }],
   }))
   const raw = sResp.content?.find(c => c.type === 'tool_use')?.input
   if (!raw) return null
@@ -313,6 +314,7 @@ async function run() {
   const meanWithout = without.length ? without.reduce((a, s) => a + s.potential_impact, 0) / without.length : 0
 
   console.log('\nHYPE CORRELATION (spec 13: the single most important number)')
+  console.log(`  claimed passed to scorer:         ${WITHHOLD_CLAIMED ? 'NO (withheld)' : 'yes'}`)
   console.log(`  marker/impact correlation:        ${r.toFixed(3)}   (target: near zero)`)
   console.log(`  mean markers, top decile:         ${topMarkers.toFixed(2)}`)
   console.log(`  mean markers, rest:               ${restMarkers.toFixed(2)}`)

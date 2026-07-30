@@ -154,3 +154,75 @@ not, and a bad scalar no longer aborts a run while a bad dimension still does.
 Consequence for this run: the correlation above was computed in memory and is
 valid, but nothing was persisted, so the underlying scores are gone and the
 `claimed`-withheld comparison will need a fresh run.
+
+---
+
+# Third run: `claimed` withheld. The mechanism test is INCONCLUSIVE.
+
+Same 175 papers, same seed, one variable changed: `claimed` removed from the
+scoring payload. Run label `retro-research-noclaim`, 170 scored and stored.
+
+| | claimed passed | claimed withheld |
+|---|---|---|
+| marker/impact correlation | 0.257 | **0.205** |
+| mean markers, top decile | 2.78 | 2.18 |
+| mean markers, rest | 1.70 | 1.90 |
+| top-decile excess | **+63%** | **+15%** |
+| mean impact with markers | 0.325 | 0.296 |
+| mean impact without | 0.195 | 0.188 |
+
+## The drop is in the predicted direction and is NOT statistically significant
+
+Fisher z difference 0.055, SE 0.109, z = 0.50. At n = 170 a change from 0.257 to
+0.205 is indistinguishable from noise. The top-decile marker excess falling from
++63% to +15% is the more striking movement and is subject to the same limitation.
+
+**So the experiment did not settle the mechanism.** It is consistent with partial
+leakage through `claimed` and equally consistent with chance.
+
+What IS solid: the 95% CI on the residual correlation is 0.061 to 0.349, which
+excludes zero. Promotional language tracks score whether or not `claimed` reaches
+the scorer, and the target is near zero. That fails either way.
+
+## Decision taken anyway: withhold `claimed` from the scorer
+
+Adopted despite the inconclusive test, on grounds that do not depend on it.
+`claimed` is recorded in the item's own framing "including its overstatement",
+and the scorer is told to score against `demonstrated` and never against
+`claimed`. Passing it hands the model rhetoric it is instructed not to use, which
+is a channel that should not exist regardless of whether this sample can prove it
+is being used. The only consumer that genuinely needs `claimed` is the
+`gap_flagged` check, which runs in code and can read it directly.
+
+Cost of being wrong: none identified. Benefit if the leakage is real: closes it.
+
+## Where that leaves the residual
+
+A correlation near 0.2 survives with every rhetorical channel this design knows
+about closed. Two candidates remain, and distinguishing them needs a larger
+sample than 170:
+
+1. **A real property of scientific writing.** Papers with stronger results also
+   write more promotionally, so any rubric that tracks result strength will
+   correlate with markers. Under this reading the number is not drift and spec
+   13's "near zero" target may be unattainable rather than unmet.
+2. **Register carried in `demonstrated`.** It is extracted from the same
+   promotional text and may inherit its emphasis even though it is meant to
+   record only what the evidence supports.
+
+Telling these apart needs roughly 800 to 1000 items for the confidence interval
+to separate 0.05 from 0.20, or a paired probe that rewrites abstracts into
+neutral register and rescores.
+
+## Status
+
+Phase 5 remains FAILED and blocking. Three runs, three failures, and the
+diagnosis is now precise about what is known and what is not:
+
+- recall at the top decile is poor (22%) on a confounded trial-heavy test
+- rank discrimination sits at chance (45.7%) on that same confounded test
+- promotional language tracks score at r ~= 0.2, robust to the one channel that
+  could be closed cheaply, and not attributable to it with this sample size
+
+The scores are now persisted, so the next diagnostic costs a query rather than a
+full re-run.
