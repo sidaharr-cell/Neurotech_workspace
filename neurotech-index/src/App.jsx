@@ -9,6 +9,7 @@ import Devices from './pages/Devices'
 import SearchPage from './pages/SearchPage'
 import PersonProfile from './pages/PersonProfile'
 import ItemDetail from './pages/ItemDetail'
+import ImpactInspector from './pages/ImpactInspector'
 import PaperDetail from './pages/PaperDetail'
 import CompanyPage from './pages/CompanyPage'
 import DevicePage from './pages/DevicePage'
@@ -29,6 +30,9 @@ export default function App() {
           <Route path="devices" element={<Devices />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="how-it-works" element={<HowItWorks />} />
+          {/* Internal inspection view, spec 9.3. Gated inside the component by
+              FLAGS.IMPACT_INSPECTOR; it must exist before the sort ships. */}
+          <Route path="impact/:itemType/:itemId" element={<ImpactInspector />} />
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="company/:id" element={<CompanyPage />} />
           <Route path="device/:id" element={<DevicePage />} />

@@ -281,7 +281,49 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
 // on it, flip to false so we stop filtering on it until the migration is applied.
 let dedupReady = true
 
-export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+
+/**
+ * Ids in potential-impact order, plus the user-facing surface for each.
+ * Used by the search functions when sort === 'impact'.
+ *
+ * Only a recent slice of the corpus is scored, so this returns FEWER ids than a
+ * normal page query would match. That is deliberate and visible: an unscored
+ * item does not belong in a ranking that has never evaluated it, and padding the
+ * tail with unscored rows would imply an ordering that does not exist.
+ */
+async function impactOrdered(entityType, { horizon = null, limit = 500 } = {}) {
+  if (!supabase) return { ids: [], surface: {} }
+  let q = supabase.from('impact_scores')
+    .select('item_id,user_facing_reason,tags,horizon,potential_impact')
+    .eq('run_label', 'live').in('entity_type', arr(entityType)).gt('potential_impact', 0)
+  if (horizon) q = q.eq('horizon', horizon)
+  const { data, error } = await q.order('potential_impact', { ascending: false }).limit(limit)
+  if (error || !data) return { ids: [], surface: {} }
+  const surface = {}
+  for (const r of data) {
+    // potential_impact is read for ordering and never carried into the surface,
+    // per spec 9.1.
+    surface[r.item_id] = { impactReason: r.user_facing_reason, impactTags: r.tags || [], horizon: r.horizon }
+  }
+  return { ids: data.map(r => r.item_id), surface }
+}
+
+/**
+ * Fetch rows by id and return them in the id order given, attaching the
+ * user-facing impact surface. Postgres does not preserve `in()` order, so the
+ * ranking has to be reimposed here or the sort silently becomes arbitrary.
+ */
+async function rowsInImpactOrder(table, cols, ids, surface, page, pageSize) {
+  const slice = ids.slice(page * pageSize, page * pageSize + pageSize)
+  if (!slice.length) return { rows: [], total: ids.length }
+  const { data, error } = await supabase.from(table).select(cols).in('id', slice)
+  if (error) return { rows: [], total: 0 }
+  const byId = Object.fromEntries((data || []).map(r => [r.id, r]))
+  const rows = slice.map(id => (byId[id] ? { ...byId[id], ...surface[id] } : null)).filter(Boolean)
+  return { rows, total: ids.length }
+}
+
+export async function searchPapers({ query = '', facets = {}, recency = null, yearRange = null, source = null, sort = 'relevant', horizon = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim()
   const minYear = recencyMinYear(recency)
@@ -303,6 +345,13 @@ export async function searchPapers({ query = '', facets = {}, recency = null, ye
     if (minYear) b = b.gte('year', String(minYear))        // year is 4-digit text → lexical compare is safe
     if (dedupReady) b = b.is('canonical_id', null)         // hide merged duplicate versions (Phase 6)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
+  }
+  // Potential impact, spec 9.2. Flagged off by default; see src/lib/flags.js.
+  if (sort === 'impact') {
+    const { ids, surface } = await impactOrdered('research', { horizon })
+    return rowsInImpactOrder('papers',
+      `id,title,authors,journal,year,doi,url,abstract,pubmed_id,source,${FACET_COLS}`,
+      ids, surface, page, pageSize)
   }
   // Default: OpenAlex field-normalized impact, then year. 'newest' sorts by year.
   // Falls back to year order if rank_score isn't in the table yet.
@@ -676,8 +725,13 @@ export async function searchPatents({ query = '', facets = {}, recency = null, y
 }
 
 /** Server-side paginated search over clinical trials (stored in news_feed). */
-export async function searchTrials({ query = '', facets = {}, recency = null, yearRange = null, phase = null, status = null, sort = 'relevant', page = 0, pageSize = 20 } = {}) {
+export async function searchTrials({ query = '', facets = {}, recency = null, yearRange = null, phase = null, status = null, sort = 'relevant', horizon = null, page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }
+  // Potential impact, spec 9.2. Flagged off by default; see src/lib/flags.js.
+  if (sort === 'impact') {
+    const { ids, surface } = await impactOrdered('trial', { horizon })
+    return rowsInImpactOrder('news_feed', '*', ids, surface, page, pageSize)
+  }
   let q = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'trial')
   if (query.trim()) q = q.ilike('title', `%${query.trim()}%`)
   q = applyFacets(q, facets)
@@ -943,5 +997,237 @@ function normalizeSupabaseResearcher(r) {
     expertise: r.expertise || [],
     notableWork: r.notable_work || [],
     ...facetsOf(r),
+  }
+}
+
+// ── Frontier records ─────────────────────────────────────────────────────────
+// The anchor layer for potential-impact scoring: what the best current result IS
+// on each axis the field measures. Scoring compares an item against these rather
+// than asking whether it is important. See
+// docs/neurobase-potential-impact-build-spec-v1.0.md section 3.1, and migration
+// 011 for the schema.
+//
+// Reads default to LIVE records only. A superseded record is kept forever so
+// historical scores stay reproducible, but scoring an item against a frontier
+// that has already moved is always a bug, so callers have to ask for those
+// explicitly.
+//
+// With no Supabase configured these return empty rather than falling back to
+// static JSON. There is no bundled record set, and an empty set is a supported
+// state throughout the pipeline: spec 7.1.3 caps FD and GAP at 0 and lets the
+// item rank on the leverage or gate path instead.
+
+const FRONTIER_COLS = 'id,subfield,partition_version,axis,axis_type,indication,' +
+  'indication_version,current_value,held_by_type,held_by_id,established_date,' +
+  'confidence,superseded_by,record_version,notes,source,source_url,last_updated'
+
+/**
+ * Frontier records, filtered by any combination of subfield, axis type, and
+ * indication. Querying by subfield and axis type is the retrieval step in spec
+ * 7.1.2; `indication` narrows to the evidence records a trial is scored against.
+ */
+export async function getFrontierRecords({
+  subfield = null, axisType = null, indication = null, includeSuperseded = false,
+} = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_records').select(FRONTIER_COLS)
+  if (!includeSuperseded) q = q.is('superseded_by', null)
+  if (subfield) q = q.in('subfield', arr(subfield))
+  if (axisType) q = q.in('axis_type', arr(axisType))
+  if (indication) q = q.in('indication', arr(indication))
+  const { data, error } = await q.order('subfield').order('axis')
+  if (error) return []
+  return data || []
+}
+
+/** One record, superseded or not. */
+export async function getFrontierRecordById(id) {
+  if (!supabase || !id) return null
+  const { data, error } = await supabase.from('frontier_records')
+    .select(FRONTIER_COLS).eq('id', id).maybeSingle()
+  return error ? null : data
+}
+
+/**
+ * The full revision history of a record, oldest first. Revising a record changes
+ * the score of every item ever compared against it, so "what did this record say
+ * when that item was scored" has to be answerable.
+ */
+export async function getFrontierRecordHistory(id) {
+  if (!supabase || !id) return []
+  const { data, error } = await supabase.from('frontier_record_changes')
+    .select('id,record_id,record_version,field,old_value,new_value,reason,changed_by,changed_at')
+    .eq('record_id', id)
+    .order('record_version', { ascending: true }).order('changed_at', { ascending: true })
+  if (error) return []
+  return data || []
+}
+
+/**
+ * Live record counts per subfield and axis type. Phase 2 accepts when every
+ * subfield has at least three records, and a subfield that stays empty is why
+ * items there can only ever rank on the leverage path (spec 7.1.3), so this is
+ * the number that says whether the record layer is actually bootstrapped.
+ */
+export async function getFrontierCoverage() {
+  const records = await getFrontierRecords()
+  const bySubfield = {}, byIndication = {}
+  for (const r of records) {
+    const s = (bySubfield[r.subfield] ||= { total: 0, axisTypes: {} })
+    s.total++
+    s.axisTypes[r.axis_type] = (s.axisTypes[r.axis_type] || 0) + 1
+    if (r.indication) byIndication[r.indication] = (byIndication[r.indication] || 0) + 1
+  }
+  return { total: records.length, bySubfield, byIndication }
+}
+
+/**
+ * Queued record update proposals. Human-gated: the scorer proposes, nothing
+ * applies itself. Automatic application lets one bad record poison every
+ * subsequent comparison in its subfield, and the resulting scores look normal.
+ */
+export async function getFrontierProposals({ status = 'pending' } = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_record_proposals')
+    .select('id,record_id,subfield,axis,axis_type,indication,proposed_value,' +
+      'item_type,item_id,evidence_grade,rubric_version,rationale,status,' +
+      'reviewed_by,reviewed_at,review_note,created_at')
+  if (status) q = q.in('status', arr(status))
+  const { data, error } = await q.order('created_at', { ascending: false })
+  if (error) return []
+  return data || []
+}
+
+/**
+ * Axis pairs the field treats as a tradeoff, for a subfield or all of them.
+ * FD 4 (spec 5.1.1) is the only score that reads these: an item that improves
+ * one axis without regressing its pair has collapsed the tradeoff. A 4 must cite
+ * `why_binding`, so it is returned rather than summarised away.
+ */
+export async function getAxisPairs({ subfield = null, includeSuperseded = false } = {}) {
+  if (!supabase) return []
+  let q = supabase.from('frontier_axis_pairs')
+    .select('id,subfield,axis_a,axis_b,axis_a_type,axis_b_type,why_binding,strength,source_url,notes,superseded_by,last_updated')
+  if (!includeSuperseded) q = q.is('superseded_by', null)
+  if (subfield) q = q.in('subfield', arr(subfield))
+  const { data, error } = await q.order('subfield').order('axis_a')
+  if (error) return []
+  return data || []
+}
+
+// ── Potential impact, Phase 6 ────────────────────────────────────────────────
+// SHIPPED BEHIND A FLAG. Spec section 0: "Ship behind a flag until Phase 5
+// (calibration) passes", and Phase 5 has NOT passed
+// (docs/potential-impact-phase5-result.md). So this must not become a tab's
+// default sort, and the legacy sort stays in place until it does.
+//
+// Spec 9.1 governs what may be read from here by a page: the ORDER, the single
+// plain sentence in user_facing_reason, the closed tag set, and the horizon.
+// Never potential_impact, never a dimension, never the multiplier. A number the
+// user cannot interpret invites false precision about a judgement this system
+// has explicitly said it cannot make precisely.
+
+/** Is the flagged sort available at all? False when nothing has been scored. */
+export async function potentialImpactReady() {
+  if (!supabase) return false
+  const { count, error } = await supabase.from('impact_scores')
+    .select('id', { count: 'exact' }).eq('run_label', 'live').limit(1)
+  return !error && (count || 0) > 0
+}
+
+const SURFACE_COLS = 'item_type,item_id,entity_type,user_facing_reason,tags,horizon,potential_impact'
+
+/**
+ * Items ordered by potential impact. Returns ids plus the user-facing surface
+ * only; the caller joins to its own rows for titles and links.
+ *
+ * `horizon` filters by translational distance per spec 9.2: near (3-4),
+ * medium (2), long (0-1). It is a toggle rather than a blended list because
+ * "what is close to patients" and "what will matter eventually" are both
+ * coherent asks and one blended list serves neither.
+ */
+export async function getPotentialImpactOrder({
+  entityType = null, horizon = null, limit = 40, runLabel = 'live',
+} = {}) {
+  if (!supabase) return []
+  let q = supabase.from('impact_scores').select(SURFACE_COLS).eq('run_label', runLabel)
+  if (entityType) q = q.in('entity_type', arr(entityType))
+  if (horizon) q = q.eq('horizon', horizon)
+  // Gated items score 0 and must not occupy the head of the list.
+  const { data, error } = await q.gt('potential_impact', 0)
+    .order('potential_impact', { ascending: false }).limit(limit)
+  if (error) return []
+  // potential_impact is deliberately dropped here: spec 9.1 forbids surfacing it,
+  // and stripping it at the data layer means a component cannot render it by
+  // accident.
+  return (data || []).map(({ potential_impact: _hidden, ...surface }) => surface)
+}
+
+/**
+ * The FULL score for one item, for the internal inspection view (spec 9.3).
+ *
+ * "Hiding the numbers means users cannot self-correct for miscalibration and
+ * their disagreement never becomes legible feedback. The inspection view is now
+ * the only place the rubric is visible. It MUST show the full ImpactScore
+ * object for any item, including every justification, referent, consulted
+ * record, gate, flag, and validation reset."
+ *
+ * Given that Phase 5 failed, this is also the practical necessity: when the
+ * order looks wrong, this is where someone finds out why.
+ */
+export async function getImpactScoreDetail(itemType, itemId, runLabel = 'live') {
+  if (!supabase || !itemId) return null
+  const { data: score, error } = await supabase.from('impact_scores')
+    .select('*').eq('item_type', itemType).eq('item_id', itemId)
+    .eq('run_label', runLabel).maybeSingle()
+  if (error || !score) return null
+
+  const [{ data: resets }, { data: extraction }, { data: records }] = await Promise.all([
+    supabase.from('impact_score_resets').select('*')
+      .eq('item_type', itemType).eq('item_id', itemId).eq('run_label', runLabel),
+    supabase.from('item_extractions').select('*')
+      .eq('item_type', itemType).eq('item_id', itemId).maybeSingle(),
+    (score.frontier_records_consulted || []).length
+      ? supabase.from('frontier_records').select('id,subfield,axis,axis_type,current_value,confidence,source_url')
+        .in('id', score.frontier_records_consulted)
+      : Promise.resolve({ data: [] }),
+  ])
+  return { score, resets: resets || [], extraction: extraction || null, consulted: records || [] }
+}
+
+/**
+ * Spec 13 monitoring. Reviewed monthly; with scores hidden from users this is
+ * the primary drift signal.
+ */
+export async function getImpactMonitoring(runLabel = 'live') {
+  if (!supabase) return null
+  const { data: rows, error } = await supabase.from('impact_scores')
+    .select('entity_type,subfield,path_taken,potential_impact,rhetorical_marker_count,tags,input_granularity,gap_flagged')
+    .eq('run_label', runLabel)
+  if (error || !rows?.length) return null
+  const { data: resets } = await supabase.from('impact_score_resets')
+    .select('rule').eq('run_label', runLabel)
+
+  const tally = (arr2, key) => arr2.reduce((a, r) => { const k = r[key] || 'none'; a[k] = (a[k] || 0) + 1; return a }, {})
+  const top50 = [...rows].sort((a, b) => b.potential_impact - a.potential_impact).slice(0, 50)
+
+  // The single most important number in spec 13.
+  const xs = rows.map(r => r.rhetorical_marker_count || 0)
+  const ys = rows.map(r => r.potential_impact)
+  const n = xs.length
+  const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n
+  let num = 0, dx = 0, dy = 0
+  for (let i = 0; i < n; i++) { const a = xs[i] - mx, b = ys[i] - my; num += a * b; dx += a * a; dy += b * b }
+
+  return {
+    scored: n,
+    entityTypeTop50: tally(top50, 'entity_type'),
+    subfieldTop50: tally(top50, 'subfield'),
+    pathSplit: tally(rows, 'path_taken'),
+    granularity: tally(rows, 'input_granularity'),
+    markerCorrelation: dx && dy ? num / Math.sqrt(dx * dy) : 0,
+    claimRankedInTop50: top50.filter(r => (r.tags || []).includes('No data released')).length,
+    gapFlagged: rows.filter(r => r.gap_flagged).length,
+    resetsByRule: tally(resets || [], 'rule'),
   }
 }

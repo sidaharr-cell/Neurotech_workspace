@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, FlaskConical, ChevronLeft, ChevronRight, ExternalLink, Activity } from 'lucide-react'
 import { searchTrials, yearHistogram, getRecentTrialChanges, getTrialSponsors } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
-import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS } from '../components/Filters'
+import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, withPotentialImpact } from '../components/Filters'
 import FacetSidebar from '../components/FacetSidebar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { StarButton } from '../components/Watch'
@@ -158,7 +158,7 @@ export default function Trials() {
           histogram={histogram}
           year={year}
           onYear={setYear}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_TRIALS} required />}
+          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS)} required />}
           extras={[
             { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },
             { label: 'Status', value: status, onChange: setStatus, options: TRIAL_STATUS, allLabel: 'Any status' },
@@ -169,7 +169,7 @@ export default function Trials() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_TRIALS} required /></div>
+            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS)} required /></div>
           </div>
 
           {loading ? (
