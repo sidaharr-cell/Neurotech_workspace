@@ -96,10 +96,10 @@ export default function CapitalStageScatter({ board }) {
         </button>
       </figcaption>
 
-      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] font-sans">
-        <span className="uppercase tracking-[0.08em] text-muted/70">Modality</span>
+      <div className="mb-3 pb-1 flex flex-nowrap items-center gap-x-3 overflow-x-auto text-[11px] font-sans">
+        <span className="shrink-0 uppercase tracking-[0.08em] text-muted/70">Modality</span>
         {modalities.map(m => (
-          <span key={m} className="inline-flex items-center gap-1.5 text-muted">
+          <span key={m} className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
             <span aria-hidden className="w-2 h-2 rounded-full shrink-0" style={{ background: MODALITY_COLOR[m] }} />
             {MODALITY_LABELS[m]}
           </span>
@@ -188,7 +188,7 @@ function ScatterTable({ points }) {
   const rows = [...points].sort((a, b) => b.total - a.total)
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[12px] font-sans border-collapse">
+      <table className="w-full min-w-[720px] text-[12px] font-sans border-collapse">
         <caption className="sr-only">Companies by capital raised, verified stage, modality and recent capital.</caption>
         <thead>
           <tr className="text-[10px] uppercase tracking-[0.08em] text-muted/70 text-left border-b border-rule">
