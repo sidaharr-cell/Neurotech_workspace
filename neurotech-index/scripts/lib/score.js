@@ -307,5 +307,20 @@ export function parseToolScores(raw, dims) {
     const v = out[d]
     return !v || typeof v !== 'object' || !Number.isInteger(v.score) || v.score < 0 || v.score > 4
   })
+
+  // Scalars need the same treatment as the dimension blocks. A retro run died on
+  // `invalid input syntax for type integer: "2, "comment": "n/a""` because
+  // translational_distance had the folded remainder of the object appended to
+  // it, and only the dimensions were being validated. Coerce what is
+  // recoverable, null what is not: a bad scalar must not abort a stored run, and
+  // must not be silently written either.
+  const ti = Number.parseInt(String(out.translational_distance ?? ''), 10)
+  out.translational_distance = Number.isInteger(ti) && ti >= 0 && ti <= 4 ? ti : null
+  if (typeof out.evidence_grade !== 'string') out.evidence_grade = null
+  if (typeof out.uncertainty !== 'string' || !['low', 'medium', 'high'].includes(out.uncertainty)) {
+    out.uncertainty = null
+  }
+  if (typeof out.user_facing_reason !== 'string') out.user_facing_reason = null
+
   return { scores: out, recovered, malformed }
 }
