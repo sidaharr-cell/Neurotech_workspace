@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   buildPrompt, applyCeilings, SCORING_TOOL, RESEARCH_RUBRIC, TRIAL_RUBRIC,
-  parseToolScores, firstJsonObject,
+  parseToolScores, firstJsonObject, normalizeGrade, STANDARD_GRADES, TRIAL_GRADES,
 } from './score.js'
 
 const extraction = {
@@ -244,5 +244,59 @@ describe('scalar fields get the same salvage as the dimension blocks', () => {
   it('does not report a scalar problem as a malformed DIMENSION', () => {
     // A bad scalar must not abort the run; a bad dimension must.
     expect(parseToolScores({ ...ok, translational_distance: 'junk' }, dims).malformed).toEqual([])
+  })
+})
+
+describe('evidence_grade is coerced to the entity vocabulary', () => {
+  it('is an enum in the tool schema, not free text', () => {
+    // Unconstrained, the model returned prose like "single-group, small-n (10
+    // subjects), simulated online experiment", which matched no multiplier and
+    // fell to the harshest default, so the primary anti-hype control became a
+    // near-constant.
+    expect(SCORING_TOOL('research').input_schema.properties.evidence_grade.enum).toEqual(STANDARD_GRADES)
+    expect(SCORING_TOOL('trial').input_schema.properties.evidence_grade.enum).toEqual(TRIAL_GRADES)
+  })
+
+  it.each([
+    ['demonstrated', 'research', 'demonstrated'],
+    ['DEMONSTRATED', 'research', 'demonstrated'],
+    ['decisive', 'trial', 'decisive'],
+  ])('passes the exact grade %s through', (raw, ent, want) => {
+    expect(normalizeGrade(raw, ent)).toMatchObject({ grade: want, coerced: false, unusable: false })
+  })
+
+  it('strips prose wrapped around a real grade', () => {
+    const r = normalizeGrade('single-group, small-n (10 subjects), partial disclosure', 'research')
+    expect(r.grade).toBe('partial')
+    expect(r.coerced).toBe(true)
+  })
+
+  it('prefers the longer grade when one contains another', () => {
+    expect(normalizeGrade('claimed-only, no data', 'research').grade).toBe('claimed-only')
+  })
+
+  it('translates a research grade applied to a trial', () => {
+    // The exact slip seen live: a trial graded "claimed-only", which belongs to
+    // the 5.3.1 table, not the 5.3.2 design-quality table.
+    const r = normalizeGrade('claimed-only (not yet recruiting, registry only)', 'trial')
+    expect(r.grade).toBe('announced-only')
+    expect(r.coerced).toBe(true)
+  })
+
+  it('translates a trial grade applied to research', () => {
+    expect(normalizeGrade('indicative', 'research').grade).toBe('partial')
+  })
+
+  it('reports an unreadable grade as unusable rather than worst-case', () => {
+    for (const v of ['low', 'very good', '', null, undefined]) {
+      expect(normalizeGrade(v, 'research')).toMatchObject({ grade: null, unusable: true })
+    }
+  })
+
+  it('flows through parseToolScores with the entity type', () => {
+    const ok = { FD: { score: 1, referent: 'a' }, LV: { score: 1, referent: 'b' }, TR: { score: 1, referent: 'c' } }
+    const { scores } = parseToolScores({ ...ok, evidence_grade: 'partial disclosure only' }, ['FD', 'LV', 'TR'], 'research')
+    expect(scores.evidence_grade).toBe('partial')
+    expect(scores.evidence_grade_coerced).toBe(true)
   })
 })
