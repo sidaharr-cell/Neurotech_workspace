@@ -232,7 +232,7 @@ async function run() {
   const trials = []
   for (let from = 0; ; from += 1000) {
     const { data, error } = await sb.from('news_feed')
-      .select('id,title,url,source_url,metadata').eq('entry_type', 'trial').order('id').range(from, from + 999)
+      .select('id,title,url,source_url,metadata').eq('entry_type', 'trial').range(from, from + 999)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     if (!data.length) break
     trials.push(...data)
