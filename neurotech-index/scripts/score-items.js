@@ -72,7 +72,7 @@ export async function scoreOne(anthropic, { extraction, item, entityType, subfie
   // pass silently: 8 of 48 items in the first run scored zero that way. Scoring
   // 0 is a real verdict and must never be the residue of a parse failure.
   const dims = entityType === 'trial' ? ['GAP', 'GATE', 'METH'] : ['FD', 'LV', 'TR']
-  const { scores: parsed, recovered, malformed } = parseToolScores(raw, dims)
+  const { scores: parsed, recovered, malformed } = parseToolScores(raw, dims, entityType)
   if (malformed.length) {
     const err = new Error(`malformed tool output for ${malformed.join(', ')}`)
     err.malformed = malformed

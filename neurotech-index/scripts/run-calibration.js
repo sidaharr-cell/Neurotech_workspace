@@ -124,7 +124,7 @@ async function scoreRetro(anthropic, { item, entityType, subfield, records, axis
   if (!raw) return null
 
   const dims = entityType === 'trial' ? ['GAP', 'GATE', 'METH'] : ['FD', 'LV', 'TR']
-  const { scores: parsed, malformed } = parseToolScores(raw, dims)
+  const { scores: parsed, malformed } = parseToolScores(raw, dims, entityType)
   if (malformed.length) throw Object.assign(new Error(`malformed ${malformed.join(',')}`), { malformed })
 
   const { scores: capped } = applyCeilings(parsed, { fdCeiling, granularityCap })

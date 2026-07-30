@@ -136,6 +136,42 @@ const CEILING_NOTE = {
   4: '',
 }
 
+/** Spec 5.3.1, Research and Devices. */
+export const STANDARD_GRADES = ['replicated', 'demonstrated', 'partial', 'claimed-only', 'contradicted']
+/** Spec 5.3.2, Trials. Design quality, which is where decisiveness lives. */
+export const TRIAL_GRADES = ['decisive', 'strong', 'indicative', 'exploratory', 'announced-only']
+
+/**
+ * Coerce a grade to the entity's vocabulary. A safety net behind the enum, not a
+ * replacement for it: the enum stops the drift at the API layer, and this catches
+ * anything that still arrives wrong rather than letting it fall silently to the
+ * harshest multiplier.
+ *
+ * Returns { grade, coerced, unusable }. `unusable` means nothing could be read
+ * and the caller should treat the item as ungraded rather than as worst-case.
+ */
+export function normalizeGrade(raw, entityType) {
+  const vocab = entityType === 'trial' ? TRIAL_GRADES : STANDARD_GRADES
+  const s = String(raw ?? '').toLowerCase().trim()
+  if (!s) return { grade: null, coerced: false, unusable: true }
+  // Exact match first.
+  const exact = vocab.find(g => s === g)
+  if (exact) return { grade: exact, coerced: false, unusable: false }
+  // Then a contained mention, longest first so "claimed-only" beats "claimed".
+  const contained = [...vocab].sort((a, b) => b.length - a.length).find(g => s.includes(g))
+  if (contained) return { grade: contained, coerced: true, unusable: false }
+  // Cross-variant slips: a trial graded on the research table, or the reverse.
+  const CROSS = {
+    'claimed-only': 'announced-only', partial: 'indicative', demonstrated: 'strong',
+    replicated: 'decisive', 'announced-only': 'claimed-only', indicative: 'partial',
+    strong: 'demonstrated', decisive: 'replicated', exploratory: 'claimed-only',
+  }
+  for (const [from, to] of Object.entries(CROSS)) {
+    if (s.includes(from) && vocab.includes(to)) return { grade: to, coerced: true, unusable: false }
+  }
+  return { grade: null, coerced: false, unusable: true }
+}
+
 export const SCORING_TOOL = entityType => {
   const dims = entityType === 'trial' ? ['GAP', 'GATE', 'METH'] : ['FD', 'LV', 'TR']
   const dim = extra => ({
@@ -158,7 +194,19 @@ export const SCORING_TOOL = entityType => {
     [dims[2]]: dim({}),
     frontier_records_consulted: { type: 'array', items: { type: 'string' } },
     translational_distance: { type: 'integer', minimum: 0, maximum: 4 },
-    evidence_grade: { type: 'string' },
+    // ENUM, not free text. Left unconstrained, the model returned prose like
+    // "single-group, small-n (10 subjects), simulated online experiment" and
+    // "low - observational/correlational", none of which match a multiplier
+    // table. Every such value fell through to the conservative 0.40 default, so
+    // the evidence multiplier, which spec 5.3 calls "the primary anti-hype
+    // control", was a near-constant and discriminated nothing.
+    evidence_grade: {
+      type: 'string',
+      enum: entityType === 'trial' ? TRIAL_GRADES : STANDARD_GRADES,
+      description: entityType === 'trial'
+        ? 'Design quality per spec 5.3.2. `decisive` requires an interpretable null.'
+        : 'Evidence class per spec 5.3.1.',
+    },
     uncertainty: { type: 'string', enum: ['low', 'medium', 'high'] },
     user_facing_reason: { type: 'string' },
     record_update_proposed: {
@@ -295,7 +343,7 @@ export function recoverFoldedParameters(s) {
  * Returns { scores, recovered, malformed } — `malformed` names any required
  * dimension that could not be recovered, and the caller MUST reject the item.
  */
-export function parseToolScores(raw, dims) {
+export function parseToolScores(raw, dims, entityType = null) {
   const out = { ...raw }
   let recovered = false
   for (const d of dims) {
@@ -322,7 +370,13 @@ export function parseToolScores(raw, dims) {
   // must not be silently written either.
   const ti = Number.parseInt(String(out.translational_distance ?? ''), 10)
   out.translational_distance = Number.isInteger(ti) && ti >= 0 && ti <= 4 ? ti : null
-  if (typeof out.evidence_grade !== 'string') out.evidence_grade = null
+  // Coerce the grade to the entity's own vocabulary. Without this a trial graded
+  // on the research table, or a grade wrapped in prose, silently took the
+  // harshest multiplier and the anti-hype control stopped discriminating.
+  const g = normalizeGrade(out.evidence_grade, entityType)
+  out.evidence_grade = g.grade
+  out.evidence_grade_coerced = g.coerced
+  out.evidence_grade_unusable = g.unusable
   if (typeof out.uncertainty !== 'string' || !['low', 'medium', 'high'].includes(out.uncertainty)) {
     out.uncertainty = null
   }
