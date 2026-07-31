@@ -13,8 +13,8 @@
     "doi": "10.1186/s13062-026-00778-4",
     "url": "https://doi.org/10.1186/s13062-026-00778-4",
     "publishedAt": "2026-05-06",
-    "pctile": 0.99588614,
-    "fwci": 24.3583,
+    "pctile": 0.99586862,
+    "fwci": 24.1176,
     "citedBy": 3,
     "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
   },
@@ -41,7 +41,7 @@
     "pctile": 0.99569294,
     "fwci": 35.0578,
     "citedBy": 6,
-    "significance": "This work represents a major milestone in clinical neurotechnology by demonstrating that intracortical BCIs can move beyond laboratory settings into practical independent use. The achievement of naturalistic speech decoding and reliable cursor control with at-home operation and minimal supervision addresses the most critical barrier to clinical adoption: sustained, unsupervised performance in real-world conditions. For neurotech practitioners, this validates the pathway toward implantable BCI systems that genuinely restore communication and digital access for people with severe paralysis."
+    "significance": "This is a landmark clinical validation showing that an intracortical BCI can operate reliably at home over extended periods, decoding both attempted speech and movement intent without tethering or constant expert recalibration. Independent at-home use is the gold standard for neurotechnology viability and represents a major step toward commercial deployment and patient autonomy. This work demonstrates that BCIs are transitioning from experimental devices to practical assistive systems for people with severe paralysis."
   },
   {
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
@@ -66,8 +66,8 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99164762,
-    "fwci": 24.3583,
+    "pctile": 0.99157199,
+    "fwci": 24.1176,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
   },
