@@ -83,7 +83,7 @@ export function Cover({ item, tint, requireReal = false, priority = false, class
         src={img}
         alt=""
         loading={priority ? 'eager' : 'lazy'}
-        fetchpriority={priority ? 'high' : 'auto'}
+        fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"
         onError={() => setBroken(true)}
         onLoad={e => { if (e.target.naturalWidth && e.target.naturalWidth < 640) setBroken(true) }}
