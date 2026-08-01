@@ -1,0 +1,95 @@
+import { describe, it, expect } from 'vitest'
+import { SLOTS, MAX_ITEMS, STORY_SLOTS, composeStories, shownKeys, pickNotable } from './homepage'
+
+const story = (over = {}) => ({
+  id: over.id,
+  entry_type: 'paper',
+  title: over.title || `Story ${over.id}`,
+  summary: 'Cortical electrode array, neural decoding.',
+  published_at: '2026-07-01T00:00:00Z',
+  ...over,
+  metadata: { rankScore: 0, ...over.metadata },
+})
+
+const photo = (id, w = 1200, h = 800, over = {}) =>
+  story({ id, ...over, metadata: { imageKind: 'real', image: `https://x/${id}.jpg`, imageW: w, imageH: h, ...over.metadata } })
+
+describe('the page budget', () => {
+  it('holds thirty items', () => {
+    expect(MAX_ITEMS).toBe(30)
+  })
+
+  it('spends the budget on stories and on the other entity types', () => {
+    expect(STORY_SLOTS).toBe(14)
+    expect(SLOTS.trials + SLOTS.clearances + SLOTS.funding + SLOTS.notable).toBe(16)
+  })
+})
+
+describe('composeStories', () => {
+  const many = Array.from({ length: 40 }, (_, i) => story({ id: `s${i}`, metadata: { rankScore: 100 - i } }))
+
+  it('never fills more slots than the budget allows', () => {
+    const { lead, sidebar, featured, latest } = composeStories(many, 'relevant')
+    expect(lead).toBeTruthy()
+    expect(sidebar).toHaveLength(SLOTS.sidebar)
+    expect(featured).toHaveLength(SLOTS.featured)
+    expect(latest).toHaveLength(SLOTS.latest)
+    expect(1 + sidebar.length + featured.length + latest.length).toBe(STORY_SLOTS)
+  })
+
+  it('shows no story twice', () => {
+    const { lead, sidebar, featured, latest } = composeStories(many, 'relevant')
+    const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('gives the featured slots to photographs, largest first', () => {
+    const items = [
+      story({ id: 'lead', metadata: { rankScore: 100 } }),
+      story({ id: 'plain-a', metadata: { rankScore: 90 } }),
+      photo('small', 700, 400, { metadata: { rankScore: 10 } }),
+      photo('large', 2000, 1200, { metadata: { rankScore: 5 } }),
+    ]
+    const { featured } = composeStories(items, 'relevant')
+    expect(featured.map(i => i.id).slice(0, 2)).toEqual(['large', 'small'])
+  })
+
+  it('keeps date order under newest rather than reordering by image size', () => {
+    const items = [
+      photo('newer', 700, 400, { published_at: '2026-07-31T00:00:00Z' }),
+      photo('older', 2000, 1200, { published_at: '2026-01-01T00:00:00Z' }),
+      story({ id: 'lead', published_at: '2026-08-01T00:00:00Z' }),
+    ]
+    const { featured } = composeStories(items, 'newest')
+    expect(featured.map(i => i.id)).toEqual(['newer', 'older'])
+  })
+
+  it('returns empty slots rather than throwing on an empty feed', () => {
+    const { lead, sidebar, featured, latest } = composeStories([], 'relevant')
+    expect(lead).toBeUndefined()
+    expect([...sidebar, ...featured, ...latest]).toHaveLength(0)
+  })
+})
+
+describe('pickNotable', () => {
+  const papers = [
+    { doi: '10.1/AAA', title: 'Deep brain stimulation in Parkinson disease', pctile: 0.99 },
+    { doi: '10.1/bbb', title: 'Speech decoding from cortex', pctile: 0.98 },
+    { doi: null, title: 'A third paper', pctile: 0.97 },
+  ]
+
+  it('drops a paper the feed above already ran, matching the DOI case-insensitively', () => {
+    const exclude = shownKeys([{ metadata: { doi: '10.1/aaa' } }])
+    expect(pickNotable(papers, exclude).map(p => p.title)).toEqual(['Speech decoding from cortex', 'A third paper'])
+  })
+
+  it('drops a paper matched by title when no DOI is carried', () => {
+    const exclude = shownKeys([{ title: 'Speech decoding from cortex!' }])
+    expect(pickNotable(papers, exclude).map(p => p.doi)).toEqual(['10.1/AAA', null])
+  })
+
+  it('caps the section at its slots', () => {
+    const long = Array.from({ length: 10 }, (_, i) => ({ doi: `10.1/${i}`, title: `P${i}`, pctile: 0.9 }))
+    expect(pickNotable(long, new Set())).toHaveLength(SLOTS.notable)
+  })
+})

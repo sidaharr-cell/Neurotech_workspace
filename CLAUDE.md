@@ -107,6 +107,14 @@ prestige) in `refresh.js`; `trialScore` in `trials.js`. Scores are stored in
 `papers.rank_score`, `organizations.rank_score`, `news_feed.relevance_score` (Claude's
 1–10 centrality) and `news_feed.metadata.rankScore`.
 
+**The home page has a fixed budget of 30 items**, split across its sections in
+`SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. Every card carries a picture: a photograph when the
+record has one, otherwise a figure drawn from that record's own fields
+(`src/components/Figure.jsx` — trial phase and enrollment, FDA submission number and
+pathway, round amount, citation impact). Figures are `aria-hidden`, so anything a
+figure shows must also be printed as text on its card. No generated placeholder art:
+a picture either says something about its item or is not shown.
+
 ## Working rules
 
 The current implementation spec is
