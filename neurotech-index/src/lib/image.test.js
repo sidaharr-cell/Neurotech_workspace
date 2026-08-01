@@ -54,6 +54,12 @@ describe('creditLine', () => {
     expect(needsCredit(imageOf(feedRow({ imageSubject: 'item', imageSource: 'og', imageCredit: 'Reuters' })))).toBe(false)
   })
 
+  it("credits a maker's product photograph, licence or no licence", () => {
+    const img = imageOf(feedRow({ imageSubject: 'item', imageSource: 'manufacturer', imageCredit: 'calahealth.com' }))
+    expect(needsCredit(img)).toBe(true)
+    expect(creditLine(img)).toBe('calahealth.com')
+  })
+
   it('always asks for one on an illustration, licence or not', () => {
     expect(needsCredit(imageOf(feedRow({ imageSubject: 'class' })))).toBe(true)
   })

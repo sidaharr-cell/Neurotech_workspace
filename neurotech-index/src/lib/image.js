@@ -87,9 +87,16 @@ export function creditLine(img) {
   return parts.length ? parts.join(' · ') : null
 }
 
-/** True when the page must print a credit beside this picture: anything
- *  licensed, and every illustration whether licensed or not. */
-export const needsCredit = img => Boolean(img && (img.license || isIllustration(img)))
+/**
+ * True when the page must print a credit beside this picture.
+ *
+ * Everything sourced from somebody else's site is credited: the licence
+ * requires it for Commons and for open-access figures, and a manufacturer's
+ * product photograph is theirs whether or not it carries a licence. The one
+ * exception is the photograph a news outlet published with its own story,
+ * because the card already names that outlet on the line below.
+ */
+export const needsCredit = img => Boolean(img && (isIllustration(img) || (img.source && img.source !== 'og')))
 
 /**
  * The ids whose picture repeats one already used earlier on the page.

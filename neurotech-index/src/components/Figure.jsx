@@ -313,8 +313,16 @@ function Photo({ img, fallback, priority, className }) {
       fetchPriority={priority ? 'high' : 'auto'}
       decoding="async"
       onError={() => setBroken(true)}
-      onLoad={e => { if (e.target.naturalWidth && e.target.naturalWidth < 300) setBroken(true) }}
-      className={`object-cover w-full h-full ${className}`}
+      // A photograph that arrives smaller than it claimed is a placeholder or a
+      // tracking pixel. A logo is small by nature and is contained, not cropped,
+      // so the floor does not apply to it.
+      onLoad={e => {
+        const floor = img.kind === 'logo' ? 120 : 300
+        if (e.target.naturalWidth && e.target.naturalWidth < floor) setBroken(true)
+      }}
+      // A logo is a mark on a field, not a photograph: cropping it to fill the
+      // frame would cut the wordmark in half.
+      className={`w-full h-full ${img.kind === 'logo' ? 'object-contain p-6 bg-paper' : 'object-cover'} ${className}`}
     />
   )
 }
