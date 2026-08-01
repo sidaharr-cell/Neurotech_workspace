@@ -14,6 +14,7 @@
 import { useState } from 'react'
 import { facetsOfEntity, FUNCTION_LABEL } from '../lib/facets'
 import { fmtUsd } from '../lib/fundingBoard'
+import { usableImage, creditLine, needsCredit } from '../lib/image'
 import { fmtDate } from './ui'
 
 /** Month and day, for a thumbnail that has room for nothing longer. */
@@ -297,41 +298,73 @@ export function SourceFigure({ item, size = 'md' }) {
 // ── Photographs ─────────────────────────────────────────────────────────────
 
 /**
- * True when the record carries an image the page should show. Images the
- * ingestion's vision pass called stock are never shown. `requireReal` narrows
- * it to images confirmed as photographs, microscopy, scans or figures.
+ * A sourced photograph. A picture that fails to load, or that arrives smaller
+ * than it claimed, falls back to the record's own figure rather than leaving a
+ * broken box: scripts/verify-images.js will clear the dead URL on its next run.
  */
-export function hasUsableImage(item, { requireReal = false } = {}) {
-  const kind = item?.metadata?.imageKind
-  return Boolean(item?.metadata?.image) && kind !== 'stock' && (!requireReal || kind === 'real')
-}
-
-function Photo({ item, priority, className }) {
+function Photo({ img, fallback, priority, className }) {
   const [broken, setBroken] = useState(false)
-  if (broken) return <StoryFigure item={item} noPhoto />
+  if (broken) return fallback
   return (
     <img
-      src={item.metadata.image}
+      src={img.url}
       alt=""
       loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : 'auto'}
       decoding="async"
       onError={() => setBroken(true)}
-      onLoad={e => { if (e.target.naturalWidth && e.target.naturalWidth < 640) setBroken(true) }}
+      onLoad={e => { if (e.target.naturalWidth && e.target.naturalWidth < 300) setBroken(true) }}
       className={`object-cover w-full h-full ${className}`}
     />
   )
 }
 
-/**
- * The picture for a feed story: its photograph, or the figure its entry type
- * earns. `requireReal` holds the lead to confirmed-real photographs.
- */
-export function StoryFigure({ item, size = 'md', requireReal = false, priority = false, noPhoto = false, className = '' }) {
-  if (!noPhoto && hasUsableImage(item, { requireReal })) {
-    return <Photo item={item} priority={priority} className={className} />
-  }
+/** The data figure a record falls back to when it has no photograph. */
+export function DataFigure({ item, size = 'md' }) {
   if (item.entry_type === 'trial') return <TrialFigure trial={item} size={size} />
   if (item.entry_type === 'paper' || item.entry_type === 'preprint') return <ResearchFigure paper={item} size={size} />
   return <SourceFigure item={item} size={size} />
+}
+
+/**
+ * The picture for a feed story: its sourced photograph, or the figure its
+ * entry type earns.
+ *
+ * `own` holds the slot to a photograph OF the story, which is what the lead
+ * uses. A labelled photograph of the technology is fair on a card in a grid
+ * and the wrong thing to run six columns wide as the day's top story.
+ * `noPhoto` is how the page suppresses a picture already used further up.
+ */
+export function StoryFigure({ item, size = 'md', own = false, priority = false, noPhoto = false, className = '' }) {
+  const img = noPhoto ? null : usableImage(item, { own })
+  const fallback = <DataFigure item={item} size={size} />
+  return img ? <Photo img={img} fallback={fallback} priority={priority} className={className} /> : fallback
+}
+
+/** A photograph for any record that carries one, with a figure to fall back
+ *  to. Used by the device, trial and company cards. */
+export function EntityFigure({ entity, fallback, noPhoto = false, className = '' }) {
+  const img = noPhoto ? null : usableImage(entity)
+  return img ? <Photo img={img} fallback={fallback} className={className} /> : fallback
+}
+
+/**
+ * The attribution beside a picture.
+ *
+ * Every Wikimedia licence requires the author and the licence to be named
+ * wherever the picture runs, and an illustration has to say that it is one.
+ * This sits OUTSIDE the card's link, because the licence link is a link and
+ * anchors do not nest.
+ */
+export function ImageCredit({ img, className = '' }) {
+  if (!needsCredit(img)) return null
+  const text = creditLine(img)
+  if (!text) return null
+  return (
+    <p className={`mt-1 text-[11px] font-sans text-muted/80 truncate ${className}`} title={text}>
+      {img.sourceUrl
+        ? <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent hover:underline">{text}</a>
+        : text}
+    </p>
+  )
 }

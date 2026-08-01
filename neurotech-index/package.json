@@ -14,6 +14,9 @@
     "validate:funding": "node --env-file-if-exists=.env scripts/validate-funding.js",
     "verify:funding": "node --env-file-if-exists=.env scripts/verify-funding.js",
     "verify:cron": "node --env-file-if-exists=.env scripts/verify-cron.js",
+    "images:classes": "node --env-file-if-exists=.env scripts/build-class-images.js",
+    "images:backfill": "node --env-file-if-exists=.env scripts/backfill-images.js",
+    "verify:images": "node --env-file-if-exists=.env scripts/verify-images.js",
     "verify:frontier": "node --env-file-if-exists=.env scripts/check-frontier-schema.js"
   },
   "dependencies": {

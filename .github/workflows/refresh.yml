@@ -102,6 +102,26 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
 
+      - name: Source images for new records (own figures, then class photographs)
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/backfill-images.js --commit --limit=150
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # Images are hotlinked, not copied, so a publisher reorganising its CDN
+      # turns a card into a broken box. This clears the dead ones; the record
+      # falls back to its data figure until something better is sourced.
+      - name: Clear rotted image links
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/verify-images.js --commit --stale-days=30 --limit=300
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Refresh recent patents (PatentsView)
         working-directory: neurotech-index
         continue-on-error: true
@@ -119,6 +139,7 @@ jobs:
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
           git add neurotech-index/src/data/notable.json \
+                  neurotech-index/scripts/data/fda-product-codes.json \
                   neurotech-index/scripts/data/neurotechx-industry.json \
                   neurotech-index/scripts/data/neurotechx-academic-labs.json \
                   neurotech-index/public/company-analytics

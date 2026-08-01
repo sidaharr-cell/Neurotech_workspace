@@ -107,6 +107,21 @@ prestige) in `refresh.js`; `trialScore` in `trials.js`. Scores are stored in
 `papers.rank_score`, `organizations.rank_score`, `news_feed.relevance_score` (Claude's
 1–10 centrality) and `news_feed.metadata.rankScore`.
 
+**Images are sourced, never generated.** `scripts/lib/images.js` resolves a picture
+for a record and returns it with its provenance: source, credit, licence, and the page
+the file is described on. `image_subject` says what the picture IS — `'item'` (a figure
+out of this paper, this company's logo, the photograph the outlet ran) or `'class'` (a
+licensed photograph of the *technology*, because no photograph of an individual 510(k)
+submission or clinical trial exists anywhere). Class photographs come from the reviewed
+pool in `scripts/data/class-images.json`, resolved once by `npm run images:classes`;
+each candidate must be affirmed by BOTH the file's own title and a vision model, and a
+class with no confirmable photograph yields nothing rather than something approximate.
+`npm run images:backfill` assigns them, `npm run verify:images` clears rotted hotlinks,
+and both run nightly. Anything `class`-subject must render with the "Illustration" label
+and its credit (`src/lib/image.js`, `ImageCredit` in `Figure.jsx`) — the attribution is a
+licence condition, and the label is what keeps the picture from making a claim.
+Publisher pages 403 every script, so a recent paywalled paper has no figure to source.
+
 **The home page has a fixed budget of 30 items**, split across its sections in
 `SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. Every card carries a picture: a photograph when the
 record has one, otherwise a figure drawn from that record's own fields
