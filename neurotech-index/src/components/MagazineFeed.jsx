@@ -9,7 +9,7 @@ import FacetSidebar, { NO_FACETS } from './FacetSidebar'
 import NotableRail from './NotableRail'
 import { Cover } from './neuron'
 import { entityMatchesFacets, facetsOfEntity } from '../lib/facets'
-import { isReputableSource, neurotechCentrality } from '../lib/sources'
+import { pickLead, hasRealImage, byNewest } from '../lib/sources'
 
 const tintOf = item => facetsOfEntity(item).function[0] || 'default'
 const metaOf = item => ({ source: item.source, date: fmtDate(item.published_at), cites: item.metadata?.citationCount ?? 0 })
@@ -91,7 +91,7 @@ export default function MagazineFeed() {
       (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
       (!type || (type === 'research' ? isResearch(i) : i.entry_type === 'news'))
     )
-    if (sort === 'newest') out = [...out].sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0))
+    if (sort === 'newest') out = [...out].sort(byNewest)
     return out
   }, [items, facets, recency, type, sort])
 
@@ -102,20 +102,15 @@ export default function MagazineFeed() {
   // slots fill with the top-ranked items.
   const { lead, featured, sidebar, rest } = useMemo(() => {
     const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
-    const realImg = i => i.metadata?.image && i.metadata?.imageKind === 'real'
+    // Under "Newest" `shown` is already in date order and sort is stable, so a
+    // constant comparator keeps the images in that order instead of by size.
     const realImgs = shown
-      .filter(realImg)
+      .filter(hasRealImage)
       .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
 
-    // The lead story must come from a reputable source (peer-reviewed journal or
-    // quality outlet — not a press-release aggregator) and sit squarely in
-    // neurotech. Among reputable items, prefer neurotech-central stories, then a
-    // real image, then overall rank. Fall back to the old logic only if nothing
-    // reputable is available.
-    const reputable = shown.filter(isReputableSource)
-    const pool = reputable.length ? reputable : shown
-    const leadScore = i => neurotechCentrality(i) * 3 + (realImg(i) ? 2 : 0) + (i.metadata?.rankScore ?? 0)
-    const lead = [...pool].sort((a, b) => leadScore(b) - leadScore(a))[0] || realImgs[0] || shown[0]
+    // The lead obeys the Sort control and the reputable-source floor; see
+    // pickLead in lib/sources.js.
+    const lead = pickLead(shown, sort) || realImgs[0] || shown[0]
     const used = new Set(lead ? [lead] : [])
     const featured = []
     for (const it of [...realImgs, ...shown]) {
