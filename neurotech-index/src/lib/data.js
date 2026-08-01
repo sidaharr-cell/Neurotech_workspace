@@ -710,6 +710,63 @@ export async function searchDevices({ query = '', facets = {}, recency = null, y
   return { rows: (data || []).map(r => ({ ...r, _type: 'devices' })), total: count ?? 0 }
 }
 
+/**
+ * The most recent FDA decisions, for the home page's clearance section.
+ *
+ * openFDA gives a decision YEAR and no finer date, so "most recent" is by year
+ * and the order inside a year is the table's own. Facets and recency come
+ * straight through, so the section answers the same filters as the feed above it.
+ */
+export async function getRecentClearances({ facets = {}, recency = null, limit = 4 } = {}) {
+  const { rows } = await searchDevices({ facets, recency, sort: 'newest', pageSize: limit })
+  return rows
+}
+
+/**
+ * The most recently filed funding rounds, each resolved to the company that
+ * raised it. Only companies with a written inclusion basis appear, the same
+ * gate the funding chart uses, so a round cannot reach the home page on a
+ * company nobody has decided belongs in the neurotech set.
+ *
+ * Rounds are read newest-first from a window wider than `limit` because the gate
+ * is applied after the fetch; a company outside the set drops its rounds and the
+ * next-newest round takes the slot.
+ */
+export async function getRecentFundingRounds({ sinceISO = null, limit = 4 } = {}) {
+  if (!supabase) return []
+  let q = supabase.from('funding_rounds')
+    .select('id,organization_id,amount_usd,round_date,date_basis,source_url,confidence')
+    .not('amount_usd', 'is', null)
+  if (sinceISO) q = q.gte('round_date', sinceISO.slice(0, 10))
+  const { data, error } = await q.order('round_date', { ascending: false }).limit(80)
+  if (error || !data?.length) return []
+
+  const orgIds = [...new Set(data.map(r => r.organization_id).filter(Boolean))]
+  if (!orgIds.length) return []
+  const { data: orgs } = await supabase.from('organizations')
+    .select('id,name,display_name,status,modality')
+    .eq('type', 'company')
+    .not('inclusion_basis', 'is', null)
+    .in('id', orgIds)
+  const byId = Object.fromEntries((orgs || []).map(o => [o.id, o]))
+
+  return data
+    .filter(r => byId[r.organization_id])
+    .slice(0, limit)
+    .map(r => ({
+      id: r.id,
+      orgId: r.organization_id,
+      name: byId[r.organization_id].display_name || byId[r.organization_id].name,
+      href: `/company/${r.organization_id}`,
+      amountUsd: r.amount_usd,
+      roundDate: r.round_date,
+      dateBasis: r.date_basis,
+      sourceUrl: r.source_url,
+      confidence: r.confidence,
+      _type: 'funding',
+    }))
+}
+
 /** Server-side paginated + full-text search over the neurotech patents table. */
 export async function searchPatents({ query = '', facets = {}, recency = null, yearRange = null, sort = 'newest', page = 0, pageSize = 20 } = {}) {
   if (!supabase) return { rows: [], total: 0 }

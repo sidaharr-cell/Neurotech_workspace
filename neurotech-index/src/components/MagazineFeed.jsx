@@ -1,24 +1,27 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
-import { getNewsFeed, recencyCutoffISO } from '../lib/data'
+import { getNewsFeed, recencyCutoffISO, searchTrials, getRecentClearances, getRecentFundingRounds } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
 import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import FacetSidebar, { NO_FACETS } from './FacetSidebar'
-import NotableRail from './NotableRail'
-import { Cover } from './neuron'
-import { entityMatchesFacets, facetsOfEntity } from '../lib/facets'
-import { pickLead, hasRealImage, byNewest } from '../lib/sources'
+import { StoryFigure, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
+import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
+import { entityMatchesFacets } from '../lib/facets'
+import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
+import notable from '../data/notable.json'
 
-const tintOf = item => facetsOfEntity(item).function[0] || 'default'
 const metaOf = item => ({ source: item.source, date: fmtDate(item.published_at), cites: item.metadata?.citationCount ?? 0 })
+const prettyStatus = s => String(s || '').replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+
+// ── Stories ─────────────────────────────────────────────────────────────────
 
 function LeadCard({ item }) {
   return (
     <Link to={`/item/${item.id}`} className="group block">
       <div className="aspect-[16/9] overflow-hidden bg-canvas mb-4">
-        <Cover item={item} tint={tintOf(item)} requireReal priority className="group-hover:scale-[1.02] transition-transform duration-500" />
+        <StoryFigure item={item} size="lg" requireReal priority className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
       <div className="flex items-center gap-3 mb-2">
         <Kicker>{typeWord(item.entry_type)}</Kicker>
@@ -33,12 +36,19 @@ function LeadCard({ item }) {
   )
 }
 
+/** The rail beside the lead. The picture is a thumbnail so the rail stays a
+ *  list of headlines rather than a second grid of cards. */
 function SidebarItem({ item }) {
   return (
-    <Link to={`/item/${item.id}`} className="group block py-4">
-      <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
-      <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
-      <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
+    <Link to={`/item/${item.id}`} className="group flex gap-3 py-4">
+      <div className="w-20 sm:w-24 shrink-0 aspect-[4/3] overflow-hidden bg-canvas">
+        <StoryFigure item={item} size="sm" />
+      </div>
+      <div className="min-w-0">
+        <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
+        <h3 className="font-serif text-[1.05rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
+        <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
+      </div>
     </Link>
   )
 }
@@ -47,7 +57,7 @@ function FeaturedCard({ item }) {
   return (
     <Link to={`/item/${item.id}`} className="group block">
       <div className="aspect-[4/3] overflow-hidden bg-canvas mb-3">
-        <Cover item={item} tint={tintOf(item)} className="group-hover:scale-[1.02] transition-transform duration-500" />
+        <StoryFigure item={item} className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
       <div className="mb-1.5"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
@@ -57,19 +67,123 @@ function FeaturedCard({ item }) {
   )
 }
 
-function CompactRow({ item }) {
+function LatestCard({ item }) {
   return (
-    <Link to={`/item/${item.id}`} className="group block py-4">
+    <Link to={`/item/${item.id}`} className="group block">
+      <div className="aspect-[16/9] overflow-hidden bg-canvas mb-2.5">
+        <StoryFigure item={item} className="group-hover:scale-[1.02] transition-transform duration-500" />
+      </div>
       <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
-      <h3 className="font-serif text-[1.15rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{item.title}</h3>
-      <div className="mt-1"><Meta {...metaOf(item)} /></div>
+      <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
+      <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
     </Link>
   )
 }
 
+// ── Sections for the other entity types ─────────────────────────────────────
+
+/** A section rule with its own heading, a one-line note on what the section
+ *  holds, and a link to the full view. */
+function RailHeading({ kicker, note, to, linkLabel }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 flex-wrap mb-3 pb-1.5 border-b-2 border-ink">
+      <Kicker>{kicker}</Kicker>
+      <div className="flex items-baseline gap-3">
+        {note && <span className="text-[12px] font-sans text-muted">{note}</span>}
+        {to && <Link to={to} className="text-[12px] font-sans text-accent hover:underline">{linkLabel}</Link>}
+      </div>
+    </div>
+  )
+}
+
+function TrialCard({ trial }) {
+  const m = trial.metadata || {}
+  return (
+    <Link to={`/item/${trial.id}`} className="group block">
+      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><TrialFigure trial={trial} /></div>
+      <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <Kicker>{m.phase || 'Clinical trial'}</Kicker>
+        {m.status && <span className="text-[11px] font-sans text-muted">{prettyStatus(m.status)}</span>}
+      </div>
+      <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{trial.title}</h3>
+      <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
+        {[m.sponsor, m.enrollment ? `n=${m.enrollment.toLocaleString()}` : null, m.nctId].filter(Boolean).join(' · ')}
+      </div>
+    </Link>
+  )
+}
+
+function ClearanceCard({ device }) {
+  return (
+    <Link to={`/device/${device.id}`} className="group block">
+      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><ClearanceFigure device={device} /></div>
+      <div className="mb-1"><Kicker>{device.status || 'FDA record'}</Kicker></div>
+      <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{device.name}</h3>
+      <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
+        {[device.manufacturer, clearanceNumber(device), device.year].filter(Boolean).join(' · ')}
+      </div>
+    </Link>
+  )
+}
+
+function FundingCard({ round, max }) {
+  return (
+    <div className="group">
+      <Link to={round.href} className="block">
+        <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><FundingFigure round={round} max={max} /></div>
+        <div className="mb-1"><Kicker>Funding round</Kicker></div>
+        <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{round.name}</h3>
+      </Link>
+      <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
+        {[fmtUsd(round.amountUsd), fmtMonthYear(round.roundDate)].filter(Boolean).join(' · ')}
+        {round.sourceUrl && (
+          <>
+            {' · '}
+            <a href={round.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Filing</a>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function NotableCard({ paper }) {
+  const inner = (
+    <>
+      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><ResearchFigure paper={paper} /></div>
+      <div className="flex items-center gap-2 mb-1">
+        <Kicker>{topPct(paper.pctile)}</Kicker>
+        {paper.citedBy > 0 && <span className="text-[11px] font-sans text-muted">{paper.citedBy} citation{paper.citedBy === 1 ? '' : 's'}</span>}
+      </div>
+      <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{paper.title}</h3>
+      <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
+        {[paper.journal, paper.publishedAt ? fmtDate(paper.publishedAt) : null].filter(Boolean).join(' · ')}
+      </div>
+    </>
+  )
+  return paper.pmid
+    ? <Link to={`/paper/${paper.pmid}`} className="group block">{inner}</Link>
+    : <a href={paper.url} target="_blank" rel="noopener noreferrer" className="group block">{inner}</a>
+}
+
+/** Every entity section is the same four-across grid. */
+function Rail({ kicker, note, to, linkLabel, children }) {
+  return (
+    <section className="mt-12">
+      <RailHeading kicker={kicker} note={note} to={to} linkLabel={linkLabel} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">{children}</div>
+    </section>
+  )
+}
+
+// ── Page ────────────────────────────────────────────────────────────────────
+
 export default function MagazineFeed() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [trials, setTrials] = useState([])
+  const [clearances, setClearances] = useState([])
+  const [rounds, setRounds] = useState([])
   const [facets, setFacets] = useState(NO_FACETS)
   const [recency, setRecency] = useState(null)
   const [type, setType] = useState(null)
@@ -77,11 +191,35 @@ export default function MagazineFeed() {
 
   useEffect(() => {
     let alive = true
-    // Fetch a wide set so real-image stories (which rank below papers) are
-    // available to feature; the display below still caps at ~20 entries.
+    // Fetch a wide set so photograph-bearing stories (which rank below papers)
+    // are available for the visual slots; the composition caps what is shown.
     getNewsFeed({ limit: 120 }).then(d => { if (alive) { setItems(d); setLoading(false) } })
     return () => { alive = false }
   }, [])
+
+  // The sections below the feed answer the same facet and recency filters. The
+  // key keeps the effect from refiring on a new object with the same selection.
+  const facetKey = JSON.stringify(facets)
+  const anyFacet = Boolean(facets.function.length || facets.access.length || facets.application.length)
+
+  useEffect(() => {
+    let alive = true
+    const f = JSON.parse(facetKey)
+    Promise.all([
+      searchTrials({ facets: f, recency, sort: 'relevant', pageSize: SLOTS.trials }),
+      getRecentClearances({ facets: f, recency, limit: SLOTS.clearances }),
+      // Rounds carry no facet columns, so a facet selection has nothing to test
+      // them against; the section stands down rather than answer the wrong
+      // question. Recency it can answer, from the filing date.
+      anyFacet ? Promise.resolve([]) : getRecentFundingRounds({ sinceISO: recencyCutoffISO(recency), limit: SLOTS.funding }),
+    ]).then(([t, c, r]) => {
+      if (!alive) return
+      setTrials(t.rows || [])
+      setClearances(c || [])
+      setRounds(r || [])
+    })
+    return () => { alive = false }
+  }, [facetKey, recency, anyFacet])
 
   const shown = useMemo(() => {
     const cutoff = recencyCutoffISO(recency)
@@ -95,42 +233,19 @@ export default function MagazineFeed() {
     return out
   }, [items, facets, recency, type, sort])
 
-  // Prefer image-bearing items for the visual slots (lead + featured grid);
-  // fill the rest by rank. Papers (no photo) fall back to the neuron motif.
-  // Show ~20 entries total. The visual slots (lead + featured) prefer
-  // image-bearing stories pulled from the full ranked feed; the remaining
-  // slots fill with the top-ranked items.
-  const { lead, featured, sidebar, rest } = useMemo(() => {
-    const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
-    // Under "Newest" `shown` is already in date order and sort is stable, so a
-    // constant comparator keeps the images in that order instead of by size.
-    const realImgs = shown
-      .filter(hasRealImage)
-      .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
+  const { lead, sidebar, featured, latest } = useMemo(() => composeStories(shown, sort), [shown, sort])
 
-    // The lead obeys the Sort control and the reputable-source floor; see
-    // pickLead in lib/sources.js.
-    const lead = pickLead(shown, sort) || realImgs[0] || shown[0]
-    const used = new Set(lead ? [lead] : [])
-    const featured = []
-    for (const it of [...realImgs, ...shown]) {
-      if (featured.length >= 3) break
-      if (used.has(it)) continue
-      featured.push(it); used.add(it)
-    }
-    const remaining = shown.filter(i => !used.has(i)).slice(0, 16)
-    return { lead, featured, sidebar: remaining.slice(0, 4), rest: remaining.slice(4) }
-  }, [shown, sort])
+  // Notable research is a standing rail rather than a filtered result, so it
+  // only drops the papers the feed above has already run.
+  const notablePapers = useMemo(
+    () => pickNotable(notable, shownKeys(lead, sidebar, featured, latest)),
+    [lead, sidebar, featured, latest],
+  )
 
-  // Keys (DOI + normalized title) of everything rendered in the feed above, so
-  // the Notable rail can suppress any paper that's already shown on this page.
-  const shownKeys = useMemo(() => {
-    const norm = t => (t || '').toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim()
-    const keys = new Set()
-    const add = it => { if (!it) return; if (it.metadata?.doi) keys.add(it.metadata.doi.toLowerCase()); if (it.title) keys.add(norm(it.title)) }
-    add(lead); featured.forEach(add); sidebar.forEach(add); rest.forEach(add)
-    return keys
-  }, [lead, featured, sidebar, rest])
+  // Type narrows the page to research or to news. The sections that are neither
+  // stand down for as long as it is set.
+  const showSections = !type
+  const maxRound = Math.max(...rounds.map(r => r.amountUsd || 0), 0)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -160,11 +275,11 @@ export default function MagazineFeed() {
             <Loader label="Loading…" />
           ) : !lead ? (
             <EmptyState icon={Newspaper} title="Nothing here yet">
-              {(facets.function.length || facets.access.length || facets.application.length) ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
+              {anyFacet ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
             </EmptyState>
           ) : (
             <>
-              {/* Lead + more-stories rail */}
+              {/* Lead plus the rail of more stories */}
               <div className="grid lg:grid-cols-3 gap-8 lg:gap-10">
                 <div className="lg:col-span-2"><LeadCard item={lead} /></div>
                 {sidebar.length > 0 && (
@@ -179,7 +294,6 @@ export default function MagazineFeed() {
                 )}
               </div>
 
-              {/* Featured grid */}
               {featured.length > 0 && (
                 <div className="mt-12 pt-8 border-t-2 border-ink">
                   <div className="grid sm:grid-cols-3 gap-8">
@@ -188,17 +302,34 @@ export default function MagazineFeed() {
                 </div>
               )}
 
-              {/* Notable research rail (unfiltered — highest field-normalized impact) */}
-              {!facets.function.length && !facets.access.length && !facets.application.length && !recency && !type && <NotableRail exclude={shownKeys} />}
+              {latest.length > 0 && (
+                <Rail kicker="Latest">
+                  {latest.map((it, i) => <LatestCard key={it.id || i} item={it} />)}
+                </Rail>
+              )}
 
-              {/* Remaining, compact */}
-              {rest.length > 0 && (
-                <div className="mt-12 pt-6 border-t border-rule">
-                  <div className="mb-2"><Kicker>Latest</Kicker></div>
-                  <div className="grid md:grid-cols-2 md:gap-x-10">
-                    {rest.map((it, i) => <div key={it.id || i} className="border-b border-rule"><CompactRow item={it} /></div>)}
-                  </div>
-                </div>
+              {showSections && trials.length > 0 && (
+                <Rail kicker="In the clinic" note="Registered on ClinicalTrials.gov" to="/trials" linkLabel="All trials">
+                  {trials.map(t => <TrialCard key={t.id} trial={t} />)}
+                </Rail>
+              )}
+
+              {showSections && clearances.length > 0 && (
+                <Rail kicker="FDA decisions" note="From the openFDA device database" to="/devices" linkLabel="All devices">
+                  {clearances.map(d => <ClearanceCard key={d.id} device={d} />)}
+                </Rail>
+              )}
+
+              {showSections && rounds.length > 0 && (
+                <Rail kicker="Funding" note="Private capital from SEC Form D filings. Bars compare the rounds shown." to="/companies" linkLabel="All companies">
+                  {rounds.map(r => <FundingCard key={r.id} round={r} max={maxRound} />)}
+                </Rail>
+              )}
+
+              {showSections && notablePapers.length > 0 && (
+                <Rail kicker="Notable research" note="Highest field-normalized citation impact, past 90 days" to="/research" linkLabel="All research">
+                  {notablePapers.map((p, i) => <NotableCard key={p.doi || p.pmid || i} paper={p} />)}
+                </Rail>
               )}
             </>
           )}
