@@ -149,11 +149,13 @@ function ClearanceCard({ device, noPhoto }) {
   )
 }
 
-function FundingCard({ round, max }) {
+function FundingCard({ round, max, noPhoto }) {
   return (
     <div className="group">
       <Link to={round.href} className="block">
-        <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><FundingFigure round={round} max={max} /></div>
+        <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5">
+          <EntityFigure entity={round} noPhoto={noPhoto} fallback={<FundingFigure round={round} max={max} />} />
+        </div>
         <div className="mb-1"><Kicker>Funding round</Kicker></div>
         <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-2">{round.name}</h3>
       </Link>
@@ -166,6 +168,7 @@ function FundingCard({ round, max }) {
           </>
         )}
       </div>
+      {!noPhoto && <ImageCredit img={usableImage(round)} />}
     </div>
   )
 }
@@ -275,8 +278,8 @@ export default function MagazineFeed() {
   // photograph eight times. The first card on the page keeps it; the rest fall
   // back to their data figure, which is the more informative picture anyway.
   const dupes = useMemo(
-    () => duplicateImageIds([lead, ...sidebar, ...featured, ...latest, ...trials, ...clearances]),
-    [lead, sidebar, featured, latest, trials, clearances],
+    () => duplicateImageIds([lead, ...sidebar, ...featured, ...latest, ...trials, ...clearances, ...rounds]),
+    [lead, sidebar, featured, latest, trials, clearances, rounds],
   )
 
   return (
@@ -354,7 +357,7 @@ export default function MagazineFeed() {
 
               {showSections && rounds.length > 0 && (
                 <Rail kicker="Funding" note="Private capital from SEC Form D filings. Bars compare the rounds shown." to="/companies" linkLabel="All companies">
-                  {rounds.map(r => <FundingCard key={r.id} round={r} max={maxRound} />)}
+                  {rounds.map(r => <FundingCard key={r.id} round={r} max={maxRound} noPhoto={dupes.has(r.id)} />)}
                 </Rail>
               )}
 

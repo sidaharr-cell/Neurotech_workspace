@@ -744,7 +744,8 @@ export async function getRecentFundingRounds({ sinceISO = null, limit = 4 } = {}
   const orgIds = [...new Set(data.map(r => r.organization_id).filter(Boolean))]
   if (!orgIds.length) return []
   const { data: orgs } = await supabase.from('organizations')
-    .select('id,name,display_name,status,modality')
+    .select('id,name,display_name,status,modality,'
+      + 'image_url,image_kind,image_subject,image_credit,image_license,image_license_url,image_source,image_source_url')
     .eq('type', 'company')
     .not('inclusion_basis', 'is', null)
     .in('id', orgIds)
@@ -754,6 +755,9 @@ export async function getRecentFundingRounds({ sinceISO = null, limit = 4 } = {}
     .filter(r => byId[r.organization_id])
     .slice(0, limit)
     .map(r => ({
+      // The company's image columns ride along, so a round can show the
+      // company it belongs to rather than only its own amount.
+      ...byId[r.organization_id],
       id: r.id,
       orgId: r.organization_id,
       name: byId[r.organization_id].display_name || byId[r.organization_id].name,
