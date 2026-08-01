@@ -1,0 +1,11 @@
+{
+  "OBP": "Transcranial Magnetic Stimulator A transcranial magnetic stimulator is a device that delivers brief duration, rapidly alternating, or pulsed, magnetic fields to induce electrical currents that are directed at spatially discrete regions of the cerebral cortex for the treatment of major depressive disorder.",
+  "OMB": "Automatic Event Detection Software For Full-Montage Electroencephalograph Automatically mark or identify electroencephalograph waveforms for spikes, electrographic seizures, seizure-like events in order to aid in identification of such events and help review and annotation of prolonged EEG traces; All output subject to verification by qualified user",
+  "GXY": "Electrode, Cutaneous",
+  "OLU": "Normalizing Quantitative Electroencephalograph Software Post-hoc statistical analysis of electroencephalograph signals with comparison to a normative database for interpretation by a qualified user.",
+  "GWF": "Stimulator, Electrical, Evoked Response",
+  "NUH": "Stimulator, Nerve, Transcutaneous, Over-The-Counter TEMPORARY RELIEF OF PAIN DUE TO SORE/ACHING MUSCLES",
+  "GWM": "Device, Monitoring, Intracranial Pressure",
+  "OLT": "Non-Normalizing Quantitative Electroencephalograph Software Analyze electroencephalograph data using conventional methodology to output and display standard electroencephalograph parameters for interpretation by a qualified user.",
+  "GWQ": "Full-Montage Standard Electroencephalograph Acquire, display, store, and archive electroencephalographic signals from the brain using a full montage array (i.e., 16 or more electrodes) and user-specified locations"
+}

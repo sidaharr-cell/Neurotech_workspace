@@ -171,6 +171,32 @@ export async function classifyImageUrl(url) {
  * an explanatory diagram of a mechanism is a claim about how something works
  * rather than a picture of it.
  */
+/**
+ * Is this a photograph at all?
+ *
+ * Wikipedia leads a drug article with its skeletal formula and a protein
+ * article with a ribbon rendering. Both are the right picture for Wikipedia
+ * and the wrong picture for a card: a card that already carries a data figure
+ * gains nothing from a second diagram. Defaults to NO on any error.
+ */
+export async function confirmPhotograph(url) {
+  const a = await ask(url, 'Is this a PHOTOGRAPH of a real object, person, or place, or a medical scan such as an X-ray or MRI? Reply NO if it is a chemical structure, molecular diagram, schematic, chart, graph, map, logo, line drawing, rendering, or screenshot. Exactly one word: YES or NO.')
+  return a.includes('YES')
+}
+
+/**
+ * Is the DEVICE the subject of this photograph?
+ *
+ * A maker's site is mostly lifestyle photography: Cala Health's home page
+ * leads with a man holding a mug and a tablet, wearing the wristband
+ * somewhere out of focus. A reader learns nothing about the device from it.
+ * This gate asks for the hardware, not the mood.
+ */
+export async function confirmProductPhoto(url) {
+  const a = await ask(url, 'Is a medical device, wearable, implant, or piece of hardware the MAIN SUBJECT of this photograph — the device by itself, or worn, held or attached so that the device itself is clearly visible and in focus? Reply NO if it is a lifestyle or marketing photograph where the device is incidental, out of focus, or absent; a portrait or group of people; an office, home or laboratory scene; a logo; or a diagram. Exactly one word: YES or NO.')
+  return a.includes('YES')
+}
+
 export async function confirmDepicts(url, label) {
   const a = await ask(url, `Is this a PHOTOGRAPH (or a medical scan such as an X-ray or MRI) showing ${label}? Reply YES only if a reader would recognise the actual hardware, or a person wearing or implanted with it. Reply NO if it is a diagram, illustration, schematic, patent drawing, chart, book or document scan, logo, screenshot, or shows something else. Exactly one word: YES or NO.`)
   return a.includes('YES')
@@ -356,6 +382,234 @@ export async function commonsFile(fileName, { subject = 'item', minWidth = 0 } =
   return parseCommons(await getJson(url), { subject, minWidth })[0] || null
 }
 
+// ── Wikipedia: the article about this exact thing ───────────────────────────
+
+/** Loose equality for entity names: case, punctuation and a trailing
+ *  disambiguator ("NeuroPace (company)") do not count. Pure. */
+export const sameName = (a, b) => {
+  const norm = s => String(s || '').toLowerCase().replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim()
+  return norm(a) === norm(b)
+}
+
+/**
+ * The lead image of the Wikipedia article about this exact device or company.
+ *
+ * The article title has to BE the name. Wikipedia will happily answer
+ * "Nerivio" with an article about migraine, and a picture of a migraine is not
+ * a picture of the device. Pure name matching is what keeps this honest.
+ */
+export async function wikipediaImage(name, { subject = 'item', minWidth = 400 } = {}) {
+  if (!name || name.length < 3) return null
+  // pilimit is 1 by default, so a three-result search returns the lead image
+  // for one arbitrary page — usually not the page whose title we are matching.
+  const search = await getJson('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*'
+    + `&generator=search&gsrsearch=${encodeURIComponent(name)}&gsrlimit=3&prop=pageimages&piprop=original&pilimit=max`)
+  const page = Object.values(search?.query?.pages || {}).find(p => sameName(p.title, name))
+  const source = page?.original?.source
+  if (!source) return null
+
+  // The file lives on Commons, where the licence and the author live too.
+  const file = decodeURIComponent(source.split('/').pop())
+  const img = await commonsFile(file, { subject, minWidth })
+  if (!img) return null
+  if (!(await confirmPhotograph(img.url))) return null
+  return { ...img, source: 'wikipedia', sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title)}` }
+}
+
+// ── A maker's own site: the product page for this product ───────────────────
+
+/** The product a device record is named for, without its model numbers and
+ *  its second listed variant. Pure. */
+export function productName(device = {}) {
+  return String(device.name || '')
+    .split(/[;,]/)[0]
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/\b[A-Z]{1,3}[-\s]?\d{2,}[A-Z\d-]*\b/g, ' ')   // model numbers: AE03-50, TB-2343F
+    .replace(/[®™]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const STOP = new Set(['the', 'a', 'an', 'and', 'for', 'with', 'system', 'device', 'inc', 'llc', 'ltd', 'corp'])
+const tokens = s => String(s || '').toLowerCase().match(/[a-z0-9]+/g)?.filter(t => t.length > 2 && !STOP.has(t)) || []
+
+/** How well a link answers to a product name: the share of the name's own
+ *  words that the link's text and href carry. Pure. */
+export function linkScore(href, text, name) {
+  const want = tokens(name)
+  if (!want.length) return 0
+  const have = new Set([...tokens(text), ...tokens(href)])
+  return want.filter(t => have.has(t)).length / want.length
+}
+
+/** Absolute links on a page, as { href, text, internal }. Pure. */
+export function pageLinks(html, origin) {
+  const out = []
+  for (const m of String(html || '').matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]{0,120}?)<\/a>/gi)) {
+    let href
+    try { href = new URL(m[1], origin).href } catch { continue }
+    if (!/^https?:/.test(href)) continue
+    out.push({ href, text: stripHtml(m[2]), internal: href.startsWith(origin) })
+  }
+  return out
+}
+
+/** Does this link's HOST carry the product's own name? A maker often gives a
+ *  product a site of its own — Theranica's home page links to nerivio.com —
+ *  and that site is still the maker's. Pure. */
+export function hostNamesProduct(href, name) {
+  let host
+  try { host = new URL(href).hostname.toLowerCase() } catch { return false }
+  return tokens(name).some(t => t.length > 3 && host.includes(t))
+}
+
+/** The largest plausible content image on a page. Pure. */
+export function contentImage(html, pageUrl) {
+  const og = String(html || '').match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1]
+  const candidates = [og, ...[...String(html || '').matchAll(/<img\b[^>]*src=["']([^"']+)["']/gi)].map(m => m[1])]
+  for (const raw of candidates) {
+    if (!raw) continue
+    if (/logo|icon|sprite|avatar|badge|placeholder|\.svg($|\?)/i.test(raw)) continue
+    try { return new URL(raw, pageUrl).href } catch { /* keep looking */ }
+  }
+  return null
+}
+
+/**
+ * The picture of a product on the site of the company that makes it.
+ *
+ * This is the best picture a device record can have: it is that product,
+ * photographed by the people who build it. The page has to answer to the
+ * product's own name — more than half of the name's words in the link — and
+ * the picture has to survive a vision check, so a careers page banner or a
+ * stock photograph of a boardroom cannot slip through.
+ */
+export async function siteProductImage(website, name) {
+  if (!website || !name) return null
+  let origin
+  try { origin = new URL(website).origin } catch { return null }
+
+  const home = await getText(website, BROWSER_UA)
+  if (!home) return null
+  // Off-site links count only when the host itself is named for the product,
+  // so a maker's link to its own product site is followed and its link to a
+  // press article is not.
+  const scored = pageLinks(home, origin)
+    .filter(l => l.internal || hostNamesProduct(l.href, name))
+    .map(l => ({ ...l, score: linkScore(l.href, l.text, name) }))
+    .filter(l => l.score >= 0.6)
+    .sort((a, b) => b.score - a.score)
+
+  // The product's own page first. Then the maker's home page, which shows the
+  // hardware they lead with: that is a photograph of their technology but not
+  // necessarily of THIS clearance, so it is marked as an illustration and the
+  // page labels it.
+  const candidates = [
+    ...scored.slice(0, 3).map(l => ({ href: l.href, subject: 'item' })),
+    { href: website, subject: 'class', html: home },
+  ]
+
+  const seen = new Set()
+  for (const link of candidates) {
+    if (seen.has(link.href)) continue
+    seen.add(link.href)
+    const page = link.html || await getText(link.href, BROWSER_UA)
+    const src = contentImage(page, link.href)
+    if (!src) continue
+    const dims = await measureImage(src)
+    if (!CARD_RES(dims)) continue
+    if (!(await confirmProductPhoto(src))) continue
+    return {
+      url: src,
+      kind: 'photo',
+      subject: link.subject,
+      credit: new URL(link.href).hostname.replace(/^www\./, ''),
+      license: null,
+      licenseUrl: null,
+      source: 'manufacturer',
+      sourceUrl: link.href,
+      w: dims.width,
+      h: dims.height,
+    }
+  }
+  return null
+}
+
+/**
+ * The maker's own site, worked out from its name and then verified.
+ *
+ * openFDA gives a manufacturer's name and no URL, and most of these makers are
+ * too small to be in the organizations table. The domain is usually the name
+ * with the corporate suffix removed, so it is worth trying — but only if the
+ * site then says it is that company. The page has to name the maker in its
+ * title, its og:site_name, or its copyright line; otherwise a squatted domain
+ * would happily supply a photograph of something else entirely.
+ */
+export async function guessMakerSite(maker) {
+  const bare = String(maker || '').toLowerCase()
+    .replace(/\b(inc|llc|ltd|plc|corp|corporation|co|gmbh|s\.?r\.?l|sa|nv|bv|ag|oy|ab|limited|company|holdings|group|medical|technologies|technology)\b/g, ' ')
+    .replace(/[^a-z0-9 ]+/g, ' ').trim()
+  if (bare.length < 4) return null
+  // "MagVenture A/S" is magventure.com, "Cala Health, Inc." is calahealth.com:
+  // the whole name, the first two words, and the distinctive first word are
+  // the three shapes worth trying.
+  const words = bare.split(/\s+/).filter(w => w.length > 1)
+  if (!words.length) return null
+  const slugs = [...new Set([words.join(''), words.slice(0, 2).join(''), words[0]])]
+    .filter(x => x.length >= 5 && x.length <= 30)
+  const hosts = slugs.flatMap(x => [`https://www.${x}.com`, `https://${x}.com`])
+
+  for (const host of hosts) {
+    const html = await getText(host, BROWSER_UA)
+    if (!html) continue
+    const said = [
+      html.match(/<title[^>]*>([\s\S]{0,160}?)<\/title>/i)?.[1],
+      html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i)?.[1],
+      html.match(/(?:©|&copy;|copyright)[^<]{0,80}/i)?.[0],
+    ].filter(Boolean).join(' ').toLowerCase()
+    // The distinctive first word has to appear in what the site calls itself.
+    // A domain that never names the maker is somebody else's domain.
+    if (said.includes(words[0])) return host
+  }
+  return null
+}
+
+// ── arXiv: the preprint's own first figure ──────────────────────────────────
+
+/** The first figure on an arXiv HTML rendering. Pure. */
+export function arxivFigureHref(html, pageUrl) {
+  const m = String(html || '').match(/<img\b[^>]*src=["']([^"']+\.(?:png|jpe?g))["']/i)
+  if (!m) return null
+  try { return new URL(m[1], pageUrl).href } catch { return null }
+}
+
+/**
+ * A figure from an arXiv preprint, through the HTML rendering arXiv now
+ * publishes. arXiv preprints carry an author licence that permits display, and
+ * the credit names the paper.
+ */
+export async function arxivFigure(arxivId) {
+  const id = String(arxivId || '').replace(/v\d+$/, '')
+  if (!id) return null
+  const page = `https://arxiv.org/html/${id}v1`
+  const fig = arxivFigureHref(await getText(page, BROWSER_UA), page)
+  if (!fig) return null
+  const dims = await measureImage(fig)
+  if (!CARD_RES(dims)) return null
+  return {
+    url: fig,
+    kind: 'figure',
+    subject: 'item',
+    credit: `arXiv:${id}`,
+    license: null,
+    licenseUrl: null,
+    source: 'arxiv',
+    sourceUrl: `https://arxiv.org/abs/${id}`,
+    w: dims.width,
+    h: dims.height,
+  }
+}
+
 // ── Wikidata: a company's own logo ──────────────────────────────────────────
 
 /**
@@ -440,28 +694,28 @@ export async function siteIcon(website) {
  * matching from 4 in 20 to 9 in 20.
  */
 export const DEVICE_CLASSES = [
-  { id: 'cochlear_implant', label: 'a cochlear implant', queries: ['cochlear implant'], re: /cochlear (implant|prosthes)/i },
-  { id: 'dbs', label: 'a deep brain stimulation system (implanted brain electrodes or its pulse generator)', queries: ['deep brain stimulation', 'deep brain stimulation implant'], re: /deep brain stimulat|\bDBS\b|globus pallidus|subthalamic/i },
-  { id: 'rns', label: 'an implanted neurostimulator for epilepsy (the device, its leads, or an X-ray of it in place)', queries: ['responsive neurostimulation epilepsy', 'neurostimulator implant epilepsy', 'NeuroPace', 'epilepsy neurostimulator'], re: /responsive neurostimulat|\bRNS\b/i },
-  { id: 'vns', label: 'a vagus nerve stimulator (implanted pulse generator and lead)', queries: ['vagus nerve stimulator implant', 'vagus nerve stimulation'], re: /vagus|vagal|\bVNS\b/i },
-  { id: 'scs', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
-  { id: 'tms', label: 'transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head', queries: ['transcranial magnetic stimulation', 'transcranial magnetic stimulation coil', 'TMS therapy treatment', 'magnetic stimulation coil head'], re: /transcranial magnetic|\b[ri]?TMS\b|theta burst/i, titleAlso: /stimulation coil|double cone coil/i },
-  { id: 'tdcs', label: 'transcranial electrical stimulation electrodes on a head', queries: ['transcranial direct current stimulation', 'tDCS electrodes head'], re: /transcranial direct current|\btDCS\b|\btACS\b|transcranial electrical/i },
-  { id: 'tens', label: 'a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes', queries: ['TENS unit electrodes', 'transcutaneous electrical nerve stimulation'], re: /(transcutaneous[\s\S]{0,40}nerve|nerve[\s\S]{0,40}transcutaneous)|\bTENS\b|tongue stimulator/i },
-  { id: 'pns', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
-  { id: 'retinal', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
-  { id: 'ecog', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
-  { id: 'mea', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
-  { id: 'eeg', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
-  { id: 'meg', label: 'a magnetoencephalography scanner', queries: ['magnetoencephalography'], re: /magnetoencephalograph|\bMEG\b/i },
-  { id: 'fnirs', label: 'a functional near-infrared spectroscopy headset', queries: ['functional near-infrared spectroscopy brain', 'fNIRS headset'], re: /near-?infrared spectroscop|\bfNIRS\b/i },
-  { id: 'mri', label: 'a magnetic resonance imaging scanner or an MRI brain scan', queries: ['magnetic resonance imaging scanner', 'MRI brain scan'], re: /magnetic resonance imag|\bfMRI\b|\bMRI\b|neuroimaging/i },
-  { id: 'emg', label: 'electromyography: surface EMG electrodes or an EMG recording', queries: ['electromyography electrodes', 'electromyography'], re: /electromyograph|\bEMG\b|biofeedback analyzer|evoked response/i },
-  { id: 'fus', label: 'a focused ultrasound therapy or ultrasound neuromodulation system', queries: ['focused ultrasound therapy', 'MRI guided focused ultrasound', 'high intensity focused ultrasound machine', 'ultrasound therapy device'], re: /focused ultrasound|ultrasound neuromodulat/i, titleAlso: /focused ultrasound|\bHIFU\b/i },
-  { id: 'exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
-  { id: 'prosthetic', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
-  { id: 'electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
-  { id: 'bci', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe/i },
+  { id: 'cochlear_implant', article: 'Cochlear implant', label: 'a cochlear implant', queries: ['cochlear implant'], re: /cochlear (implant|prosthes)/i },
+  { id: 'dbs', article: 'Deep brain stimulation', label: 'a deep brain stimulation system (implanted brain electrodes or its pulse generator)', queries: ['deep brain stimulation', 'deep brain stimulation implant'], re: /deep brain stimulat|\bDBS\b|globus pallidus|subthalamic/i },
+  { id: 'rns', article: 'Responsive neurostimulation device', label: 'an implanted neurostimulator for epilepsy (the device, its leads, or an X-ray of it in place)', queries: ['responsive neurostimulation epilepsy', 'neurostimulator implant epilepsy', 'NeuroPace', 'epilepsy neurostimulator'], re: /responsive neurostimulat|\bRNS\b/i },
+  { id: 'vns', article: 'Vagus nerve stimulation', label: 'a vagus nerve stimulator (implanted pulse generator and lead)', queries: ['vagus nerve stimulator implant', 'vagus nerve stimulation'], re: /vagus|vagal|\bVNS\b/i },
+  { id: 'scs', article: 'Spinal cord stimulator', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
+  { id: 'tms', article: 'Transcranial magnetic stimulation', label: 'transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head', queries: ['transcranial magnetic stimulation', 'transcranial magnetic stimulation coil', 'TMS therapy treatment', 'magnetic stimulation coil head'], re: /transcranial magnetic|\b[ri]?TMS\b|theta burst/i, titleAlso: /stimulation coil|double cone coil/i },
+  { id: 'tdcs', article: 'Transcranial direct-current stimulation', label: 'transcranial electrical stimulation electrodes on a head', queries: ['transcranial direct current stimulation', 'tDCS electrodes head'], re: /transcranial direct current|\btDCS\b|\btACS\b|transcranial electrical/i },
+  { id: 'tens', article: 'Transcutaneous electrical nerve stimulation', label: 'a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes', queries: ['TENS unit electrodes', 'transcutaneous electrical nerve stimulation'], re: /(transcutaneous[\s\S]{0,40}nerve|nerve[\s\S]{0,40}transcutaneous)|\bTENS\b|tongue stimulator/i },
+  { id: 'pns', article: 'Peripheral nerve stimulation', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
+  { id: 'retinal', article: 'Retinal implant', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
+  { id: 'ecog', article: 'Electrocorticography', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
+  { id: 'mea', article: 'Microelectrode array', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
+  { id: 'eeg', article: 'Electroencephalography', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
+  { id: 'meg', article: 'Magnetoencephalography', label: 'a magnetoencephalography scanner', queries: ['magnetoencephalography'], re: /magnetoencephalograph|\bMEG\b/i },
+  { id: 'fnirs', article: 'Functional near-infrared spectroscopy', label: 'a functional near-infrared spectroscopy headset', queries: ['functional near-infrared spectroscopy brain', 'fNIRS headset'], re: /near-?infrared spectroscop|\bfNIRS\b/i },
+  { id: 'mri', article: 'Magnetic resonance imaging', label: 'a magnetic resonance imaging scanner or an MRI brain scan', queries: ['magnetic resonance imaging scanner', 'MRI brain scan'], re: /magnetic resonance imag|\bfMRI\b|\bMRI\b|neuroimaging/i },
+  { id: 'emg', article: 'Electromyography', label: 'electromyography: surface EMG electrodes or an EMG recording', queries: ['electromyography electrodes', 'electromyography'], re: /electromyograph|\bEMG\b|biofeedback analyzer|evoked response/i },
+  { id: 'fus', article: 'High-intensity focused ultrasound', label: 'a focused ultrasound therapy or ultrasound neuromodulation system', queries: ['focused ultrasound therapy', 'MRI guided focused ultrasound', 'high intensity focused ultrasound machine', 'ultrasound therapy device'], re: /focused ultrasound|ultrasound neuromodulat/i, titleAlso: /focused ultrasound|\bHIFU\b/i },
+  { id: 'exoskeleton', article: 'Powered exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
+  { id: 'prosthetic', article: 'Myoelectric prosthesis', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
+  { id: 'electrode', article: 'Electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
+  { id: 'bci', article: 'Brain–computer interface', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe/i },
 ]
 
 /**
@@ -577,6 +831,19 @@ export async function classImagePool(cls, { want = 3, maxChecks = 16 } = {}) {
   const out = []
   const seen = new Set()
   let checks = 0
+
+  // Wikipedia's article on the technology first. Its lead image was chosen by
+  // editors to represent the topic, which is a better picture than anything a
+  // text search ranks first, and the article's title is the affirmation that
+  // Commons file names otherwise have to supply.
+  if (cls.article) {
+    const lead = await wikipediaImage(cls.article, { subject: 'class', minWidth: 330 })
+    if (lead && (await confirmDepicts(lead.url, cls.label))) {
+      seen.add(lead.url)
+      out.push({ ...lead, classId: cls.id, classLabel: cls.label, classTitle: cls.article })
+    }
+  }
+
   for (const query of cls.queries) {
     for (const cand of await commonsSearch(query)) {
       if (out.length >= want || checks >= maxChecks) break
@@ -619,26 +886,72 @@ export function pickClassImage(pool, classId, seedKey = '') {
 }
 
 /**
- * A paper's own figure: the preprint server first, then PMC. A paywalled paper
- * returns null, because its figures are not ours to show.
+ * A paper's own figure: the preprint servers first, then PMC. A paywalled
+ * paper returns null, because its figures are not ours to show.
  */
 export async function resolvePaperImage(item) {
   const doi = item.metadata?.doi || item.doi
   const pmid = item.metadata?.pmid || item.pmid
+  const arxivId = item.metadata?.arxivId || item.arxivId
   return (await preprintFigure({ url: item.url, doi }))
+    || (arxivId ? await arxivFigure(arxivId) : null)
     || (await europePmcFigure({ doi, pmid }))
     || null
 }
 
-/** A device's picture. There is no photograph of an individual 510(k)
- *  submission, so this is always a class photograph, labelled as one. */
-export async function resolveDeviceImage(device) {
+/**
+ * A device's picture, best first.
+ *
+ *   1. the Wikipedia article about this exact device, when one exists
+ *   2. the product's page on the site of the company that makes it, which is
+ *      the product photographed by the people who build it
+ *   3. a labelled photograph of the technology
+ *
+ * `website` is the maker's site, which the caller looks up: openFDA gives a
+ * manufacturer's NAME and no URL, and the organizations table is where the
+ * URLs are.
+ */
+export async function resolveDeviceImage(device, { website = null } = {}) {
+  const name = productName(device)
+  const own = (await wikipediaImage(name))
+    || (website ? await siteProductImage(website, name) : null)
+  if (own) return own
   const cls = classifyTechnology(device, await productCodeText(device.product_code))
   return classImage(cls)
 }
 
-/** A trial's picture: a class photograph, from its interventions. */
-export async function resolveTrialImage(trial) {
+/**
+ * The named products among a trial's interventions.
+ *
+ * "Repetitive transcranial magnetic stimulation" is a technique and belongs to
+ * the class photographs; "Nerivio" is a product and has a photograph of its
+ * own. The difference is that a technique is in the class vocabulary and a
+ * product is a proper noun that is not. Pure.
+ */
+export function productLikeNames(trial = {}) {
+  const raw = [...(trial.metadata?.interventions || [])]
+  return raw
+    .map(s => String(s).replace(/\b(device|therapy|treatment|system)\b\s*$/i, '').trim())
+    .filter(s => s.length > 3 && s.split(/\s+/).length <= 4)
+    .filter(s => /[A-Z]/.test(s))                                  // a name, not a description
+    .filter(s => !DEVICE_CLASSES.some(c => c.re.test(s)))          // a technique, not a product
+    .filter(s => !/^(placebo|sham|control|standard|usual|saline|blood|questionnaire|survey)/i.test(s))
+}
+
+/**
+ * A trial's picture, best first.
+ *
+ *   1. the product under test: the Wikipedia article about it, or its page on
+ *      the sponsor's own site. Nothing represents a trial better than a
+ *      photograph of the thing being trialled.
+ *   2. a labelled photograph of the technique it uses.
+ */
+export async function resolveTrialImage(trial, { sponsorSite = null } = {}) {
+  for (const name of productLikeNames(trial).slice(0, 2)) {
+    const own = (await wikipediaImage(name))
+      || (sponsorSite ? await siteProductImage(sponsorSite, name) : null)
+    if (own) return own
+  }
   return classImage(classifyTechnology(trial))
 }
 

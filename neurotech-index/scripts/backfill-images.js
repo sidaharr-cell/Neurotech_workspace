@@ -6,6 +6,9 @@
  *   … --type=feed,trials,devices,orgs   default: all four
  *   … --limit=200                       rows per type
  *   … --force                           re-source rows that already have one
+ *   … --upgrade                         re-source rows holding a CLASS photograph,
+ *                                       keeping it unless something of the record's
+ *                                       own turns up
  *
  * Dry run by default, like every other backfill here, so a local run cannot
  * write to production by accident.
@@ -34,8 +37,9 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import {
-  resolvePaperImage, resolveOrgImage, ogImage, classifyImageUrl, measureImage, CARD_RES,
+  resolvePaperImage, resolveOrgImage, resolveTrialImage, ogImage, classifyImageUrl, measureImage, CARD_RES,
   classifyTechnology, productCodeText, loadClassImages, pickClassImage, saveProductCodes,
+  productName, wikipediaImage, siteProductImage, guessMakerSite,
 } from './lib/images.js'
 
 const arg = (name, fallback = null) => {
@@ -44,6 +48,11 @@ const arg = (name, fallback = null) => {
 }
 const COMMIT = process.argv.includes('--commit')
 const FORCE = process.argv.includes('--force')
+// A class photograph is the fallback, not the answer. --upgrade goes back over
+// the records that settled for one and asks the item-specific sources again:
+// a preprint that has since appeared on arXiv, a device whose maker's site has
+// come up, a trial whose product now has a photograph.
+const UPGRADE = process.argv.includes('--upgrade')
 const LIMIT = Number(arg('limit', 200))
 const TYPES = new Set((arg('type', 'feed,trials,devices,orgs')).split(','))
 
@@ -71,6 +80,54 @@ function classImageFor(entity, extra = '') {
   return img
     ? { img: { ...img, classId: cls.id, subject: 'class' }, why: null }
     : { img: null, why: `${cls.id}: no confirmed photograph` }
+}
+
+/**
+ * Maker name to website. openFDA gives a device a manufacturer's NAME and no
+ * URL; the organizations table is where the URLs are. Matching is on the
+ * normalized name, so "Cala Health, Inc." finds "Cala Health".
+ */
+const normName = s => String(s || '').toLowerCase()
+  .replace(/\b(inc|llc|ltd|plc|corp|corporation|co|gmbh|srl|sa|nv|bv|ag|as|oy|ab|limited|company)\b/g, ' ')
+  .replace(/[^a-z0-9]+/g, ' ').trim()
+
+async function makerSites() {
+  const { data } = await sb.from('organizations').select('name,display_name,website')
+    .eq('type', 'company').not('website', 'is', null).limit(2000)
+  const byName = new Map()
+  for (const o of data || []) {
+    for (const n of [o.display_name, o.name]) if (n) byName.set(normName(n), o.website)
+  }
+  return byName
+}
+
+/**
+ * Products we already hold a picture of, by name.
+ *
+ * A trial of the Nerivio device is best represented by a photograph of
+ * Nerivio, which the device row already has. The trial's own interventions
+ * name the product, so the two can be joined on the name and the picture
+ * reused rather than falling back to a photograph of the technology.
+ */
+async function productImages() {
+  const { data, error } = await sb.from('devices')
+    .select('name,image_url,image_kind,image_subject,image_credit,image_license,image_license_url,image_source,image_source_url,image_w,image_h')
+    .not('image_url', 'is', null).eq('image_subject', 'item').limit(2000)
+  if (error) return []
+  return (data || []).map(d => ({
+    name: productName(d),
+    img: {
+      url: d.image_url, kind: d.image_kind, subject: 'item', credit: d.image_credit,
+      license: d.image_license, licenseUrl: d.image_license_url, source: d.image_source,
+      sourceUrl: d.image_source_url, w: d.image_w, h: d.image_h,
+    },
+  })).filter(p => p.name.length > 3)
+}
+
+/** The product a record names, if we hold a picture of it. */
+function matchProduct(text, products) {
+  const haystack = String(text || '').toLowerCase()
+  return products.find(p => haystack.includes(p.name.toLowerCase()))?.img || null
 }
 
 /** metadata keys for a news_feed row. camelCase, beside the ones already there. */
@@ -130,7 +187,7 @@ async function doFeed() {
   if (error) throw error
   const rows = data
     .sort((a, b) => (b.metadata?.rankScore ?? 0) - (a.metadata?.rankScore ?? 0))
-    .filter(r => FORCE || !r.metadata?.image)
+    .filter(r => FORCE || !r.metadata?.image || (UPGRADE && r.metadata?.imageSubject === 'class'))
     .slice(0, LIMIT)
   console.log(`\nFeed: ${rows.length} rows without a picture (of ${data.length} fetched)`)
 
@@ -151,8 +208,8 @@ async function doFeed() {
       img = await resolvePaperImage(row)
     }
     let why = ''
-    if (!img) ({ img, why } = classImageFor(row))
-    note(row.title || row.id, img, why)
+    if (!img && !(UPGRADE && row.metadata?.image)) ({ img, why } = classImageFor(row))
+    note(row.title || row.id, img, why || 'kept its class photograph')
     if (img) await write('news_feed', row.id, { metadata: { ...(row.metadata || {}), ...toMetadata(img) } })
   }
 }
@@ -166,12 +223,20 @@ async function doTrials() {
     .order('relevance_score', { ascending: false })
     .limit(LIMIT * 2)
   if (error) throw error
-  const rows = data.filter(r => FORCE || !r.metadata?.image).slice(0, LIMIT)
-  console.log(`\nTrials: ${rows.length} rows without a picture`)
+  const rows = data.filter(r => FORCE || !r.metadata?.image || (UPGRADE && r.metadata?.imageSubject === 'class')).slice(0, LIMIT)
+  const products = await productImages()
+  const makers = await makerSites()
+  console.log(`\nTrials: ${rows.length} rows without a picture (${products.length} products with a photograph to reuse)`)
 
   for (const row of rows) {
-    const { img, why } = classImageFor(row)
-    note(row.title || row.id, img, why)
+    // The product under test, in three ways: a device row we already hold a
+    // picture of, the article about it, or its page on the sponsor's own site.
+    const named = [row.title, ...(row.metadata?.interventions || [])].join(' ')
+    let img = matchProduct(named, products)
+    if (!img) img = await resolveTrialImage(row, { sponsorSite: makers.get(normName(row.metadata?.sponsor)) || null })
+    let why = ''
+    if (!img && !(UPGRADE && row.metadata?.image)) ({ img, why } = classImageFor(row))
+    note(row.title || row.id, img, why || 'kept its class photograph')
     if (img) await write('news_feed', row.id, { metadata: { ...(row.metadata || {}), ...toMetadata(img) } })
   }
 }
@@ -179,23 +244,44 @@ async function doTrials() {
 // ── Devices ─────────────────────────────────────────────────────────────────
 
 async function doDevices() {
-  const { data, error } = await sb.from('devices')
-    .select('id,name,description,manufacturer,product_code,image_url')
+  const COLS = 'id,name,description,manufacturer,product_code'
+  let { data, error } = await sb.from('devices')
+    .select(`${COLS},image_url,image_subject`)
     .order('year', { ascending: false, nullsFirst: false })
     .limit(LIMIT * 2)
-  if (error) {
-    if (/image_url/.test(error.message)) {
-      console.error('\ndevices: image columns are missing. Apply supabase/migrations/016-entity-images.sql first.')
+
+  // Migration 016 adds the image columns. Until it is applied the resolver can
+  // still be exercised, so a dry run shows exactly what the migration would let
+  // it write. Committing without the columns is refused rather than attempted.
+  let unmigrated = false
+  if (error && /image_url|image_subject/.test(error.message)) {
+    unmigrated = true
+    if (COMMIT) {
+      console.error('\ndevices: the image columns do not exist yet.')
+      console.error('Apply supabase/migrations/016-entity-images.sql in the Supabase SQL editor, then re-run.')
       return
     }
-    throw error
+    console.log('\ndevices: image columns not applied yet, so this is a preview of what would be written.')
+    ;({ data, error } = await sb.from('devices').select(COLS)
+      .order('year', { ascending: false, nullsFirst: false }).limit(LIMIT * 2))
   }
-  const rows = data.filter(r => FORCE || !r.image_url).slice(0, LIMIT)
-  console.log(`\nDevices: ${rows.length} rows without a picture`)
+  if (error) throw error
+  const rows = data.filter(r => unmigrated || FORCE || !r.image_url || (UPGRADE && r.image_subject === 'class')).slice(0, LIMIT)
+  const sites = await makerSites()
+  console.log(`\nDevices: ${rows.length} rows without a picture (${sites.size} makers with a known site)`)
 
   for (const row of rows) {
-    const { img, why } = classImageFor(row, await productCodeText(row.product_code))
-    note(row.name || row.id, img, why)
+    const name = productName(row)
+    // The organizations table first, then the maker's own domain worked out
+    // from its name and verified against what the site says it is.
+    const website = sites.get(normName(row.manufacturer)) || await guessMakerSite(row.manufacturer)
+    // Best first: the article about this exact device, then the maker's own
+    // product page, then a labelled photograph of the technology.
+    let img = await wikipediaImage(name)
+    if (!img && website) img = await siteProductImage(website, name)
+    let why = ''
+    if (!img) ({ img, why } = classImageFor(row, await productCodeText(row.product_code)))
+    note(row.name || row.id, img, why || (website ? '' : 'maker site unknown'))
     if (img) await write('devices', row.id, toColumns(img))
   }
   saveProductCodes()
