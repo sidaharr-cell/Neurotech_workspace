@@ -6,8 +6,9 @@ import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
 import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import FacetSidebar, { NO_FACETS } from './FacetSidebar'
-import { StoryFigure, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
+import { StoryFigure, EntityFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
 import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
+import { usableImage, duplicateImageIds } from '../lib/image'
 import { entityMatchesFacets } from '../lib/facets'
 import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
 import notable from '../data/notable.json'
@@ -18,10 +19,14 @@ const prettyStatus = s => String(s || '').replace(/_/g, ' ').toLowerCase().repla
 // ── Stories ─────────────────────────────────────────────────────────────────
 
 function LeadCard({ item }) {
+  // The lead only runs a photograph OF the story, so the credit has to be read
+  // through the same rule: a card must never credit a picture it is not showing.
+  const img = usableImage(item, { own: true })
   return (
-    <Link to={`/item/${item.id}`} className="group block">
+    <div className="group">
+      <Link to={`/item/${item.id}`} className="block">
       <div className="aspect-[16/9] overflow-hidden bg-canvas mb-4">
-        <StoryFigure item={item} size="lg" requireReal priority className="group-hover:scale-[1.02] transition-transform duration-500" />
+        <StoryFigure item={item} size="lg" own priority className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
       <div className="flex items-center gap-3 mb-2">
         <Kicker>{typeWord(item.entry_type)}</Kicker>
@@ -32,17 +37,19 @@ function LeadCard({ item }) {
       </h2>
       {item.summary && <p className="mt-3 text-[1.05rem] leading-relaxed text-ink-soft font-body line-clamp-3">{item.summary}</p>}
       <div className="mt-3"><Meta {...metaOf(item)} /></div>
-    </Link>
+      </Link>
+      <ImageCredit img={img} />
+    </div>
   )
 }
 
 /** The rail beside the lead. The picture is a thumbnail so the rail stays a
  *  list of headlines rather than a second grid of cards. */
-function SidebarItem({ item }) {
+function SidebarItem({ item, noPhoto }) {
   return (
     <Link to={`/item/${item.id}`} className="group flex gap-3 py-4">
       <div className="w-20 sm:w-24 shrink-0 aspect-[4/3] overflow-hidden bg-canvas">
-        <StoryFigure item={item} size="sm" />
+        <StoryFigure item={item} size="sm" noPhoto={noPhoto} />
       </div>
       <div className="min-w-0">
         <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
@@ -53,30 +60,36 @@ function SidebarItem({ item }) {
   )
 }
 
-function FeaturedCard({ item }) {
+function FeaturedCard({ item, noPhoto }) {
   return (
-    <Link to={`/item/${item.id}`} className="group block">
+    <div className="group">
+      <Link to={`/item/${item.id}`} className="block">
       <div className="aspect-[4/3] overflow-hidden bg-canvas mb-3">
-        <StoryFigure item={item} className="group-hover:scale-[1.02] transition-transform duration-500" />
+        <StoryFigure item={item} noPhoto={noPhoto} className="group-hover:scale-[1.02] transition-transform duration-500" />
       </div>
       <div className="mb-1.5"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
       <h3 className="font-serif text-[1.3rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
       {item.summary && <p className="mt-1.5 text-[0.9rem] leading-relaxed text-ink-soft font-body line-clamp-2">{item.summary}</p>}
       <div className="mt-2"><Meta {...metaOf(item)} /></div>
-    </Link>
+      </Link>
+      {!noPhoto && <ImageCredit img={usableImage(item)} />}
+    </div>
   )
 }
 
-function LatestCard({ item }) {
+function LatestCard({ item, noPhoto }) {
   return (
-    <Link to={`/item/${item.id}`} className="group block">
-      <div className="aspect-[16/9] overflow-hidden bg-canvas mb-2.5">
-        <StoryFigure item={item} className="group-hover:scale-[1.02] transition-transform duration-500" />
-      </div>
-      <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
-      <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
-      <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
-    </Link>
+    <div className="group">
+      <Link to={`/item/${item.id}`} className="block">
+        <div className="aspect-[16/9] overflow-hidden bg-canvas mb-2.5">
+          <StoryFigure item={item} noPhoto={noPhoto} className="group-hover:scale-[1.02] transition-transform duration-500" />
+        </div>
+        <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
+        <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
+        <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
+      </Link>
+      {!noPhoto && <ImageCredit img={usableImage(item)} />}
+    </div>
   )
 }
 
@@ -96,11 +109,14 @@ function RailHeading({ kicker, note, to, linkLabel }) {
   )
 }
 
-function TrialCard({ trial }) {
+function TrialCard({ trial, noPhoto }) {
   const m = trial.metadata || {}
   return (
-    <Link to={`/item/${trial.id}`} className="group block">
-      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><TrialFigure trial={trial} /></div>
+    <div className="group">
+      <Link to={`/item/${trial.id}`} className="block">
+      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5">
+        <EntityFigure entity={trial} noPhoto={noPhoto} fallback={<TrialFigure trial={trial} />} />
+      </div>
       <div className="flex items-center gap-2 mb-1 flex-wrap">
         <Kicker>{m.phase || 'Clinical trial'}</Kicker>
         {m.status && <span className="text-[11px] font-sans text-muted">{prettyStatus(m.status)}</span>}
@@ -109,20 +125,27 @@ function TrialCard({ trial }) {
       <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
         {[m.sponsor, m.enrollment ? `n=${m.enrollment.toLocaleString()}` : null, m.nctId].filter(Boolean).join(' · ')}
       </div>
-    </Link>
+      </Link>
+      {!noPhoto && <ImageCredit img={usableImage(trial)} />}
+    </div>
   )
 }
 
-function ClearanceCard({ device }) {
+function ClearanceCard({ device, noPhoto }) {
   return (
-    <Link to={`/device/${device.id}`} className="group block">
-      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5"><ClearanceFigure device={device} /></div>
+    <div className="group">
+      <Link to={`/device/${device.id}`} className="block">
+      <div className="aspect-[4/3] overflow-hidden bg-canvas mb-2.5">
+        <EntityFigure entity={device} noPhoto={noPhoto} fallback={<ClearanceFigure device={device} />} />
+      </div>
       <div className="mb-1"><Kicker>{device.status || 'FDA record'}</Kicker></div>
       <h3 className="font-serif text-[1.1rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{device.name}</h3>
       <div className="mt-1.5 text-[13px] font-sans text-muted line-clamp-2">
         {[device.manufacturer, clearanceNumber(device), device.year].filter(Boolean).join(' · ')}
       </div>
-    </Link>
+      </Link>
+      {!noPhoto && <ImageCredit img={usableImage(device)} />}
+    </div>
   )
 }
 
@@ -247,6 +270,15 @@ export default function MagazineFeed() {
   const showSections = !type
   const maxRound = Math.max(...rounds.map(r => r.amountUsd || 0), 0)
 
+  // A class photograph belongs to a technology, not to a record, so eight
+  // brain-computer interface stories would otherwise run the same conference
+  // photograph eight times. The first card on the page keeps it; the rest fall
+  // back to their data figure, which is the more informative picture anyway.
+  const dupes = useMemo(
+    () => duplicateImageIds([lead, ...sidebar, ...featured, ...latest, ...trials, ...clearances]),
+    [lead, sidebar, featured, latest, trials, clearances],
+  )
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <SectionHeading
@@ -288,7 +320,7 @@ export default function MagazineFeed() {
                       <Kicker>More stories</Kicker>
                     </div>
                     <div className="divide-rule">
-                      {sidebar.map((it, i) => <SidebarItem key={it.id || i} item={it} />)}
+                      {sidebar.map((it, i) => <SidebarItem key={it.id || i} item={it} noPhoto={dupes.has(it.id)} />)}
                     </div>
                   </div>
                 )}
@@ -297,26 +329,26 @@ export default function MagazineFeed() {
               {featured.length > 0 && (
                 <div className="mt-12 pt-8 border-t-2 border-ink">
                   <div className="grid sm:grid-cols-3 gap-8">
-                    {featured.map((it, i) => <FeaturedCard key={it.id || i} item={it} />)}
+                    {featured.map((it, i) => <FeaturedCard key={it.id || i} item={it} noPhoto={dupes.has(it.id)} />)}
                   </div>
                 </div>
               )}
 
               {latest.length > 0 && (
                 <Rail kicker="Latest">
-                  {latest.map((it, i) => <LatestCard key={it.id || i} item={it} />)}
+                  {latest.map((it, i) => <LatestCard key={it.id || i} item={it} noPhoto={dupes.has(it.id)} />)}
                 </Rail>
               )}
 
               {showSections && trials.length > 0 && (
                 <Rail kicker="In the clinic" note="Registered on ClinicalTrials.gov" to="/trials" linkLabel="All trials">
-                  {trials.map(t => <TrialCard key={t.id} trial={t} />)}
+                  {trials.map(t => <TrialCard key={t.id} trial={t} noPhoto={dupes.has(t.id)} />)}
                 </Rail>
               )}
 
               {showSections && clearances.length > 0 && (
                 <Rail kicker="FDA decisions" note="From the openFDA device database" to="/devices" linkLabel="All devices">
-                  {clearances.map(d => <ClearanceCard key={d.id} device={d} />)}
+                  {clearances.map(d => <ClearanceCard key={d.id} device={d} noPhoto={dupes.has(d.id)} />)}
                 </Rail>
               )}
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { phasesOf, clearanceNumber, clearancePathway, hasUsableImage, topPct, trustedPctile } from './Figure'
+import { phasesOf, clearanceNumber, clearancePathway, topPct, trustedPctile } from './Figure'
 
 const daysAgo = n => new Date(Date.now() - n * 86400000).toISOString()
 
@@ -41,28 +41,6 @@ describe('clearance fields', () => {
   it('returns null rather than guessing when nothing says', () => {
     expect(clearanceNumber({ name: 'A device' })).toBeNull()
     expect(clearancePathway({ name: 'A device' })).toBeNull()
-  })
-})
-
-describe('hasUsableImage', () => {
-  const withImage = kind => ({ metadata: { image: 'https://x/a.jpg', imageKind: kind } })
-
-  it('never shows an image the vision pass called stock', () => {
-    expect(hasUsableImage(withImage('stock'))).toBe(false)
-  })
-
-  it('shows an unclassified image in an ordinary slot', () => {
-    expect(hasUsableImage(withImage(null))).toBe(true)
-  })
-
-  it('holds the lead to confirmed photographs', () => {
-    expect(hasUsableImage(withImage(null), { requireReal: true })).toBe(false)
-    expect(hasUsableImage(withImage('real'), { requireReal: true })).toBe(true)
-  })
-
-  it('is false when there is no image at all', () => {
-    expect(hasUsableImage({ metadata: {} })).toBe(false)
-    expect(hasUsableImage(undefined)).toBe(false)
   })
 })
 

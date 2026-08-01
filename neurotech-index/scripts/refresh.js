@@ -15,6 +15,7 @@ import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
 import { classify } from '../src/lib/classify.js'
 import { scanReproLinks } from '../src/lib/repro.js'
+import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage } from './lib/images.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -638,74 +639,61 @@ async function classifyImages(items) {
   console.log(`      image check: ${real} real / ${withImg.length} classified`)
 }
 
-/** Confirm a URL returns a real image (so the browser will render it). */
-async function isReachableImage(url) {
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(6000) })
-    if (!res.ok) return false
-    return (res.headers.get('content-type') || '').startsWith('image/')
-  } catch { return false }
-}
-
 /**
- * Find a real figure for a paper via Europe PMC: resolve the article to its PMC
- * id, and if it is open-access, pull the first figure's image from the PMC
- * full-text. Returns a reachable image URL or null.
+ * Give the day's items a picture, in the order the pipeline trusts them.
+ *
+ *   1. the paper's OWN figure, from bioRxiv/medRxiv or from Europe PMC when it
+ *      is open access. Publisher pages 403 every script, so a paywalled paper
+ *      has no figure to be had.
+ *   2. a labelled photograph of the technology, from the reviewed pool in
+ *      scripts/data/class-images.json. Marked subject='class', which is what
+ *      makes the page label it and print the credit.
+ *
+ * News keeps the photograph its outlet published, sourced earlier in the run.
+ * Everything the pipeline writes carries its provenance: source, credit,
+ * licence and the page the file is described on. See scripts/lib/images.js.
  */
-async function europePmcFigure(item) {
-  const q = item.doi ? `DOI:"${item.doi}"` : item.pmid ? `EXT_ID:${item.pmid} AND SRC:MED` : null
-  if (!q) return null
-  try {
-    const searchUrl = `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${encodeURIComponent(q)}&format=json&resultType=core&pageSize=1`
-    const sres = await fetch(searchUrl, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(7000) })
-    if (!sres.ok) return null
-    const res = (await sres.json())?.resultList?.result?.[0]
-    const pmcid = res?.pmcid
-    if (!pmcid || (res.inEPMC !== 'Y' && res.isOpenAccess !== 'Y')) return null
+async function enrichWithFigures(sortedItems, limit = 60) {
+  const pool = loadClassImages()
+  const targets = sortedItems.slice(0, limit)
+  let own = 0, cls = 0
 
-    const xres = await fetch(`https://www.ebi.ac.uk/europepmc/webservices/rest/PMC/${pmcid}/fullTextXML`,
-      { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(9000) })
-    if (!xres.ok) return null
-    const xml = await xres.text()
-    // Prefer a figure (<fig>) graphic; fall back to any graphic.
-    const figBlock = xml.match(/<fig[\s>][\s\S]*?<\/fig>/i)?.[0] || xml
-    let href = figBlock.match(/<graphic[^>]*xlink:href="([^"]+)"/i)?.[1]
-    if (!href) return null
-    if (!/\.(jpe?g|png|gif|webp)$/i.test(href)) href += '.jpg'
-    const imgUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/${pmcid}/bin/${href}`
-    return (await isReachableImage(imgUrl)) ? imgUrl : null
-  } catch {
-    return null
+  const stamp = (it, img) => {
+    Object.assign(it.metadata, {
+      image: img.url,
+      imageKind: img.kind,
+      imageSubject: img.subject,
+      imageCredit: img.credit || null,
+      imageLicense: img.license || null,
+      imageLicenseUrl: img.licenseUrl || null,
+      imageSource: img.source,
+      imageSourceUrl: img.sourceUrl || null,
+      imageClassId: img.classId || null,
+      imageW: img.w || null,
+      imageH: img.h || null,
+      imageCheckedAt: new Date().toISOString(),
+    })
   }
-}
 
-/**
- * Populate real figures for the top-ranked papers/preprints. Primary source:
- * Europe PMC open-access figures (authentic scientific figures). Fallback:
- * the DOI page's og:image, vision-filtered to reject logos/stock. Bounded to
- * the top `limit` items. Mutates metadata.
- */
-async function enrichWithFigures(sortedItems, limit = 40) {
-  const targets = sortedItems.slice(0, limit).filter(it =>
+  const needFigure = targets.filter(it =>
     (it.entry_type === 'paper' || it.entry_type === 'preprint') && !it.metadata.image && it.url)
-  let pmc = 0, og = 0
-  const accept = (it, url, d) => { it.metadata.image = url; it.metadata.imageKind = 'real'; it.metadata.imageW = d.width; it.metadata.imageH = d.height }
-  for (let i = 0; i < targets.length; i += 5) {
-    await Promise.all(targets.slice(i, i + 5).map(async it => {
-      // 1) Europe PMC open-access figure — authentic; keep only if high-res.
-      const fig = await europePmcFigure(it)
-      if (fig) { const d = await measureImage(fig); if (HI_RES(d)) { accept(it, fig, d); pmc++; return } }
-      // 2) Fallback: publisher og:image, vision-filtered + high-res only.
-      const img = await getOgImage(it.url)
-      if (!img) return
-      const kind = await classifyImageUrl(img)
-      if (kind !== 'real') return // only keep confirmed-real figures for papers
-      const d = await measureImage(img)
-      if (!HI_RES(d)) return
-      accept(it, img, d); og++
+  for (let i = 0; i < needFigure.length; i += 5) {
+    await Promise.all(needFigure.slice(i, i + 5).map(async it => {
+      const img = await resolvePaperImage(it)
+      if (img) { stamp(it, img); own++ }
     }))
   }
-  console.log(`      figures: ${pmc} via Europe PMC + ${og} via publisher (of top ${targets.length} without images)`)
+
+  // The class fallback costs no API calls: the pool is resolved and reviewed
+  // once, by scripts/build-class-images.js.
+  for (const it of targets) {
+    if (it.metadata.image) continue
+    const match = classifyTechnology(it)
+    const img = match && pickClassImage(pool, match.id, it.source_id || it.title || '')
+    if (img) { stamp(it, { ...img, classId: match.id, subject: 'class' }); cls++ }
+  }
+
+  console.log(`      figures: ${own} of the paper's own, ${cls} labelled class photographs (top ${targets.length})`)
 }
 
 /** Parse an RSS 2.0 or Atom feed into normalized items. */
@@ -1087,13 +1075,13 @@ async function syncToSupabase(pubmed, arxiv, news) {
   // Populate real figures for the top-ranked papers/preprints (graphical
   // abstracts / hero figures via the DOI page, vision-filtered to real only).
   console.log('  Fetching paper figures...')
-  await enrichWithFigures(allItems, 40)
+  await enrichWithFigures(allItems, 90)
 
   // Store the top 60 by rank, PLUS any real-image stories that ranked below the
   // cutoff — so the homepage always has real photos to feature, even though
   // photo-bearing media tends to rank below papers.
   const top = allItems.slice(0, 60)
-  const extras = allItems.slice(60).filter(i => i.metadata?.imageKind === 'real').slice(0, 30)
+  const extras = allItems.slice(60).filter(i => i.metadata?.image && i.metadata?.imageSubject !== 'class').slice(0, 30)
   const toStore = [...top, ...extras]
 
   for (const item of toStore) {
