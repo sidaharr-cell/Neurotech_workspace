@@ -3,6 +3,7 @@ import {
   getImageSize, HI_RES, CARD_RES, isReusableLicense, firstFigureHref, europePmcFileUrl,
   articleCredit, preprintFigureHref, preprintServer, parseCommons, pickCompanyEntity,
   iconHref, recordText, classifyTechnology, titleAffirmsClass, pickClassImage, DEVICE_CLASSES,
+  productName, linkScore, pageLinks, hostNamesProduct, contentImage, sameName, productLikeNames,
 } from './images.js'
 
 describe('getImageSize', () => {
@@ -243,5 +244,82 @@ describe('pickClassImage', () => {
   it('is null for a class with no confirmed photograph', () => {
     expect(pickClassImage(pool, 'tms', 'row-1')).toBeNull()
     expect(pickClassImage({}, 'eeg', 'row-1')).toBeNull()
+  })
+})
+
+describe('productName', () => {
+  it('drops the second listed variant and the model numbers', () => {
+    expect(productName({ name: 'Remote Wave Electrode (AE03-50); Remote Wave Electrode (AE03-60)' }))
+      .toBe('Remote Wave Electrode')
+  })
+
+  it('keeps the words a product page would use', () => {
+    expect(productName({ name: 'SPRINT PNS System' })).toBe('SPRINT PNS System')
+    expect(productName({ name: 'BraiN20® (BraiN20)' })).toBe('BraiN20')
+  })
+})
+
+describe('linkScore', () => {
+  it('scores a link that carries the product name', () => {
+    expect(linkScore('https://x.com/products/nerivio', 'Nerivio', 'Nerivio')).toBe(1)
+  })
+
+  it('ignores words that say nothing, like "system"', () => {
+    expect(linkScore('https://x.com/sprint-pns', 'SPRINT PNS', 'SPRINT PNS System')).toBe(1)
+  })
+
+  it('scores an unrelated link at zero', () => {
+    expect(linkScore('https://x.com/careers', 'Careers', 'Nerivio')).toBe(0)
+  })
+})
+
+describe('pageLinks and hostNamesProduct', () => {
+  const html = '<a href="/products/x">Product X</a><a href="https://nerivio.com/">Nerivio</a><a href="https://forbes.com/a">Press</a>'
+
+  it('marks which links stay on the site', () => {
+    const links = pageLinks(html, 'https://theranica.com')
+    expect(links.map(l => l.internal)).toEqual([true, false, false])
+  })
+
+  it('follows a maker link to the product\'s own domain, and not to the press', () => {
+    expect(hostNamesProduct('https://nerivio.com/', 'Nerivio')).toBe(true)
+    expect(hostNamesProduct('https://forbes.com/a', 'Nerivio')).toBe(false)
+  })
+})
+
+describe('contentImage', () => {
+  it('prefers the Open Graph image', () => {
+    const html = '<meta property="og:image" content="https://x.com/hero.jpg"><img src="/other.png">'
+    expect(contentImage(html, 'https://x.com/p')).toBe('https://x.com/hero.jpg')
+  })
+
+  it('skips logos and icons', () => {
+    expect(contentImage('<img src="/logo.png"><img src="/photos/device.jpg">', 'https://x.com/p'))
+      .toBe('https://x.com/photos/device.jpg')
+  })
+})
+
+describe('sameName', () => {
+  it('ignores case, punctuation and a disambiguator', () => {
+    expect(sameName('NeuroPace (company)', 'neuropace')).toBe(true)
+    expect(sameName('Transcranial magnetic stimulation', 'Transcranial Magnetic Stimulation')).toBe(true)
+  })
+
+  it('refuses a different article', () => {
+    expect(sameName('Migraine', 'Nerivio')).toBe(false)
+  })
+})
+
+describe('productLikeNames', () => {
+  it('takes the named product out of a trial\'s interventions', () => {
+    expect(productLikeNames({ metadata: { interventions: ['Nerivio', 'placebo'] } })).toEqual(['Nerivio'])
+  })
+
+  it('leaves techniques to the class photographs', () => {
+    expect(productLikeNames({ metadata: { interventions: ['repetitive transcranial magnetic stimulation'] } })).toEqual([])
+  })
+
+  it('ignores a description dressed up as an intervention', () => {
+    expect(productLikeNames({ metadata: { interventions: ['standard of care physical therapy for six weeks'] } })).toEqual([])
   })
 })
