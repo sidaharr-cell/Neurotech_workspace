@@ -131,7 +131,7 @@
       "EEG electrodes head",
       "electroencephalography"
     ],
-    "resolvedAt": "2026-08-02T01:03:34.935Z",
+    "resolvedAt": "2026-08-02T02:01:15.518Z",
     "images": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg/1280px-Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
@@ -378,7 +378,7 @@
       "myoelectric prosthetic arm",
       "prosthetic hand"
     ],
-    "resolvedAt": "2026-08-02T00:41:37.273Z",
+    "resolvedAt": "2026-08-02T02:02:05.173Z",
     "images": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Myoelectric_prosthetic_arm.jpg",
@@ -402,7 +402,7 @@
       "brain computer interface",
       "brain computer interface user"
     ],
-    "resolvedAt": "2026-08-02T01:03:46.545Z",
+    "resolvedAt": "2026-08-02T02:03:20.911Z",
     "images": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg",
@@ -516,7 +516,7 @@
       "spinal cord stimulator",
       "spinal cord stimulation implant"
     ],
-    "resolvedAt": "2026-08-02T00:37:48.440Z",
+    "resolvedAt": "2026-08-02T01:58:55.084Z",
     "images": [
       {
         "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
@@ -532,6 +532,34 @@
         "title": "File:Anterior thoracic SCS.jpg",
         "classId": "scs",
         "classTitle": "Spinal cord stimulator"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Synapse_IPG.jpg/1280px-Synapse_IPG.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "3Win",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Synapse_IPG.jpg",
+        "w": 1280,
+        "h": 1899,
+        "classId": "scs",
+        "classTitle": "File:Synapse IPG.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/TENS.jpg/1280px-TENS.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Thomas671973",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:TENS.jpg",
+        "w": 1280,
+        "h": 1923,
+        "classId": "scs",
+        "classTitle": "File:TENS.jpg"
       }
     ]
   },
@@ -556,6 +584,207 @@
         "h": 1280,
         "classId": "microscopy",
         "classTitle": "File:4-week-old neurons (7184654817).jpg"
+      }
+    ]
+  },
+  "pns": {
+    "label": "an implanted or wearable peripheral nerve stimulator",
+    "queries": [
+      "peripheral nerve stimulation",
+      "tibial nerve stimulation",
+      "nerve stimulator wearable"
+    ],
+    "resolvedAt": "2026-08-02T01:59:45.404Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/%D7%A0%D7%95%D7%99%D7%A8%D7%95%D7%A1%D7%98%D7%99%D7%9E%D7%95%D7%9C%D7%98%D7%95%D7%A8_RNS.jpg/1280px-%D7%A0%D7%95%D7%99%D7%A8%D7%95%D7%A1%D7%98%D7%99%D7%9E%D7%95%D7%9C%D7%98%D7%95%D7%A8_RNS.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "ArinaGr19",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D7%A0%D7%95%D7%99%D7%A8%D7%95%D7%A1%D7%98%D7%99%D7%9E%D7%95%D7%9C%D7%98%D7%95%D7%A8_RNS.jpg",
+        "w": 1280,
+        "h": 960,
+        "classId": "pns",
+        "classTitle": "File:נוירוסטימולטור RNS.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Synapse_IPG.jpg/1280px-Synapse_IPG.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "3Win",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Synapse_IPG.jpg",
+        "w": 1280,
+        "h": 1899,
+        "classId": "pns",
+        "classTitle": "File:Synapse IPG.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/TENS.jpg/1280px-TENS.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Thomas671973",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:TENS.jpg",
+        "w": 1280,
+        "h": 1923,
+        "classId": "pns",
+        "classTitle": "File:TENS.jpg"
+      }
+    ]
+  },
+  "exoskeleton": {
+    "label": "a powered exoskeleton or robotic gait trainer worn by a person",
+    "queries": [
+      "powered exoskeleton rehabilitation",
+      "robotic gait trainer"
+    ],
+    "resolvedAt": "2026-08-02T02:01:55.443Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg/1280px-%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Exo-robotics",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg",
+        "w": 1280,
+        "h": 1707,
+        "classId": "exoskeleton",
+        "classTitle": "File:Первое впечатление 22.05.16.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg/1280px-%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Exo-robotics",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg",
+        "w": 1280,
+        "h": 1707,
+        "classId": "exoskeleton",
+        "classTitle": "File:Экзоскелет ExoLite.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg/1280px-LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Matti Blume",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:LG_CLOi,_IFA_2018,_Berlin_(P1070245).jpg",
+        "w": 1280,
+        "h": 1707,
+        "classId": "exoskeleton",
+        "classTitle": "File:LG CLOi, IFA 2018, Berlin (P1070245).jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg/1280px-Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Grendelkhan",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg",
+        "w": 1280,
+        "h": 1730,
+        "classId": "exoskeleton",
+        "classTitle": "File:Ajax Exosuit at Maker Faire 2015.gk.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg/1280px-Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Yuichiro C. Katsumoto from Shonan, Japan",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hybrid_Assistive_Limb,_CYBERDYNE.jpg",
+        "w": 1280,
+        "h": 1920,
+        "classId": "exoskeleton",
+        "classTitle": "File:Hybrid Assistive Limb, CYBERDYNE.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG/1280px-Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "DonSimon",
+        "license": "CC0",
+        "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Geek_Picnic_(Moscow;_2014-01-26)_DonSimon_36.JPG",
+        "w": 1280,
+        "h": 1920,
+        "classId": "exoskeleton",
+        "classTitle": "File:Geek Picnic (Moscow; 2014-01-26) DonSimon 36.JPG"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg/1280px-%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Владислав Давыдов",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg",
+        "w": 1280,
+        "h": 1920,
+        "classId": "exoskeleton",
+        "classTitle": "File:Положение сидя в экзоскелете ExoHeaver.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Aktivni_egzoskelet_02%2C_1974._godina.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Unknown authorUnknown author",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aktivni_egzoskelet_02,_1974._godina.jpg",
+        "w": 512,
+        "h": 835,
+        "classId": "exoskeleton",
+        "classTitle": "File:Aktivni egzoskelet 02, 1974. godina.jpg"
+      }
+    ]
+  },
+  "electrode": {
+    "label": "medical skin electrodes attached to a body",
+    "queries": [
+      "medical electrodes skin",
+      "surface electrodes patient",
+      "ECG electrodes chest",
+      "electrode pads body"
+    ],
+    "resolvedAt": "2026-08-02T02:02:59.247Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/01TTRDZN2020.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "malekhin",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:01TTRDZN2020.jpg",
+        "w": 649,
+        "h": 884,
+        "classId": "electrode",
+        "classTitle": "File:01TTRDZN2020.jpg"
       }
     ]
   }

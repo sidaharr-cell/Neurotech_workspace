@@ -272,13 +272,29 @@ export const isReusableLicense = l => Boolean(l) && REUSABLE.test(String(l).trim
 
 // ── Europe PMC: figures out of the open-access article itself ───────────────
 
+const withExt = href => (/\.(jpe?g|png|gif|webp)$/i.test(href) ? href : `${href}.jpg`)
+
 /** First figure graphic named in a JATS full text, or null. Pure. */
 export function firstFigureHref(xml) {
-  if (!xml) return null
-  const fig = xml.match(/<fig[\s>][\s\S]*?<\/fig>/i)?.[0]
-  const href = (fig || xml).match(/<graphic[^>]*xlink:href="([^"]+)"/i)?.[1]
-  if (!href) return null
-  return /\.(jpe?g|png|gif|webp)$/i.test(href) ? href : `${href}.jpg`
+  return figureHrefs(xml)[0] || null
+}
+
+/**
+ * Every figure graphic in a JATS full text, in order. Pure.
+ *
+ * Figure 1 is nearly always the composite that sets up the paper: eight
+ * lettered panels, a schematic and a plot. The photograph or micrograph tends
+ * to be further in, so a caller can walk the list until one is a single image.
+ */
+export function figureHrefs(xml) {
+  if (!xml) return []
+  const figs = [...String(xml).matchAll(/<fig[\s>][\s\S]*?<\/fig>/gi)].map(m => m[0])
+  const hrefs = figs
+    .map(f => f.match(/<graphic[^>]*xlink:href="([^"]+)"/i)?.[1])
+    .filter(Boolean)
+  if (hrefs.length) return hrefs.map(withExt)
+  const any = String(xml).match(/<graphic[^>]*xlink:href="([^"]+)"/i)?.[1]
+  return any ? [withExt(any)] : []
 }
 
 /** The endpoint that serves a PMC figure file today. Pure. */
@@ -303,15 +319,18 @@ export async function europePmcFigure({ doi, pmid } = {}) {
   if (rec.isOpenAccess !== 'Y' && rec.inEPMC !== 'Y') return null
   if (!isReusableLicense(rec.license)) return null
 
-  const file = firstFigureHref(await getText(`https://www.ebi.ac.uk/europepmc/webservices/rest/${rec.pmcid}/fullTextXML`))
-  if (!file) return null
-  const url = europePmcFileUrl(rec.pmcid, file)
-  const dims = await measureImage(url)
-  if (!CARD_RES(dims)) return null
-  // Figure 1 of a paper is usually a composite of eight labelled panels. It is
-  // the most authentic picture a paper has and an unreadable one at card size,
-  // so only a figure that is a single image is kept.
-  if (!(await confirmSinglePanel(url))) return null
+  // Walk the figures until one is a single image. Figure 1 is nearly always
+  // the composite that sets the paper up; the photograph is further in.
+  const files = figureHrefs(await getText(`https://www.ebi.ac.uk/europepmc/webservices/rest/${rec.pmcid}/fullTextXML`))
+  let url = null, dims = null
+  for (const file of files.slice(0, 6)) {
+    const candidate = europePmcFileUrl(rec.pmcid, file)
+    const d = await measureImage(candidate)
+    if (!CARD_RES(d)) continue
+    if (!(await confirmSinglePanel(candidate))) continue
+    url = candidate; dims = d; break
+  }
+  if (!url) return null
 
   return {
     url,
@@ -356,11 +375,16 @@ export async function preprintFigure({ url, doi } = {}) {
   if (!isReusableLicense(license)) return null
 
   const page = `https://www.${server}.org/content/${cleanDoi}v${detail.version || 1}.full`
-  const fig = preprintFigureHref(await getText(page, BROWSER_UA))
+  const html = await getText(page, BROWSER_UA)
+  const figs = [...new Set([...String(html || '').matchAll(/https?:\/\/[^"']*\/F\d+\.(?:large|medium)\.jpg/gi)].map(m => m[0]))]
+  let fig = null, dims = null
+  for (const candidate of figs.slice(0, 6)) {
+    const d = await measureImage(candidate)
+    if (!CARD_RES(d)) continue
+    if (!(await confirmSinglePanel(candidate))) continue
+    fig = candidate; dims = d; break
+  }
   if (!fig) return null
-  const dims = await measureImage(fig)
-  if (!CARD_RES(dims)) return null
-  if (!(await confirmSinglePanel(fig))) return null
 
   return {
     url: fig,
@@ -780,27 +804,27 @@ export const DEVICE_CLASSES = [
   { id: 'dbs', category: 'Deep brain stimulation', article: 'Deep brain stimulation', label: 'a deep brain stimulation system (implanted brain electrodes or its pulse generator)', queries: ['deep brain stimulation', 'deep brain stimulation implant'], re: /deep brain stimulat|\bDBS\b|globus pallidus|subthalamic/i },
   { id: 'rns', category: 'Neurostimulators', article: 'Responsive neurostimulation device', label: 'an implanted neurostimulator for epilepsy (the device, its leads, or an X-ray of it in place)', queries: ['responsive neurostimulation epilepsy', 'neurostimulator implant epilepsy', 'NeuroPace', 'epilepsy neurostimulator'], re: /responsive neurostimulat|\bRNS\b/i },
   { id: 'vns', category: 'Vagus nerve stimulation', article: 'Vagus nerve stimulation', label: 'a vagus nerve stimulator (implanted pulse generator and lead)', queries: ['vagus nerve stimulator implant', 'vagus nerve stimulation'], re: /vagus|vagal|\b(?:ta|t|n|c)?VNS\b/i },
-  { id: 'scs', category: 'Spinal cord stimulation', article: 'Spinal cord stimulator', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
+  { id: 'scs', categories: ['Spinal cord stimulation', 'Neurostimulators'], article: 'Spinal cord stimulator', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
   { id: 'tms', category: 'Transcranial magnetic stimulation', article: 'Transcranial magnetic stimulation', label: 'transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head', queries: ['transcranial magnetic stimulation', 'transcranial magnetic stimulation coil', 'TMS therapy treatment', 'magnetic stimulation coil head'], re: /transcranial magnetic|\b(?:r|i|a|c|d|s)?TMS\b|theta burst|\biTBS\b/i, titleAlso: /stimulation coil|double cone coil/i },
   { id: 'tdcs', category: 'Transcranial direct current stimulation', article: 'Transcranial direct-current stimulation', label: 'transcranial electrical stimulation electrodes on a head', queries: ['transcranial direct current stimulation', 'tDCS electrodes head'], re: /transcranial direct current|\b(?:hd-?)?t[DA]CS\b|transcranial electrical|\btRNS\b/i },
   { id: 'tens', category: 'Transcutaneous electrical nerve stimulation', article: 'Transcutaneous electrical nerve stimulation', label: 'a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes', queries: ['TENS unit electrodes', 'transcutaneous electrical nerve stimulation'], re: /(transcutaneous[\s\S]{0,40}nerve|nerve[\s\S]{0,40}transcutaneous)|\bTENS\b|tongue stimulator/i },
-  { id: 'pns', category: 'Neurostimulators', article: 'Peripheral nerve stimulation', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
-  { id: 'retinal', category: 'Retinal implants', article: 'Retinal implant', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
-  { id: 'ecog', category: 'Electrocorticography', article: 'Electrocorticography', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
-  { id: 'mea', category: 'Microelectrode arrays', article: 'Microelectrode array', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
-  { id: 'eeg', category: 'Electroencephalography', article: 'Electroencephalography', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
+  { id: 'pns', categories: ['Neurostimulators', 'Implantable medical devices'], article: 'Peripheral nerve stimulation', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
+  { id: 'retinal', categories: ['Retinal implants', 'Visual prosthetics'], article: 'Retinal implant', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
+  { id: 'ecog', categories: ['Electrocorticography', 'Electroencephalography equipment'], article: 'Electrocorticography', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
+  { id: 'mea', categories: ['Microelectrode arrays', 'Neural implants', 'Brain implants'], article: 'Microelectrode array', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
+  { id: 'eeg', categories: ['Electroencephalography', 'Electroencephalography equipment', 'Electroencephalograms'], article: 'Electroencephalography', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
   { id: 'meg', category: 'Magnetoencephalography', article: 'Magnetoencephalography', label: 'a magnetoencephalography scanner', queries: ['magnetoencephalography'], re: /magnetoencephalograph|\bMEG\b/i },
   { id: 'fnirs', category: 'Functional near-infrared spectroscopy', article: 'Functional near-infrared spectroscopy', label: 'a functional near-infrared spectroscopy headset', queries: ['functional near-infrared spectroscopy brain', 'fNIRS headset'], re: /near-?infrared spectroscop|\bfNIRS\b/i },
   { id: 'mri', category: 'MRI scanners', article: 'Magnetic resonance imaging', label: 'a magnetic resonance imaging scanner or an MRI brain scan', queries: ['magnetic resonance imaging scanner', 'MRI brain scan'], re: /magnetic resonance imag|\bfMRI\b|\bMRI\b|neuroimaging/i },
   { id: 'emg', category: 'Electromyography', article: 'Electromyography', label: 'electromyography: surface EMG electrodes or an EMG recording', queries: ['electromyography electrodes', 'electromyography'], re: /electromyograph|\bEMG\b|biofeedback analyzer|evoked response/i },
   { id: 'fus', category: 'High-intensity focused ultrasound', article: 'High-intensity focused ultrasound', label: 'a focused ultrasound therapy or ultrasound neuromodulation system', queries: ['focused ultrasound therapy', 'MRI guided focused ultrasound', 'high intensity focused ultrasound machine', 'ultrasound therapy device'], re: /focused ultrasound|ultrasound neuromodulat/i, titleAlso: /focused ultrasound|\bHIFU\b/i },
-  { id: 'exoskeleton', category: 'Powered exoskeletons', article: 'Powered exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
-  { id: 'prosthetic', category: 'Myoelectric prostheses', article: 'Myoelectric prosthesis', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
-  { id: 'electrode', category: 'Medical electrodes', article: 'Electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
+  { id: 'exoskeleton', categories: ['Powered exoskeletons', 'Exoskeletons'], article: 'Powered exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
+  { id: 'prosthetic', categories: ['Myoelectric prostheses', 'Prosthetic hands', 'Prosthetic arms'], article: 'Myoelectric prosthesis', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
+  { id: 'electrode', categories: ['Medical electrodes', 'Electrodes'], article: 'Electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
   { id: 'optogenetics', category: 'Optogenetics', article: 'Optogenetics', label: 'optogenetics: laser or fibre-optic hardware for stimulating neurons, or fluorescently labelled brain tissue', queries: ['optogenetics', 'optogenetic stimulation'], re: /optogenetic|channelrhodopsin|photostimulat/i },
   { id: 'microscopy', category: 'Neurons', article: 'Neuron', label: 'neurons or brain tissue seen under a microscope', queries: ['neuron microscopy', 'neurons fluorescence microscopy'], re: /microscop|two-photon|calcium imaging|immunostain|histolog|transcriptom|single-cell|organoid|photoreceptor|retina\b/i, titleAlso: /neuron|dendrit|axon|purkinje|glia|pyramidal cell/i },
   { id: 'spinal', category: 'Spinal cord', article: 'Spinal cord injury', label: 'the spinal cord, a spine, or spinal surgery', queries: ['spinal cord', 'spinal cord injury rehabilitation'], re: /spinal cord|spine\b|tetrapleg|parapleg/i, titleAlso: /spinal|spine|vertebr|myelon/i },
-  { id: 'bci', category: 'Brain-computer interfacing', article: 'Brain–computer interface', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe|neuralink|synchron|precision neuroscience|paradromics|blackrock neurotech|motif neurotech|onward medical/i },
+  { id: 'bci', categories: ['Brain-computer interfacing', 'Neuroprosthetics', 'Brain implants'], article: 'Brain–computer interface', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe|neuralink|synchron|precision neuroscience|paradromics|blackrock neurotech|motif neurotech|onward medical/i },
   // The catch-all, deliberately last. A record about the nervous system that
   // names no instrument still gets a picture of the nervous system, labelled
   // as the illustration it is. Anything more specific above wins first.
@@ -961,18 +985,21 @@ export async function classImagePool(cls, { want = 3, maxChecks = Math.max(16, w
   // TMS category is full of photographs of machines and sessions, while
   // searching the same words returns the schematic that leads the article.
   const sources = [
-    ...(cls.categories || (cls.category ? [cls.category] : [])).map(c => () => commonsCategory(c)),
-    cls.article ? () => wikipediaArticleImages(cls.article) : null,
-    ...cls.queries.map(q => () => commonsSearch(q)),
+    ...(cls.categories || (cls.category ? [cls.category] : [])).map(c => ({ fetch: () => commonsCategory(c), curated: true })),
+    cls.article ? { fetch: () => wikipediaArticleImages(cls.article), curated: true } : null,
+    ...cls.queries.map(q => ({ fetch: () => commonsSearch(q), curated: false })),
   ].filter(Boolean)
 
-  for (const source of sources) {
+  for (const { fetch: source, curated } of sources) {
     for (const cand of await source()) {
       if (out.length >= want || checks >= maxChecks) break
       if (seen.has(cand.url)) continue
       seen.add(cand.url)
       if (isRejected(cand.title)) continue
-      if (!titleAffirmsClass(cand.title, cls)) continue
+      // A file sitting in "Category:Brain-computer interfacing" was put there
+      // by somebody who knew what it was, so the category vouches for it. A
+      // text search vouches for nothing, and there the file's own title has to.
+      if (!curated && !titleAffirmsClass(cand.title, cls)) continue
       checks++
       if (await confirmSinglePhoto(cand.url) && await confirmDepicts(cand.url, cls.label)) {
         const { title, ...img } = cand
