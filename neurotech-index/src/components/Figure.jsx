@@ -355,20 +355,6 @@ export function StoryFigure({ item, size = 'md', own = false, priority = false, 
   return img ? <Photo img={img} fallback={fallback} priority={priority} className={className} /> : fallback
 }
 
-/**
- * The picture the lead may run.
- *
- * The lead is displayed eleven hundred pixels wide, so it prefers a photograph
- * OF the story and will otherwise take a labelled illustration only when that
- * illustration is large enough not to look soft at that size. Below the bar it
- * shows the story's data figure, which is sharp at any width.
- */
-export function leadImage(item) {
-  const own = usableImage(item, { own: true })
-  if (own) return own
-  const any = usableImage(item)
-  return (any?.w || 0) >= 900 ? any : null
-}
 
 /** A photograph for any record that carries one, with a figure to fall back
  *  to. Used by the device, trial and company cards. */
