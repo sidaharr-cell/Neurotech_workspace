@@ -117,7 +117,14 @@ pool in `scripts/data/class-images.json`, resolved once by `npm run images:class
 each candidate must be affirmed by BOTH the file's own title and a vision model, and a
 class with no confirmable photograph yields nothing rather than something approximate.
 `npm run images:backfill` assigns them, `npm run verify:images` clears rotted hotlinks,
-and both run nightly. Anything `class`-subject must render with the "Illustration" label
+and both run nightly. Three files carry judgement the pipeline cannot make:
+`class-images-rejected.json` (pictures a person looked at and turned down, so a rebuild
+cannot reinstate them), `card-images.json` (a picture chosen by hand for one record,
+with the reason), and `image-focus.json` (where the subject sits, handed to CSS
+object-position, because a card crops to the middle and the subject often is not there).
+`scripts/verify-image-fit.js` re-reads every class assignment and clears the ones the
+current classifier no longer supports — the reading changes underneath a stored picture,
+and the mismatch is otherwise silent. Anything `class`-subject must render with the "Illustration" label
 and its credit (`src/lib/image.js`, `ImageCredit` in `Figure.jsx`) — the attribution is a
 licence condition, and the label is what keeps the picture from making a claim.
 Publisher pages 403 every script, so a recent paywalled paper has no figure to source.

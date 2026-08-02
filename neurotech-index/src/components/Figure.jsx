@@ -14,7 +14,7 @@
 import { useState } from 'react'
 import { facetsOfEntity, FUNCTION_LABEL } from '../lib/facets'
 import { fmtUsd } from '../lib/fundingBoard'
-import { usableImage, creditLine, fullCredit, needsCredit } from '../lib/image'
+import { usableImage, creditLine, fullCredit, needsCredit, focusOf } from '../lib/image'
 import { fmtDate } from './ui'
 
 /** Month and day, for a thumbnail that has room for nothing longer. */
@@ -322,6 +322,8 @@ function Photo({ img, fallback, priority, className }) {
       }}
       // A logo is a mark on a field, not a photograph: cropping it to fill the
       // frame would cut the wordmark in half.
+      // The crop is taken around the subject, not the middle of the frame.
+      style={img.kind === 'logo' ? undefined : { objectPosition: focusOf(img) }}
       className={`w-full h-full ${img.kind === 'logo' ? 'object-contain p-6 bg-paper' : 'object-cover'} ${className}`}
     />
   )
