@@ -35,6 +35,27 @@ const CARD_ASPECT = 4 / 3
 const fitness = i => Math.abs((i.w || 1) / (i.h || 1) - CARD_ASPECT)
 const byFit = (a, b) => fitness(a) - fitness(b)
 
+/**
+ * How far a picture can be from the card's shape before cropping it does more
+ * harm than letterboxing.
+ *
+ * Filling a 4:3 card with a tall portrait means showing a narrow band through
+ * the middle of it: the subject arrives cropped to the waist and magnified,
+ * which reads as a mistake even when the focal point is right. Past this
+ * threshold the whole picture is shown instead, centred, on the card's own
+ * background.
+ */
+const MAX_CROP = 1.6
+
+export function fitsFrame(img) {
+  if (!img?.w || !img?.h) return true
+  const ratio = (img.w / img.h) / CARD_ASPECT
+  return ratio <= MAX_CROP && ratio >= 1 / MAX_CROP
+}
+
+/** How a picture should sit in its frame: filling it, or shown whole. */
+export const objectFitOf = img => (img?.kind === 'logo' || !fitsFrame(img) ? 'contain' : 'cover')
+
 /** There is no general pool to fall back on; see the note in
  *  scripts/lib/images.js. A repeat is offered another photograph of its OWN
  *  technology, and otherwise shows the record's data figure. */
@@ -89,6 +110,10 @@ export function imageOf(entity) {
 export function usableImage(entity, { own = false } = {}) {
   const img = imageOf(entity)
   if (!img || img.kind === 'stock') return null
+  // A logo is a mark, not a picture. It says nothing about what a company
+  // builds or what a story is about, and a page of them reads as a directory.
+  // Records whose only image is a mark show their data figure instead.
+  if (img.kind === 'logo') return null
   if (own && img.subject !== 'item') return null
   return img
 }
@@ -113,37 +138,51 @@ export const isIllustration = img => img?.subject === 'class'
  * not survive the pipeline is not shown at all.
  */
 /**
- * A credit fit to print on a card.
+ * Where a picture came from, in as few words as a reader needs.
  *
  * Uploaders write whatever they like in the author field: a bare URL, or "My
  * father is the person in the photo. He passed and I found this in his
  * personal photos." Both are honest and neither belongs set in six point type
- * under a news card. Anything unwieldy becomes the archive's name, and the
- * full text stays on the element's title and one click away at the source.
+ * under a news card. So the line under a card names the SOURCE — the archive,
+ * the maker's site, the outlet — and the full attribution, author and licence
+ * included, stays on the element's title and one click away at the source.
  */
-function shortCredit(credit) {
-  const c = String(credit || '').trim()
-  if (!c) return null
-  if (/^https?:\/\//i.test(c)) return 'Wikimedia Commons'
-  if (c.length > 42 || c.split(/\s+/).length > 6) return 'Wikimedia Commons'
-  return c
+const SOURCE_NAME = {
+  commons: 'Wikimedia Commons',
+  wikipedia: 'Wikimedia Commons',
+  wikidata: 'Wikimedia Commons',
+  europepmc: 'Europe PMC',
+  biorxiv: 'bioRxiv',
+  medrxiv: 'medRxiv',
+  arxiv: 'arXiv',
+}
+
+const hostOf = url => {
+  try { return new URL(url).hostname.replace(/^www\./, '') } catch { return null }
+}
+
+export function sourceName(img) {
+  if (!img) return null
+  return SOURCE_NAME[img.source]
+    || (img.credit && !/\s/.test(img.credit) ? img.credit : null)   // already a domain
+    || hostOf(img.sourceUrl)
+    || hostOf(img.url)
 }
 
 export function creditLine(img) {
   if (!img) return null
   const parts = []
   if (isIllustration(img)) parts.push('Illustration')
-  const who = img.source === 'commons' || img.source === 'wikipedia' || img.source === 'wikidata'
-    ? shortCredit(img.credit) : img.credit
-  if (who) parts.push(who)
-  if (img.license) parts.push(img.license)
+  const where = sourceName(img)
+  if (where) parts.push(where)
   return parts.length ? parts.join(' · ') : null
 }
 
 /** The full attribution, for the element's title. */
 export function fullCredit(img) {
   if (!img) return null
-  return [isIllustration(img) ? 'Illustration' : null, img.credit, img.license].filter(Boolean).join(' · ')
+  return [isIllustration(img) ? 'Illustration' : null, img.credit, img.license, sourceName(img)]
+    .filter(Boolean).join(' · ')
 }
 
 /**
@@ -155,7 +194,7 @@ export function fullCredit(img) {
  * exception is the photograph a news outlet published with its own story,
  * because the card already names that outlet on the line below.
  */
-export const needsCredit = img => Boolean(img && (isIllustration(img) || (img.source && img.source !== 'og')))
+export const needsCredit = img => Boolean(img && (isIllustration(img) || img.source || img.credit))
 
 /**
  * The picture each item on the page will actually run, keyed by id.

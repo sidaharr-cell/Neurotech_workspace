@@ -396,30 +396,6 @@
       }
     ]
   },
-  "bci": {
-    "label": "a brain-computer interface in use: a person wearing or implanted with a neural interface",
-    "queries": [
-      "brain computer interface",
-      "brain computer interface user"
-    ],
-    "resolvedAt": "2026-08-02T02:03:20.911Z",
-    "images": [
-      {
-        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg",
-        "kind": "photo",
-        "subject": "class",
-        "credit": "Anders Sandberg from Oxford, UK",
-        "license": "CC BY 2.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-        "source": "commons",
-        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brain-Computer_Interface_(BCI)_-_FET09_Prague.jpg",
-        "w": 800,
-        "h": 600,
-        "classId": "bci",
-        "classTitle": "File:Brain-Computer Interface (BCI) - FET09 Prague.jpg"
-      }
-    ]
-  },
   "fus": {
     "label": "a focused ultrasound therapy or ultrasound neuromodulation system",
     "queries": [

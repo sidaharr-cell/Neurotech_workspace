@@ -568,6 +568,19 @@ export function hostNamesProduct(href, name) {
   return tokens(name).some(t => t.length > 3 && host.includes(t))
 }
 
+/** Every plausible content image on a page, best first. Pure. */
+export function contentImages(html, pageUrl) {
+  const og = String(html || '').match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1]
+  const raw = [og, ...[...String(html || '').matchAll(/<img\b[^>]*src=["']([^"']+)["']/gi)].map(m => m[1])]
+  const out = []
+  for (const candidate of raw) {
+    if (!candidate) continue
+    if (/logo|icon|sprite|avatar|badge|placeholder|favicon|\.svg($|\?)/i.test(candidate)) continue
+    try { out.push(new URL(candidate, pageUrl).href) } catch { /* keep looking */ }
+  }
+  return [...new Set(out)]
+}
+
 /** The largest plausible content image on a page. Pure. */
 export function contentImage(html, pageUrl) {
   const og = String(html || '').match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1]
@@ -1126,6 +1139,56 @@ export async function resolveTrialImage(trial, { sponsorSite = null } = {}) {
     if (own) return own
   }
   return classImage(classifyTechnology(trial))
+}
+
+/**
+ * A photograph from a company's own site: its product, its hardware, its lab.
+ *
+ * A logo is a mark, not a picture. It tells a reader nothing about what the
+ * company builds, and a page of them reads as a directory rather than a news
+ * feed. So a company is asked for a photograph first, and its mark is only a
+ * fallback for callers that want one.
+ */
+export async function companyPhoto(website, name) {
+  if (!website) return null
+  let origin
+  try { origin = new URL(website).origin } catch { return null }
+  const home = await getText(website, BROWSER_UA)
+  if (!home) return null
+
+  // Product and technology pages first, then the home page itself.
+  const pages = [
+    ...pageLinks(home, origin)
+      .filter(l => l.internal && /product|technolog|device|platform|science|how-it-works|solution/i.test(l.href))
+      .slice(0, 3)
+      .map(l => ({ href: l.href })),
+    { href: website, html: home },
+  ]
+
+  const seen = new Set()
+  for (const page of pages) {
+    if (seen.has(page.href)) continue
+    seen.add(page.href)
+    const html = page.html || await getText(page.href, BROWSER_UA)
+    for (const src of contentImages(html, page.href).slice(0, 5)) {
+      const dims = await measureImage(src)
+      if (!CARD_RES(dims)) continue
+      if (!(await confirmProductPhoto(src))) continue
+      return {
+        url: src,
+        kind: 'photo',
+        subject: 'item',
+        credit: new URL(origin).hostname.replace(/^www\./, ''),
+        license: null,
+        licenseUrl: null,
+        source: 'manufacturer',
+        sourceUrl: page.href,
+        w: dims.width,
+        h: dims.height,
+      }
+    }
+  }
+  return null
 }
 
 /** A company's own mark: its Wikidata logo, else its site's icon. */
