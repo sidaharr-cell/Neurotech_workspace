@@ -56,7 +56,13 @@ async function fitsHeadline(url, headline) {
 
 "${headline}"
 
-Would a science editor accept it? Reply YES only if the photograph shows the technology, instrument, or subject the headline is about, closely enough that a reader is informed rather than misled. Reply NO if it shows a different technology, an unrelated subject, or nothing recognisable. Exactly one word: YES or NO.` },
+Would a science editor accept it? Reply YES only if ALL of these hold:
+
+1. The photograph shows the technology, instrument or subject the headline is about. A DIFFERENT technology is a no: a vagus nerve stimulator is not a speech implant, an ultrasound probe is not a magnetic device.
+2. If the headline describes a person — "a woman", "a patient", someone named — nobody in the photograph contradicts that description. A man under a headline about a woman is a no.
+3. Any person shown is either the subject of the story or is anonymously using the technology in question. An unconnected person is a no, because a photograph of a person beside a headline says that this is the person the story is about.
+
+Reply NO if you are unsure. Exactly one word: YES or NO.` },
         ],
       }],
     })

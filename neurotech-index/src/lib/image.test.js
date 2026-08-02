@@ -164,3 +164,12 @@ describe('logos are not pictures', () => {
     expect(usableImage({ id: 'x', image_url: 'https://x/lab.jpg', image_kind: 'photo' })).toBeTruthy()
   })
 })
+
+describe('legacy rows still name their source', () => {
+  it('derives the outlet from the image host when the row predates source stamping', () => {
+    const legacy = { id: 'x', metadata: { image: 'https://manilatimes.net/uploads/2026/1154690.jpg', imageKind: 'real' } }
+    const img = imageOf(legacy)
+    expect(creditLine(img)).toBe('manilatimes.net')
+    expect(needsCredit(img)).toBe(true)
+  })
+})
