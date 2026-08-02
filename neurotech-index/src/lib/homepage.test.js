@@ -45,12 +45,15 @@ describe('composeStories', () => {
 
   it('gives the featured slots to photographs, largest first', () => {
     const items = [
-      story({ id: 'lead', metadata: { rankScore: 100 } }),
+      // The lead takes a picture-bearing story, so the fixture gives it one
+      // outright; what is under test here is the order of what follows.
+      photo('lead', 1600, 1000, { metadata: { rankScore: 100 } }),
       story({ id: 'plain-a', metadata: { rankScore: 90 } }),
       photo('small', 700, 400, { metadata: { rankScore: 10 } }),
       photo('large', 2000, 1200, { metadata: { rankScore: 5 } }),
     ]
-    const { featured } = composeStories(items, 'relevant')
+    const { lead, featured } = composeStories(items, 'relevant')
+    expect(lead.id).toBe('lead')
     expect(featured.map(i => i.id).slice(0, 2)).toEqual(['large', 'small'])
   })
 
@@ -58,9 +61,10 @@ describe('composeStories', () => {
     const items = [
       photo('newer', 700, 400, { published_at: '2026-07-31T00:00:00Z' }),
       photo('older', 2000, 1200, { published_at: '2026-01-01T00:00:00Z' }),
-      story({ id: 'lead', published_at: '2026-08-01T00:00:00Z' }),
+      photo('lead', 1600, 1000, { published_at: '2026-08-01T00:00:00Z' }),
     ]
-    const { featured } = composeStories(items, 'newest')
+    const { lead, featured } = composeStories(items, 'newest')
+    expect(lead.id).toBe('lead')
     expect(featured.map(i => i.id)).toEqual(['newer', 'older'])
   })
 
@@ -91,5 +95,30 @@ describe('pickNotable', () => {
   it('caps the section at its slots', () => {
     const long = Array.from({ length: 10 }, (_, i) => ({ doi: `10.1/${i}`, title: `P${i}`, pctile: 0.9 }))
     expect(pickNotable(long, new Set())).toHaveLength(SLOTS.notable)
+  })
+})
+
+describe('the lead always carries a picture', () => {
+  const withImage = (id, url, over = {}) => story({
+    id,
+    ...over,
+    metadata: { rankScore: over.rank ?? 50, image: url, imageSubject: 'item', imageW: 1280, imageH: 960 },
+  })
+  const noImage = (id, rank) => story({ id, metadata: { rankScore: rank } })
+
+  it('passes over a higher-ranked story that cannot fill the slot', () => {
+    const { lead } = composeStories([noImage('top', 99), withImage('second', 'https://x/a.jpg', { rank: 80 })], 'relevant')
+    expect(lead.id).toBe('second')
+  })
+
+  it('still leads with the best story when none has a picture', () => {
+    const { lead } = composeStories([noImage('top', 99), noImage('next', 80)], 'relevant')
+    expect(lead.id).toBe('top')
+  })
+
+  it('will not lead on an illustration too small for the slot', () => {
+    const small = story({ id: 'small', metadata: { rankScore: 99, image: 'https://x/s.jpg', imageSubject: 'class', imageW: 700, imageH: 500 } })
+    const big = withImage('big', 'https://x/b.jpg', { rank: 10 })
+    expect(composeStories([small, big], 'relevant').lead.id).toBe('big')
   })
 })

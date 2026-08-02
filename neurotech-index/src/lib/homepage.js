@@ -8,6 +8,7 @@
  * ever grows it past the budget.
  */
 import { pickLead, hasRealImage, byNewest } from './sources'
+import { canLead } from './image'
 
 /** Items per section. The sum is the page's whole budget. */
 export const SLOTS = {
@@ -40,9 +41,13 @@ export function composeStories(shown, sort = 'relevant') {
     .filter(hasRealImage)
     .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
 
-  // The lead obeys the Sort control and the reputable-source floor; see
-  // pickLead in lib/sources.js.
-  const lead = pickLead(shown, sort) || withPhotos[0] || shown[0]
+  // The lead obeys the Sort control and the reputable-source floor (pickLead
+  // in lib/sources.js), and on top of that it has to be able to fill the slot.
+  // The lead is the one picture a reader is certain to see, and a data figure
+  // eleven hundred pixels wide is a poor front page. So the choice runs over
+  // the stories that HAVE a lead-worthy picture first, and only falls back to
+  // the whole list when none of them does.
+  const lead = pickLead(shown.filter(canLead), sort) || pickLead(shown, sort) || withPhotos[0] || shown[0]
   const used = new Set(lead ? [lead] : [])
 
   const take = (pool, n) => {

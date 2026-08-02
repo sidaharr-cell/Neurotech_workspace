@@ -129,6 +129,24 @@ export function usableImage(entity, { own = false } = {}) {
  */
 export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
 
+/**
+ * The picture the lead may run, or null.
+ *
+ * The lead is displayed eleven hundred pixels wide, so it prefers a
+ * photograph OF the story and will otherwise take a labelled illustration
+ * only when that illustration is large enough not to look soft at that size.
+ */
+export function leadImage(entity) {
+  const own = usableImage(entity, { own: true })
+  if (own) return own
+  const any = usableImage(entity)
+  return (any?.w || 0) >= 900 ? any : null
+}
+
+/** Can this story lead the page? The top slot is the one picture a reader is
+ *  certain to see, so a story that cannot fill it does not take it. */
+export const canLead = entity => Boolean(leadImage(entity))
+
 /** Is this a labelled photograph of the technology rather than of the record? */
 export const isIllustration = img => img?.subject === 'class'
 
