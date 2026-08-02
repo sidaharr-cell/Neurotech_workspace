@@ -12,10 +12,6 @@
     "file": "Stage-14 Drosophila embryo expressing AbdA and Exd, both fused to one half of the fluorescent protein Venus - journal.pbio.1001349.g001.png",
     "why": "morphogen gradients are studied in the Drosophila embryo, which this shows stained for a reporter"
   },
-  "A woman who hadnt spoken an intelligible word": {
-    "file": "Noland Arbaugh on ROP.jpg",
-    "why": "a person using an implanted brain-computer interface, which is what this story is about"
-  },
   "Neuropixels Opto": {
     "file": "Patch rig.png",
     "why": "an electrophysiology rig, for a paper about high-resolution electrophysiology"
@@ -39,5 +35,9 @@
   "A neuroprosthesis for restoring hand movement": {
     "file": "Myoelectric prosthetic arm.jpg",
     "why": "a myoelectric prosthetic arm, for a paper on restoring hand movement and sensation"
+  },
+  "How Neuralink brain chip transformed life of ALS sufferer": {
+    "file": "Elon Musk unveiling Neuralink.jpg",
+    "why": "Neuralink's founder unveiling the device, for a story about a Neuralink implant recipient"
   }
 }

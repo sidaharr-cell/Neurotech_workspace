@@ -14,7 +14,7 @@
 import { useState } from 'react'
 import { facetsOfEntity, FUNCTION_LABEL } from '../lib/facets'
 import { fmtUsd } from '../lib/fundingBoard'
-import { usableImage, creditLine, fullCredit, needsCredit, focusOf } from '../lib/image'
+import { usableImage, creditLine, fullCredit, needsCredit, focusOf, objectFitOf } from '../lib/image'
 import { fmtDate } from './ui'
 
 /** Month and day, for a thumbnail that has room for nothing longer. */
@@ -304,6 +304,7 @@ export function SourceFigure({ item, size = 'md' }) {
  */
 function Photo({ img, fallback, priority, className }) {
   const [broken, setBroken] = useState(false)
+  const fit = objectFitOf(img)
   if (broken) return fallback
   return (
     <img
@@ -322,9 +323,11 @@ function Photo({ img, fallback, priority, className }) {
       }}
       // A logo is a mark on a field, not a photograph: cropping it to fill the
       // frame would cut the wordmark in half.
-      // The crop is taken around the subject, not the middle of the frame.
-      style={img.kind === 'logo' ? undefined : { objectPosition: focusOf(img) }}
-      className={`w-full h-full ${img.kind === 'logo' ? 'object-contain p-6 bg-paper' : 'object-cover'} ${className}`}
+      // Filling crops around the subject rather than the middle of the frame.
+      // A picture too tall or too wide to crop is shown whole instead.
+      style={fit === 'cover' ? { objectPosition: focusOf(img) } : undefined}
+      className={`w-full h-full ${fit === 'cover' ? 'object-cover'
+        : `object-contain ${img.kind === 'logo' ? 'p-6' : 'p-2'} bg-paper`} ${className}`}
     />
   )
 }

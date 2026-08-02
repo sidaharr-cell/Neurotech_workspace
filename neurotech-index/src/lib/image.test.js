@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { imageOf, usableImage, isIllustration, creditLine, needsCredit, assignImages } from './image'
+import { imageOf, usableImage, isIllustration, creditLine, fullCredit, needsCredit, assignImages, objectFitOf } from './image'
 
 const feedRow = (over = {}) => ({ id: 'f1', metadata: { image: 'https://x/a.jpg', ...over } })
 const deviceRow = (over = {}) => ({ id: 'd1', image_url: 'https://x/b.jpg', image_source: 'commons', ...over })
@@ -39,29 +39,39 @@ describe('usableImage', () => {
 })
 
 describe('creditLine', () => {
-  it('says an illustration is one, and names the author and licence', () => {
-    const img = imageOf(feedRow({ imageSubject: 'class', imageCredit: 'Jane Doe', imageLicense: 'CC BY-SA 4.0' }))
-    expect(creditLine(img)).toBe('Illustration · Jane Doe · CC BY-SA 4.0')
-    expect(isIllustration(img)).toBe(true)
+  it('names the archive rather than an uploader\'s essay', () => {
+    const img = imageOf(feedRow({
+      imageSubject: 'class', imageSource: 'commons',
+      imageCredit: 'My father is the person in the photo. He passed and I found this', imageLicense: 'CC0',
+    }))
+    expect(creditLine(img)).toBe('Illustration · Wikimedia Commons')
+    // the whole attribution survives, on the title
+    expect(fullCredit(img)).toContain('My father is the person')
+    expect(fullCredit(img)).toContain('CC0')
   })
 
-  it('credits a licensed figure without calling it an illustration', () => {
-    const img = imageOf(feedRow({ imageSubject: 'item', imageCredit: 'Card NS et al., Nature medicine, 2026', imageLicense: 'cc by' }))
-    expect(creditLine(img)).toBe('Card NS et al., Nature medicine, 2026 · cc by')
-  })
-
-  it('asks for no credit line on an outlet photograph the card already sources', () => {
-    expect(needsCredit(imageOf(feedRow({ imageSubject: 'item', imageSource: 'og', imageCredit: 'Reuters' })))).toBe(false)
-  })
-
-  it("credits a maker's product photograph, licence or no licence", () => {
+  it('names a maker by its site', () => {
     const img = imageOf(feedRow({ imageSubject: 'item', imageSource: 'manufacturer', imageCredit: 'calahealth.com' }))
-    expect(needsCredit(img)).toBe(true)
     expect(creditLine(img)).toBe('calahealth.com')
   })
 
-  it('always asks for one on an illustration, licence or not', () => {
-    expect(needsCredit(imageOf(feedRow({ imageSubject: 'class' })))).toBe(true)
+  it('names the outlet that ran a story photograph', () => {
+    // A one-word credit is already the outlet's name, and reads better than
+    // its domain. A credit that is a sentence is not, and falls back to the host.
+    expect(creditLine(imageOf(feedRow({ imageSubject: 'item', imageSource: 'og', imageCredit: 'Reuters' })))).toBe('Reuters')
+    expect(creditLine(imageOf(feedRow({
+      imageSubject: 'item', imageSource: 'og', imageCredit: 'Photograph by staff',
+      imageSourceUrl: 'https://www.manilatimes.net/a/b',
+    })))).toBe('manilatimes.net')
+  })
+
+  it('says an illustration is one', () => {
+    expect(isIllustration(imageOf(feedRow({ imageSubject: 'class' })))).toBe(true)
+  })
+
+  it('asks for a source line on every picture', () => {
+    expect(needsCredit(imageOf(feedRow({ imageSubject: 'item', imageSource: 'og', imageCredit: 'Reuters' })))).toBe(true)
+    expect(needsCredit(imageOf(feedRow({ imageSubject: 'class', imageSource: 'commons' })))).toBe(true)
   })
 })
 
@@ -123,5 +133,34 @@ describe('assignImages, the withheld case', () => {
     const urls = cards.map(c => got.get(c.id)).filter(Boolean).map(i => i.url)
     expect(new Set(urls).size).toBe(urls.length)
     expect(got.size).toBeLessThan(cards.length)
+  })
+})
+
+describe('fitsFrame', () => {
+  it('fills the card with a picture near its shape', () => {
+    expect(objectFitOf({ w: 1280, h: 960 })).toBe('cover')
+    expect(objectFitOf({ w: 1280, h: 720 })).toBe('cover')
+  })
+
+  it('shows a tall portrait whole rather than cropping it to a band', () => {
+    expect(objectFitOf({ w: 766, h: 1707 })).toBe('contain')
+  })
+
+  it('shows a very wide picture whole', () => {
+    expect(objectFitOf({ w: 1280, h: 400 })).toBe('contain')
+  })
+
+  it('never crops a logo', () => {
+    expect(objectFitOf({ kind: 'logo', w: 1280, h: 960 })).toBe('contain')
+  })
+})
+
+describe('logos are not pictures', () => {
+  it('refuses a company mark as a card picture', () => {
+    expect(usableImage({ id: 'x', image_url: 'https://x/logo.png', image_kind: 'logo' })).toBeNull()
+  })
+
+  it('still accepts a photograph from the same company', () => {
+    expect(usableImage({ id: 'x', image_url: 'https://x/lab.jpg', image_kind: 'photo' })).toBeTruthy()
   })
 })
