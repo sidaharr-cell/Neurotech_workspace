@@ -10,6 +10,7 @@ without trusting a screenshot of a browser pane that goes stale on scroll.
 import io
 import json
 import sys
+import os
 import textwrap
 import urllib.request
 
@@ -17,6 +18,20 @@ from PIL import Image, ImageDraw
 
 cards = json.load(open(sys.argv[1]))
 out = sys.argv[2] if len(sys.argv) > 2 else 'card-sheet.png'
+
+# The same focal points the page uses, so this sheet shows the same crop.
+FOCUS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src', 'data', 'image-focus.json')
+try:
+    with open(FOCUS_PATH) as fh:
+        FOCUS = json.load(fh)
+except Exception:                                              # noqa: BLE001
+    FOCUS = {}
+
+
+def focal(src):
+    """CSS object-position for this picture, as fractions."""
+    value = FOCUS.get(src, '50% 50%').replace('%', '').split()
+    return int(value[0]) / 100, int(value[1]) / 100
 
 CELL_W, CELL_H, PAD, TEXT_H, COLS = 300, 225, 12, 60, 4
 UA = {'User-Agent': 'NeuroBase/1.0 (+https://neurobase-live.vercel.app)'}
@@ -32,15 +47,30 @@ for n, card in enumerate(shown):
     try:
         req = urllib.request.Request(card['src'], headers=UA)
         with urllib.request.urlopen(req, timeout=30) as resp:
-            im = Image.open(io.BytesIO(resp.read())).convert('RGB')
+            im = Image.open(io.BytesIO(resp.read()))
+        # Transparent logos are shown on white by the page, so flatten onto
+        # white here too. Converting straight to RGB fills with black, which
+        # made a black wordmark look like an empty cell.
+        if im.mode in ('RGBA', 'LA', 'P'):
+            im = im.convert('RGBA')
+            flat = Image.new('RGB', im.size, 'white')
+            flat.paste(im, mask=im.split()[-1])
+            im = flat
+        else:
+            im = im.convert('RGB')
         target = CELL_W / CELL_H
         w, h = im.size
+        fx, fy = focal(card['src'])
+        # object-position: the picture slides until the focal point sits at the
+        # same relative place in the box, clamped to the picture's own edges.
         if w / h > target:
             nw = int(h * target)
-            im = im.crop(((w - nw) // 2, 0, (w + nw) // 2, h))
+            left = min(max(int(w * fx - nw / 2), 0), w - nw)
+            im = im.crop((left, 0, left + nw, h))
         else:
             nh = int(w / target)
-            im = im.crop((0, (h - nh) // 2, w, (h + nh) // 2))
+            top = min(max(int(h * fy - nh / 2), 0), h - nh)
+            im = im.crop((0, top, w, top + nh))
         sheet.paste(im.resize((CELL_W, CELL_H)), (x, y))
     except Exception as err:                                   # noqa: BLE001
         draw.rectangle([x, y, x + CELL_W, y + CELL_H], fill='#eee')

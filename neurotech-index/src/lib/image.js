@@ -20,6 +20,7 @@
  */
 
 import CLASS_POOL from '../data/class-images.json'
+import IMAGE_FOCUS from '../data/image-focus.json'
 
 const KIND = { real: 'photo' }
 
@@ -91,6 +92,17 @@ export function usableImage(entity, { own = false } = {}) {
   if (own && img.subject !== 'item') return null
   return img
 }
+
+/**
+ * Where to crop a picture from.
+ *
+ * A card is landscape and fills by cropping, and a crop takes the middle,
+ * which is wrong whenever the subject is not in the middle: a prosthetic arm
+ * along the bottom edge, a patient sitting to one side of a scanner. The
+ * focal points are found once by scripts/set-image-focus.js and handed
+ * straight to CSS. A picture with no entry is already centred.
+ */
+export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
 
 /** Is this a labelled photograph of the technology rather than of the record? */
 export const isIllustration = img => img?.subject === 'class'
