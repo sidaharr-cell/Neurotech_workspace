@@ -194,7 +194,7 @@ export function fullCredit(img) {
  * exception is the photograph a news outlet published with its own story,
  * because the card already names that outlet on the line below.
  */
-export const needsCredit = img => Boolean(img && (isIllustration(img) || img.source || img.credit))
+export const needsCredit = img => Boolean(creditLine(img))
 
 /**
  * The picture each item on the page will actually run, keyed by id.
