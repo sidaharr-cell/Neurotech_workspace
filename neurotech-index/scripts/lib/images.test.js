@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   getImageSize, HI_RES, CARD_RES, SANE_ASPECT, isReusableLicense, firstFigureHref, europePmcFileUrl,
-  articleCredit, preprintFigureHref, preprintServer, parseCommons, pickCompanyEntity,
+  articleCredit, figureHrefs, preprintFigureHref, preprintServer, parseCommons, pickCompanyEntity,
   iconHref, recordText, classifyTechnology, titleAffirmsClass, pickClassImage, DEVICE_CLASSES,
   isRejected, productName, linkScore, pageLinks, hostNamesProduct, contentImage, sameName, productLikeNames,
 } from './images.js'
@@ -369,5 +369,20 @@ describe('recordText boundaries', () => {
 
   it('still reads a phrase that really is in one field', () => {
     expect(classifyTechnology({ title: 'Focused ultrasound neuromodulation of the thalamus' }).id).toBe('fus')
+  })
+})
+
+describe('figureHrefs', () => {
+  it('lists every figure, so a caller can walk past the composite', () => {
+    const xml = '<fig><graphic xlink:href="F1"/></fig><fig><graphic xlink:href="F2.jpg"/></fig>'
+    expect(figureHrefs(xml)).toEqual(['F1.jpg', 'F2.jpg'])
+  })
+
+  it('falls back to a lone graphic outside any figure', () => {
+    expect(figureHrefs('<graphic xlink:href="g1.png"/>')).toEqual(['g1.png'])
+  })
+
+  it('is empty when the full text names none', () => {
+    expect(figureHrefs('<article><p>text</p></article>')).toEqual([])
   })
 })

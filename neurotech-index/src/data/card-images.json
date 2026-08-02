@@ -1,0 +1,43 @@
+{
+  "_note": "Pictures chosen by hand for a specific record, when the pipeline's general sources cannot reach one. Keyed by a distinctive fragment of the record's title. `file` is a Wikimedia Commons file name; the licence, the author and the dimensions are read from Commons at apply time, so nothing here asserts a fact of its own. `why` is the reason a person picked it, which is the part worth keeping.",
+  "Elon Musk Shows Off Neuralink Patients": {
+    "file": "Noland Arbaugh in 2024.jpg",
+    "why": "Noland Arbaugh is Neuralink's first patient and the subject of this story"
+  },
+  "Deep brain stimulation induces white matter remodeling": {
+    "file": "Typical deep brain stimulation setup.jpg",
+    "why": "a DBS setup, for a paper about what DBS does to white matter"
+  },
+  "Tissue rigidity phase transition shapes morphogen gradients": {
+    "file": "Stage-14 Drosophila embryo expressing AbdA and Exd, both fused to one half of the fluorescent protein Venus - journal.pbio.1001349.g001.png",
+    "why": "morphogen gradients are studied in the Drosophila embryo, which this shows stained for a reporter"
+  },
+  "A woman who hadnt spoken an intelligible word": {
+    "file": "Noland Arbaugh on ROP.jpg",
+    "why": "a person using an implanted brain-computer interface, which is what this story is about"
+  },
+  "Neuropixels Opto": {
+    "file": "Patch rig.png",
+    "why": "an electrophysiology rig, for a paper about high-resolution electrophysiology"
+  },
+  "Long-term independent use of an intracortical": {
+    "file": "Flickr - Official U.S. Navy Imagery - The Modular Prosthetic Limb (MPL)..jpg",
+    "why": "the Modular Prosthetic Limb, the effector intracortical brain-computer interfaces are tested with"
+  },
+  "Magnetoelectric Nanoparticles": {
+    "file": "TEM image of gold nanoparticles and nanorods.jpg",
+    "why": "nanoparticles under transmission electron microscopy, for a paper on nanoparticle neuromodulation"
+  },
+  "The emerging field of cognitive brain-computer interfaces": {
+    "file": "Eeg registration.jpg",
+    "why": "cognitive brain-computer interfaces are read from the scalp, which is what this shows"
+  },
+  "China’s Brain-Computer Interface tech steps out of laboratory": {
+    "file": "EEG Experiment.jpg",
+    "why": "a brain-computer interface session, for a story about the field leaving the laboratory"
+  },
+  "A neuroprosthesis for restoring hand movement": {
+    "file": "Myoelectric prosthetic arm.jpg",
+    "why": "a myoelectric prosthetic arm, for a paper on restoring hand movement and sensation"
+  }
+}
