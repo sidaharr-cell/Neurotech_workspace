@@ -8,7 +8,7 @@
  *
  * A class photograph stands for a technology, not for one record: every deep
  * brain stimulation clearance shows the same small set of DBS photographs. So
- * the set is resolved ONCE, here, and written to scripts/data/class-images.json
+ * the set is resolved ONCE, here, and written to src/data/class-images.json
  * where a person can read it and disagree with it. The backfill and the daily
  * cron then assign from that file at no API cost.
  *
@@ -49,7 +49,11 @@ for (const cls of classes) {
     label: cls.label,
     queries: cls.queries,
     resolvedAt: new Date().toISOString(),
-    images: images.map(({ classLabel, ...i }) => i),   // label lives on the class, not on each file
+    // Landscape first: a card crops to 4:3, so the pictures that survive that
+    // crop best are the ones a record should be offered first.
+    images: images
+      .map(({ classLabel, ...i }) => i)
+      .sort((a, b) => Math.abs((a.w || 1) / (a.h || 1) - 4 / 3) - Math.abs((b.w || 1) / (b.h || 1) - 4 / 3)),
   }
   for (const i of images) console.log(`${cls.id.padEnd(16)} ${String(i.classTitle).slice(0, 52).padEnd(54)} ${i.w}x${i.h} ${i.license}`)
 }
@@ -58,8 +62,8 @@ console.log(`\n${found} photographs across ${classes.length - empty.length} clas
 if (empty.length) console.log(`No confirmable photograph for: ${empty.join(', ')} (records in these classes keep their data figure).`)
 
 if (!COMMIT) {
-  console.log('\nDry run. Re-run with --commit to write scripts/data/class-images.json.')
+  console.log('\nDry run. Re-run with --commit to write src/data/class-images.json.')
 } else {
   saveClassImages(pool)
-  console.log('\nWrote scripts/data/class-images.json.')
+  console.log('\nWrote src/data/class-images.json.')
 }

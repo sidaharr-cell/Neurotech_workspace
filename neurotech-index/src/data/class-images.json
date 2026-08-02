@@ -1,0 +1,562 @@
+{
+  "cochlear_implant": {
+    "label": "a cochlear implant",
+    "queries": [
+      "cochlear implant"
+    ],
+    "resolvedAt": "2026-08-02T00:36:36.078Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Cochlear_implant_user.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Hear hear!",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cochlear_implant_user.jpg",
+        "w": 501,
+        "h": 400,
+        "classId": "cochlear_implant",
+        "classTitle": "File:Cochlear implant user.jpg"
+      }
+    ]
+  },
+  "dbs": {
+    "label": "a deep brain stimulation system (implanted brain electrodes or its pulse generator)",
+    "queries": [
+      "deep brain stimulation",
+      "deep brain stimulation implant"
+    ],
+    "resolvedAt": "2026-08-02T01:02:59.545Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/73/Tiefe_Hirnstimulation_-_Sonden_RoeSchaedel_ap.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Hellerhoff",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "wikipedia",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Deep%20brain%20stimulation",
+        "w": 756,
+        "h": 790,
+        "title": "File:Tiefe Hirnstimulation - Sonden RoeSchaedel ap.jpg",
+        "classId": "dbs",
+        "classTitle": "Deep brain stimulation"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Prep_for_Deep_Brain_Stimulation.png",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Whoisjohngalt",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Prep_for_Deep_Brain_Stimulation.png",
+        "w": 1200,
+        "h": 1600,
+        "classId": "dbs",
+        "classTitle": "File:Prep for Deep Brain Stimulation.png"
+      }
+    ]
+  },
+  "vns": {
+    "label": "a vagus nerve stimulator (implanted pulse generator and lead)",
+    "queries": [
+      "vagus nerve stimulator implant",
+      "vagus nerve stimulation"
+    ],
+    "resolvedAt": "2026-08-02T00:37:42.575Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg/1280px-Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Hellerhoff",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg",
+        "w": 1280,
+        "h": 1737,
+        "classId": "vns",
+        "classTitle": "File:Vagusstimulator bei Lennox-Gastaut-Syndrom 17M - CR ap - 001.jpg"
+      }
+    ]
+  },
+  "tens": {
+    "label": "a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes",
+    "queries": [
+      "TENS unit electrodes",
+      "transcutaneous electrical nerve stimulation"
+    ],
+    "resolvedAt": "2026-08-02T00:38:17.605Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Tens.jpg/1280px-Tens.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Yeza",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "wikipedia",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Transcutaneous%20electrical%20nerve%20stimulation",
+        "w": 1280,
+        "h": 960,
+        "title": "File:Tens.jpg",
+        "classId": "tens",
+        "classTitle": "Transcutaneous electrical nerve stimulation"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Tens_unit.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Guilty",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tens_unit.jpg",
+        "w": 800,
+        "h": 783,
+        "classId": "tens",
+        "classTitle": "File:Tens unit.jpg"
+      }
+    ]
+  },
+  "eeg": {
+    "label": "electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording",
+    "queries": [
+      "electroencephalography cap",
+      "EEG electrodes head",
+      "electroencephalography"
+    ],
+    "resolvedAt": "2026-08-02T01:03:34.935Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg/1280px-Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Antoine Lutz",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
+        "w": 1280,
+        "h": 858,
+        "classId": "eeg",
+        "classTitle": "File:Barry Kerzin meditating with EEG for neuroscience research.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Chris Hope",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:EEG_Recording_Cap.jpg",
+        "w": 1280,
+        "h": 853,
+        "classId": "eeg",
+        "classTitle": "File:EEG Recording Cap.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Eeg_registration.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Baburov",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eeg_registration.jpg",
+        "w": 1280,
+        "h": 853,
+        "classId": "eeg",
+        "classTitle": "File:Eeg registration.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/EEG_Hospital.png",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "HannahDoverty",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:EEG_Hospital.png",
+        "w": 1136,
+        "h": 640,
+        "classId": "eeg",
+        "classTitle": "File:EEG Hospital.png"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/EEG_Experiment.jpg/1280px-EEG_Experiment.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Flexagoon",
+        "license": "CC0",
+        "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:EEG_Experiment.jpg",
+        "w": 1280,
+        "h": 1700,
+        "classId": "eeg",
+        "classTitle": "File:EEG Experiment.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg/1280px-Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Shixart1985",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg",
+        "w": 1280,
+        "h": 1707,
+        "classId": "eeg",
+        "classTitle": "File:Child undergoing an EEG test with electrodes on the head while lying on a bed in a clinic setting.jpg"
+      }
+    ]
+  },
+  "meg": {
+    "label": "a magnetoencephalography scanner",
+    "queries": [
+      "magnetoencephalography"
+    ],
+    "resolvedAt": "2026-08-02T00:39:41.099Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/NIMH_MEG.jpg/1280px-NIMH_MEG.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Unknown NIMH author",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "source": "wikipedia",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Magnetoencephalography",
+        "w": 1280,
+        "h": 1927,
+        "title": "File:NIMH MEG.jpg",
+        "classId": "meg",
+        "classTitle": "Magnetoencephalography"
+      }
+    ]
+  },
+  "fnirs": {
+    "label": "a functional near-infrared spectroscopy headset",
+    "queries": [
+      "functional near-infrared spectroscopy brain",
+      "fNIRS headset"
+    ],
+    "resolvedAt": "2026-08-02T00:40:01.288Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Blonde_fNIRS_lady.jpg/1280px-Blonde_fNIRS_lady.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Elisenicolegray",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "wikipedia",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Functional%20near-infrared%20spectroscopy",
+        "w": 1280,
+        "h": 853,
+        "title": "File:Blonde fNIRS lady.jpg",
+        "classId": "fnirs",
+        "classTitle": "Functional near-infrared spectroscopy"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/FNIRS_EEG_HMD.jpg/1280px-FNIRS_EEG_HMD.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Cybertooms",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:FNIRS_EEG_HMD.jpg",
+        "w": 1280,
+        "h": 1280,
+        "classId": "fnirs",
+        "classTitle": "File:FNIRS EEG HMD.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/FNIRS_head_Hitachi_ETG4000_4.jpg/1280px-FNIRS_head_Hitachi_ETG4000_4.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Walej",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:FNIRS_head_Hitachi_ETG4000_4.jpg",
+        "w": 1280,
+        "h": 720,
+        "classId": "fnirs",
+        "classTitle": "File:FNIRS head Hitachi ETG4000 4.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/FNIRS_head_Hitachi_ETG4000_2.jpg/1280px-FNIRS_head_Hitachi_ETG4000_2.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Walej",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:FNIRS_head_Hitachi_ETG4000_2.jpg",
+        "w": 1280,
+        "h": 720,
+        "classId": "fnirs",
+        "classTitle": "File:FNIRS head Hitachi ETG4000 2.jpg"
+      }
+    ]
+  },
+  "mri": {
+    "label": "a magnetic resonance imaging scanner or an MRI brain scan",
+    "queries": [
+      "magnetic resonance imaging scanner",
+      "MRI brain scan"
+    ],
+    "resolvedAt": "2026-08-02T00:40:42.632Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/HITACHI%2C_Magnetic_Resonance_Imaging_System%2C_ECHELON_OVAL%2C.jpg/1280px-HITACHI%2C_Magnetic_Resonance_Imaging_System%2C_ECHELON_OVAL%2C.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Mj-bird",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:HITACHI,_Magnetic_Resonance_Imaging_System,_ECHELON_OVAL,.jpg",
+        "w": 1280,
+        "h": 960,
+        "classId": "mri",
+        "classTitle": "File:HITACHI, Magnetic Resonance Imaging System, ECHELON OVAL,.jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/MRI-Philips.JPG/1280px-MRI-Philips.JPG",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Jan Ainali",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:MRI-Philips.JPG",
+        "w": 1280,
+        "h": 1168,
+        "classId": "mri",
+        "classTitle": "File:MRI-Philips.JPG"
+      }
+    ]
+  },
+  "emg": {
+    "label": "electromyography: surface EMG electrodes or an EMG recording",
+    "queries": [
+      "electromyography electrodes",
+      "electromyography"
+    ],
+    "resolvedAt": "2026-08-02T00:41:06.033Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg/1280px-Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Paul Anthony Stewart",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg",
+        "w": 1280,
+        "h": 857,
+        "classId": "emg",
+        "classTitle": "File:Electromyographic recording at adductor pollicis muscle and stimulation of the ulnar nerve.jpg"
+      }
+    ]
+  },
+  "prosthetic": {
+    "label": "a myoelectric prosthetic arm or hand",
+    "queries": [
+      "myoelectric prosthetic arm",
+      "prosthetic hand"
+    ],
+    "resolvedAt": "2026-08-02T00:41:37.273Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Myoelectric_prosthetic_arm.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Petty Officer 2nd Class Greg Mitchell of the United States Navy",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Myoelectric_prosthetic_arm.jpg",
+        "w": 926,
+        "h": 1059,
+        "classId": "prosthetic",
+        "classTitle": "File:Myoelectric prosthetic arm.jpg"
+      }
+    ]
+  },
+  "bci": {
+    "label": "a brain-computer interface in use: a person wearing or implanted with a neural interface",
+    "queries": [
+      "brain computer interface",
+      "brain computer interface user"
+    ],
+    "resolvedAt": "2026-08-02T01:03:46.545Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Anders Sandberg from Oxford, UK",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brain-Computer_Interface_(BCI)_-_FET09_Prague.jpg",
+        "w": 800,
+        "h": 600,
+        "classId": "bci",
+        "classTitle": "File:Brain-Computer Interface (BCI) - FET09 Prague.jpg"
+      }
+    ]
+  },
+  "fus": {
+    "label": "a focused ultrasound therapy or ultrasound neuromodulation system",
+    "queries": [
+      "focused ultrasound therapy",
+      "MRI guided focused ultrasound",
+      "high intensity focused ultrasound machine",
+      "ultrasound therapy device"
+    ],
+    "resolvedAt": "2026-08-02T00:41:23.888Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/HIFU_Transducers_Compared_with_Cardiac_Imaging_Probe.jpg/1280px-HIFU_Transducers_Compared_with_Cardiac_Imaging_Probe.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Chris Adams",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:HIFU_Transducers_Compared_with_Cardiac_Imaging_Probe.jpg",
+        "w": 1280,
+        "h": 960,
+        "classId": "fus",
+        "classTitle": "File:HIFU Transducers Compared with Cardiac Imaging Probe.jpg"
+      }
+    ]
+  },
+  "tms": {
+    "label": "transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head",
+    "queries": [
+      "transcranial magnetic stimulation",
+      "transcranial magnetic stimulation coil",
+      "TMS therapy treatment",
+      "magnetic stimulation coil head"
+    ],
+    "resolvedAt": "2026-08-02T00:38:04.396Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Technophant",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Basic_outpatient_TMS_setup_(cropped).jpg",
+        "w": 1280,
+        "h": 923,
+        "classId": "tms",
+        "classTitle": "File:Basic outpatient TMS setup (cropped).jpg"
+      },
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Brain_TMS.jpg/1280px-Brain_TMS.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Adindva1",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brain_TMS.jpg",
+        "w": 1280,
+        "h": 720,
+        "classId": "tms",
+        "classTitle": "File:Brain TMS.jpg"
+      }
+    ]
+  },
+  "optogenetics": {
+    "label": "optogenetics: laser or fibre-optic hardware for stimulating neurons, or fluorescently labelled brain tissue",
+    "queries": [
+      "optogenetics",
+      "optogenetic stimulation"
+    ],
+    "resolvedAt": "2026-08-02T00:42:03.785Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Optogenetics_imetronic.JPG/1280px-Optogenetics_imetronic.JPG",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Bd008",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Optogenetics_imetronic.JPG",
+        "w": 1280,
+        "h": 851,
+        "classId": "optogenetics",
+        "classTitle": "File:Optogenetics imetronic.JPG"
+      }
+    ]
+  },
+  "scs": {
+    "label": "a spinal cord stimulator",
+    "queries": [
+      "spinal cord stimulator",
+      "spinal cord stimulation implant"
+    ],
+    "resolvedAt": "2026-08-02T00:37:48.440Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Mconnell",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "source": "wikipedia",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Spinal%20cord%20stimulator",
+        "w": 966,
+        "h": 1362,
+        "title": "File:Anterior thoracic SCS.jpg",
+        "classId": "scs",
+        "classTitle": "Spinal cord stimulator"
+      }
+    ]
+  },
+  "microscopy": {
+    "label": "neurons or brain tissue seen under a microscope",
+    "queries": [
+      "neuron microscopy",
+      "neurons fluorescence microscopy"
+    ],
+    "resolvedAt": "2026-08-02T00:42:34.614Z",
+    "images": [
+      {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/4-week-old_neurons_%287184654817%29.jpg/1280px-4-week-old_neurons_%287184654817%29.jpg",
+        "kind": "photo",
+        "subject": "class",
+        "credit": "Jason Snyder from Washington, DC, United States",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "commons",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:4-week-old_neurons_(7184654817).jpg",
+        "w": 1280,
+        "h": 1280,
+        "classId": "microscopy",
+        "classTitle": "File:4-week-old neurons (7184654817).jpg"
+      }
+    ]
+  }
+}

@@ -15,7 +15,7 @@ import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
 import { classify } from '../src/lib/classify.js'
 import { scanReproLinks } from '../src/lib/repro.js'
-import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage } from './lib/images.js'
+import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage, FALLBACK_CLASS } from './lib/images.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -646,7 +646,7 @@ async function classifyImages(items) {
  *      is open access. Publisher pages 403 every script, so a paywalled paper
  *      has no figure to be had.
  *   2. a labelled photograph of the technology, from the reviewed pool in
- *      scripts/data/class-images.json. Marked subject='class', which is what
+ *      src/data/class-images.json. Marked subject='class', which is what
  *      makes the page label it and print the credit.
  *
  * News keeps the photograph its outlet published, sourced earlier in the run.
@@ -689,8 +689,12 @@ async function enrichWithFigures(sortedItems, limit = 60) {
   for (const it of targets) {
     if (it.metadata.image) continue
     const match = classifyTechnology(it)
-    const img = match && pickClassImage(pool, match.id, it.source_id || it.title || '')
-    if (img) { stamp(it, { ...img, classId: match.id, subject: 'class' }); cls++ }
+    if (!match) continue
+    const seed = it.source_id || it.title || ''
+    for (const id of [match.id, FALLBACK_CLASS].filter(Boolean)) {
+      const img = pickClassImage(pool, id, seed)
+      if (img) { stamp(it, { ...img, classId: id, subject: 'class' }); cls++; break }
+    }
   }
 
   console.log(`      figures: ${own} of the paper's own, ${cls} labelled class photographs (top ${targets.length})`)

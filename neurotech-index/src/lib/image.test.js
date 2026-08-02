@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { imageOf, usableImage, isIllustration, creditLine, needsCredit, duplicateImageIds } from './image'
+import { imageOf, usableImage, isIllustration, creditLine, needsCredit, assignImages } from './image'
 
 const feedRow = (over = {}) => ({ id: 'f1', metadata: { image: 'https://x/a.jpg', ...over } })
 const deviceRow = (over = {}) => ({ id: 'd1', image_url: 'https://x/b.jpg', image_source: 'commons', ...over })
@@ -65,15 +65,63 @@ describe('creditLine', () => {
   })
 })
 
-describe('duplicateImageIds', () => {
+describe('assignImages', () => {
   const withUrl = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
+  // The first entry of the eeg pool, so a repeat can be swapped for the second.
+  const POOL_EEG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg'
 
-  it('keeps the first card and marks the repeats', () => {
-    const dupes = duplicateImageIds([withUrl('a', 'x.jpg'), withUrl('b', 'x.jpg'), withUrl('c', 'y.jpg'), withUrl('d', 'x.jpg')])
-    expect([...dupes].sort()).toEqual(['b', 'd'])
+  it('gives the first card the picture it carries', () => {
+    const got = assignImages([withUrl('a', 'x.jpg')])
+    expect(got.get('a').url).toBe('x.jpg')
   })
 
-  it('ignores records with no picture', () => {
-    expect(duplicateImageIds([{ id: 'a', metadata: {} }, null, { id: 'b' }]).size).toBe(0)
+  it('hands a repeat a different photograph of the same technology', () => {
+    const got = assignImages([withUrl('a', POOL_EEG), withUrl('b', POOL_EEG)])
+    expect(got.get('a').url).toBe(POOL_EEG)
+    expect(got.get('b')).toBeTruthy()
+    expect(got.get('b').url).not.toBe(POOL_EEG)
+  })
+
+  it('withholds from a repeat whose picture belongs to no pool', () => {
+    // There is no general pool to reach for, by design: see the note in
+    // scripts/lib/images.js. The second card shows its data figure.
+    const got = assignImages([withUrl('a', 'x.jpg'), withUrl('b', 'x.jpg')])
+    expect(got.get('a').url).toBe('x.jpg')
+    expect(got.has('b')).toBe(false)
+  })
+
+  it('skips records with no picture and no id', () => {
+    expect(assignImages([{ id: 'a', metadata: {} }, null, { metadata: { image: 'y.jpg' } }]).size).toBe(0)
+  })
+})
+
+describe('assignImages, uniqueness', () => {
+  const POOL_EEG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg'
+  const card = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
+
+  it('never gives two entries the same picture', () => {
+    const cards = Array.from({ length: 12 }, (_, i) => card(`c${i}`, POOL_EEG))
+    const got = assignImages(cards)
+    const urls = [...got.values()].map(i => i.url)
+    expect(new Set(urls).size).toBe(urls.length)
+  })
+
+  it('falls through to the general pool once the technology runs out', () => {
+    const cards = Array.from({ length: 12 }, (_, i) => card(`c${i}`, POOL_EEG))
+    const got = assignImages(cards)
+    expect(got.size).toBeGreaterThan(3)
+  })
+})
+
+describe('assignImages, the withheld case', () => {
+  const POOL_BCI = 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg'
+  const card = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
+
+  it('withholds rather than repeats when the pool is exhausted', () => {
+    const cards = Array.from({ length: 6 }, (_, i) => card(`c${i}`, POOL_BCI))
+    const got = assignImages(cards)
+    const urls = cards.map(c => got.get(c.id)).filter(Boolean).map(i => i.url)
+    expect(new Set(urls).size).toBe(urls.length)
+    expect(got.size).toBeLessThan(cards.length)
   })
 })

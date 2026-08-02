@@ -14,7 +14,7 @@
 import { useState } from 'react'
 import { facetsOfEntity, FUNCTION_LABEL } from '../lib/facets'
 import { fmtUsd } from '../lib/fundingBoard'
-import { usableImage, creditLine, needsCredit } from '../lib/image'
+import { usableImage, creditLine, fullCredit, needsCredit } from '../lib/image'
 import { fmtDate } from './ui'
 
 /** Month and day, for a thumbnail that has room for nothing longer. */
@@ -338,21 +338,37 @@ export function DataFigure({ item, size = 'md' }) {
  * The picture for a feed story: its sourced photograph, or the figure its
  * entry type earns.
  *
- * `own` holds the slot to a photograph OF the story, which is what the lead
- * uses. A labelled photograph of the technology is fair on a card in a grid
- * and the wrong thing to run six columns wide as the day's top story.
- * `noPhoto` is how the page suppresses a picture already used further up.
+ * `image` is the picture the page assigned this card — see assignImages in
+ * lib/image.js, which hands a second card that landed on the same class
+ * photograph a different one from the same pool. Passing it explicitly is what
+ * keeps the credit line and the picture in agreement. Without it the figure
+ * falls back to whatever the record itself carries.
  */
-export function StoryFigure({ item, size = 'md', own = false, priority = false, noPhoto = false, className = '' }) {
-  const img = noPhoto ? null : usableImage(item, { own })
+export function StoryFigure({ item, size = 'md', own = false, priority = false, image, className = '' }) {
+  const img = image !== undefined ? image : usableImage(item, { own })
   const fallback = <DataFigure item={item} size={size} />
   return img ? <Photo img={img} fallback={fallback} priority={priority} className={className} /> : fallback
 }
 
+/**
+ * The picture the lead may run.
+ *
+ * The lead is displayed eleven hundred pixels wide, so it prefers a photograph
+ * OF the story and will otherwise take a labelled illustration only when that
+ * illustration is large enough not to look soft at that size. Below the bar it
+ * shows the story's data figure, which is sharp at any width.
+ */
+export function leadImage(item) {
+  const own = usableImage(item, { own: true })
+  if (own) return own
+  const any = usableImage(item)
+  return (any?.w || 0) >= 900 ? any : null
+}
+
 /** A photograph for any record that carries one, with a figure to fall back
  *  to. Used by the device, trial and company cards. */
-export function EntityFigure({ entity, fallback, noPhoto = false, className = '' }) {
-  const img = noPhoto ? null : usableImage(entity)
+export function EntityFigure({ entity, fallback, image, className = '' }) {
+  const img = image !== undefined ? image : usableImage(entity)
   return img ? <Photo img={img} fallback={fallback} className={className} /> : fallback
 }
 
@@ -369,7 +385,7 @@ export function ImageCredit({ img, className = '' }) {
   const text = creditLine(img)
   if (!text) return null
   return (
-    <p className={`mt-1 text-[11px] font-sans text-muted/80 truncate ${className}`} title={text}>
+    <p className={`mt-1 text-[11px] font-sans text-muted/80 truncate ${className}`} title={fullCredit(img)}>
       {img.sourceUrl
         ? <a href={img.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent hover:underline">{text}</a>
         : text}

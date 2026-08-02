@@ -16,7 +16,18 @@
     "pctile": 0.99577193,
     "fwci": 23.822,
     "citedBy": 3,
-    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach."
+    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/X-ray_of_deep_brain_stimulation_in_OCD%2C_L.png",
+    "image_kind": "photo",
+    "image_subject": "class",
+    "image_credit": "Jmarchn",
+    "image_license": "CC BY-SA 3.0",
+    "image_license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "image_source": "commons",
+    "image_source_url": "https://commons.wikimedia.org/wiki/File:X-ray_of_deep_brain_stimulation_in_OCD,_L.png",
+    "image_w": 980,
+    "image_h": 930,
+    "image_checked_at": "2026-08-01T23:16:36.155Z"
   },
   {
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
@@ -41,7 +52,18 @@
     "pctile": 0.99569294,
     "fwci": 35.0578,
     "citedBy": 6,
-    "significance": "This work proves that intracortical BCIs can function reliably outside laboratory settings with minimal oversight, a critical milestone for practical neurotechnology. By showing sustained performance and independent operation for speech and cursor control in daily life, it removes the assumption that BCIs require constant clinical supervision. This achievement directly validates the viability of implantable neural interfaces as therapeutic devices for severely paralyzed patients and establishes the technical and clinical feasibility required for broader adoption."
+    "significance": "This work proves that intracortical BCIs can function reliably outside laboratory settings with minimal oversight, a critical milestone for practical neurotechnology. By showing sustained performance and independent operation for speech and cursor control in daily life, it removes the assumption that BCIs require constant clinical supervision. This achievement directly validates the viability of implantable neural interfaces as therapeutic devices for severely paralyzed patients and establishes the technical and clinical feasibility required for broader adoption.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg",
+    "image_kind": "photo",
+    "image_subject": "class",
+    "image_credit": "Anders Sandberg from Oxford, UK",
+    "image_license": "CC BY 2.0",
+    "image_license_url": "https://creativecommons.org/licenses/by/2.0",
+    "image_source": "commons",
+    "image_source_url": "https://commons.wikimedia.org/wiki/File:Brain-Computer_Interface_(BCI)_-_FET09_Prague.jpg",
+    "image_w": 800,
+    "image_h": 600,
+    "image_checked_at": "2026-08-01T23:16:37.113Z"
   },
   {
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
@@ -69,7 +91,18 @@
     "pctile": 0.99150281,
     "fwci": 23.822,
     "citedBy": 12,
-    "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
+    "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/X-ray_of_deep_brain_stimulation_in_OCD%2C_L.png",
+    "image_kind": "photo",
+    "image_subject": "class",
+    "image_credit": "Jmarchn",
+    "image_license": "CC BY-SA 3.0",
+    "image_license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "image_source": "commons",
+    "image_source_url": "https://commons.wikimedia.org/wiki/File:X-ray_of_deep_brain_stimulation_in_OCD,_L.png",
+    "image_w": 980,
+    "image_h": 930,
+    "image_checked_at": "2026-08-01T23:16:37.311Z"
   },
   {
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",

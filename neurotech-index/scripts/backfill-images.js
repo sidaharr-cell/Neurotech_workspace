@@ -3,7 +3,7 @@
  *
  *   node --env-file-if-exists=.env scripts/backfill-images.js               # DRY RUN
  *   node --env-file-if-exists=.env scripts/backfill-images.js --commit
- *   … --type=feed,trials,devices,orgs   default: all four
+ *   … --type=feed,trials,devices,orgs,notable   default: all five
  *   … --limit=200                       rows per type
  *   … --force                           re-source rows that already have one
  *   … --upgrade                         re-source rows holding a CLASS photograph,
@@ -28,18 +28,21 @@
  *   company            its own logo, from Wikidata or from its site.
  *
  * The class fallback is a licensed photograph of the TECHNOLOGY, drawn from
- * the reviewed pool in scripts/data/class-images.json and marked subject='class'
+ * the reviewed pool in src/data/class-images.json and marked subject='class'
  * so the page can label it. It costs no API calls: the pool is resolved once by
  * scripts/build-class-images.js.
  *
  * Records whose class has no confirmable photograph keep their data figure.
  * That is a normal outcome, not a failure.
  */
+import { readFileSync, writeFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import {
   resolvePaperImage, resolveOrgImage, resolveTrialImage, ogImage, classifyImageUrl, measureImage, CARD_RES,
   classifyTechnology, productCodeText, loadClassImages, pickClassImage, saveProductCodes,
-  productName, wikipediaImage, siteProductImage, guessMakerSite,
+  productName, wikipediaImage, siteProductImage, guessMakerSite, FALLBACK_CLASS,
 } from './lib/images.js'
 
 const arg = (name, fallback = null) => {
@@ -54,12 +57,12 @@ const FORCE = process.argv.includes('--force')
 // come up, a trial whose product now has a photograph.
 const UPGRADE = process.argv.includes('--upgrade')
 const LIMIT = Number(arg('limit', 200))
-const TYPES = new Set((arg('type', 'feed,trials,devices,orgs')).split(','))
+const TYPES = new Set((arg('type', 'feed,trials,devices,orgs,notable')).split(','))
 
 const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 const pool = loadClassImages()
 if (!Object.keys(pool).length) {
-  console.error('scripts/data/class-images.json is empty. Run scripts/build-class-images.js --commit first.')
+  console.error('src/data/class-images.json is empty. Run scripts/build-class-images.js --commit first.')
   process.exit(1)
 }
 
@@ -76,10 +79,14 @@ const note = (label, img, why = '') => {
 function classImageFor(entity, extra = '') {
   const cls = classifyTechnology(entity, extra)
   if (!cls) return { img: null, why: 'no technology named' }
-  const img = pickClassImage(pool, cls.id, entity.id)
-  return img
-    ? { img: { ...img, classId: cls.id, subject: 'class' }, why: null }
-    : { img: null, why: `${cls.id}: no confirmed photograph` }
+  // The class it matched, then the fallback. A record about microelectrode
+  // arrays, a class Commons has no photograph of, is still a record about the
+  // nervous system.
+  for (const id of [cls.id, FALLBACK_CLASS].filter(Boolean)) {
+    const img = pickClassImage(pool, id, entity.id)
+    if (img) return { img: { ...img, classId: id, subject: 'class' }, why: null }
+  }
+  return { img: null, why: `${cls.id}: no confirmed photograph` }
 }
 
 /**
@@ -124,10 +131,54 @@ async function productImages() {
   })).filter(p => p.name.length > 3)
 }
 
-/** The product a record names, if we hold a picture of it. */
-function matchProduct(text, products) {
-  const haystack = String(text || '').toLowerCase()
-  return products.find(p => haystack.includes(p.name.toLowerCase()))?.img || null
+/**
+ * The product or company a record names, if we hold a picture of it.
+ *
+ * Matching has to be strict, because the register is full of companies called
+ * Restore, Stimulus, Cerebral and Mentia. A substring match would put the
+ * Restore logo on any headline containing the word "restore". So: whole words
+ * only, at least six characters, and never a name that is an ordinary English
+ * word on its own.
+ */
+const GENERIC_NAMES = new Set([
+  'restore', 'stimulus', 'cerebral', 'mentia', 'neuromod', 'stroke rehab', 'neurotechnology',
+  'medical', 'neuroscience', 'research', 'clinical', 'therapy', 'health', 'brain', 'neuro',
+  'science', 'digital', 'sensor', 'vision', 'motion', 'signal', 'element', 'freedom',
+])
+
+export function matchNamed(text, entries) {
+  const haystack = String(text || '')
+  for (const e of entries) {
+    const name = String(e.name || '').trim()
+    if (name.length < 6) continue
+    if (GENERIC_NAMES.has(name.toLowerCase())) continue
+    const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\p{L}\\p{N}]|$)`, 'iu')
+    if (pattern.test(haystack)) return e.img
+  }
+  return null
+}
+
+/**
+ * Companies we hold a picture of, by name.
+ *
+ * A story headlined "How Neuralink brain chip transformed life of ALS
+ * sufferer" is about a company we already hold a mark for. The mark is a
+ * poorer picture than a photograph of the work, but it is about this story,
+ * which a photograph of somebody else's laboratory would not be.
+ */
+async function companyImages() {
+  const { data, error } = await sb.from('organizations')
+    .select('name,display_name,image_url,image_kind,image_subject,image_credit,image_license,image_license_url,image_source,image_source_url,image_w,image_h')
+    .eq('type', 'company').not('image_url', 'is', null).limit(2000)
+  if (error) return []
+  return (data || []).map(o => ({
+    name: (o.display_name || o.name || '').trim(),
+    img: {
+      url: o.image_url, kind: o.image_kind, subject: 'item', credit: o.image_credit,
+      license: o.image_license, licenseUrl: o.image_license_url, source: o.image_source,
+      sourceUrl: o.image_source_url, w: o.image_w, h: o.image_h,
+    },
+  })).filter(c => c.name.length > 3)
 }
 
 /** metadata keys for a news_feed row. camelCase, beside the ones already there. */
@@ -189,7 +240,8 @@ async function doFeed() {
     .sort((a, b) => (b.metadata?.rankScore ?? 0) - (a.metadata?.rankScore ?? 0))
     .filter(r => FORCE || !r.metadata?.image || (UPGRADE && r.metadata?.imageSubject === 'class'))
     .slice(0, LIMIT)
-  console.log(`\nFeed: ${rows.length} rows without a picture (of ${data.length} fetched)`)
+  const companies = await companyImages()
+  console.log(`\nFeed: ${rows.length} rows without a picture (of ${data.length} fetched, ${companies.length} companies with a mark)`)
 
   for (const row of rows) {
     let img = null
@@ -207,6 +259,8 @@ async function doFeed() {
     } else {
       img = await resolvePaperImage(row)
     }
+    // A story that names a company we hold a mark for is about that company.
+    if (!img) img = matchNamed(row.title, companies)
     let why = ''
     if (!img && !(UPGRADE && row.metadata?.image)) ({ img, why } = classImageFor(row))
     note(row.title || row.id, img, why || 'kept its class photograph')
@@ -232,7 +286,7 @@ async function doTrials() {
     // The product under test, in three ways: a device row we already hold a
     // picture of, the article about it, or its page on the sponsor's own site.
     const named = [row.title, ...(row.metadata?.interventions || [])].join(' ')
-    let img = matchProduct(named, products)
+    let img = matchNamed(named, products)
     if (!img) img = await resolveTrialImage(row, { sponsorSite: makers.get(normName(row.metadata?.sponsor)) || null })
     let why = ''
     if (!img && !(UPGRADE && row.metadata?.image)) ({ img, why } = classImageFor(row))
@@ -306,6 +360,37 @@ async function doOrgs() {
   }
 }
 
+// ── Notable research ────────────────────────────────────────────────────────
+
+/**
+ * The notable rail lives in a committed JSON file rather than in Postgres, so
+ * its pictures are written back into that file. Each entry keeps the column
+ * shape the rest of the pipeline uses, which is what lets the page read it
+ * without knowing where it came from.
+ */
+const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
+
+async function doNotable() {
+  let rows = []
+  try { rows = JSON.parse(readFileSync(NOTABLE_PATH, 'utf8')) } catch { rows = [] }
+  const todo = rows.filter(r => FORCE || !r.image_url || (UPGRADE && r.image_subject === 'class'))
+  console.log(`\nNotable research: ${todo.length} of ${rows.length} entries without a picture`)
+
+  for (const row of todo) {
+    let img = await resolvePaperImage({ url: row.url, metadata: { doi: row.doi, pmid: row.pmid } })
+    let why = ''
+    if (!img && !(UPGRADE && row.image_url)) {
+      ;({ img, why } = classImageFor({ ...row, id: row.doi || row.pmid || row.title }))
+    }
+    note(row.title || '', img, why || 'kept its class photograph')
+    if (img) Object.assign(row, toColumns(img))
+  }
+  if (COMMIT) {
+    writeFileSync(NOTABLE_PATH, JSON.stringify(rows, null, 2) + '\n')
+    console.log('  wrote src/data/notable.json')
+  }
+}
+
 // ── Run ─────────────────────────────────────────────────────────────────────
 
 console.log(COMMIT ? 'Writing to Supabase.' : 'DRY RUN. Nothing is written. Add --commit to write.')
@@ -313,6 +398,7 @@ if (TYPES.has('feed')) await doFeed()
 if (TYPES.has('trials')) await doTrials()
 if (TYPES.has('devices')) await doDevices()
 if (TYPES.has('orgs')) await doOrgs()
+if (TYPES.has('notable')) await doNotable()
 
 const total = tally.item + tally.class + tally.none
 console.log(`\n● ${tally.item} pictures of the record itself`)

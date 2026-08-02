@@ -106,9 +106,22 @@ export async function measureImage(url) {
 /** The bar for the lead slot, which is displayed 1100px wide. */
 export const HI_RES = d => !!d && Math.max(d.width, d.height) >= 900 && Math.min(d.width, d.height) >= 500
 
+/**
+ * A shape a card can crop without destroying it.
+ *
+ * Cards are 4:3 and fill by cropping, so a 916x123 banner strip arrives as a
+ * sliver of itself and a very tall portrait loses its subject. Three to one in
+ * either direction is as far as that survives.
+ */
+export const SANE_ASPECT = d => {
+  if (!d || !d.width || !d.height) return false
+  const r = d.width / d.height
+  return r <= 3 && r >= 1 / 3
+}
+
 /** The bar for a card. Journal figures are often modest; 450px still reads
  *  cleanly in a 4:3 card and refusing them would throw away most of PMC. */
-export const CARD_RES = d => !!d && Math.max(d.width, d.height) >= 450
+export const CARD_RES = d => !!d && Math.max(d.width, d.height) >= 450 && SANE_ASPECT(d)
 
 /**
  * Is this URL still an image? Used by the rot check. Returns
@@ -197,8 +210,43 @@ export async function confirmProductPhoto(url) {
   return a.includes('YES')
 }
 
+/**
+ * Two structural questions a class photograph has to pass, asked separately
+ * because a combined prompt lets them blur.
+ *
+ * SINGLE catches the figures Commons is full of: four panels lettered A to D,
+ * scale bars, arrows and callouts. One of those on a card is an unreadable
+ * fragment of itself.
+ *
+ * SAFE catches what a general news page should not run without warning:
+ * exposed tissue, surgery in progress, cadavers. Both were slipping past the
+ * depiction check, which asks only whether the subject is right.
+ */
+/**
+ * One image, or a grid of panels?
+ *
+ * Asked of a paper's own figure, where the subject is right by definition and
+ * the only question is whether a reader can make anything of it 300 pixels
+ * wide. Figure 1 is usually a composite of lettered panels, microscopy grids
+ * and plots; at card size that is grey noise.
+ */
+export async function confirmSinglePanel(url) {
+  const a = await ask(url, 'Is this ONE single image, rather than a composite of several panels? Reply NO if it is divided into multiple panels or sub-figures, has panels lettered a, b, c or A, B, C, or combines photographs with plots or charts. Reply YES only for a single uninterrupted image. Exactly one word: YES or NO.')
+  return a.includes('YES')
+}
+
+export async function confirmSinglePhoto(url) {
+  const a = await ask(url, `Answer both questions about this image, one per line, exactly:
+SINGLE: yes|no
+SAFE: yes|no
+
+SINGLE is yes only if this is ONE photograph. It is no if the image combines several panels or views, has panels lettered A, B, C, has arrows, callouts, scale bars or text labels drawn onto it, or contains an embedded chart.
+SAFE is yes if a general news site could run it beside a headline without warning the reader. It is no for exposed tissue or organs, surgery in progress, open wounds, blood, cadavers or dissection.`, 20)
+  return /SINGLE:\s*yes/i.test(a) && /SAFE:\s*yes/i.test(a)
+}
+
 export async function confirmDepicts(url, label) {
-  const a = await ask(url, `Is this a PHOTOGRAPH (or a medical scan such as an X-ray or MRI) showing ${label}? Reply YES only if a reader would recognise the actual hardware, or a person wearing or implanted with it. Reply NO if it is a diagram, illustration, schematic, patent drawing, chart, book or document scan, logo, screenshot, or shows something else. Exactly one word: YES or NO.`)
+  const a = await ask(url, `Is this a PHOTOGRAPH (or a medical scan such as an X-ray or MRI) showing ${label}? Reply YES only if a reader would recognise the actual hardware, or a person wearing or implanted with it. Reply NO if it is a diagram, illustration, schematic, patent drawing, chart, book or document scan, logo, screenshot, or shows something else. Reply NO if it is a FIGURE FROM A PAPER: several panels combined, panels lettered a/b/c, arrows or callouts drawn on, embedded plots, or captions burned into the image. Exactly one word: YES or NO.`)
   return a.includes('YES')
 }
 
@@ -260,6 +308,10 @@ export async function europePmcFigure({ doi, pmid } = {}) {
   const url = europePmcFileUrl(rec.pmcid, file)
   const dims = await measureImage(url)
   if (!CARD_RES(dims)) return null
+  // Figure 1 of a paper is usually a composite of eight labelled panels. It is
+  // the most authentic picture a paper has and an unreadable one at card size,
+  // so only a figure that is a single image is kept.
+  if (!(await confirmSinglePanel(url))) return null
 
   return {
     url,
@@ -308,6 +360,7 @@ export async function preprintFigure({ url, doi } = {}) {
   if (!fig) return null
   const dims = await measureImage(fig)
   if (!CARD_RES(dims)) return null
+  if (!(await confirmSinglePanel(fig))) return null
 
   return {
     url: fig,
@@ -338,8 +391,10 @@ export function parseCommons(json, { subject = 'class', minWidth = 500 } = {}) {
   return Object.values(json?.query?.pages || {})
     .map(p => {
       const info = p.imageinfo?.[0]
-      if (!info?.url || !(info.mime || '').startsWith('image/')) return null
+      // GIF is excluded: Commons uses it for animations, and a card must not move.
+      if (!info?.url || !/^image\/(jpeg|png|webp)$/.test(info.mime || '')) return null
       if ((info.width || 0) < minWidth) return null
+      if (!SANE_ASPECT({ width: info.width, height: info.height })) return null
       const meta = info.extmetadata || {}
       const license = stripHtml(meta.LicenseShortName?.value)
       const credit = stripHtml(meta.Artist?.value) || stripHtml(meta.Credit?.value)
@@ -373,6 +428,32 @@ export async function commonsSearch(term, { limit = 8, subject = 'class', minWid
     + `&generator=search&gsrsearch=${encodeURIComponent(`${term} filetype:bitmap`)}`
     + `&gsrnamespace=6&gsrlimit=${limit}&${COMMONS_PROPS}`
   return parseCommons(await getJson(url), { subject, minWidth })
+}
+
+/**
+ * The files in a Commons category.
+ *
+ * A category is curated by people who know the subject, so it holds pictures a
+ * text search never surfaces: "Category:Transcranial magnetic stimulation"
+ * carries photographs of machines and sessions, while searching the same words
+ * returns the schematic that leads the Wikipedia article.
+ */
+export async function commonsCategory(category, { limit = 24, subject = 'class', minWidth = 500 } = {}) {
+  const url = 'https://commons.wikimedia.org/w/api.php?action=query&format=json'
+    + `&generator=categorymembers&gcmtitle=${encodeURIComponent(`Category:${category}`)}`
+    + `&gcmtype=file&gcmlimit=${limit}&${COMMONS_PROPS}`
+  return parseCommons(await getJson(url), { subject, minWidth })
+}
+
+/**
+ * Every image used on a Wikipedia article, not just the one that leads it.
+ * The lead image of "Transcranial magnetic stimulation" is a schematic; the
+ * photographs are further down the page.
+ */
+export async function wikipediaArticleImages(title, { limit = 20, subject = 'class', minWidth = 500 } = {}) {
+  const json = await getJson('https://en.wikipedia.org/w/api.php?action=query&format=json'
+    + `&titles=${encodeURIComponent(title)}&generator=images&gimlimit=${limit}&${COMMONS_PROPS}`)
+  return parseCommons(json, { subject, minWidth })
 }
 
 /** One named Commons file (used for Wikidata logo claims). */
@@ -596,6 +677,7 @@ export async function arxivFigure(arxivId) {
   if (!fig) return null
   const dims = await measureImage(fig)
   if (!CARD_RES(dims)) return null
+  if (!(await confirmSinglePanel(fig))) return null
   return {
     url: fig,
     kind: 'figure',
@@ -694,28 +776,34 @@ export async function siteIcon(website) {
  * matching from 4 in 20 to 9 in 20.
  */
 export const DEVICE_CLASSES = [
-  { id: 'cochlear_implant', article: 'Cochlear implant', label: 'a cochlear implant', queries: ['cochlear implant'], re: /cochlear (implant|prosthes)/i },
-  { id: 'dbs', article: 'Deep brain stimulation', label: 'a deep brain stimulation system (implanted brain electrodes or its pulse generator)', queries: ['deep brain stimulation', 'deep brain stimulation implant'], re: /deep brain stimulat|\bDBS\b|globus pallidus|subthalamic/i },
-  { id: 'rns', article: 'Responsive neurostimulation device', label: 'an implanted neurostimulator for epilepsy (the device, its leads, or an X-ray of it in place)', queries: ['responsive neurostimulation epilepsy', 'neurostimulator implant epilepsy', 'NeuroPace', 'epilepsy neurostimulator'], re: /responsive neurostimulat|\bRNS\b/i },
-  { id: 'vns', article: 'Vagus nerve stimulation', label: 'a vagus nerve stimulator (implanted pulse generator and lead)', queries: ['vagus nerve stimulator implant', 'vagus nerve stimulation'], re: /vagus|vagal|\bVNS\b/i },
-  { id: 'scs', article: 'Spinal cord stimulator', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
-  { id: 'tms', article: 'Transcranial magnetic stimulation', label: 'transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head', queries: ['transcranial magnetic stimulation', 'transcranial magnetic stimulation coil', 'TMS therapy treatment', 'magnetic stimulation coil head'], re: /transcranial magnetic|\b[ri]?TMS\b|theta burst/i, titleAlso: /stimulation coil|double cone coil/i },
-  { id: 'tdcs', article: 'Transcranial direct-current stimulation', label: 'transcranial electrical stimulation electrodes on a head', queries: ['transcranial direct current stimulation', 'tDCS electrodes head'], re: /transcranial direct current|\btDCS\b|\btACS\b|transcranial electrical/i },
-  { id: 'tens', article: 'Transcutaneous electrical nerve stimulation', label: 'a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes', queries: ['TENS unit electrodes', 'transcutaneous electrical nerve stimulation'], re: /(transcutaneous[\s\S]{0,40}nerve|nerve[\s\S]{0,40}transcutaneous)|\bTENS\b|tongue stimulator/i },
-  { id: 'pns', article: 'Peripheral nerve stimulation', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
-  { id: 'retinal', article: 'Retinal implant', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
-  { id: 'ecog', article: 'Electrocorticography', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
-  { id: 'mea', article: 'Microelectrode array', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
-  { id: 'eeg', article: 'Electroencephalography', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
-  { id: 'meg', article: 'Magnetoencephalography', label: 'a magnetoencephalography scanner', queries: ['magnetoencephalography'], re: /magnetoencephalograph|\bMEG\b/i },
-  { id: 'fnirs', article: 'Functional near-infrared spectroscopy', label: 'a functional near-infrared spectroscopy headset', queries: ['functional near-infrared spectroscopy brain', 'fNIRS headset'], re: /near-?infrared spectroscop|\bfNIRS\b/i },
-  { id: 'mri', article: 'Magnetic resonance imaging', label: 'a magnetic resonance imaging scanner or an MRI brain scan', queries: ['magnetic resonance imaging scanner', 'MRI brain scan'], re: /magnetic resonance imag|\bfMRI\b|\bMRI\b|neuroimaging/i },
-  { id: 'emg', article: 'Electromyography', label: 'electromyography: surface EMG electrodes or an EMG recording', queries: ['electromyography electrodes', 'electromyography'], re: /electromyograph|\bEMG\b|biofeedback analyzer|evoked response/i },
-  { id: 'fus', article: 'High-intensity focused ultrasound', label: 'a focused ultrasound therapy or ultrasound neuromodulation system', queries: ['focused ultrasound therapy', 'MRI guided focused ultrasound', 'high intensity focused ultrasound machine', 'ultrasound therapy device'], re: /focused ultrasound|ultrasound neuromodulat/i, titleAlso: /focused ultrasound|\bHIFU\b/i },
-  { id: 'exoskeleton', article: 'Powered exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
-  { id: 'prosthetic', article: 'Myoelectric prosthesis', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
-  { id: 'electrode', article: 'Electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
-  { id: 'bci', article: 'Brain–computer interface', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe/i },
+  { id: 'cochlear_implant', category: 'Cochlear implants', article: 'Cochlear implant', label: 'a cochlear implant', queries: ['cochlear implant'], re: /cochlear (implant|prosthes)/i },
+  { id: 'dbs', category: 'Deep brain stimulation', article: 'Deep brain stimulation', label: 'a deep brain stimulation system (implanted brain electrodes or its pulse generator)', queries: ['deep brain stimulation', 'deep brain stimulation implant'], re: /deep brain stimulat|\bDBS\b|globus pallidus|subthalamic/i },
+  { id: 'rns', category: 'Neurostimulators', article: 'Responsive neurostimulation device', label: 'an implanted neurostimulator for epilepsy (the device, its leads, or an X-ray of it in place)', queries: ['responsive neurostimulation epilepsy', 'neurostimulator implant epilepsy', 'NeuroPace', 'epilepsy neurostimulator'], re: /responsive neurostimulat|\bRNS\b/i },
+  { id: 'vns', category: 'Vagus nerve stimulation', article: 'Vagus nerve stimulation', label: 'a vagus nerve stimulator (implanted pulse generator and lead)', queries: ['vagus nerve stimulator implant', 'vagus nerve stimulation'], re: /vagus|vagal|\b(?:ta|t|n|c)?VNS\b/i },
+  { id: 'scs', category: 'Spinal cord stimulation', article: 'Spinal cord stimulator', label: 'a spinal cord stimulator', queries: ['spinal cord stimulator', 'spinal cord stimulation implant'], re: /spinal cord stimulat|\bSCS\b|dorsal column stimulat/i },
+  { id: 'tms', category: 'Transcranial magnetic stimulation', article: 'Transcranial magnetic stimulation', label: 'transcranial magnetic stimulation: a TMS coil or stimulator, either as hardware or held against a head', queries: ['transcranial magnetic stimulation', 'transcranial magnetic stimulation coil', 'TMS therapy treatment', 'magnetic stimulation coil head'], re: /transcranial magnetic|\b(?:r|i|a|c|d|s)?TMS\b|theta burst|\biTBS\b/i, titleAlso: /stimulation coil|double cone coil/i },
+  { id: 'tdcs', category: 'Transcranial direct current stimulation', article: 'Transcranial direct-current stimulation', label: 'transcranial electrical stimulation electrodes on a head', queries: ['transcranial direct current stimulation', 'tDCS electrodes head'], re: /transcranial direct current|\b(?:hd-?)?t[DA]CS\b|transcranial electrical|\btRNS\b/i },
+  { id: 'tens', category: 'Transcutaneous electrical nerve stimulation', article: 'Transcutaneous electrical nerve stimulation', label: 'a transcutaneous electrical nerve stimulation (TENS) unit with skin electrodes', queries: ['TENS unit electrodes', 'transcutaneous electrical nerve stimulation'], re: /(transcutaneous[\s\S]{0,40}nerve|nerve[\s\S]{0,40}transcutaneous)|\bTENS\b|tongue stimulator/i },
+  { id: 'pns', category: 'Neurostimulators', article: 'Peripheral nerve stimulation', label: 'an implanted or wearable peripheral nerve stimulator', queries: ['peripheral nerve stimulation', 'tibial nerve stimulation', 'nerve stimulator wearable'], re: /peripheral nerve stimulat|occipital nerve stimulat|tremor stimulator|\bPNS system\b/i, titleAlso: /nerve stimulat/i },
+  { id: 'retinal', category: 'Retinal implants', article: 'Retinal implant', label: 'a retinal implant or bionic eye', queries: ['retinal implant', 'Argus II retinal prosthesis', 'retinal prosthesis device'], re: /retinal (implant|prosthes)|bionic eye/i, titleAlso: /retina|argus/i },
+  { id: 'ecog', category: 'Electrocorticography', article: 'Electrocorticography', label: 'an electrocorticography electrode grid', queries: ['electrocorticography electrode grid', 'subdural electrode grid', 'intracranial electrodes epilepsy', 'ECoG electrode array'], re: /electrocorticograph|\bECoG\b|subdural (grid|electrode)/i },
+  { id: 'mea', category: 'Microelectrode arrays', article: 'Microelectrode array', label: 'a microelectrode array used to record neurons', queries: ['microelectrode array neural', 'Utah electrode array', 'multielectrode array chip', 'neural probe silicon'], re: /microelectrode array|utah array|intracortical (array|electrode)|penetrating electrode/i, titleAlso: /electrode array|neural probe/i },
+  { id: 'eeg', category: 'Electroencephalography', article: 'Electroencephalography', label: 'electroencephalography: an EEG cap, EEG electrodes on a scalp, or an EEG recording', queries: ['electroencephalography cap', 'EEG electrodes head', 'electroencephalography'], re: /electroencephalograph|\bEEG\b|evoked potential|polysomnograph/i },
+  { id: 'meg', category: 'Magnetoencephalography', article: 'Magnetoencephalography', label: 'a magnetoencephalography scanner', queries: ['magnetoencephalography'], re: /magnetoencephalograph|\bMEG\b/i },
+  { id: 'fnirs', category: 'Functional near-infrared spectroscopy', article: 'Functional near-infrared spectroscopy', label: 'a functional near-infrared spectroscopy headset', queries: ['functional near-infrared spectroscopy brain', 'fNIRS headset'], re: /near-?infrared spectroscop|\bfNIRS\b/i },
+  { id: 'mri', category: 'MRI scanners', article: 'Magnetic resonance imaging', label: 'a magnetic resonance imaging scanner or an MRI brain scan', queries: ['magnetic resonance imaging scanner', 'MRI brain scan'], re: /magnetic resonance imag|\bfMRI\b|\bMRI\b|neuroimaging/i },
+  { id: 'emg', category: 'Electromyography', article: 'Electromyography', label: 'electromyography: surface EMG electrodes or an EMG recording', queries: ['electromyography electrodes', 'electromyography'], re: /electromyograph|\bEMG\b|biofeedback analyzer|evoked response/i },
+  { id: 'fus', category: 'High-intensity focused ultrasound', article: 'High-intensity focused ultrasound', label: 'a focused ultrasound therapy or ultrasound neuromodulation system', queries: ['focused ultrasound therapy', 'MRI guided focused ultrasound', 'high intensity focused ultrasound machine', 'ultrasound therapy device'], re: /focused ultrasound|ultrasound neuromodulat/i, titleAlso: /focused ultrasound|\bHIFU\b/i },
+  { id: 'exoskeleton', category: 'Powered exoskeletons', article: 'Powered exoskeleton', label: 'a powered exoskeleton or robotic gait trainer worn by a person', queries: ['powered exoskeleton rehabilitation', 'robotic gait trainer'], re: /exoskelet|gait trainer|robotic gait/i },
+  { id: 'prosthetic', category: 'Myoelectric prostheses', article: 'Myoelectric prosthesis', label: 'a myoelectric prosthetic arm or hand', queries: ['myoelectric prosthetic arm', 'prosthetic hand'], re: /myoelectric|prosthetic (arm|hand|limb)|limb prosthes/i },
+  { id: 'electrode', category: 'Medical electrodes', article: 'Electrode', label: 'medical skin electrodes attached to a body', queries: ['medical electrodes skin', 'surface electrodes patient', 'ECG electrodes chest', 'electrode pads body'], re: /electrode, cutaneous|cutaneous electrode|surface electrode|\bcup electrode/i, titleAlso: /electrode/i },
+  { id: 'optogenetics', category: 'Optogenetics', article: 'Optogenetics', label: 'optogenetics: laser or fibre-optic hardware for stimulating neurons, or fluorescently labelled brain tissue', queries: ['optogenetics', 'optogenetic stimulation'], re: /optogenetic|channelrhodopsin|photostimulat/i },
+  { id: 'microscopy', category: 'Neurons', article: 'Neuron', label: 'neurons or brain tissue seen under a microscope', queries: ['neuron microscopy', 'neurons fluorescence microscopy'], re: /microscop|two-photon|calcium imaging|immunostain|histolog|transcriptom|single-cell|organoid|photoreceptor|retina\b/i, titleAlso: /neuron|dendrit|axon|purkinje|glia|pyramidal cell/i },
+  { id: 'spinal', category: 'Spinal cord', article: 'Spinal cord injury', label: 'the spinal cord, a spine, or spinal surgery', queries: ['spinal cord', 'spinal cord injury rehabilitation'], re: /spinal cord|spine\b|tetrapleg|parapleg/i, titleAlso: /spinal|spine|vertebr|myelon/i },
+  { id: 'bci', category: 'Brain-computer interfacing', article: 'Brain–computer interface', label: 'a brain-computer interface in use: a person wearing or implanted with a neural interface', queries: ['brain computer interface', 'brain computer interface user'], re: /brain[- ]computer interface|brain[- ]machine interface|\bBCI\b|neural interface|neuroprosthe|neuralink|synchron|precision neuroscience|paradromics|blackrock neurotech|motif neurotech|onward medical/i },
+  // The catch-all, deliberately last. A record about the nervous system that
+  // names no instrument still gets a picture of the nervous system, labelled
+  // as the illustration it is. Anything more specific above wins first.
 ]
 
 /**
@@ -730,14 +818,33 @@ export const DEVICE_CLASSES = [
  */
 export function recordText(entity = {}, extra = '') {
   const m = entity.metadata || {}
+  // Joined with a separator no phrase can span. Joining with a space invented
+  // phrases that were never in the record: a paper tagged ["Ultrasound",
+  // "Neuromodulation"] read as "ultrasound neuromodulation" and took a
+  // photograph of ultrasound transducers onto a paper about magnetic fields.
   return [
     entity.name, entity.title, entity.description,
     entity.manufacturer, entity.product_code, extra,
     ...(m.interventions || []), ...(entity.topics || []),
-  ].filter(Boolean).join(' ')
+  ].filter(Boolean).join(' | ')
 }
 
 /** The technology class a record is about, or null. Pure. */
+/**
+ * There is no general fallback, deliberately.
+ *
+ * A pool of generic brain pictures was built and thrown away twice. Sourced
+ * from the obvious categories it fills with autopsy specimens, tumour scans
+ * and haemorrhages: grim, and a clinical claim the record never made. Sourced
+ * more carefully it fills with multi-panel figures lifted from open-access
+ * papers, which are unreadable at card size. Neither belongs on a news page,
+ * and a card showing a picture of nothing in particular is worse than a card
+ * showing the record's own numbers.
+ *
+ * So a record whose technology has no photograph keeps its data figure.
+ */
+export const FALLBACK_CLASS = null
+
 export function classifyTechnology(entity, extra = '') {
   const text = recordText(entity, extra)
   return DEVICE_CLASSES.find(c => c.re.test(text)) || null
@@ -785,7 +892,7 @@ export async function classImage(cls, { maxChecks = 4 } = {}) {
       if (seen.has(cand.url) || checks >= maxChecks) continue
       seen.add(cand.url)
       checks++
-      if (await confirmDepicts(cand.url, cls.label)) {
+      if (await confirmSinglePhoto(cand.url) && await confirmDepicts(cand.url, cls.label)) {
         const { title, ...img } = cand
         return { ...img, classId: cls.id, classLabel: cls.label, classTitle: title }
       }
@@ -818,15 +925,20 @@ export async function classImage(cls, { maxChecks = 4 } = {}) {
  * The cost of the rule is classes with no picture at all. That is the correct
  * price: those records keep their data figure. Pure.
  */
+/** Titles that announce a paper figure rather than a photograph. Commons holds
+ *  thousands of them, uploaded from open-access articles. */
+const FIGURE_TITLE = /overview of|study design|graphical abstract|\bfig(?:ure)?[\s._-]*\d|schematic|workflow|flow ?chart|panel|diagram|infographic/i
+
 export function titleAffirmsClass(title, cls) {
   const t = String(title || '')
+  if (FIGURE_TITLE.test(t)) return false
   // `titleAlso` covers classes whose files are named for the hardware rather
   // than the procedure: a TMS coil is filed under "double cone coil", a Utah
   // array under "electrode array".
   return cls.re.test(t) || Boolean(cls.titleAlso?.test(t))
 }
 
-export async function classImagePool(cls, { want = 3, maxChecks = 16 } = {}) {
+export async function classImagePool(cls, { want = 3, maxChecks = Math.max(16, want * 3) } = {}) {
   if (!cls) return []
   const out = []
   const seen = new Set()
@@ -844,14 +956,25 @@ export async function classImagePool(cls, { want = 3, maxChecks = 16 } = {}) {
     }
   }
 
-  for (const query of cls.queries) {
-    for (const cand of await commonsSearch(query)) {
+  // Three ways in, widest first. A curated Commons category and the body of
+  // the Wikipedia article both hold pictures a text search never ranks: the
+  // TMS category is full of photographs of machines and sessions, while
+  // searching the same words returns the schematic that leads the article.
+  const sources = [
+    ...(cls.categories || (cls.category ? [cls.category] : [])).map(c => () => commonsCategory(c)),
+    cls.article ? () => wikipediaArticleImages(cls.article) : null,
+    ...cls.queries.map(q => () => commonsSearch(q)),
+  ].filter(Boolean)
+
+  for (const source of sources) {
+    for (const cand of await source()) {
       if (out.length >= want || checks >= maxChecks) break
       if (seen.has(cand.url)) continue
       seen.add(cand.url)
+      if (isRejected(cand.title)) continue
       if (!titleAffirmsClass(cand.title, cls)) continue
       checks++
-      if (await confirmDepicts(cand.url, cls.label)) {
+      if (await confirmSinglePhoto(cand.url) && await confirmDepicts(cand.url, cls.label)) {
         const { title, ...img } = cand
         out.push({ ...img, classId: cls.id, classLabel: cls.label, classTitle: title })
       }
@@ -861,9 +984,32 @@ export async function classImagePool(cls, { want = 3, maxChecks = 16 } = {}) {
   return out
 }
 
+/**
+ * Pictures a person looked at and turned down.
+ *
+ * Curation has to survive a rebuild. Twice now a rebuild has quietly
+ * reinstated a picture that had already been rejected by eye, because the
+ * builder replaces a class wholesale and the vision gate is not deterministic:
+ * it drops a clean product photograph one run and passes a four-panel surgical
+ * figure the next. The judgement lives in a file so it outlives the run that
+ * made it.
+ */
+const REJECTS_PATH = join(HERE, '../../src/data/class-images-rejected.json')
+let rejects = null
+export function isRejected(title) {
+  if (!rejects) {
+    try { rejects = Object.keys(JSON.parse(readFileSync(REJECTS_PATH, 'utf8'))).filter(k => !k.startsWith('_')) } catch { rejects = [] }
+  }
+  const t = String(title || '')
+  return rejects.some(r => t.includes(r))
+}
+
 /** The pool file: the reviewed set of class photographs, kept in the repo so a
  *  human can see exactly which picture stands for which technology. */
-const POOL_PATH = join(HERE, '../data/class-images.json')
+// The pool lives with the app's data, not the scripts', because the page reads
+// it too: when two cards land on the same class photograph the second picks a
+// different one from the same pool rather than dropping to a data figure.
+const POOL_PATH = join(HERE, '../../src/data/class-images.json')
 export function loadClassImages() {
   try { return existsSync(POOL_PATH) ? JSON.parse(readFileSync(POOL_PATH, 'utf8')) : {} } catch { return {} }
 }

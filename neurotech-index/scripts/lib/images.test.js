@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
-  getImageSize, HI_RES, CARD_RES, isReusableLicense, firstFigureHref, europePmcFileUrl,
+  getImageSize, HI_RES, CARD_RES, SANE_ASPECT, isReusableLicense, firstFigureHref, europePmcFileUrl,
   articleCredit, preprintFigureHref, preprintServer, parseCommons, pickCompanyEntity,
   iconHref, recordText, classifyTechnology, titleAffirmsClass, pickClassImage, DEVICE_CLASSES,
-  productName, linkScore, pageLinks, hostNamesProduct, contentImage, sameName, productLikeNames,
+  isRejected, productName, linkScore, pageLinks, hostNamesProduct, contentImage, sameName, productLikeNames,
 } from './images.js'
 
 describe('getImageSize', () => {
@@ -179,6 +179,8 @@ describe('iconHref', () => {
 describe('classifyTechnology', () => {
   it('reads a device through the FDA name for its product code', () => {
     const device = { name: 'Ceribell Brain Monitor Headband', product_code: 'OMC' }
+    // On its own the name names no instrument at all; the product code is what
+    // says what the device is.
     expect(classifyTechnology(device)).toBeNull()
     expect(classifyTechnology(device, 'Reduced-Montage Standard Electroencephalograph').id).toBe('eeg')
   })
@@ -197,8 +199,12 @@ describe('classifyTechnology', () => {
     expect(classifyTechnology(trial)).toBeNull()
   })
 
-  it('leaves a record it cannot describe alone', () => {
+  it('leaves a record with nothing neurological about it alone', () => {
     expect(classifyTechnology({ title: 'Remimazolam versus dexmedetomidine for sedation' })).toBeNull()
+  })
+
+  it('leaves a record that names no instrument alone, rather than reaching for a generic picture', () => {
+    expect(classifyTechnology({ title: 'Gene regulatory innovations in cortical development' })).toBeNull()
   })
 
   it('reads the record fields and nothing else', () => {
@@ -321,5 +327,47 @@ describe('productLikeNames', () => {
 
   it('ignores a description dressed up as an intervention', () => {
     expect(productLikeNames({ metadata: { interventions: ['standard of care physical therapy for six weeks'] } })).toEqual([])
+  })
+})
+
+describe('SANE_ASPECT', () => {
+  it('accepts the shapes a 4:3 card can crop', () => {
+    expect(SANE_ASPECT({ width: 1280, height: 960 })).toBe(true)
+    expect(SANE_ASPECT({ width: 756, height: 1280 })).toBe(true)
+  })
+
+  it('refuses a banner strip that would arrive as a sliver', () => {
+    expect(SANE_ASPECT({ width: 916, height: 123 })).toBe(false)
+  })
+
+  it('refuses a column that would lose its subject to the crop', () => {
+    expect(SANE_ASPECT({ width: 300, height: 1600 })).toBe(false)
+  })
+})
+
+describe('isRejected', () => {
+  it('remembers a picture a person turned down', () => {
+    expect(isRejected('File:MRI accident on a 1.5 Tesla MR system.jpg')).toBe(true)
+    expect(isRejected('File:Josh Universe Brain Computer Interface.jpg')).toBe(true)
+  })
+
+  it('leaves everything else alone', () => {
+    expect(isRejected('File:EEG Recording Cap.jpg')).toBe(false)
+  })
+})
+
+describe('recordText boundaries', () => {
+  it('does not let a phrase span two separate fields', () => {
+    const paper = {
+      title: 'Magnetoelectric Nanoparticles Modulate Cortical Networks by Static Magnetic Fields',
+      topics: ['Ultrasound', 'Neuromodulation', 'Wireless'],
+    }
+    // "ultrasound neuromodulation" exists only across the join, so the record
+    // must not be read as a focused ultrasound paper.
+    expect(classifyTechnology(paper)?.id).not.toBe('fus')
+  })
+
+  it('still reads a phrase that really is in one field', () => {
+    expect(classifyTechnology({ title: 'Focused ultrasound neuromodulation of the thalamus' }).id).toBe('fus')
   })
 })
