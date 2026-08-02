@@ -19,7 +19,29 @@
  * is what it was already treated as.
  */
 
+import CLASS_POOL from '../data/class-images.json'
+
 const KIND = { real: 'photo' }
+
+/** Which class pool a picture came out of, so a repeat can be swapped for
+ *  another photograph of the same technology. */
+/**
+ * Cards are landscape, and `object-cover` fills the frame by cropping. A tall
+ * portrait loses most of its subject to that crop, so where there is a choice
+ * the picture closest to the frame's own shape wins.
+ */
+const CARD_ASPECT = 4 / 3
+const fitness = i => Math.abs((i.w || 1) / (i.h || 1) - CARD_ASPECT)
+const byFit = (a, b) => fitness(a) - fitness(b)
+
+/** There is no general pool to fall back on; see the note in
+ *  scripts/lib/images.js. A repeat is offered another photograph of its OWN
+ *  technology, and otherwise shows the record's data figure. */
+const FALLBACK_CLASS = null
+
+const POOL_BY_URL = new Map(
+  Object.entries(CLASS_POOL).flatMap(([classId, c]) => (c.images || []).map(i => [i.url, classId])),
+)
 
 /** The image block on a record, or null. */
 export function imageOf(entity) {
@@ -78,13 +100,38 @@ export const isIllustration = img => img?.subject === 'class'
  * licence to be named wherever the picture runs, so a picture whose credit did
  * not survive the pipeline is not shown at all.
  */
+/**
+ * A credit fit to print on a card.
+ *
+ * Uploaders write whatever they like in the author field: a bare URL, or "My
+ * father is the person in the photo. He passed and I found this in his
+ * personal photos." Both are honest and neither belongs set in six point type
+ * under a news card. Anything unwieldy becomes the archive's name, and the
+ * full text stays on the element's title and one click away at the source.
+ */
+function shortCredit(credit) {
+  const c = String(credit || '').trim()
+  if (!c) return null
+  if (/^https?:\/\//i.test(c)) return 'Wikimedia Commons'
+  if (c.length > 42 || c.split(/\s+/).length > 6) return 'Wikimedia Commons'
+  return c
+}
+
 export function creditLine(img) {
   if (!img) return null
   const parts = []
   if (isIllustration(img)) parts.push('Illustration')
-  if (img.credit) parts.push(img.credit)
+  const who = img.source === 'commons' || img.source === 'wikipedia' || img.source === 'wikidata'
+    ? shortCredit(img.credit) : img.credit
+  if (who) parts.push(who)
   if (img.license) parts.push(img.license)
   return parts.length ? parts.join(' · ') : null
+}
+
+/** The full attribution, for the element's title. */
+export function fullCredit(img) {
+  if (!img) return null
+  return [isIllustration(img) ? 'Illustration' : null, img.credit, img.license].filter(Boolean).join(' · ')
 }
 
 /**
@@ -99,22 +146,43 @@ export function creditLine(img) {
 export const needsCredit = img => Boolean(img && (isIllustration(img) || (img.source && img.source !== 'og')))
 
 /**
- * The ids whose picture repeats one already used earlier on the page.
+ * The picture each item on the page will actually run, keyed by id.
  *
- * Class photographs are shared by every record of a technology, so a page of
- * eight brain-computer interface stories would otherwise run the same
- * conference photograph eight times. The first card keeps it; the rest fall
- * back to their data figure, which is the more informative picture anyway.
+ * A class photograph belongs to a technology, not to a record, so eight
+ * brain-computer interface stories would otherwise run the same conference
+ * photograph eight times. The first card keeps it. Every card after it is
+ * offered a DIFFERENT photograph of the same technology, from the reviewed
+ * pool the picture came out of, and only falls back to its data figure once
+ * that pool is exhausted.
+ *
+ * An item with no id is skipped rather than keyed as undefined, which would
+ * let one entry claim another's picture.
  */
-export function duplicateImageIds(items = []) {
-  const seen = new Set()
-  const dupes = new Set()
+export function assignImages(items = []) {
+  const used = new Set()
+  const out = new Map()
   for (const it of items) {
-    if (!it) continue
+    if (!it?.id) continue
     const img = usableImage(it)
     if (!img) continue
-    if (seen.has(img.url)) dupes.add(it.id)
-    else seen.add(img.url)
+    if (!used.has(img.url)) {
+      used.add(img.url)
+      out.set(it.id, img)
+      continue
+    }
+    // Its own technology first, then the general one. A record about
+    // microelectrode arrays, which nobody has photographed for Commons, is
+    // still a record about the nervous system, and a brain is a fair
+    // illustration of that. Nothing borrows a picture of a DIFFERENT
+    // technology: that would be a claim, not an illustration.
+    const alt = [POOL_BY_URL.get(img.url), FALLBACK_CLASS].filter(Boolean)
+      .flatMap(id => CLASS_POOL[id]?.images || [])
+      .filter(a => !used.has(a.url))
+      .sort(byFit)[0]
+    if (alt) {
+      used.add(alt.url)
+      out.set(it.id, { ...alt, subject: 'class' })
+    }
   }
-  return dupes
+  return out
 }

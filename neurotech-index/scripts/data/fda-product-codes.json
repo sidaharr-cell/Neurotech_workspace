@@ -48,5 +48,14 @@
   "GWJ": "Stimulator, Auditory, Evoked Response",
   "GXZ": "Electrode, Needle",
   "HCC": "Device, Biofeedback",
-  "PZR": "Percutaneous Nerve Stimulator For Opioid Withdrawal Stimulate nerve branches to aid in the reduction of symptoms associated with substance use disorders."
+  "PZR": "Percutaneous Nerve Stimulator For Opioid Withdrawal Stimulate nerve branches to aid in the reduction of symptoms associated with substance use disorders.",
+  "OLW": "Index-Generating Electroencephalograph Software Analyze electrical activity of the brain by transformation of electroencephalograph signals into a dimensionless index number for use and interpretation by a qualified user.",
+  "QGT": "Distal Transcutaneous Electrical Stimulator For Treatment Of Acute Migraine A trunk and limb electrical stimulator to treat headache is a device intended to treat headache through the application of electrical stimulation anywhere on the body of the patient apart from the patient's head or neck through electrodes placed on the skin. The stimulation may be provided transcutaneously or percutaneously.",
+  "OKP": "Transcranial Magnetic Stimulator For The Treatment Of Migraine Headache Transcranial magnetic stimulator for the treatment of migraine headache delivers brief duration, rapidly alternating, or pulsed, magnetic fields that are externally directed at spatially discrete regions of the brain to induce electric currents for the treatment of migraine headache.",
+  "QWD": "Stimulator, Nerve, For Restless Legs Syndrome An external lower extremity nerve stimulator for Restless Legs Syndrome is a prescription device that uses external electrical stimulators and cutaneous electrodes to stimulate nerves in the lower extremity (e.g.,peroneal nerves) and evoke tonic, sustained muscle activation in the legs to reduce the symptoms of Restless Legs Syndrome.",
+  "NHI": "Stimulator, Nerve, Electrical, Percutaneous (Pens), For Pain Relief Percutaneous electrical nerve stimulator (pens) is a device used for the treatment of pain.  Unlike the classified transcutaneous electrical nerve stimulator that apply an electrical current to electrodes on a patient's skin to deliver stimulation, a pens uses electrodes that are placed percutaneously to deliver stimulation,",
+  "QSQ": "Transcutaneous Electrical Nerve Stimulator To Treat Fibromyalgia Symptoms Transcutaneous electrical nerve stimulator to treat fibromyalgia symptoms.",
+  "GWE": "Stimulator, Photic, Evoked Response",
+  "QMD": "Transcranial Magnetic Stimulation System For Smoking Cessation Intended for use as a transcranial magnetic stimulation system for neurological and psychiatric disorders and conditions.",
+  "QOL": "Electroencephalography (Eeg)-Driven Upper Extremity Powered Exerciser An EEG-driven upper extremity powered exerciser is a non-invasive prescription device intended for rehabilitation by driving movement or exercise of an impaired upper extremity in response to the detection of purpose oriented electrical activity produced by the patient's brain."
 }
