@@ -38,10 +38,10 @@
     "doi": "10.1038/s41591-026-04414-6",
     "url": "https://doi.org/10.1038/s41591-026-04414-6",
     "publishedAt": "2026-06-15T00:00:00.000Z",
-    "pctile": 0.99569294,
-    "fwci": 35.0578,
+    "pctile": 0.99545487,
+    "fwci": 33.4231,
     "citedBy": 6,
-    "significance": "This work proves that intracortical BCIs can function reliably outside laboratory settings with minimal oversight, a critical milestone for practical neurotechnology. By showing sustained performance and independent operation for speech and cursor control in daily life, it removes the assumption that BCIs require constant clinical supervision. This achievement directly validates the viability of implantable neural interfaces as therapeutic devices for severely paralyzed patients and establishes the technical and clinical feasibility required for broader adoption."
+    "significance": "This is a watershed moment for neurotechnology: proof that a chronically implanted intracortical device can deliver real-world, unsupervised functionality for paralyzed patients over extended periods. The achievement of independent operation, rather than supervised lab use, directly addresses the clinical viability question that has limited BCI adoption. Decoding both speech and movement intent from motor cortex shows the versatility of modern neural interfaces and sets a new standard for what clinical BCI systems must accomplish."
   },
   {
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
@@ -66,8 +66,8 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99150281,
-    "fwci": 23.822,
+    "pctile": 0.99146556,
+    "fwci": 23.7383,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression."
   },
@@ -109,8 +109,8 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99055102,
-    "fwci": 18.7418,
+    "pctile": 0.99015634,
+    "fwci": 18.1013,
     "citedBy": 15,
     "significance": "This paper enables simultaneous high-resolution recording and precise optogenetic manipulation of thousands of neurons across brain regions, advancing our ability to map neural circuits and causality."
   },
