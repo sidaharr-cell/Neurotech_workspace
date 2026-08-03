@@ -102,10 +102,64 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
 
+      # ── Images ────────────────────────────────────────────────────────
+      # Order matters. The fit check runs FIRST so the records it clears are
+      # refilled in the same run rather than sitting pictureless for a day.
+      # Hand-placed pictures then override whatever the general sources chose,
+      # and the page fill runs last of the assigning steps so it can see what
+      # is already spoken for and keep every card on the page distinct.
+
+      # A picture is assigned from how a record read at the time, and the
+      # reading changes underneath it: a corrected regex, a retired class. The
+      # mismatch is silent, which is how a paper on restoring hand movement
+      # came to sit under a radiograph of a vagus nerve stimulator.
+      - name: Clear images that no longer match their record
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/verify-image-fit.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       - name: Source images for new records (own figures, then class photographs)
         working-directory: neurotech-index
         continue-on-error: true
         run: node scripts/backfill-images.js --commit --limit=150
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # Pictures a person chose for one record, in src/data/card-images.json.
+      # They run after the general sources so they win, and the reason each was
+      # chosen travels with it.
+      - name: Re-place the hand-picked pictures
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/apply-card-images.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # The class pipeline assigns by technology, which hands the same
+      # photograph to every record sharing one. This pass works over exactly
+      # what the home page shows and keeps each card's picture distinct.
+      - name: Give every card on the home page its own picture
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/fill-page-images.js --commit
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # Cards crop to fill, and a crop takes the middle, which is wrong
+      # whenever the subject is not in the middle. Writes src/data/image-focus.json,
+      # which the commit step below has to stage or the work is thrown away.
+      - name: Find the focal point of any new picture
+        working-directory: neurotech-index
+        continue-on-error: true
+        run: node scripts/set-image-focus.js --commit
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -139,6 +193,7 @@ jobs:
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
           git add neurotech-index/src/data/notable.json \
+                  neurotech-index/src/data/image-focus.json \
                   neurotech-index/scripts/data/fda-product-codes.json \
                   neurotech-index/scripts/data/neurotechx-industry.json \
                   neurotech-index/scripts/data/neurotechx-academic-labs.json \
