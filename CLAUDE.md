@@ -116,8 +116,13 @@ submission or clinical trial exists anywhere). Class photographs come from the r
 pool in `scripts/data/class-images.json`, resolved once by `npm run images:classes`;
 each candidate must be affirmed by BOTH the file's own title and a vision model, and a
 class with no confirmable photograph yields nothing rather than something approximate.
-`npm run images:backfill` assigns them, `npm run verify:images` clears rotted hotlinks,
-and both run nightly. Three files carry judgement the pipeline cannot make:
+`npm run images:backfill` assigns them and `npm run verify:images` clears rotted
+hotlinks. The nightly workflow runs the whole sequence, and the ORDER is load-bearing:
+`verify-image-fit` first, so records it clears are refilled in the same run;
+`backfill-images`; then `apply-card-images`, so hand-placed pictures beat the general
+sources; then `fill-page-images`, which sees what is already spoken for and keeps every
+card on the page distinct; then `set-image-focus`. That last one writes
+`image-focus.json`, which the workflow's commit step must stage or the work is discarded. Three files carry judgement the pipeline cannot make:
 `class-images-rejected.json` (pictures a person looked at and turned down, so a rebuild
 cannot reinstate them), `card-images.json` (a picture chosen by hand for one record,
 with the reason), and `image-focus.json` (where the subject sits, handed to CSS
