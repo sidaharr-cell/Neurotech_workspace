@@ -21,6 +21,7 @@
 
 import CLASS_POOL from '../data/class-images.json'
 import IMAGE_FOCUS from '../data/image-focus.json'
+import { rankClasses } from './class-match'
 
 const KIND = { real: 'photo' }
 
@@ -58,14 +59,31 @@ const byFit = (a, b) => fitness(a) - fitness(b)
  */
 export const objectFitOf = img => (img?.kind === 'logo' ? 'contain' : 'cover')
 
-/** There is no general pool to fall back on; see the note in
- *  scripts/lib/images.js. A repeat is offered another photograph of its OWN
- *  technology, and otherwise shows the record's data figure. */
-const FALLBACK_CLASS = null
-
 const POOL_BY_URL = new Map(
   Object.entries(CLASS_POOL).flatMap(([classId, c]) => (c.images || []).map(i => [i.url, classId])),
 )
+
+/**
+ * The best unused photograph in the reviewed pool for this record.
+ *
+ * Classes are asked in the order rankClasses puts them in — the technologies
+ * the record is about, then the ones its facets imply, then the rest — and
+ * within a class the picture closest to a card's shape wins. `first` is the
+ * class a picture the record ALREADY held came out of, so a story that has to
+ * give up a repeated photograph is offered another of its own technology
+ * before anything else.
+ *
+ * Everything here is a licensed photograph a person reviewed, carrying its own
+ * credit; it is stamped `'class'` because it is a picture of the technology and
+ * not of the record, which is what makes the page label it "Illustration".
+ */
+function fromPool(entity, used, first = null) {
+  for (const id of [first, ...rankClasses(entity)].filter(Boolean)) {
+    const pick = (CLASS_POOL[id]?.images || []).filter(i => !used.has(i.url)).sort(byFit)[0]
+    if (pick) return { ...pick, subject: 'class' }
+  }
+  return null
+}
 
 /** The image block on a record, or null. */
 export function imageOf(entity) {
@@ -138,16 +156,30 @@ export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
  * photograph OF the story and will otherwise take a labelled illustration
  * only when that illustration is large enough not to look soft at that size.
  */
+const LEAD_MIN_W = 900
+
 export function leadImage(entity) {
   const own = usableImage(entity, { own: true })
   if (own) return own
   const any = usableImage(entity)
-  return (any?.w || 0) >= 900 ? any : null
+  return (any?.w || 0) >= LEAD_MIN_W ? any : null
 }
 
 /** Can this story lead the page? The top slot is the one picture a reader is
  *  certain to see, so a story that cannot fill it does not take it. */
 export const canLead = entity => Boolean(leadImage(entity))
+
+/**
+ * The picture the lead actually runs: its own, or the one the page assigned it.
+ *
+ * composeStories tries to lead with a story that brings its own picture, and on
+ * a day when none of them can, the lead falls to a story whose picture comes
+ * out of the pool like any other card's. The size floor still applies either
+ * way, because the frame is eleven hundred pixels wide whatever fills it.
+ */
+export function leadPicture(entity, assigned) {
+  return leadImage(entity) || ((assigned?.w || 0) >= LEAD_MIN_W ? assigned : null)
+}
 
 /** Is this a labelled photograph of the technology rather than of the record? */
 export const isIllustration = img => img?.subject === 'class'
@@ -219,12 +251,29 @@ export const needsCredit = img => Boolean(creditLine(img))
 /**
  * The picture each item on the page will actually run, keyed by id.
  *
- * A class photograph belongs to a technology, not to a record, so eight
- * brain-computer interface stories would otherwise run the same conference
- * photograph eight times. The first card keeps it. Every card after it is
- * offered a DIFFERENT photograph of the same technology, from the reviewed
- * pool the picture came out of, and only falls back to its data figure once
- * that pool is exhausted.
+ * Two passes, because the page's own photographs come first and what is left of
+ * the reviewed pool is then shared out among the cards that have none.
+ *
+ *   1. A record with a photograph of its own keeps it. A class photograph
+ *      belongs to a technology rather than to a record, so eight brain-computer
+ *      interface stories would otherwise run the same conference photograph
+ *      eight times: the first card keeps it and the rest are re-asked, their
+ *      own technology first.
+ *   2. Every card still without one takes the best unused photograph in the
+ *      pool for what it is about (rankClasses in lib/class-match.js).
+ *
+ * The second pass is why a card here cannot end up running a plate while the
+ * pool still holds a picture. It reaches further than the ingest pipeline will:
+ * the photograph is of a technology the record is ABOUT rather than of the
+ * record, and past the first few candidates it is of a neighbouring technology.
+ * That is a labelled, credited illustration, which is what the `'class'`
+ * subject has always meant, and beside a headline it is a better card than a
+ * tinted plate carrying an outlet's name. Only the home page's story cards ask
+ * for this; nothing else calls assignImages.
+ *
+ * Nothing is generated at any point. Every picture here is a licensed
+ * photograph out of `src/data/class-images.json`, reviewed by a person, run
+ * with the credit and licence it arrived with.
  *
  * An item with no id is skipped rather than keyed as undefined, which would
  * let one entry claim another's picture.
@@ -232,28 +281,29 @@ export const needsCredit = img => Boolean(creditLine(img))
 export function assignImages(items = []) {
   const used = new Set()
   const out = new Map()
+  const unfilled = []
   for (const it of items) {
     if (!it?.id) continue
     const img = usableImage(it)
-    if (!img) continue
+    if (!img) { unfilled.push(it); continue }
     if (!used.has(img.url)) {
       used.add(img.url)
       out.set(it.id, img)
       continue
     }
-    // Its own technology first, then the general one. A record about
-    // microelectrode arrays, which nobody has photographed for Commons, is
-    // still a record about the nervous system, and a brain is a fair
-    // illustration of that. Nothing borrows a picture of a DIFFERENT
-    // technology: that would be a claim, not an illustration.
-    const alt = [POOL_BY_URL.get(img.url), FALLBACK_CLASS].filter(Boolean)
-      .flatMap(id => CLASS_POOL[id]?.images || [])
-      .filter(a => !used.has(a.url))
-      .sort(byFit)[0]
+    const alt = fromPool(it, used, POOL_BY_URL.get(img.url))
     if (alt) {
       used.add(alt.url)
-      out.set(it.id, { ...alt, subject: 'class' })
+      out.set(it.id, alt)
+    } else {
+      unfilled.push(it)
     }
+  }
+  for (const it of unfilled) {
+    const pick = fromPool(it, used)
+    if (!pick) continue          // the pool is spent: this card shows its figure
+    used.add(pick.url)
+    out.set(it.id, pick)
   }
   return out
 }

@@ -182,11 +182,15 @@ Publisher pages 403 every script, so a recent paywalled paper has no figure to s
 
 **The home page has a fixed budget of 43 items**, split across its sections in
 `SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. **Every section is
-expected to FILL its slots**, and `scripts/verify-homepage.js` (in the daily run, last)
-is what says whether they do. A short section is otherwise silent: nothing errors, the
-row is just half empty. It asks through the page's own `composeStories` and `pickNotable`
-so the answer cannot drift from what a reader sees, which needs Vite's resolution, so
-`daily.js` runs that one step through `vite-node`.
+expected to FILL its slots, and every story frame to hold a picture**, and
+`scripts/verify-homepage.js` (in the daily run, last) is what says whether they do.
+Both fail silently otherwise: nothing errors, the row is just half empty and the frame
+holds a plate. It asks through the page's own `composeStories`, `pickNotable`,
+`assignImages` and `leadPicture`, so the answer cannot drift from what a reader sees,
+which needs Vite's resolution, so `daily.js` runs that one step through `vite-node`.
+A blank frame means the reviewed pool ran dry or the day's stories all landed on the
+same few technologies; the fix is more pictures in the pool (`npm run images:classes`),
+not a looser rule.
 
 The rail is the section that starves, for two compounding reasons. `syncNotable` used to
 draw candidates only from the day's ingest, which is ~200 papers, few of which are
@@ -200,10 +204,27 @@ Every card carries a picture: a photograph when the
 record has one, otherwise a figure drawn from that record's own fields
 (`src/components/Figure.jsx` — trial phase and enrollment, FDA submission number and
 pathway, round amount, citation impact). Figures are `aria-hidden`, so anything a
-figure shows must also be printed as text on its card. No generated placeholder art:
-a picture either says something about its item or is not shown.
+figure shows must also be printed as text on its card. No generated placeholder art,
+ever: a picture is a photograph somebody took, or it is a figure of the record's own
+numbers.
 
-**The home page splits that rule by section.** The stories (lead, More stories,
+**How far a photograph may be from its record is a per-surface decision.** The ingest
+pipeline holds the strict line: it gives a record a picture of the technology its
+classifier named, and nothing else. The home page's story cards hold a looser one.
+Settled 4 Aug 2026: those fifteen frames are filled from the reviewed pool by
+relevance, and a card whose own technology has no photograph left takes the best
+unused picture of a NEIGHBOURING one rather than running a plate. `rankClasses` in
+`src/lib/class-match.js` is that ordering — the technologies the record's own words
+name, then the ones its facets imply, then the rest, most general first — and the
+second pass of `assignImages` in `src/lib/image.js` spends the pool against it. It
+reads local data only: no API call, no model call, no picture that a person has not
+already reviewed, and every one of them is stamped `'class'`, so it renders labelled
+"Illustration" with its credit and licence. The pool is `src/data/class-images.json`,
+39 pictures; the page needs 15, and `image.test.js` covers what happens when it runs
+dry, which is that a card shows its data figure rather than repeat a picture already
+on the page.
+
+**The home page splits both rules by section.** The stories (lead, More stories,
 Featured, Latest) carry the photographs; the four record rails — In the clinic, FDA
 decisions, Funding, Notable research — carry only their data figure, shrunk to a 96px
 thumbnail beside the text, and are left out of `assignImages` entirely. Two reasons.

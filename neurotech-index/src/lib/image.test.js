@@ -92,16 +92,26 @@ describe('assignImages', () => {
     expect(got.get('b').url).not.toBe(POOL_EEG)
   })
 
-  it('withholds from a repeat whose picture belongs to no pool', () => {
-    // There is no general pool to reach for, by design: see the note in
-    // scripts/lib/images.js. The second card shows its data figure.
+  it('hands a repeat whose picture belongs to no pool one out of the pool', () => {
     const got = assignImages([withUrl('a', 'x.jpg'), withUrl('b', 'x.jpg')])
     expect(got.get('a').url).toBe('x.jpg')
-    expect(got.has('b')).toBe(false)
+    expect(got.get('b').url).not.toBe('x.jpg')
+    // Whatever it gets is a picture of a technology rather than of the record,
+    // which is what obliges the "Illustration" label and the credit line.
+    expect(got.get('b').subject).toBe('class')
+    expect(got.get('b').license).toBeTruthy()
   })
 
-  it('skips records with no picture and no id', () => {
-    expect(assignImages([{ id: 'a', metadata: {} }, null, { metadata: { image: 'y.jpg' } }]).size).toBe(0)
+  it('gives a record with no picture of its own one for what it is about', () => {
+    const got = assignImages([{ id: 'a', title: 'A spinal cord stimulator trial for chronic pain', metadata: {} }])
+    expect(got.get('a').url).toMatch(/wikimedia/)
+    expect(got.get('a').subject).toBe('class')
+  })
+
+  it('skips a record with no id rather than keying it as undefined', () => {
+    const got = assignImages([{ id: 'a', metadata: {} }, null, { metadata: { image: 'y.jpg' } }])
+    expect(got.size).toBe(1)
+    expect(got.has(undefined)).toBe(false)
   })
 })
 
@@ -128,11 +138,20 @@ describe('assignImages, the withheld case', () => {
   const card = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
 
   it('withholds rather than repeats when the pool is exhausted', () => {
-    const cards = Array.from({ length: 6 }, (_, i) => card(`c${i}`, POOL_BCI))
+    // The pool holds thirty-nine pictures and the page shows fifteen, so this
+    // is the case that cannot arise on the page as it stands. It is the rule
+    // that matters: a card runs its data figure before it runs a picture the
+    // card above it is already showing.
+    const cards = Array.from({ length: 60 }, (_, i) => card(`c${i}`, POOL_BCI))
     const got = assignImages(cards)
-    const urls = cards.map(c => got.get(c.id)).filter(Boolean).map(i => i.url)
+    const urls = [...got.values()].map(i => i.url)
     expect(new Set(urls).size).toBe(urls.length)
     expect(got.size).toBeLessThan(cards.length)
+  })
+
+  it('fills every card on a page the size of the real one', () => {
+    const cards = Array.from({ length: 15 }, (_, i) => card(`c${i}`, POOL_BCI))
+    expect(assignImages(cards).size).toBe(15)
   })
 })
 

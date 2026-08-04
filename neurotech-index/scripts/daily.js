@@ -63,9 +63,10 @@ const STEPS = [
   { name: 'clear rotted image links',               cmd: 'verify-images.js', args: ['--commit', '--stale-days=30', '--limit=300'] },
 
   // Last, because it judges the result of everything above: can each of the
-  // home page's eight sections fill its slots? A short section is otherwise
-  // silent — nothing errors, the row is just half empty.
-  { name: 'home page sections fill', cmd: 'verify-homepage.js', node: 'vite-node' },
+  // home page's eight sections fill its slots, and does every story frame come
+  // out with a picture in it? Both fail silently — nothing errors, the row is
+  // just half empty and the frame holds a plate.
+  { name: 'home page sections and pictures fill', cmd: 'verify-homepage.js', node: 'vite-node' },
 ]
 
 /** PatentsView is key-gated; without one the step is skipped, not failed. */
