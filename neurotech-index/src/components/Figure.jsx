@@ -28,16 +28,17 @@ export function shortMark(item) {
   return fn ? FUNCTION_LABEL[fn] : shortDate(item.publishedAt || item.published_at)
 }
 
-// Facet function → the figure's field colour. Muted enough to sit under a
-// headline without competing with it.
-const TINTS = {
-  records: ['#EAF2FA', '#0B5FA6'],
-  stimulates: ['#F3EEF9', '#6D4AA6'],
-  decodes: ['#EAF4F1', '#0E7C66'],
-  images: ['#ECF0F6', '#3A5687'],
-  default: ['#EEF1F5', '#3D5A80'],
-}
-const tintOf = item => facetsOfEntity(item).function[0] || 'default'
+// The field every data figure is drawn on: one light blue, muted enough to sit
+// under a headline without competing with it.
+//
+// This used to be five colours keyed to the facet function — blue for records,
+// purple for stimulates, green for decodes, and so on. In a row of cards it did
+// not read as a code, it read as inconsistency: the cards without a photograph
+// are the ones a reader already notices, and giving them four different
+// backgrounds drew more attention to the gap. The function is still named in
+// words on the plate itself, which is where a reader can actually use it.
+const FIELD_BG = '#EAF2FA'
+const FIELD_INK = '#0B5FA6'
 
 // Three sizes: the lead, a card, and a thumbnail. A thumbnail keeps the datum
 // and drops everything else, because at 96px anything more is unreadable.
@@ -65,14 +66,13 @@ function datumClass(text, size) {
 }
 
 /** The shared plate every figure is drawn on: tinted field, label, datum, mark. */
-function Plate({ tint = 'default', label, size = 'md', children, className = '' }) {
-  const [bg, ink] = TINTS[tint] || TINTS.default
+function Plate({ label, size = 'md', children, className = '' }) {
   const s = SIZE[size] || SIZE.md
   return (
     <div
       aria-hidden="true"
       className={`w-full h-full flex flex-col justify-between overflow-hidden ${s.pad} ${className}`}
-      style={{ background: bg, color: ink }}
+      style={{ background: FIELD_BG, color: FIELD_INK }}
     >
       {s.chrome && label && (
         <span className="font-sans font-semibold uppercase tracking-[0.12em] text-[10px] opacity-70">
@@ -132,10 +132,9 @@ const prettyStatus = s => String(s || '').replace(/_/g, ' ').toLowerCase().repla
 
 export function TrialFigure({ trial, size = 'md' }) {
   const m = trial.metadata || {}
-  const tint = tintOf(trial)
-  const ink = (TINTS[tint] || TINTS.default)[1]
+  const ink = FIELD_INK
   return (
-    <Plate tint={tint} size={size} label="Clinical trial">
+    <Plate size={size} label="Clinical trial">
       {m.enrollment ? <Datum size={size} mono>n={m.enrollment.toLocaleString()}</Datum>
         : <Datum size={size}>{m.phase || 'Trial'}</Datum>}
       <PhaseLadder phase={m.phase} ink={ink} />
@@ -172,7 +171,7 @@ export function ClearanceFigure({ device, size = 'md' }) {
   const number = clearanceNumber(device)
   const pathway = clearancePathway(device)
   return (
-    <Plate tint={tintOf(device)} size={size} label={pathway || 'FDA record'}>
+    <Plate size={size} label={pathway || 'FDA record'}>
       {number ? <Datum size={size} mono>{number}</Datum> : <Datum size={size}>{device.year || 'FDA'}</Datum>}
       <Caption size={size}>{device.year ? `Decision ${device.year}` : null}</Caption>
     </Plate>
@@ -186,9 +185,9 @@ export function ClearanceFigure({ device, size = 'md' }) {
  *  card does not repeat it four times. */
 export function FundingFigure({ round, max, size = 'md' }) {
   const pct = max > 0 && round.amountUsd > 0 ? Math.max((round.amountUsd / max) * 100, 3) : 0
-  const [, ink] = TINTS.default
+  const ink = FIELD_INK
   return (
-    <Plate tint="default" size={size} label="SEC Form D">
+    <Plate size={size} label="SEC Form D">
       <Datum size={size}>{fmtUsd(round.amountUsd) || 'Not available'}</Datum>
       {pct > 0 && (
         <div className="mt-3 h-2 w-full rounded-[1px]" style={{ background: `${ink}22` }}>
@@ -255,10 +254,10 @@ export function ResearchFigure({ paper, size = 'md' }) {
 
   if (size === 'sm') {
     const short = pctile != null ? topPct(pctile) : cites > 0 ? cites.toLocaleString() : shortMark(paper)
-    return <Plate tint={tintOf(paper)} size={size}><Datum size={size} mono={cites > 0 && pctile == null}>{short}</Datum></Plate>
+    return <Plate size={size}><Datum size={size} mono={cites > 0 && pctile == null}>{short}</Datum></Plate>
   }
   return (
-    <Plate tint={tintOf(paper)} size={size} label={label}>
+    <Plate size={size} label={label}>
       {pctile != null ? <Datum size={size}>{topPct(pctile)}</Datum>
         : cites > 0 ? <Datum size={size} mono>{cites.toLocaleString()}</Datum>
           : <Datum size={size}>{venue || 'Paper'}</Datum>}
@@ -281,13 +280,13 @@ export function SourceFigure({ item, size = 'md' }) {
   const outlet = String(item.source || '').replace(/^[\s|·,-]+/, '').trim()
   if (size === 'sm') {
     return (
-      <Plate tint={tintOf(item)} size={size}>
+      <Plate size={size}>
         <Datum size={size} mono={!facetsOfEntity(item).function[0]}>{shortMark(item)}</Datum>
       </Plate>
     )
   }
   return (
-    <Plate tint={tintOf(item)} size={size} label="Coverage">
+    <Plate size={size} label="Coverage">
       <Datum size={size}>{outlet || 'Report'}</Datum>
       <Caption size={size}>{fmtDate(item.published_at)}</Caption>
       {size === 'lg' && <Topics topics={item.topics} />}

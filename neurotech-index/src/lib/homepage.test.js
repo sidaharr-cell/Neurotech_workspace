@@ -16,12 +16,12 @@ const photo = (id, w = 1200, h = 800, over = {}) =>
   story({ id, ...over, metadata: { imageKind: 'real', image: `https://x/${id}.jpg`, imageW: w, imageH: h, ...over.metadata } })
 
 describe('the page budget', () => {
-  it('holds thirty items', () => {
-    expect(MAX_ITEMS).toBe(30)
+  it('holds thirty-two items', () => {
+    expect(MAX_ITEMS).toBe(32)
   })
 
   it('spends the budget on stories and on the other entity types', () => {
-    expect(STORY_SLOTS).toBe(14)
+    expect(STORY_SLOTS).toBe(16)
     expect(SLOTS.trials + SLOTS.clearances + SLOTS.funding + SLOTS.notable).toBe(16)
   })
 })
