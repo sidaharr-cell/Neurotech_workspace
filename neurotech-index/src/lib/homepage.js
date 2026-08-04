@@ -1,7 +1,7 @@
 /**
  * homepage.js — what the home page is allowed to show, and in what order.
  *
- * The page holds thirty items. That is a fixed budget, split across the
+ * The page holds thirty-two items. That is a fixed budget, split across the
  * sections below, and the split lives here rather than in the component so it
  * can be counted by a test instead of by eye. Sections that come back empty
  * (Supabase absent, a filter that nothing matches) shrink the page; nothing
@@ -15,7 +15,7 @@ export const SLOTS = {
   lead: 1,
   sidebar: 4,
   featured: 3,
-  latest: 6,
+  latest: 8,
   trials: 4,
   clearances: 4,
   funding: 4,
