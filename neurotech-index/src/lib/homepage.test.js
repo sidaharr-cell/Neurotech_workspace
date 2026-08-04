@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { SLOTS, MAX_ITEMS, STORY_SLOTS, composeStories, shownKeys, pickNotable } from './homepage'
+import notable from '../data/notable.json'
 
 const story = (over = {}) => ({
   id: over.id,
@@ -120,5 +121,26 @@ describe('the lead always carries a picture', () => {
     const small = story({ id: 'small', metadata: { rankScore: 99, image: 'https://x/s.jpg', imageSubject: 'class', imageW: 700, imageH: 500 } })
     const big = withImage('big', 'https://x/b.jpg', { rank: 10 })
     expect(composeStories([small, big], 'relevant').lead.id).toBe('big')
+  })
+})
+
+// The rail is a neurotech rail before it is an impact rail. A field percentile
+// ranks a paper among its own kind and says nothing about which kind that is,
+// so citation impact alone once put a zebrafish morphogenesis paper on the
+// front page under "Top 1%". scripts/refresh.js now scores every rail entry for
+// neurotech centrality and admits nothing below the floor; this is the check
+// that the committed file still obeys it, since the file is what the page reads.
+describe('the notable rail carries only neurotech', () => {
+  const FLOOR = 5   // RELEVANCE_FLOOR in scripts/refresh.js
+
+  it('records the topic judgement that admitted each paper', () => {
+    for (const p of notable) {
+      expect(typeof p.relevance, `${p.title} has no relevance score`).toBe('number')
+    }
+  })
+
+  it('holds nothing the classifier called off-topic', () => {
+    const offTopic = notable.filter(p => p.relevance < FLOOR).map(p => `${p.relevance}: ${p.title}`)
+    expect(offTopic).toEqual([])
   })
 })
