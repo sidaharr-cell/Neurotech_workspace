@@ -50,7 +50,8 @@ const byFit = (a, b) => fitness(a) - fitness(b)
  * fault, and it is no longer through the middle — the crop is aimed at the
  * subject by scripts/set-image-focus.js. A wide multi-panel figure does lose
  * panels to this, and the card is a way in to the record, not a reading copy
- * of it.
+ * of it. Settled 4 Aug 2026: that is accepted, and there is no per-figure
+ * exception. Do not reintroduce one.
  *
  * A logo is the one exception: it is a mark on a field, not a picture, and
  * cropping it would cut the wordmark in half.
