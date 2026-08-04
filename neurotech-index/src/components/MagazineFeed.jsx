@@ -8,7 +8,7 @@ import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import FilterBar, { NO_FACETS } from './FilterBar'
 import { StoryFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
 import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
-import { assignImages, leadImage } from '../lib/image'
+import { assignImages, leadPicture } from '../lib/image'
 import { entityMatchesFacets, cardBadges } from '../lib/facets'
 import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
 import notable from '../data/notable.json'
@@ -66,8 +66,8 @@ function RuledCell({ children }) {
  * The kicker is set light rather than through the shared Kicker class, whose
  * editorial blue is a link colour chosen against white and vanishes on ink.
  */
-function LeadCard({ item }) {
-  const img = leadImage(item)
+function LeadCard({ item, image }) {
+  const img = leadPicture(item, image)
   return (
     // The lead stretches to whatever height the rail beside it comes out at,
     // so the row has no hole under the lead on a day when the rail's headlines
@@ -332,13 +332,15 @@ export default function MagazineFeed() {
   const showSections = !type
   const maxRound = Math.max(...rounds.map(r => r.amountUsd || 0), 0)
 
-  // A class photograph belongs to a technology, not to a record, so eight
-  // brain-computer interface stories would otherwise run the same conference
-  // photograph eight times. The first card on the page keeps it; the rest fall
-  // back to their data figure, which is the more informative picture anyway.
+  // Every story card's picture, decided centrally: the record's own photograph
+  // where it has one, and otherwise the best unused photograph in the reviewed
+  // pool for what the story is about. A class photograph belongs to a
+  // technology rather than to a record, so eight brain-computer interface
+  // stories would otherwise run the same conference photograph eight times; the
+  // first card keeps it and the rest are given a different one.
   //
   // Only the story cards are in this list. The rail is not, because it shows no
-  // pictures, and neither are the record sections any more: an item assigned a
+  // pictures, and neither are the record sections: an item assigned a
   // photograph it never renders takes that photograph out of the pool for a
   // card that would have shown it.
   const images = useMemo(
@@ -390,7 +392,7 @@ export default function MagazineFeed() {
         <>
           {/* Lead plus the rail of more stories */}
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-10">
-            <div className="lg:col-span-8 flex flex-col"><LeadCard item={lead} /></div>
+            <div className="lg:col-span-8 flex flex-col"><LeadCard item={lead} image={pictureOf(lead)} /></div>
             {sidebar.length > 0 && (
               <aside className="lg:col-span-4 lg:border-l lg:border-rule lg:pl-8">
                 <RuleHeading title="More stories" />
