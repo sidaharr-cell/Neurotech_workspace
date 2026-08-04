@@ -59,7 +59,8 @@ Every step in `daily.js` is best-effort except the ingest, so one dead upstream 
 cannot stop the rest. A failed step prints a `::warning::` and the script still exits 0
 — on purpose, because the workflow steps AFTER it commit `notable.json` and
 `image-focus.json` and run `verify:cron`, and exiting non-zero would skip both. Whether
-the run was good is `verify:cron`'s call.
+the run was good is `verify:cron`'s call. **Settled 4 Aug 2026: a short home page
+section stays a warning and does not fail the build.** Only data loss goes red.
 
 ## Architecture
 
