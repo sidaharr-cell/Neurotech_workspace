@@ -1,9 +1,92 @@
-import { Loader2 } from 'lucide-react'
+import { useState, useEffect, useLayoutEffect, useId, useRef } from 'react'
+import { Loader2, Info } from 'lucide-react'
 import { cardBadges } from '../lib/facets'
 
 // Kicker / eyebrow label above a headline
 export function Kicker({ children, className = '' }) {
   return <span className={`kicker ${className}`}>{children}</span>
+}
+
+/**
+ * A note that explains itself. The trigger is a small "i", and the panel it
+ * opens holds the sentence a section heading has no room for, plus the link to
+ * whoever computed the number.
+ *
+ * It opens on hover and on keyboard focus, and it is a button rather than a
+ * bare title attribute because the panel carries a link a reader has to be
+ * able to reach: the pointer moves from the trigger into the panel without
+ * crossing a gap, and Escape or a click outside closes it again.
+ */
+export function InfoTip({ label, children, className = '' }) {
+  const [open, setOpen] = useState(false)
+  // How far the panel has to slide to stay on screen. The panel hangs off the
+  // right of a trigger that can sit anywhere on the line, and on a phone that
+  // puts its left edge past the edge of the window, so it is measured once on
+  // open and nudged back. Measuring is safe because the shift resets to 0
+  // first: the rect read here is always the unshifted one.
+  const [shift, setShift] = useState(0)
+  const id = useId()
+  const wrap = useRef(null)
+  const panel = useRef(null)
+
+  useEffect(() => {
+    if (!open) { setShift(0); return }
+    const onKey = e => { if (e.key === 'Escape') setOpen(false) }
+    const onDown = e => { if (!wrap.current?.contains(e.target)) setOpen(false) }
+    // The nudge below is measured once, so a resize would leave it stale and
+    // push the panel back off the edge it was moved away from. Closing is the
+    // honest answer: the next open measures the window it now has.
+    const onResize = () => setOpen(false)
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onDown)
+    window.addEventListener('resize', onResize)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('mousedown', onDown)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [open])
+
+  useLayoutEffect(() => {
+    if (!open || !panel.current) return
+    const pad = 12
+    const r = panel.current.getBoundingClientRect()
+    if (r.left < pad) setShift(Math.round(pad - r.left))
+    else if (r.right > window.innerWidth - pad) setShift(Math.round(window.innerWidth - pad - r.right))
+  }, [open])
+
+  return (
+    <span
+      ref={wrap}
+      className={`relative inline-flex items-center align-middle ${className}`}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onBlur={e => { if (!wrap.current?.contains(e.relatedTarget)) setOpen(false) }}
+    >
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen(o => !o)}
+        onFocus={() => setOpen(true)}
+        className="inline-flex items-center text-muted hover:text-accent focus:outline-none focus-visible:text-accent focus-visible:ring-1 focus-visible:ring-accent rounded-sm"
+      >
+        <Info className="w-3.5 h-3.5" strokeWidth={1.8} aria-hidden />
+      </button>
+      {open && (
+        <span
+          id={id}
+          ref={panel}
+          role="tooltip"
+          style={shift ? { transform: `translateX(${shift}px)` } : undefined}
+          className="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-1.5rem)] p-3 rounded-sm border border-rule bg-paper shadow-lg font-sans text-[12px] leading-relaxed text-ink-soft normal-case tracking-normal text-left animate-fade-in"
+        >
+          {children}
+        </span>
+      )}
+    </span>
+  )
 }
 
 // Facet badges for an entity, read straight from its stored facet columns.
