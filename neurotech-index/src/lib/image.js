@@ -36,25 +36,26 @@ const fitness = i => Math.abs((i.w || 1) / (i.h || 1) - CARD_ASPECT)
 const byFit = (a, b) => fitness(a) - fitness(b)
 
 /**
- * How far a picture can be from the card's shape before cropping it does more
- * harm than letterboxing.
+ * How a picture should sit in its frame: filling it, or shown whole.
  *
- * Filling a 4:3 card with a tall portrait means showing a narrow band through
- * the middle of it: the subject arrives cropped to the waist and magnified,
- * which reads as a mistake even when the focal point is right. Past this
- * threshold the whole picture is shown instead, centred, on the card's own
- * background.
+ * Every photograph fills its frame. A picture shown whole inside a landscape
+ * card is letterboxed, and a portrait letterboxed beside a filled neighbour
+ * reads as a vertical picture in a row of horizontal ones — the grid stops
+ * looking like a grid. A frame that lets a fifth of its cards out of it is not
+ * a frame.
+ *
+ * This was once conditional: past 1.6x from the card's own shape a picture was
+ * shown whole instead, on the reasoning that a tall portrait cropped to 4:3 is
+ * a magnified band through the middle. The band is real, and it is the lesser
+ * fault, and it is no longer through the middle — the crop is aimed at the
+ * subject by scripts/set-image-focus.js. A wide multi-panel figure does lose
+ * panels to this, and the card is a way in to the record, not a reading copy
+ * of it.
+ *
+ * A logo is the one exception: it is a mark on a field, not a picture, and
+ * cropping it would cut the wordmark in half.
  */
-const MAX_CROP = 1.6
-
-export function fitsFrame(img) {
-  if (!img?.w || !img?.h) return true
-  const ratio = (img.w / img.h) / CARD_ASPECT
-  return ratio <= MAX_CROP && ratio >= 1 / MAX_CROP
-}
-
-/** How a picture should sit in its frame: filling it, or shown whole. */
-export const objectFitOf = img => (img?.kind === 'logo' || !fitsFrame(img) ? 'contain' : 'cover')
+export const objectFitOf = img => (img?.kind === 'logo' ? 'contain' : 'cover')
 
 /** There is no general pool to fall back on; see the note in
  *  scripts/lib/images.js. A repeat is offered another photograph of its OWN

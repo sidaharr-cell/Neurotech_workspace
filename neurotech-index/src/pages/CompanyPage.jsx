@@ -291,12 +291,15 @@ export default function CompanyPage() {
         <a href={ctgovUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
       </div>
 
-      {/* A real, curated representative photo, shown responsively when one is on
-          record. Populated by curation only; never auto-scraped (see migration 007). */}
+      {/* A real, curated representative photo, in a declared frame like every
+          other picture on the site. Populated by curation only; never
+          auto-scraped (see migration 007). Left to its natural height it set
+          the height of this block, so the same page ran a shallow band for one
+          company and a half-screen portrait for the next. */}
       {company.image_url && (
-        <figure className="mt-6">
+        <figure className="mt-6 aspect-[16/9] overflow-hidden rounded-sm border border-rule bg-canvas">
           <img src={company.image_url} alt={`${company.name}`} loading="lazy"
-            className="w-full h-auto max-h-80 object-cover rounded-sm border border-rule" />
+            className="w-full h-full object-cover" />
         </figure>
       )}
 
