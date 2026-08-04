@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { ChevronDown, Search, Menu, X, Cog, Star } from 'lucide-react'
-import { NeuronBackdrop } from './neuron'
 
 const TOPICS = [
   { to: '/trials', label: 'Clinical Trials' },
@@ -12,8 +11,16 @@ const TOPICS = [
 ]
 
 // Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).
+//
+// 2.9rem is set against the page headings, not chosen on its own. The masthead
+// has to outrank whatever heading sits under it, and every page title — the
+// topic pages through SectionHeading, and Top Stories set to match them — is
+// 2.5rem. A publication's name smaller than the name of one of its sections
+// reads as a section that has escaped its paper. The gap has to be wide enough
+// to see: at 2.6rem it outranked them by a pixel and a half, which is a rule
+// obeyed in arithmetic and broken on the page.
 function Wordmark({ size = 'lg' }) {
-  const text = size === 'sm' ? 'text-xl' : 'text-3xl sm:text-[2.1rem]'
+  const text = size === 'sm' ? 'text-xl' : 'text-3xl sm:text-[2.9rem]'
   const gear = size === 'sm' ? 'w-[0.68em] h-[0.68em]' : 'w-[0.72em] h-[0.72em]'
   return (
     <span className={`inline-flex items-center font-serif ${text} font-semibold tracking-[-0.02em] text-ink`}>
@@ -76,7 +83,7 @@ function Masthead() {
   return (
     <header className="border-b border-ink bg-paper">
       {/* Top row: date · wordmark · search */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="page-wide">
         <div className="grid grid-cols-3 items-center py-4">
           <div className="hidden sm:block text-[12px] text-muted font-sans">{today}</div>
           <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center">
@@ -98,7 +105,7 @@ function Masthead() {
 
       {/* Nav bar (Search intentionally omitted — it lives top-right) */}
       <div className="border-t border-rule hidden sm:block">
-        <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-7">
+        <nav className="page-wide flex items-center gap-7">
           <NavLink to="/" end className={navLink}>Home</NavLink>
           <TopicsDropdown />
         </nav>
@@ -133,7 +140,7 @@ function MobileLink({ to, label, onClick }) {
 function Footer() {
   return (
     <footer className="border-t border-ink mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      <div className="page-wide py-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <Wordmark size="sm" />
           <p className="text-[12px] text-muted font-sans text-center">
@@ -153,7 +160,6 @@ export default function Shell() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <NeuronBackdrop />
       <Masthead />
       <main className="flex-1">
         <Outlet />

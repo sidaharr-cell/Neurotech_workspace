@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
-import FacetSidebar from '../components/FacetSidebar'
+import FilterBar from '../components/FilterBar'
 import FundingChart from '../components/FundingChart'
 import CapitalStageScatter from '../components/CapitalStageScatter'
 import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
@@ -125,7 +125,7 @@ export default function Companies() {
   const total = result.total
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <SectionHeading
         kicker="Companies and Labs"
         title="Companies"
@@ -154,10 +154,12 @@ export default function Companies() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar facets={facets} onChange={setFacets} counts={facetCts} />
+      <div className="border-b border-rule mb-6">
+        <FilterBar facets={facets} onChange={setFacets} counts={facetCts} />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>
           </div>

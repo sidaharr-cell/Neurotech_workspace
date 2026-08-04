@@ -4,7 +4,7 @@ import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState } from './ui'
 import FilterSelect, { RECENCY_DATE, SORT_SIGNIF } from './Filters'
-import FacetSidebar, { NO_FACETS } from './FacetSidebar'
+import FilterBar, { NO_FACETS } from './FilterBar'
 import NewsList from './NewsList'
 import { entityMatchesFacets } from '../lib/facets'
 
@@ -49,23 +49,25 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
   }, [items, facets, recency, outlet, sort])
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <SectionHeading kicker={kicker} title={title} sub={sub} />
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar
+      <div className="border-b border-rule mb-6">
+        <FilterBar
           facets={facets}
           onChange={setFacets}
+          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />}
           extras={[
             ...(outletOptions.length > 1 ? [{ label: 'Outlet', value: outlet, onChange: setOutlet, options: outletOptions, allLabel: 'All outlets' }] : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
           ]}
         />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center justify-between gap-4 h-9 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shown.length.toLocaleString()} {shown.length === 1 ? 'story' : 'stories'}</span>
-            <FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />
           </div>
 
           {!supabase ? (

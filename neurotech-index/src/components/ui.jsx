@@ -1,4 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useId, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Loader2, Info } from 'lucide-react'
 import { cardBadges } from '../lib/facets'
 
@@ -162,6 +163,61 @@ export function EmptyState({ icon: Icon, title, children }) {
       {Icon && <Icon className="w-8 h-8 text-muted/60 mb-3" strokeWidth={1.4} />}
       <p className="font-serif text-lg text-ink">{title}</p>
       {children && <p className="text-sm text-muted mt-1.5 max-w-md font-sans leading-relaxed">{children}</p>}
+    </div>
+  )
+}
+
+/**
+ * A section rule: a heavy line, the section's name under it, and the way out.
+ *
+ * Both reference journals mark a section by weight rather than by size. The
+ * rule sits ABOVE the heading and runs the full measure, so the eye reads it as
+ * "a new thing starts here" before it reads the words. The heading itself is
+ * small — a section on a front page is a signpost, not a headline, and setting
+ * it large makes it compete with the stories underneath it.
+ */
+export function RuleHeading({ title, note, tip, to, linkLabel }) {
+  return (
+    <div className="border-t-2 border-ink pt-2 mb-4">
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <h2 className="font-sans text-[13px] font-bold uppercase tracking-[0.1em] text-ink">{title}</h2>
+        <div className="flex items-baseline gap-3">
+          {note && <span className="text-[12px] font-sans text-muted">{note}{tip ? <> {tip}</> : null}</span>}
+          {to && (
+            <Link to={to} className="text-[12px] font-sans font-medium text-accent hover:underline whitespace-nowrap">
+              {linkLabel} <span aria-hidden>›</span>
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The line at the foot of a card: what kind of thing it is, then when.
+ *
+ * Nature sets the type in bold against a hairline bar and the date in grey, and
+ * the pairing does something a plain metadata line does not: the type word is
+ * the first thing scanned down a column, so a reader picking research out of
+ * news never has to read a headline to do it. The source sits above it, because
+ * a venue name is often long and would push the date off the line.
+ */
+export function Byline({ type, source, date, cites }) {
+  return (
+    <div className="font-sans text-[12px] text-muted">
+      {source && <div className="truncate mb-0.5">{source}</div>}
+      <div className="flex items-center gap-2">
+        {type && <span className="font-semibold text-ink-soft">{type}</span>}
+        {type && date && <span className="w-px h-3 bg-rule" aria-hidden />}
+        {date && <span className="tabular-nums">{date}</span>}
+        {cites > 0 && (
+          <>
+            <span className="w-px h-3 bg-rule" aria-hidden />
+            <span className="tabular-nums">{cites.toLocaleString()} citation{cites === 1 ? '' : 's'}</span>
+          </>
+        )}
+      </div>
     </div>
   )
 }

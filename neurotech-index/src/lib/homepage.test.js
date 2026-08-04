@@ -16,13 +16,20 @@ const photo = (id, w = 1200, h = 800, over = {}) =>
   story({ id, ...over, metadata: { imageKind: 'real', image: `https://x/${id}.jpg`, imageW: w, imageH: h, ...over.metadata } })
 
 describe('the page budget', () => {
-  it('holds thirty-two items', () => {
-    expect(MAX_ITEMS).toBe(32)
+  it('holds forty-three items', () => {
+    expect(MAX_ITEMS).toBe(43)
   })
 
   it('spends the budget on stories and on the other entity types', () => {
-    expect(STORY_SLOTS).toBe(16)
-    expect(SLOTS.trials + SLOTS.clearances + SLOTS.funding + SLOTS.notable).toBe(16)
+    expect(STORY_SLOTS).toBe(19)
+    expect(SLOTS.trials + SLOTS.clearances + SLOTS.funding + SLOTS.notable).toBe(24)
+  })
+
+  // The rail is capped upstream at NOTABLE_MAX and then deduped against the
+  // feed above, so it is the one section that cannot be grown by asking for
+  // more. Its slots have to stay inside what the committed file can supply.
+  it('asks the notable rail for no more than its pool holds', () => {
+    expect(SLOTS.notable).toBeLessThanOrEqual(notable.length)
   })
 })
 

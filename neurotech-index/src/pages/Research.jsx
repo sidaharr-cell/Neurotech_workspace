@@ -4,7 +4,7 @@ import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT, withPotentialImpact } from '../components/Filters'
-import FacetSidebar from '../components/FacetSidebar'
+import FilterBar from '../components/FilterBar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { KindBadge, ReproBadges } from '../components/PaperSignals'
 import { StarButton } from '../components/Watch'
@@ -99,7 +99,7 @@ export default function Research() {
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <SectionHeading
         kicker="Research"
         title="Research"
@@ -117,26 +117,27 @@ export default function Research() {
         />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar
+      <div className="border-b border-rule mb-6">
+        <FilterBar
           facets={facets}
           onChange={setFacets}
           histogram={histogram}
           year={year}
           onYear={setYear}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT, 'research')} required />}
+          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT, 'research')} required />}
           extras={[
             { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
             { label: 'Publication date', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
           ]}
         />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
             <div className="flex items-center gap-3">
               {queryItem && <StarButton item={queryItem} />}
-              <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT, 'research')} required /></div>
             </div>
           </div>
 

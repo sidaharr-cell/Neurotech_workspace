@@ -4,7 +4,7 @@ import { Search, FlaskConical, ChevronLeft, ChevronRight, ExternalLink, Activity
 import { searchTrials, yearHistogram, getRecentTrialChanges, getTrialSponsors } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
 import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, withPotentialImpact } from '../components/Filters'
-import FacetSidebar from '../components/FacetSidebar'
+import FilterBar from '../components/FilterBar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { StarButton } from '../components/Watch'
 
@@ -135,7 +135,7 @@ export default function Trials() {
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <SectionHeading
         kicker="Clinical Trials"
         title="Trials & Studies"
@@ -151,25 +151,26 @@ export default function Trials() {
 
       <RecentChanges changes={changes} />
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar
+      <div className="border-b border-rule mb-6">
+        <FilterBar
           facets={facets}
           onChange={setFacets}
           histogram={histogram}
           year={year}
           onYear={setYear}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required />}
+          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required />}
           extras={[
             { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },
             { label: 'Status', value: status, onChange: setStatus, options: TRIAL_STATUS, allLabel: 'Any status' },
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
           ]}
         />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required /></div>
           </div>
 
           {loading ? (
