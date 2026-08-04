@@ -4,7 +4,7 @@ import { Search, SearchX } from 'lucide-react'
 import { getPapers, getDevices, getOrganizations, getResearchers } from '../lib/data'
 import { Loader, EmptyState, Kicker, typeWord } from '../components/ui'
 import { DetailPanel } from '../components/Directory'
-import FacetSidebar, { NO_FACETS } from '../components/FacetSidebar'
+import FilterBar, { NO_FACETS } from '../components/FilterBar'
 import { entityMatchesFacets } from '../lib/facets'
 import { slugify } from '../lib/links'
 
@@ -70,7 +70,7 @@ export default function SearchPage() {
   const submit = e => { e.preventDefault(); setParams(input.trim() ? { q: input.trim() } : {}) }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <div className="border-b-2 border-ink pb-4 mb-6">
         <Kicker className="block mb-2">Search</Kicker>
         <form onSubmit={submit} className="relative max-w-2xl">
@@ -94,10 +94,12 @@ export default function SearchPage() {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar facets={facets} onChange={setFacets} />
+      <div className="border-b border-rule mb-6">
+        <FilterBar facets={facets} onChange={setFacets} />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center h-9 mb-6 border-b border-rule">
             <span className="text-[13px] text-muted font-sans">
               {results.length}{results.length === 100 ? '+' : ''} {results.length === 1 ? 'result' : 'results'}

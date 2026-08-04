@@ -24,6 +24,28 @@
 }
 
 @layer components {
+  /*
+   * The measure of an index page: the masthead, the footer, and every page
+   * that lists things rather than says one thing.
+   *
+   * Nature News, measured off the live page, runs a 1152px grid inside a 1320px
+   * outer wrapper and holds there from 1600px of viewport all the way up. This
+   * sits a little above their outer wrapper: a five-across row of cards wants
+   * more room than their three-across, and this page carries a filter bar on
+   * the same line that theirs does not. What matters is that it is capped at
+   * all. The whole window is not an option — past about 1500 the eye stops
+   * being able to travel a row, and the rules dividing the columns stop
+   * reading as one object.
+   *
+   * A DETAIL page is not this. Anything showing one record — an abstract, a
+   * company, a device — stays on its own narrower measure (max-w-prose,
+   * max-w-3xl), because that is a column of prose and 1320px of abstract is
+   * unreadable. Those pages set their own width and must not take this one.
+   */
+  .page-wide {
+    @apply w-full max-w-[1440px] mx-auto px-5 sm:px-8;
+  }
+
   /* Editorial kicker / section eyebrow */
   .kicker {
     @apply font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-accent;

@@ -4,7 +4,7 @@ import { searchDevices, searchPatents, yearHistogram, facetCounts } from '../lib
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import { EntityRow, DetailPanel } from '../components/Directory'
 import FilterSelect, { RECENCY_YEAR, DEVICE_FDA, SORT_DATE } from '../components/Filters'
-import FacetSidebar from '../components/FacetSidebar'
+import FilterBar from '../components/FilterBar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 
 const PAGE_SIZE = 20
@@ -91,7 +91,7 @@ export default function Devices() {
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="page-wide py-8">
       <SectionHeading
         kicker="Devices and Patents"
         title="Devices and Patents"
@@ -118,25 +118,26 @@ export default function Devices() {
           className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-rule text-ink font-serif text-xl placeholder:text-muted/50 focus:outline-none focus:border-ink transition-colors" />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <FacetSidebar
+      <div className="border-b border-rule mb-6">
+        <FilterBar
           facets={facets}
           onChange={setFacets}
           histogram={histogram}
           year={year}
           onYear={setYear}
           counts={facetCts}
-          sortControl={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />}
+          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required />}
           extras={[
             ...(!isPatent ? [{ label: 'FDA route', value: fda, onChange: setFda, options: DEVICE_FDA, allLabel: 'Any route' }] : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_YEAR, allLabel: 'Any time' },
           ]}
         />
+      </div>
 
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <div className="flex items-center justify-between gap-4 h-11 mb-6 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">{shownTotal.toLocaleString()} results</span>
-            <div className="hidden lg:block"><FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_DATE} required /></div>
           </div>
 
           {loading ? (

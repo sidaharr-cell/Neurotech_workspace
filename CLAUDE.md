@@ -108,8 +108,22 @@ confidence allows.
 **Classification** is the three-facet scheme in `src/lib/facets.js` — FUNCTION, ACCESS,
 APPLICATION — stored as `text[]` columns with GIN indexes and stamped with
 `CLASSIFIER_VERSION`. It is deterministic (no model calls), runs once at ingest, and
-pages read the stored columns. `src/lib/classify.js` applies it, `FacetSidebar.jsx` is
-the UI, and `applyFacets` in `data.js` filters (OR within a facet, AND across facets).
+pages read the stored columns. `src/lib/classify.js` applies it and `applyFacets` in
+`data.js` filters (OR within a facet, AND across facets). `FilterBar.jsx` is the UI
+everywhere: one closed line of dropdowns carrying the three facet groups plus whatever
+single-select `extras` a page adds, and optionally per-value `counts` and a `histogram`
+(the results-by-year bars, which live inside a Year dropdown). `FacetSidebar.jsx` is
+the open left rail it replaced and **is no longer imported by anything** — it held the
+same controls permanently expanded down a 240px column, which on pages thousands of
+pixels tall left a rail of nothing beside most of the content and took a fifth of the
+width from the results to do it.
+
+**Page width** is one of two values, and the distinction is index versus detail.
+`.page-wide` (in `index.css`, 1440px) is for anything that LISTS things — the home
+page, the five topic pages, search. Anything showing ONE record keeps its own narrower
+measure (`max-w-prose`, `max-w-3xl`) and must not take `.page-wide`: an abstract set
+1440px wide is unreadable. Nature News, for reference, runs a 1152px grid inside a
+1320px wrapper and caps there at any viewport.
 The older eight-class `DEVICE_CLASSES` scheme in `taxonomy.js` is superseded — do not
 add to it. Calibration lives in `scripts/gold-set.js`, `score-facets.js`,
 `score-taxonomy.js`, and `audit-taxonomy.js`, with the rubric in `docs/taxonomy-rubric.md`.
@@ -166,7 +180,7 @@ and its credit (`src/lib/image.js`, `ImageCredit` in `Figure.jsx`) — the attri
 licence condition, and the label is what keeps the picture from making a claim.
 Publisher pages 403 every script, so a recent paywalled paper has no figure to source.
 
-**The home page has a fixed budget of 30 items**, split across its sections in
+**The home page has a fixed budget of 43 items**, split across its sections in
 `SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. **Every section is
 expected to FILL its slots**, and `scripts/verify-homepage.js` (in the daily run, last)
 is what says whether they do. A short section is otherwise silent: nothing errors, the
@@ -188,6 +202,18 @@ record has one, otherwise a figure drawn from that record's own fields
 pathway, round amount, citation impact). Figures are `aria-hidden`, so anything a
 figure shows must also be printed as text on its card. No generated placeholder art:
 a picture either says something about its item or is not shown.
+
+**The home page splits that rule by section.** The stories (lead, More stories,
+Featured, Latest) carry the photographs; the four record rails — In the clinic, FDA
+decisions, Funding, Notable research — carry only their data figure, shrunk to a 96px
+thumbnail beside the text, and are left out of `assignImages` entirely. Two reasons.
+No photograph of an individual 510(k) submission exists, so a card built around a
+picture frame asks those records for something they cannot supply and blows a tinted
+plate up to card size to cover it, which beside a real photograph reads as an image
+that failed to load. And a sourced photograph obliges an `ImageCredit` line, which at
+list-row density costs more than the picture returns. A figure drawn from the record's
+own fields owes no attribution, so the rows stay tight. Photographs still run on the
+section pages (`/trials`, `/devices`, `/companies`, `/research`).
 
 ## Working rules
 

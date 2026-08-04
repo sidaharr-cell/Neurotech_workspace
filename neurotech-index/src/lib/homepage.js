@@ -1,11 +1,24 @@
 /**
  * homepage.js — what the home page is allowed to show, and in what order.
  *
- * The page holds thirty-two items. That is a fixed budget, split across the
+ * The page holds forty-three items. That is a fixed budget, split across the
  * sections below, and the split lives here rather than in the component so it
  * can be counted by a test instead of by eye. Sections that come back empty
  * (Supabase absent, a filter that nothing matches) shrink the page; nothing
  * ever grows it past the budget.
+ *
+ * The budget was thirty-two while every entity rail was a row of four picture
+ * cards, which is as many as a four-across grid of 4:3 images can hold before
+ * the page is all pictures. The rails are now list rows — a 96px thumbnail
+ * beside the text rather than a card built around an image — and two rails sit
+ * side by side, so six entries cost less height than four cards did. The extra
+ * slots went where the supply is: the feed pool is 120 rows deep and the trial,
+ * device and funding tables run to thousands. Notable is the one section that
+ * cannot be grown on demand, since it is capped upstream at NOTABLE_MAX and
+ * then deduped against the feed above; six is what the pool of twelve supports.
+ *
+ * The total is forty-three rather than a rounder number because the sidebar is
+ * held to four by the geometry of the row it sits in, not by taste. See below.
  */
 import { pickLead, hasRealImage, byNewest } from './sources'
 import { canLead } from './image'
@@ -13,13 +26,17 @@ import { canLead } from './image'
 /** Items per section. The sum is the page's whole budget. */
 export const SLOTS = {
   lead: 1,
+  // Four, because the rail sets the height of the row it shares with the lead.
+  // The lead stretches to match it, and the lead's picture is three fifths of
+  // its width; a fifth headline in the rail pushes that picture past square and
+  // into a portrait crop of a landscape photograph.
   sidebar: 4,
-  featured: 3,
-  latest: 8,
-  trials: 4,
-  clearances: 4,
-  funding: 4,
-  notable: 4,
+  featured: 4,
+  latest: 10,
+  trials: 6,
+  clearances: 6,
+  funding: 6,
+  notable: 6,
 }
 
 export const MAX_ITEMS = Object.values(SLOTS).reduce((n, v) => n + v, 0)
