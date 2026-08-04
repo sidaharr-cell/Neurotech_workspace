@@ -127,6 +127,12 @@ card on the page distinct; then `set-image-focus`. That last one writes
 cannot reinstate them), `card-images.json` (a picture chosen by hand for one record,
 with the reason), and `image-focus.json` (where the subject sits, handed to CSS
 object-position, because a card crops to the middle and the subject often is not there).
+**Every picture sits in a declared frame and fills it** (`objectFitOf` in `src/lib/image.js`):
+a picture shown whole inside a landscape card is letterboxed, and a letterboxed portrait
+beside a filled neighbour reads as a vertical picture in a row of horizontal ones. A logo
+is the one exception, since cropping would cut the wordmark. Frames are flex children in
+places, so they need `self-start` or the row stretches them and the declared ratio never
+applies.
 `scripts/verify-image-fit.js` re-reads every class assignment and clears the ones the
 current classifier no longer supports — the reading changes underneath a stored picture,
 and the mismatch is otherwise silent. Anything `class`-subject must render with the "Illustration" label

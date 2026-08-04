@@ -321,13 +321,11 @@ function Photo({ img, fallback, priority, className }) {
         const floor = img.kind === 'logo' ? 120 : 300
         if (e.target.naturalWidth && e.target.naturalWidth < floor) setBroken(true)
       }}
-      // A logo is a mark on a field, not a photograph: cropping it to fill the
-      // frame would cut the wordmark in half.
-      // Filling crops around the subject rather than the middle of the frame.
-      // A picture too tall or too wide to crop is shown whole instead.
+      // Every photograph fills its frame, cropped around its subject rather
+      // than around the middle. A logo is a mark on a field, not a photograph:
+      // cropping it would cut the wordmark in half, so it alone is contained.
       style={fit === 'cover' ? { objectPosition: focusOf(img) } : undefined}
-      className={`w-full h-full ${fit === 'cover' ? 'object-cover'
-        : `object-contain ${img.kind === 'logo' ? 'p-6' : 'p-2'} bg-paper`} ${className}`}
+      className={`w-full h-full ${fit === 'cover' ? 'object-cover' : 'object-contain p-6 bg-paper'} ${className}`}
     />
   )
 }

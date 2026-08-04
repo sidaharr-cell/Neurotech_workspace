@@ -48,7 +48,11 @@ function LeadCard({ item }) {
 function SidebarItem({ item, image }) {
   return (
     <Link to={`/item/${item.id}`} className="group flex gap-3 py-4">
-      <div className="w-20 sm:w-24 shrink-0 aspect-[4/3] overflow-hidden bg-canvas">
+      {/* self-start, or the row stretches the thumbnail to the height of the
+          headline beside it and the declared 4:3 never applies: the rail then
+          runs portrait thumbnails of whatever height each headline happens to
+          be. */}
+      <div className="w-20 sm:w-24 shrink-0 self-start aspect-[4/3] overflow-hidden bg-canvas">
         <StoryFigure item={item} size="sm" image={image} />
       </div>
       <div className="min-w-0">

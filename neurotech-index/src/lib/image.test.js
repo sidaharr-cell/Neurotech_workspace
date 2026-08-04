@@ -136,18 +136,23 @@ describe('assignImages, the withheld case', () => {
   })
 })
 
-describe('fitsFrame', () => {
+describe('every photograph fills its frame', () => {
   it('fills the card with a picture near its shape', () => {
     expect(objectFitOf({ w: 1280, h: 960 })).toBe('cover')
     expect(objectFitOf({ w: 1280, h: 720 })).toBe('cover')
   })
 
-  it('shows a tall portrait whole rather than cropping it to a band', () => {
-    expect(objectFitOf({ w: 766, h: 1707 })).toBe('contain')
+  it('crops a tall portrait rather than letterboxing it in a landscape card', () => {
+    expect(objectFitOf({ w: 766, h: 1707 })).toBe('cover')
+    expect(objectFitOf({ w: 1200, h: 1600 })).toBe('cover')
   })
 
-  it('shows a very wide picture whole', () => {
-    expect(objectFitOf({ w: 1280, h: 400 })).toBe('contain')
+  it('crops a very wide picture too', () => {
+    expect(objectFitOf({ w: 1280, h: 400 })).toBe('cover')
+  })
+
+  it('does not let a missing dimension change how a picture sits', () => {
+    expect(objectFitOf({ url: 'https://x/a.jpg' })).toBe('cover')
   })
 
   it('never crops a logo', () => {
