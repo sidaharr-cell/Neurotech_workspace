@@ -1139,11 +1139,28 @@ const NOTABLE_MAX = 12
 const NOTABLE_PCTILE_MIN = 0.90
 const NOTABLE_WINDOW_DAYS = 90
 
+/** The image block scripts/backfill-images.js writes onto a rail entry. */
+const NOTABLE_IMAGE_KEYS = [
+  'image_url', 'image_kind', 'image_subject', 'image_credit', 'image_license',
+  'image_license_url', 'image_source', 'image_source_url', 'image_w', 'image_h',
+  'image_checked_at',
+]
+
 // Normalize a raw scored item OR a stored rail entry into one rail record.
 // `relevance` is carried so a paper admitted today can be re-judged on topic
 // tomorrow without being scored again.
+//
+// The image block is carried for a plainer reason: this rebuilds the file from
+// scratch every run, so a field it does not name is a field it deletes. It was
+// dropping the picture backfill-images had resolved for each paper, which then
+// resolved it again from the same source the same night — the pictures were
+// only ever there because the image step runs after this one. A rail entry
+// keeps its picture now, and a failed image step no longer empties the rail.
 function toNotable(x) {
+  const image = {}
+  for (const k of NOTABLE_IMAGE_KEYS) if (x[k] != null) image[k] = x[k]
   return {
+    ...image,
     title: x.title,
     authors: x.authors || [],
     journal: x.oaVenue || x.journal || x.source || '',
@@ -1182,6 +1199,60 @@ async function scoreRailTopics(entries) {
   gaps.forEach((e, i) => { e.relevance = scored[i]?.relevanceScore ?? RELEVANCE_FLOOR; delete e.abstract })
 }
 
+/**
+ * Fill the rail out of the papers table when the day's ingest did not.
+ *
+ * The rail only ever saw two sources: what came in today, and what was already
+ * on it. Today's ingest is a hundred-odd papers, and the chance that four of
+ * them are both top-decile for their field and inside the window is small, so
+ * the rail drained. The home page then showed fewer than four, and lost another
+ * to the dedup against the feed above, which is how a four-slot section came to
+ * render two.
+ *
+ * The table holds 83k papers. This asks it for recent ones with a DOI and puts
+ * them through the SAME gates as everything else — trusted impact, top decile,
+ * in window, on topic. Nothing is relaxed to fill a slot: a short rail is
+ * better than a rail padded with work that does not belong on it.
+ *
+ * Cost is bounded and small. OpenAlex takes 25 DOIs a request, so the scan is
+ * about twenty requests, and Claude only sees the handful that already cleared
+ * impact and window.
+ */
+const NOTABLE_SCAN = 500
+
+async function topUpNotable(byKey, keyOf, need) {
+  const { data, error } = await supabase
+    .from('papers')
+    .select('title,authors,journal,year,doi,pubmed_id,url,abstract')
+    .not('doi', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(NOTABLE_SCAN)
+  if (error) { console.warn('      rail top-up read failed:', error.message); return 0 }
+
+  const candidates = (data || [])
+    .map(r => ({ title: r.title, authors: r.authors || [], journal: r.journal, doi: r.doi,
+      pmid: r.pubmed_id || null, url: r.url, abstract: r.abstract || '' }))
+    .filter(c => !byKey.has(keyOf(c)))
+  if (!candidates.length) return 0
+
+  await enrichOpenAlex(candidates)
+  const qualified = candidates.filter(c =>
+    impactTrusted(c) && (c.pctile ?? 0) >= NOTABLE_PCTILE_MIN && daysOld(c.oaDate) <= NOTABLE_WINDOW_DAYS)
+  if (!qualified.length) return 0
+
+  const scored = await scoreWithClaude(qualified.map(c => ({ title: c.title, abstract: c.abstract })))
+  qualified.forEach((c, i) => { c.relevance = scored[i]?.relevanceScore ?? RELEVANCE_FLOOR })
+
+  let added = 0
+  for (const c of qualified.filter(isOnTopic).sort((a, b) => b.pctile - a.pctile)) {
+    if (added >= need) break
+    byKey.set(keyOf(c), toNotable(c))
+    added++
+  }
+  console.log(`      rail top-up: scanned ${candidates.length} papers, ${qualified.length} cleared impact, added ${added}`)
+  return added
+}
+
 async function syncNotable(researchItems) {
   // Load the existing rail and re-enrich it — citations climb over time, so a
   // paper's percentile is re-checked every run (and it drops off if it fades).
@@ -1204,14 +1275,22 @@ async function syncNotable(researchItems) {
   // its own kind and nothing at all about which kind that is. Impact alone put
   // a zebrafish morphogenesis paper on the front page under "Top 1%". The rail
   // is a neurotech rail before it is an impact rail, so topic is asked first.
-  const candidates = [...byKey.values()]
-  const offTopic = candidates.filter(x => !isOnTopic(x))
-
-  const rail = candidates
+  const build = () => [...byKey.values()]
     .filter(isOnTopic)
     .filter(x => x.pctile != null && x.pctile >= NOTABLE_PCTILE_MIN && daysOld(x.publishedAt) <= NOTABLE_WINDOW_DAYS)
     .sort((a, b) => b.pctile - a.pctile)
     .slice(0, NOTABLE_MAX)
+
+  const offTopic = [...byKey.values()].filter(x => !isOnTopic(x))
+  let rail = build()
+
+  // The home page shows four and takes them from this file AFTER dropping any
+  // that already appear in the feed above, so a rail of exactly four can render
+  // fewer. Carrying the full twelve is what keeps the section full.
+  if (rail.length < NOTABLE_MAX) {
+    await topUpNotable(byKey, keyOf, NOTABLE_MAX - rail.length)
+    rail = build()
+  }
 
   writeFileSync(NOTABLE_PATH, JSON.stringify(rail, null, 2) + '\n')
   console.log(`      notable rail: ${rail.length} papers (${existing.length} carried + ${fresh.length} new qualifiers)`)

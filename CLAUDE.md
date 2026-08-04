@@ -30,11 +30,17 @@ npx vitest run -t "never selects withdrawn as the furthest stage"
 Data pipeline (needs `.env`; scripts load it via `--env-file-if-exists`):
 
 ```bash
-npm run refresh          # the daily cron: PubMed + arXiv + media + trials -> Supabase
+npm run daily            # THE daily run: ingest, backfills, then the whole image sequence
+npm run refresh          # ingest only: PubMed + arXiv + media + trials -> Supabase
 npm run verify:cron      # post-cron integrity check; exits non-zero on data collapse
 npm run validate:funding # fails on any unsupported financial/regulatory claim (runs in CI)
 npm run verify:funding
 ```
+
+**Use `npm run daily`, not `npm run refresh`.** `refresh` is the first of fifteen steps
+and nothing else: it ingests, and it does not source a picture for anything it ingested,
+so a run that looks complete leaves the day's new records showing data figures. The
+order lives once, in `scripts/daily.js`, and the workflow calls it.
 
 One-off backfills are `node scripts/backfill-*.js` / `scripts/seed*.js`. Several take
 `--commit`; **those are dry-run by default** so a local run cannot write to production
@@ -44,9 +50,16 @@ There is **no typecheck** — the codebase is plain JS/JSX with no TypeScript. W
 build spec asks for "typecheck passes", read it as "build + lint pass".
 
 CI (`.github/workflows/ci.yml`, on push to `main`/`revamp` and on PRs) runs lint, tests,
-build, and `validate:funding`. `.github/workflows/refresh.yml` runs the nightly data
-refresh at 6am UTC, then the companies / labs / funding / status / inclusion / stage
-backfills, then `verify:cron`.
+build, and `validate:funding`. `.github/workflows/refresh.yml` runs `npm run daily` at
+6am UTC, then commits the data files it wrote, then `verify:cron`. The workflow holds no
+sequence of its own: it used to list every step in YAML, which is how the sequence and
+the manual command drifted apart.
+
+Every step in `daily.js` is best-effort except the ingest, so one dead upstream API
+cannot stop the rest. A failed step prints a `::warning::` and the script still exits 0
+— on purpose, because the workflow steps AFTER it commit `notable.json` and
+`image-focus.json` and run `verify:cron`, and exiting non-zero would skip both. Whether
+the run was good is `verify:cron`'s call.
 
 ## Architecture
 
@@ -141,7 +154,22 @@ licence condition, and the label is what keeps the picture from making a claim.
 Publisher pages 403 every script, so a recent paywalled paper has no figure to source.
 
 **The home page has a fixed budget of 30 items**, split across its sections in
-`SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. Every card carries a picture: a photograph when the
+`SLOTS` in `src/lib/homepage.js` and counted by `homepage.test.js`. **Every section is
+expected to FILL its slots**, and `scripts/verify-homepage.js` (in the daily run, last)
+is what says whether they do. A short section is otherwise silent: nothing errors, the
+row is just half empty. It asks through the page's own `composeStories` and `pickNotable`
+so the answer cannot drift from what a reader sees, which needs Vite's resolution, so
+`daily.js` runs that one step through `vite-node`.
+
+The rail is the section that starves, for two compounding reasons. `syncNotable` used to
+draw candidates only from the day's ingest, which is ~200 papers, few of which are
+top-decile for their field and in window — so it drained. Then `pickNotable` drops any
+paper already shown in the feed above, so a rail of four can render three. `topUpNotable`
+now refills from the papers table through the SAME gates (trusted impact, top decile, in
+window, on topic) up to `NOTABLE_MAX` of 12. Nothing is relaxed to fill a slot: a short
+rail is better than a padded one.
+
+Every card carries a picture: a photograph when the
 record has one, otherwise a figure drawn from that record's own fields
 (`src/components/Figure.jsx` — trial phase and enrollment, FDA submission number and
 pathway, round amount, citation impact). Figures are `aria-hidden`, so anything a
