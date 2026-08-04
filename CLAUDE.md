@@ -146,6 +146,18 @@ beside a filled neighbour reads as a vertical picture in a row of horizontal one
 is the one exception, since cropping would cut the wordmark. Frames are flex children in
 places, so they need `self-start` or the row stretches them and the declared ratio never
 applies.
+
+Because everything crops, **the focal point has to hold the SUBJECT, not point at it**.
+`src/lib/crop.js` is that geometry, and it is pure and tested (`crop.test.js`): at
+`object-position: p` the visible window spans `[p·(1−frac), p·(1−frac)+frac]`, so
+`positionFor` takes the subject's *extent* and returns a position that contains it,
+falling back to centring on the subject only when the subject is wider than the window.
+`set-image-focus.js` therefore asks a vision model for a bounding BOX, not a centre
+point: a subject centred at 72% but running 55%–90% is cut by placing the window at 72%,
+and held by placing it at the extent-aware answer. Each picture is solved for whichever
+of 4:3 and 16:9 crops it harder (`frameFor`), so it holds in either. `--recompute-crops`
+re-reads pictures losing more than 10% of an axis; without it only pictures with no entry
+are read, which is what the daily run wants.
 `scripts/verify-image-fit.js` re-reads every class assignment and clears the ones the
 current classifier no longer supports — the reading changes underneath a stored picture,
 and the mismatch is otherwise silent. Anything `class`-subject must render with the "Illustration" label
