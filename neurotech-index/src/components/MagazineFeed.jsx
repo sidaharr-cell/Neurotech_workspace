@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO, searchTrials, getRecentClearances, getRecentFundingRounds } from '../lib/data'
 import { supabase } from '../lib/supabase'
-import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, fmtDate, typeWord } from './ui'
+import { SectionHeading, Loader, EmptyState, Kicker, Meta, DeviceClassLabels, InfoTip, fmtDate, typeWord } from './ui'
 import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import FacetSidebar, { NO_FACETS } from './FacetSidebar'
 import { StoryFigure, EntityFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
@@ -103,12 +103,12 @@ function LatestCard({ item, image }) {
 
 /** A section rule with its own heading, a one-line note on what the section
  *  holds, and a link to the full view. */
-function RailHeading({ kicker, note, to, linkLabel }) {
+function RailHeading({ kicker, note, tip, to, linkLabel }) {
   return (
     <div className="flex items-baseline justify-between gap-4 flex-wrap mb-3 pb-1.5 border-b-2 border-ink">
       <Kicker>{kicker}</Kicker>
       <div className="flex items-baseline gap-3">
-        {note && <span className="text-[12px] font-sans text-muted">{note}</span>}
+        {note && <span className="text-[12px] font-sans text-muted">{note}{tip ? <> {tip}</> : null}</span>}
         {to && <Link to={to} className="text-[12px] font-sans text-accent hover:underline">{linkLabel}</Link>}
       </div>
     </div>
@@ -206,11 +206,50 @@ function NotableCard({ paper, image }) {
   )
 }
 
+/**
+ * What the "Top N%" on a notable card actually measures.
+ *
+ * The rail's note names a percentile without saying what it is a percentile
+ * of, which is the part that decides whether a reader believes it: the number
+ * is a comparison against one field and one year, not a raw citation count.
+ * The thresholds restated here are the ones syncNotable applies in
+ * scripts/refresh.js (NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, impactTrusted).
+ */
+function NotableTip() {
+  return (
+    <InfoTip label="How citation impact is measured">
+      <p>
+        Citation counts are not comparable on their own. Some fields cite far more than others,
+        and an older paper has had longer to collect any. OpenAlex corrects for both by ranking
+        each paper against the papers published in its own field the same year. Top 1% means it
+        is cited more often than 99% of them.
+      </p>
+      <p className="mt-2">
+        This section holds papers from the past 90 days that rank in the top 10% of their field
+        and year. A new paper waits until it has three citations or turns 60 days old, because in
+        the first weeks almost nothing has been cited and one citation is enough to reach the top.
+      </p>
+      <p className="mt-2">
+        Citation data comes from{' '}
+        <a
+          href="https://developers.openalex.org/api-entities/works/work-object"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          OpenAlex
+        </a>
+        , which publishes this ranking as citation_normalized_percentile.
+      </p>
+    </InfoTip>
+  )
+}
+
 /** Every entity section is the same four-across grid. */
-function Rail({ kicker, note, to, linkLabel, children }) {
+function Rail({ kicker, note, tip, to, linkLabel, children }) {
   return (
     <section className="mt-12">
-      <RailHeading kicker={kicker} note={note} to={to} linkLabel={linkLabel} />
+      <RailHeading kicker={kicker} note={note} tip={tip} to={to} linkLabel={linkLabel} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">{children}</div>
     </section>
   )
@@ -386,7 +425,7 @@ export default function MagazineFeed() {
               )}
 
               {showSections && notablePapers.length > 0 && (
-                <Rail kicker="Notable research" note="Highest field-normalized citation impact, past 90 days" to="/research" linkLabel="All research">
+                <Rail kicker="Notable research" note="Highest field-normalized citation impact, past 90 days" tip={<NotableTip />} to="/research" linkLabel="All research">
                   {notablePapers.map((p, i) => <NotableCard key={p.doi || p.pmid || i} paper={p} image={pictureOf(p)} />)}
                 </Rail>
               )}
