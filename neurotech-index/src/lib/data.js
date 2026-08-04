@@ -143,7 +143,17 @@ export async function yearHistogram({ table = 'papers', facets = {}, from = 2010
     p_ax: asArr(facets.access),
     p_ap: asArr(facets.application),
   })
-  if (error || !data) return []
+  if (error || !data) {
+    // Hiding is the right answer for a histogram that cannot be drawn exactly.
+    // Hiding SILENTLY is not: the control simply is not there, which looks like
+    // a design decision rather than a failure, and the usual cause is a table
+    // whose covering index from supabase/migrations/002-year-histogram.sql was
+    // never applied — the grouped scan then runs to the statement timeout on
+    // the fat tables and squeaks through on the small ones, so the control
+    // appears on devices and is missing on papers with nothing said.
+    console.warn(`yearHistogram(${table}): hidden, the query failed —`, error?.message || 'no rows returned')
+    return []
+  }
 
   // The RPC returns the year as text (some rows are dirty/empty) — parse to a
   // 4-digit int and drop anything that isn't one.
