@@ -51,10 +51,24 @@ const ARXIV_QUERIES = [
   'all:neural+prosthetics',
 ]
 
-// Keep only news the model scored as neurotech-CENTRAL (5+). General
+// Keep only what the model scored as neurotech-CENTRAL (5+). General
 // neuroscience, neuroimaging findings, genetics, drugs, and medical news score
 // 1 to 4 and are dropped, so the feed stays about neurotechnology specifically.
-const NEWS_RELEVANCE_FLOOR = 5
+//
+// This applies to every channel, not only to media. A paper is admitted on the
+// same terms as a press item: a study that USES electrodes or imaging to ask a
+// question about the brain is neuroscience, and this index is about the
+// instruments. Papers used to ride in ungated, held back only by ranking below
+// the storage cutoff, which is not a filter — it is an accident that holds
+// until an off-topic paper outranks something.
+const RELEVANCE_FLOOR = 5
+
+/** Claude's 1-to-10 neurotech centrality, wherever on the record it is kept. */
+const relevanceOf = x => x?.relevance ?? x?.relevanceScore ?? x?.relevance_score ?? null
+
+/** Is this item about neurotechnology, rather than merely near it? An item
+ *  that was never scored is given the benefit of the doubt, as it always was. */
+const isOnTopic = x => (relevanceOf(x) ?? RELEVANCE_FLOOR) >= RELEVANCE_FLOOR
 
 // Provenance stamp: written to source_url / last_updated / pipeline_version on
 // every row this run touches, so a record is traceable to its ingestion.
@@ -1040,8 +1054,19 @@ async function syncToSupabase(pubmed, arxiv, news) {
   }
 
   // Build combined feed, sorted by the composite rank (not the raw AI score).
+  //
+  // The topic gate is applied HERE and not at the call site: the papers table
+  // is the index and stays comprehensive, marking topicality with in_scope for
+  // pages to filter on. The feed is the curated layer over it, and a paper
+  // that only borrows a neurotechnology to study something else does not
+  // belong in it.
+  const feedPubmed = pubmed.filter(isOnTopic)
+  const feedArxiv = arxiv.filter(isOnTopic)
+  const offTopicResearch = (pubmed.length - feedPubmed.length) + (arxiv.length - feedArxiv.length)
+  if (offTopicResearch) console.log(`      kept ${offTopicResearch} off-topic papers out of the feed (relevance < ${RELEVANCE_FLOOR}); they stay in the index`)
+
   const allItems = [
-    ...pubmed.map(p => withMeta(p, {
+    ...feedPubmed.map(p => withMeta(p, {
       title: p.title,
       summary: p.aiSummary || p.abstract?.slice(0, 300) || '',
       source: p.journal || 'PubMed',
@@ -1052,7 +1077,7 @@ async function syncToSupabase(pubmed, arxiv, news) {
       entry_type: 'paper',
       metadata: { authors: p.authors, journal: p.journal, doi: p.doi, pmid: p.pmid },
     })),
-    ...arxiv.map(p => withMeta(p, {
+    ...feedArxiv.map(p => withMeta(p, {
       title: p.title,
       summary: p.aiSummary || p.abstract?.slice(0, 300) || '',
       source: 'arXiv',
@@ -1115,6 +1140,8 @@ const NOTABLE_PCTILE_MIN = 0.90
 const NOTABLE_WINDOW_DAYS = 90
 
 // Normalize a raw scored item OR a stored rail entry into one rail record.
+// `relevance` is carried so a paper admitted today can be re-judged on topic
+// tomorrow without being scored again.
 function toNotable(x) {
   return {
     title: x.title,
@@ -1127,8 +1154,32 @@ function toNotable(x) {
     pctile: x.pctile ?? null,
     fwci: x.fwci ?? null,
     citedBy: x.citedBy ?? 0,
+    relevance: relevanceOf(x),
     significance: x.significance || x.aiSignificance || '',
   }
+}
+
+/**
+ * Score any rail entry that has no topic judgement on it yet.
+ *
+ * Entries written before the rail had a topic gate carry a percentile and
+ * nothing else. They are scored from the abstract in the papers table, which
+ * is where the rail's own candidates came from; a paper the table does not
+ * have is judged on its title, which for the case that prompted this is
+ * already answer enough.
+ */
+async function scoreRailTopics(entries) {
+  const gaps = entries.filter(e => relevanceOf(e) == null)
+  if (!gaps.length) return
+
+  for (const e of gaps) {
+    if (!e.doi && !e.pmid) continue
+    const q = supabase.from('papers').select('abstract').limit(1)
+    const { data } = await (e.doi ? q.eq('doi', e.doi) : q.eq('pubmed_id', String(e.pmid)))
+    e.abstract = data?.[0]?.abstract || ''
+  }
+  const scored = await scoreWithClaude(gaps.map(e => ({ title: e.title, abstract: e.abstract || '' })))
+  gaps.forEach((e, i) => { e.relevance = scored[i]?.relevanceScore ?? RELEVANCE_FLOOR; delete e.abstract })
 }
 
 async function syncNotable(researchItems) {
@@ -1137,6 +1188,7 @@ async function syncNotable(researchItems) {
   let existing = []
   try { if (existsSync(NOTABLE_PATH)) existing = JSON.parse(readFileSync(NOTABLE_PATH, 'utf8')) } catch { /* first run */ }
   await enrichOpenAlex(existing) // mutates in place: refreshes pctile/fwci/citedBy
+  await scoreRailTopics(existing)
 
   // New qualifiers from this run: trusted impact AND top-decile field percentile.
   const fresh = researchItems.filter(it => it.doi && impactTrusted(it) && (it.pctile ?? 0) >= NOTABLE_PCTILE_MIN)
@@ -1148,13 +1200,22 @@ async function syncNotable(researchItems) {
   for (const e of existing) if (keyOf(e)) byKey.set(keyOf(e), toNotable(e))
   for (const it of fresh) if (keyOf(it)) byKey.set(keyOf(it), toNotable(it))
 
-  const rail = [...byKey.values()]
+  // A percentile is a ranking WITHIN a field, so it says how a paper did among
+  // its own kind and nothing at all about which kind that is. Impact alone put
+  // a zebrafish morphogenesis paper on the front page under "Top 1%". The rail
+  // is a neurotech rail before it is an impact rail, so topic is asked first.
+  const candidates = [...byKey.values()]
+  const offTopic = candidates.filter(x => !isOnTopic(x))
+
+  const rail = candidates
+    .filter(isOnTopic)
     .filter(x => x.pctile != null && x.pctile >= NOTABLE_PCTILE_MIN && daysOld(x.publishedAt) <= NOTABLE_WINDOW_DAYS)
     .sort((a, b) => b.pctile - a.pctile)
     .slice(0, NOTABLE_MAX)
 
   writeFileSync(NOTABLE_PATH, JSON.stringify(rail, null, 2) + '\n')
   console.log(`      notable rail: ${rail.length} papers (${existing.length} carried + ${fresh.length} new qualifiers)`)
+  for (const x of offTopic) console.log(`      dropped off-topic (relevance ${relevanceOf(x)}): ${x.title.slice(0, 64)}`)
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
@@ -1201,9 +1262,9 @@ async function main() {
 
   const scoredPubmed = scored.filter(i => i.source === 'pubmed')
   const scoredArxiv = scored.filter(i => i.source === 'arxiv')
-  const scoredNews = scored.filter(i => i.entry_type === 'news' && (i.relevanceScore ?? 5) >= NEWS_RELEVANCE_FLOOR)
+  const scoredNews = scored.filter(i => i.entry_type === 'news' && isOnTopic(i))
   const dropped = scored.filter(i => i.entry_type === 'news').length - scoredNews.length
-  if (dropped) console.log(`      dropped ${dropped} off-topic media items (relevance < ${NEWS_RELEVANCE_FLOOR})`)
+  if (dropped) console.log(`      dropped ${dropped} off-topic media items (relevance < ${RELEVANCE_FLOOR})`)
 
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
@@ -1221,7 +1282,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, NEWS_RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, isOnTopic, relevanceOf, RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).

@@ -7,7 +7,7 @@
  *   node --env-file=.env scripts/rescore-news.js
  */
 import { createClient } from '@supabase/supabase-js'
-import { scoreWithClaude, mediaScore, NEWS_RELEVANCE_FLOOR } from './refresh.js'
+import { scoreWithClaude, mediaScore, RELEVANCE_FLOOR } from './refresh.js'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
@@ -22,7 +22,7 @@ const scored = await scoreWithClaude(items)
 
 let dropped = 0, kept = 0
 for (const s of scored) {
-  if ((s.relevanceScore ?? 5) < NEWS_RELEVANCE_FLOOR) {
+  if ((s.relevanceScore ?? 5) < RELEVANCE_FLOOR) {
     await supabase.from('news_feed').delete().eq('id', s._id)
     dropped++
   } else {

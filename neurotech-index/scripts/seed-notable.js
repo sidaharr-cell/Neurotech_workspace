@@ -12,8 +12,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 import { writeFileSync } from 'fs'
 import {
-  enrichOpenAlex, impactTrusted, toNotable, daysOld,
-  NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH,
+  enrichOpenAlex, impactTrusted, toNotable, daysOld, scoreWithClaude, isOnTopic,
+  NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH, RELEVANCE_FLOOR,
 } from './refresh.js'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
@@ -46,10 +46,22 @@ const items = rows.map(r => ({
 console.log(`Enriching ${items.length} candidate papers via OpenAlex (this takes ~1–2 min)...`)
 await enrichOpenAlex(items)
 
-const rail = items
+const qualified = items
   .filter(it => impactTrusted(it) && (it.pctile ?? 0) >= NOTABLE_PCTILE_MIN && daysOld(it.oaDate) <= NOTABLE_WINDOW_DAYS)
   .sort((a, b) => (b.pctile - a.pctile))
-  .slice(0, NOTABLE_MAX)
+
+// A field percentile ranks a paper among its own kind and says nothing about
+// which kind that is, so the rail asks the same topic question the feed asks:
+// is this about a neurotechnology, or does it merely use one? Scored only for
+// the papers that already cleared impact, which is a few dozen calls.
+console.log(`Checking ${qualified.length} high-impact papers for topic...`)
+const judged = await scoreWithClaude(qualified.map(it => ({ title: it.title, abstract: it.abstract || '' })))
+qualified.forEach((it, i) => { it.relevance = judged[i]?.relevanceScore ?? RELEVANCE_FLOOR })
+for (const it of qualified.filter(x => !isOnTopic(x))) {
+  console.log(`  dropped off-topic (relevance ${it.relevance}): ${it.title.slice(0, 64)}`)
+}
+
+const rail = qualified.filter(isOnTopic).slice(0, NOTABLE_MAX)
 
 // One-line "why it matters" blurb for the final set (cheap — only ~12 calls).
 for (const it of rail) {
