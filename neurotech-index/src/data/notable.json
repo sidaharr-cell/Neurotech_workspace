@@ -1,35 +1,5 @@
 [
   {
-    "title": "Multi-omics analysis of deep brain stimulation associated with brain-gut axis modulation and symptom amelioration in a Parkinson's disease mouse model.",
-    "authors": [
-      "Ye Song",
-      "Changxin Yang",
-      "Jie Tu",
-      "Jiaojiao Dong",
-      "Xiao Zhang"
-    ],
-    "journal": "Biology Direct",
-    "pmid": "42092952",
-    "doi": "10.1186/s13062-026-00778-4",
-    "url": "https://doi.org/10.1186/s13062-026-00778-4",
-    "publishedAt": "2026-05-06",
-    "pctile": 0.99577193,
-    "fwci": 23.822,
-    "citedBy": 3,
-    "significance": "DBS combined with BCI restores brain-gut axis function in Parkinson's disease by modulating synaptic and metabolic pathways, offering a multi-system therapeutic approach.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Prep_for_Deep_Brain_Stimulation.png",
-    "image_kind": "photo",
-    "image_subject": "class",
-    "image_credit": "Whoisjohngalt",
-    "image_license": "CC BY-SA 4.0",
-    "image_license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "image_source": "commons",
-    "image_source_url": "https://commons.wikimedia.org/wiki/File:Prep_for_Deep_Brain_Stimulation.png",
-    "image_w": 1200,
-    "image_h": 1600,
-    "image_checked_at": "2026-08-03T15:30:43.637Z"
-  },
-  {
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -52,8 +22,8 @@
     "pctile": 0.99531187,
     "fwci": 33.2321,
     "citedBy": 6,
-    "significance": "Prior BCIs required close clinical supervision and could not sustain performance outside controlled labs. This landmark result proves that a fully implanted intracortical BCI can be reliably operated by a paralyzed user without expert oversight, maintaining accuracy over months at home. This is a watershed moment for neurotechnology, demonstrating that BCIs have matured from laboratory curiosities to practical assistive devices capable of restoring communication and control for people with severe paralysis in real-world conditions.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg",
+    "significance": "Intracortical BCIs have decoded speech and movement in lab settings, but clinical viability requires unsupervised, at-home operation with stable performance over months. This paper demonstrates that an implanted electrode array can be used independently by a patient outside the clinic, decoding both speech intent and cursor movement reliably without daily recalibration or technician support. This is a critical proof point that neurotechnology devices can transition from research demonstrations to practical tools that paralyzed users can operate autonomously in their own homes, directly advancing the path to FDA approval and patient adoption.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Official Navy Page from United States of America Sarah Fortney/U.S. Navy",
@@ -63,7 +33,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 1280,
     "image_h": 853,
-    "image_checked_at": "2026-08-03T15:31:32.576Z"
+    "image_checked_at": "2026-08-04T09:12:30.962Z"
   },
   {
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
@@ -92,7 +62,7 @@
     "fwci": 23.5791,
     "citedBy": 12,
     "significance": "This study reveals how DBS physically remodels white matter and reorganizes brain networks, explaining the mechanisms underlying its therapeutic effects for depression.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Typical_deep_brain_stimulation_setup.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Typical_deep_brain_stimulation_setup.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Shamir R, Noecker A and McIntyre C",
@@ -100,9 +70,9 @@
     "image_license_url": "https://creativecommons.org/licenses/by/3.0",
     "image_source": "commons",
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
-    "image_w": 817,
-    "image_h": 1184,
-    "image_checked_at": "2026-08-03T15:31:31.794Z"
+    "image_w": 1280,
+    "image_h": 1855,
+    "image_checked_at": "2026-08-04T09:12:29.992Z"
   },
   {
     "title": "Tissue rigidity phase transition shapes morphogen gradients.",
@@ -128,7 +98,7 @@
     "fwci": 15.4405,
     "citedBy": 3,
     "significance": "Tissue rigidity transitions physically reshape morphogen gradients during development, revealing how mechanical properties actively control cell fate decisions beyond chemical signaling alone.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Stage-14_Drosophila_embryo_expressing_AbdA_and_Exd%2C_both_fused_to_one_half_of_the_fluorescent_protein_Venus_-_journal.pbio.1001349.g001.png",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Stage-14_Drosophila_embryo_expressing_AbdA_and_Exd%2C_both_fused_to_one_half_of_the_fluorescent_protein_Venus_-_journal.pbio.1001349.g001.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Caitlin Sedwick",
@@ -136,9 +106,9 @@
     "image_license_url": "https://creativecommons.org/licenses/by/2.5",
     "image_source": "commons",
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Stage-14_Drosophila_embryo_expressing_AbdA_and_Exd,_both_fused_to_one_half_of_the_fluorescent_protein_Venus_-_journal.pbio.1001349.g001.png",
-    "image_w": 1216,
-    "image_h": 737,
-    "image_checked_at": "2026-08-03T15:31:32.030Z"
+    "image_w": 1280,
+    "image_h": 776,
+    "image_checked_at": "2026-08-04T09:12:30.235Z"
   },
   {
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
@@ -182,7 +152,7 @@
     "fwci": 17.9758,
     "citedBy": 15,
     "significance": "This paper enables simultaneous high-resolution recording and precise optogenetic manipulation of thousands of neurons across brain regions, advancing our ability to map neural circuits and causality.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Peter Duncan",
@@ -192,6 +162,6 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 1280,
     "image_h": 468,
-    "image_checked_at": "2026-08-03T15:31:32.270Z"
+    "image_checked_at": "2026-08-04T09:12:30.453Z"
   }
 ]
