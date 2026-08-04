@@ -8,7 +8,7 @@ import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
 import FacetSidebar, { NO_FACETS } from './FacetSidebar'
 import { StoryFigure, EntityFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
 import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
-import { usableImage, assignImages, leadImage } from '../lib/image'
+import { assignImages, leadImage } from '../lib/image'
 import { entityMatchesFacets } from '../lib/facets'
 import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
 import notable from '../data/notable.json'
@@ -43,31 +43,27 @@ function LeadCard({ item }) {
   )
 }
 
-/** The rail beside the lead. The picture is a thumbnail so the rail stays a
- *  list of headlines rather than a second grid of cards. */
-function SidebarItem({ item, image }) {
+/**
+ * The rail beside the lead: a list of headlines, and now actually one.
+ *
+ * It used to carry a thumbnail beside each headline. The rail is 212px wide,
+ * and the picture and its gap took 108px of that — more than half — leaving
+ * the headline 104px, about twelve characters a line. Every headline in it
+ * truncated, titles of sixty to a hundred characters showing thirty-six. A
+ * 96x72 crop of a licensed photograph of the technology is worth less than the
+ * words it was displacing, and the pictures it gave up are handed on by
+ * assignImages to the cards below, which run them at a size that reads.
+ *
+ * So the headline takes the whole rail, and a fourth line where it needs one.
+ */
+function SidebarItem({ item }) {
   return (
-    <Link to={`/item/${item.id}`} className="group flex gap-3 py-4">
-      {/* self-start, or the row stretches the thumbnail to the height of the
-          headline beside it and the declared 4:3 never applies: the rail then
-          runs portrait thumbnails of whatever height each headline happens to
-          be. */}
-      <div className="w-20 sm:w-24 shrink-0 self-start aspect-[4/3] overflow-hidden bg-canvas">
-        <StoryFigure item={item} size="sm" image={image} />
-      </div>
-      <div className="min-w-0">
-        <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
-        <h3 className="font-serif text-[1.05rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-3">{item.title}</h3>
-        <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
-      </div>
+    <Link to={`/item/${item.id}`} className="group block py-3.5">
+      <div className="mb-1"><Kicker>{typeWord(item.entry_type)}</Kicker></div>
+      <h3 className="font-serif text-[1.05rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link line-clamp-5">{item.title}</h3>
+      <div className="mt-1.5"><Meta {...metaOf(item)} /></div>
     </Link>
   )
-}
-
-/** The rail's attribution, which sits outside its link. Every other card does
- *  this inline; the rail is a flex row, so the credit follows the whole item. */
-function SidebarCredit({ image }) {
-  return <ImageCredit img={image} className="ml-[5.75rem] sm:ml-[6.75rem] -mt-3 mb-2" />
 }
 
 function FeaturedCard({ item, image }) {
@@ -334,10 +330,13 @@ export default function MagazineFeed() {
   // brain-computer interface stories would otherwise run the same conference
   // photograph eight times. The first card on the page keeps it; the rest fall
   // back to their data figure, which is the more informative picture anyway.
+  // The rail is not in this list: it shows no pictures, and an item that is
+  // assigned one it never renders takes that photograph out of the pool for a
+  // card that would have shown it.
   const images = useMemo(
-    () => assignImages([lead, ...sidebar, ...featured, ...latest, ...trials, ...clearances, ...rounds,
+    () => assignImages([lead, ...featured, ...latest, ...trials, ...clearances, ...rounds,
       ...notablePapers.map(p => ({ ...p, id: p.doi || p.pmid }))]),
-    [lead, sidebar, featured, latest, trials, clearances, rounds, notablePapers],
+    [lead, featured, latest, trials, clearances, rounds, notablePapers],
   )
   // Null, not undefined. A card reads undefined as "work it out yourself" and
   // falls back to the picture it carries — which is the very picture the
@@ -386,10 +385,7 @@ export default function MagazineFeed() {
                     </div>
                     <div className="divide-rule">
                       {sidebar.map((it, i) => (
-                        <div key={it.id || i}>
-                          <SidebarItem item={it} image={pictureOf(it)} />
-                          <SidebarCredit image={pictureOf(it)} />
-                        </div>
+                        <SidebarItem key={it.id || i} item={it} />
                       ))}
                     </div>
                   </div>
