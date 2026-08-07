@@ -23,7 +23,7 @@
     "fwci": 33.2321,
     "citedBy": 6,
     "relevance": 9,
-    "significance": "This is a landmark advance showing that intracortical BCIs can operate reliably outside laboratory settings with patient self-management, meeting the practical requirement for clinical viability. The demonstration of independent, long-term at-home use for both speech decoding and cursor control removes a critical proof-of-concept gap that has blocked real-world deployment. This validates the pathway toward consumer neurotechnology and dramatically expands the population who could benefit from BCIs.",
+    "significance": "Long-term at-home independent BCI operation is the true test of clinical viability. This landmark result shows an intracortical device enabling naturalistic communication and digital control in a severely paralyzed user without requiring constant expert oversight or laboratory infrastructure. It demonstrates that modern neural decoding algorithms and implant stability can sustain reliable performance across months of unsupervised use, a critical milestone proving that BCIs are transitioning from research curiosities to genuine assistive technology for patients.",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
@@ -34,7 +34,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 1280,
     "image_h": 853,
-    "image_checked_at": "2026-08-06T09:14:14.789Z"
+    "image_checked_at": "2026-08-07T07:51:12.562Z"
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
@@ -181,7 +181,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 1280,
     "image_h": 1855,
-    "image_checked_at": "2026-08-06T09:14:13.849Z",
+    "image_checked_at": "2026-08-07T07:51:11.292Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -250,7 +250,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 1280,
     "image_h": 468,
-    "image_checked_at": "2026-08-06T09:14:14.380Z",
+    "image_checked_at": "2026-08-07T07:51:11.988Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -288,8 +288,8 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.9901989,
-    "fwci": 17.9758,
+    "pctile": 0.9897131,
+    "fwci": 17.4868,
     "citedBy": 15,
     "relevance": 9,
     "significance": "This paper enables simultaneous high-resolution recording and spatially precise optogenetic manipulation of thousands of neurons, revolutionizing circuit neuroscience research capabilities."
@@ -413,6 +413,26 @@
     "significance": "This work enables non-invasive, wireless optogenetic pain control by using upconversion nanoparticles to overcome light penetration and implantation limitations in dorsal root ganglia."
   },
   {
+    "title": "Restorative neurostimulation of the lumbar multifidus muscles improves mobility, strength, pain and disability in patients with mechanical chronic low back pain.",
+    "authors": [
+      "Adrian Nowitzke",
+      "Patrick Beaumont",
+      "Clare Dal Bon",
+      "Paul Hodges",
+      "Paul Licina"
+    ],
+    "journal": "European Spine Journal",
+    "pmid": "42176014",
+    "doi": "10.1007/s00586-026-10020-4",
+    "url": "https://doi.org/10.1007/s00586-026-10020-4",
+    "publishedAt": "2026-05-23",
+    "pctile": 0.97999252,
+    "fwci": 11.2138,
+    "citedBy": 1,
+    "relevance": 6,
+    "significance": "This paper demonstrates that targeted electrical stimulation of deep spinal muscles can significantly improve chronic low back pain, mobility, and function in patients."
+  },
+  {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
     "image_kind": "photo",
     "image_subject": "class",
@@ -442,30 +462,10 @@
     "doi": "10.1038/s41551-026-01684-w",
     "url": "https://doi.org/10.1038/s41551-026-01684-w",
     "publishedAt": "2026-05-12",
-    "pctile": 0.9803987,
-    "fwci": 10.0503,
+    "pctile": 0.9796875,
+    "fwci": 9.7133,
     "citedBy": 2,
     "relevance": 7,
     "significance": "This study reveals that kilohertz-frequency stimulation cannot selectively recruit proprioceptive fibers needed for motor recovery, challenging assumptions underlying current spinal cord stimulation therapies."
-  },
-  {
-    "title": "Restorative neurostimulation of the lumbar multifidus muscles improves mobility, strength, pain and disability in patients with mechanical chronic low back pain.",
-    "authors": [
-      "Adrian Nowitzke",
-      "Patrick Beaumont",
-      "Clare Dal Bon",
-      "Paul Hodges",
-      "Paul Licina"
-    ],
-    "journal": "European Spine Journal",
-    "pmid": "42176014",
-    "doi": "10.1007/s00586-026-10020-4",
-    "url": "https://doi.org/10.1007/s00586-026-10020-4",
-    "publishedAt": "2026-05-23",
-    "pctile": 0.97999252,
-    "fwci": 11.2138,
-    "citedBy": 1,
-    "relevance": 6,
-    "significance": "This paper demonstrates that targeted electrical stimulation of deep spinal muscles can significantly improve chronic low back pain, mobility, and function in patients."
   }
 ]
