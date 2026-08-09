@@ -23,7 +23,7 @@
     "fwci": 33.2321,
     "citedBy": 6,
     "relevance": 9,
-    "significance": "This is a landmark demonstration that an intracortical BCI can operate reliably outside laboratory settings without expert supervision, supporting naturalistic communication and digital access for severely paralyzed users. Achieving long-term independent use solves critical practical challenges around training, recalibration, and daily-life functionality that have long hindered clinical translation. This work represents a major step toward making BCIs practical assistive devices rather than research demonstrations.",
+    "significance": "This work validates a critical milestone for neurotechnology: sustained, independent operation of an intracortical BCI outside clinical facilities. By demonstrating reliable speech and cursor control during long-term, unsupervised, at-home use, it provides evidence that implantable neural interfaces can achieve the durability, stability, and user-friendly operation required for clinical approval and patient adoption. This represents a landmark step toward practical BCI therapies for people with severe paralysis.",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
@@ -34,7 +34,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 1280,
     "image_h": 853,
-    "image_checked_at": "2026-08-08T07:29:14.524Z"
+    "image_checked_at": "2026-08-09T07:31:35.364Z"
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
@@ -181,7 +181,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 1280,
     "image_h": 1855,
-    "image_checked_at": "2026-08-08T07:29:13.611Z",
+    "image_checked_at": "2026-08-09T07:31:34.596Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -211,35 +211,6 @@
     "significance": "This study reveals how DBS mechanically remodels white matter and reorganizes brain networks, providing crucial biological mechanisms explaining why this treatment alleviates depression."
   },
   {
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg/1280px-Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
-    "image_kind": "photo",
-    "image_subject": "class",
-    "image_credit": "Antoine Lutz",
-    "image_license": "Public domain",
-    "image_source": "commons",
-    "image_source_url": "https://commons.wikimedia.org/wiki/File:Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
-    "image_w": 1280,
-    "image_h": 858,
-    "image_checked_at": "2026-08-05T09:08:41.049Z",
-    "title": "Turning motor intentions into words: an MRCP-based BCI speller for motor-impaired users enhanced by task-specific calibration.",
-    "authors": [
-      "Patrick Suwandjieff",
-      "Markus R Crell",
-      "Kyriaki Kostoglou",
-      "Gernot R Müller-Putz"
-    ],
-    "journal": "Journal of Neural Engineering",
-    "pmid": "42114561",
-    "doi": "10.1088/1741-2552/ae6bef",
-    "url": "https://doi.org/10.1088/1741-2552/ae6bef",
-    "publishedAt": "2026-05-11",
-    "pctile": 0.9909331,
-    "fwci": 16.6161,
-    "citedBy": 2,
-    "relevance": 9,
-    "significance": "This work enables locked-in syndrome patients to communicate by decoding motor intentions into text, potentially restoring functional communication independence."
-  },
-  {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
@@ -250,7 +221,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 1280,
     "image_h": 468,
-    "image_checked_at": "2026-08-08T07:29:14.057Z",
+    "image_checked_at": "2026-08-09T07:31:35.058Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -288,8 +259,8 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.98963489,
-    "fwci": 17.4217,
+    "pctile": 0.98950107,
+    "fwci": 17.2985,
     "citedBy": 15,
     "relevance": 9,
     "significance": "This paper enables simultaneous high-resolution recording and spatially precise optogenetic manipulation of thousands of neurons, revolutionizing circuit neuroscience research capabilities."
@@ -462,10 +433,43 @@
     "doi": "10.1038/s41551-026-01684-w",
     "url": "https://doi.org/10.1038/s41551-026-01684-w",
     "publishedAt": "2026-05-12",
-    "pctile": 0.97925176,
-    "fwci": 9.6024,
+    "pctile": 0.97915819,
+    "fwci": 9.5633,
     "citedBy": 2,
     "relevance": 7,
     "significance": "This study reveals that kilohertz-frequency stimulation cannot selectively recruit proprioceptive fibers needed for motor recovery, challenging assumptions underlying current spinal cord stimulation therapies."
+  },
+  {
+    "title": "Acute Perturbations of Whole-Brain and Triple-Network Connectivity During Low- Frequency-Right TMS for Treatment Resistant Depression.",
+    "authors": [
+      "Elizabeth Gregory",
+      "Ahmad Samara",
+      "Ruiyang Ge",
+      "Hallee Shearer",
+      "Afifa Humaira",
+      "Tamara Vanderwal",
+      "Fidel Vila-Rodriguez"
+    ],
+    "journal": "Neuromodulation Technology at the Neural Interface",
+    "pmid": "42467020",
+    "doi": "10.1016/j.neurom.2026.06.465",
+    "url": "https://doi.org/10.1016/j.neurom.2026.06.465",
+    "publishedAt": "2026-06-01",
+    "pctile": 0.97885545,
+    "fwci": 8.4188,
+    "citedBy": 1,
+    "relevance": 7,
+    "significance": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
+    "image_kind": "photo",
+    "image_subject": "class",
+    "image_credit": "Technophant",
+    "image_license": "CC BY-SA 4.0",
+    "image_license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "image_source": "commons",
+    "image_source_url": "https://commons.wikimedia.org/wiki/File:Basic_outpatient_TMS_setup_(cropped).jpg",
+    "image_w": 1280,
+    "image_h": 923,
+    "image_checked_at": "2026-08-09T07:31:32.321Z"
   }
 ]
