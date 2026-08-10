@@ -9,7 +9,7 @@ import FilterBar, { NO_FACETS } from './FilterBar'
 import { StoryFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
 import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
 import { assignImages, leadPicture } from '../lib/image'
-import { entityMatchesFacets, cardBadges } from '../lib/facets'
+import { entityMatchesFacets, countFacets, cardBadges } from '../lib/facets'
 import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
 import notable from '../data/notable.json'
 
@@ -306,17 +306,25 @@ export default function MagazineFeed() {
     return () => { alive = false }
   }, [facetKey, recency, anyFacet])
 
-  const shown = useMemo(() => {
+  // Everything recency and type allow, before any facet is applied. The facet
+  // counts come off this, so each number is how many of the stories on THIS page
+  // the value holds — the feed filters in memory, so it can be exact about the
+  // other controls in a way the server-side pages cannot.
+  const candidates = useMemo(() => {
     const cutoff = recencyCutoffISO(recency)
     const isResearch = i => i.entry_type === 'paper' || i.entry_type === 'preprint'
-    let out = items.filter(i =>
-      entityMatchesFacets(i, facets) &&
+    return items.filter(i =>
       (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
       (!type || (type === 'research' ? isResearch(i) : i.entry_type === 'news'))
     )
-    if (sort === 'newest') out = [...out].sort(byNewest)
-    return out
-  }, [items, facets, recency, type, sort])
+  }, [items, recency, type])
+
+  const facetCts = useMemo(() => countFacets(candidates, facets), [candidates, facets])
+
+  const shown = useMemo(() => {
+    const out = candidates.filter(i => entityMatchesFacets(i, facets))
+    return sort === 'newest' ? [...out].sort(byNewest) : out
+  }, [candidates, facets, sort])
 
   const { lead, sidebar, featured, latest } = useMemo(() => composeStories(shown, sort), [shown, sort])
 
@@ -372,6 +380,7 @@ export default function MagazineFeed() {
         <FilterBar
           facets={facets}
           onChange={setFacets}
+          counts={facetCts}
           extras={[
             { label: 'Type', value: type, onChange: setType, options: FEED_TYPE, allLabel: 'All types' },
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },

@@ -6,7 +6,7 @@ import { SectionHeading, Loader, EmptyState } from './ui'
 import FilterSelect, { RECENCY_DATE, SORT_SIGNIF } from './Filters'
 import FilterBar, { NO_FACETS } from './FilterBar'
 import NewsList from './NewsList'
-import { entityMatchesFacets } from '../lib/facets'
+import { entityMatchesFacets, countFacets } from '../lib/facets'
 
 /**
  * A content-typed editorial news section (home feed, Media, Research).
@@ -34,19 +34,27 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
     return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([s]) => ({ id: s, label: s }))
   }, [items])
 
-  const shown = useMemo(() => {
+  // Everything recency and outlet allow, before any facet is applied. The facet
+  // counts come off this list, so they answer the question the reader is asking:
+  // how many of the stories in front of me does this value hold. The section
+  // filters in memory, so the counts can be exact about every other filter too —
+  // unlike the server-side pages, which count facets and scope alone.
+  const candidates = useMemo(() => {
     const cutoff = recencyCutoffISO(recency)
-    const rank = r => r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10
-    let out = items.filter(i =>
-      entityMatchesFacets(i, facets) &&
+    return items.filter(i =>
       (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
       (!outlet || i.source === outlet)
     )
-    out = [...out].sort((a, b) => sort === 'newest'
+  }, [items, recency, outlet])
+
+  const facetCts = useMemo(() => countFacets(candidates, facets), [candidates, facets])
+
+  const shown = useMemo(() => {
+    const rank = r => r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10
+    return [...candidates.filter(i => entityMatchesFacets(i, facets))].sort((a, b) => sort === 'newest'
       ? new Date(b.published_at || 0) - new Date(a.published_at || 0)
       : rank(b) - rank(a))
-    return out
-  }, [items, facets, recency, outlet, sort])
+  }, [candidates, facets, sort])
 
   return (
     <div className="page-wide py-8">
@@ -56,6 +64,7 @@ export default function NewsSection({ kicker, title, sub, entryTypes = null, lea
         <FilterBar
           facets={facets}
           onChange={setFacets}
+          counts={facetCts}
           sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />}
           extras={[
             ...(outletOptions.length > 1 ? [{ label: 'Outlet', value: outlet, onChange: setOutlet, options: outletOptions, allLabel: 'All outlets' }] : []),

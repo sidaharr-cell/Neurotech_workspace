@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Search, ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { searchPapers, yearHistogram, getPaperSignalsBatch } from '../lib/data'
+import { searchPapers, yearHistogram, facetCounts, getPaperSignalsBatch } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels } from '../components/ui'
 import FilterSelect, { RECENCY_YEAR, RESEARCH_SOURCE, SORT_IMPACT, withPotentialImpact } from '../components/Filters'
 import FilterBar from '../components/FilterBar'
@@ -53,6 +53,7 @@ export default function Research() {
   const [signals, setSignals] = useState({})
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
+  const [facetCts, setFacetCts] = useState(null)
   const debounce = useRef(null)
   const location = useLocation()
   // A saveable facet query (Phase 8): only meaningful when a facet is selected.
@@ -90,12 +91,33 @@ export default function Research() {
     return () => { alive = false }
   }, [facets, query])
 
-  // The histogram reflects facets + scope only. When no other filter narrows the
-  // results (no search term, year click, recency, or source), its exact bucket
-  // sum IS the result total — so show that, and the bars reconcile with the
-  // count exactly. Otherwise show the actual search result count.
-  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !source
-  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  // Per-facet-value counts, on the same terms as the histogram: facets and scope
+  // only, hidden during a text search. One grouped query answered from the
+  // covering index (migration 017) — a value at a time is not affordable here.
+  useEffect(() => {
+    let alive = true
+    if (query.trim()) { setFacetCts(null); return }
+    facetCounts({ table: 'papers', facets }).then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, query])
+
+  // Three sources for one number, most trustworthy first, and all three are only
+  // usable while nothing but the facets narrows the results.
+  //
+  //   facetCts.total   exact, and drops nothing.
+  //   histogram sum    exact for every row it can PLACE, which is not every row:
+  //                    an unparseable year, or one outside the buckets it emits,
+  //                    is counted nowhere. Kept as the middle tier so a database
+  //                    without migration 017's total row shows what it showed
+  //                    before rather than falling through to the estimate.
+  //   total            searchPapers counts `estimated` — a planner guess,
+  //                    measured 25-28% low. It is the last resort, not the
+  //                    default: the bar said 9,723 for Images and this said
+  //                    7,293, on the same screen.
+  const onlyFacetsNarrow = !query.trim() && !year && !recency && !source
+  const shownTotal = onlyFacetsNarrow && facetCts?.total != null ? facetCts.total
+    : onlyFacetsNarrow && histogram && histogram.length > 1 ? histogram.reduce((a, b) => a + b.n, 0)
+    : total
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
@@ -124,6 +146,7 @@ export default function Research() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          counts={facetCts}
           sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_IMPACT, 'research')} required />}
           extras={[
             { label: 'Article type', value: source, onChange: setSource, options: RESEARCH_SOURCE, allLabel: 'All types' },
