@@ -77,17 +77,29 @@ export default function Devices() {
     return () => { alive = false }
   }, [facets, isPatent, query])
 
-  // Per-facet-value counts (devices only; patents table is fat, facetCounts
-  // returns null there and the sidebar shows no counts).
+  // Per-facet-value counts. Like the histogram they reflect facets + scope only,
+  // so they are hidden during a text search. Patents are counted through the
+  // same grouped query as devices; the table is fat, but the count never leaves
+  // the covering index (migration 017).
   useEffect(() => {
     let alive = true
-    if (isPatent) { setFacetCts(null); return }
-    facetCounts({ table: 'devices', facets }).then(c => { if (alive) setFacetCts(c) })
+    if (query.trim()) { setFacetCts(null); return }
+    facetCounts({ table: isPatent ? 'patents' : 'devices', facets })
+      .then(c => { if (alive) setFacetCts(c) })
     return () => { alive = false }
-  }, [facets, isPatent])
+  }, [facets, isPatent, query])
 
-  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !fda
-  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  // The two views count differently, so they take their total differently.
+  // searchDevices counts `exact`, so its own total is right and needs nothing.
+  // searchPatents counts `estimated` — the same planner guess as papers, and on
+  // that table it measured 25-28% low — so the patents view prefers the exact
+  // facet count, then the histogram's bucket sum, which is exact for every row
+  // it can place in a year it emits, before it will show the estimate.
+  const onlyFacetsNarrow = !query.trim() && !year && !recency && !fda
+  const shownTotal = !isPatent ? total
+    : onlyFacetsNarrow && facetCts?.total != null ? facetCts.total
+    : onlyFacetsNarrow && histogram && histogram.length > 1 ? histogram.reduce((a, b) => a + b.n, 0)
+    : total
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (

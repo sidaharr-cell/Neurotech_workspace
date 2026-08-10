@@ -23,7 +23,14 @@ import {
  *   facets    { function:[], access:[], application:[] }   multi-select
  *   onChange  next facets object
  *   extras    [{ label, value, onChange, options:[{id,label}], allLabel }]  single-select
- *   counts    { function:{id:n}, ... } result counts; zero-count values are hidden
+ *   counts    { function:{id:n}, ... } per-value result counts, printed beside
+ *             each value; a zero-count value is hidden, so a reader can tell a
+ *             filter will return something before spending a click on it. Null
+ *             means "not counted", which is a different thing from zero: no
+ *             numbers are printed and nothing is hidden. Every page supplies
+ *             these — from one grouped query where the results are paginated
+ *             server-side, and from the loaded list where they are not (see
+ *             facetCounts in lib/data.js and countFacets in lib/facets.js).
  *   histogram [{label,n}] results by year, shown inside a Year dropdown
  *   year      the selected histogram bucket, and onYear(bucket|null)
  *   sort      the Sort control, pinned to the right end of the bar

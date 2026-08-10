@@ -5,7 +5,7 @@ import { getPapers, getDevices, getOrganizations, getResearchers } from '../lib/
 import { Loader, EmptyState, Kicker, typeWord } from '../components/ui'
 import { DetailPanel } from '../components/Directory'
 import FilterBar, { NO_FACETS } from '../components/FilterBar'
-import { entityMatchesFacets } from '../lib/facets'
+import { entityMatchesFacets, countFacets } from '../lib/facets'
 import { slugify } from '../lib/links'
 
 // People excluded from default scope (opt-in only).
@@ -58,14 +58,23 @@ export default function SearchPage() {
     return () => { alive = false }
   }, [])
 
-  const results = useMemo(() => {
+  // Everything the scope and the search term allow, before any facet is applied.
+  // The facet counts are taken from this, so they answer "how many of MY results
+  // does this value hold" rather than "how many exist in the index".
+  const candidates = useMemo(() => {
     const types = SCOPES.find(s => s.id === scope).types
     let list = all.filter(e => types.includes(e._type))
     const q = query.toLowerCase().trim()
     if (q) list = list.filter(e => JSON.stringify(e).toLowerCase().includes(q))
-    list = list.filter(e => entityMatchesFacets(e, facets))
-    return list.slice(0, 100)
-  }, [all, scope, query, facets])
+    return list
+  }, [all, scope, query])
+
+  const facetCts = useMemo(() => countFacets(candidates, facets), [candidates, facets])
+
+  const results = useMemo(
+    () => candidates.filter(e => entityMatchesFacets(e, facets)).slice(0, 100),
+    [candidates, facets],
+  )
 
   const submit = e => { e.preventDefault(); setParams(input.trim() ? { q: input.trim() } : {}) }
 
@@ -95,7 +104,7 @@ export default function SearchPage() {
       </div>
 
       <div className="border-b border-rule mb-6">
-        <FilterBar facets={facets} onChange={setFacets} />
+        <FilterBar facets={facets} onChange={setFacets} counts={facetCts} />
       </div>
 
       <div>

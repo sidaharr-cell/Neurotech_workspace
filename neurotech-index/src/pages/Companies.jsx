@@ -90,13 +90,18 @@ export default function Companies() {
     return () => { alive = false }
   }, [])
 
-  // Per-facet-value counts, scoped to the current organization type.
+  // Per-facet-value counts, scoped to the current organization type. They
+  // reflect facets and scope only, so they are hidden during a text search
+  // rather than printed beside results the search has already narrowed.
   useEffect(() => {
     let alive = true
-    facetCounts({ table: 'organizations', facets, extraFilter: q => q.eq('type', kind) })
+    if (query.trim()) { setFacetCts(null); return }
+    // includeOutOfScope matches searchLabs/searchCompanies: organizations that
+    // abstain are unclassified, not off topic, and the gate would hide them.
+    facetCounts({ table: 'organizations', facets, kind, includeOutOfScope: true })
       .then(c => { if (alive) setFacetCts(c) })
     return () => { alive = false }
-  }, [facets, kind])
+  }, [facets, kind, query])
 
   useEffect(() => {
     clearTimeout(debounce.current)
