@@ -4,7 +4,8 @@ import { Search, SearchX } from 'lucide-react'
 import { getPapers, getDevices, getOrganizations, getResearchers } from '../lib/data'
 import { Loader, EmptyState, Kicker, typeWord } from '../components/ui'
 import { DetailPanel } from '../components/Directory'
-import FilterBar, { NO_FACETS } from '../components/FilterBar'
+import FilterBar from '../components/FilterBar'
+import { useUrlFacets } from '../lib/useUrlFacets'
 import { entityMatchesFacets, countFacets } from '../lib/facets'
 import { slugify } from '../lib/links'
 
@@ -46,7 +47,7 @@ export default function SearchPage() {
   const [all, setAll] = useState([])
   const [loading, setLoading] = useState(true)
   const [scope, setScope] = useState('all')
-  const [facets, setFacets] = useState(NO_FACETS)
+  const [facets, setFacets] = useUrlFacets()
   const [selected, setSelected] = useState(null)
 
   useEffect(() => { setInput(query) }, [query])
@@ -76,7 +77,19 @@ export default function SearchPage() {
     [candidates, facets],
   )
 
-  const submit = e => { e.preventDefault(); setParams(input.trim() ? { q: input.trim() } : {}) }
+  // Edit the params rather than replace them. The facets live in this same query
+  // string now, so the old wholesale `{ q: term }` cleared the filter every time
+  // a term was submitted.
+  const submit = e => {
+    e.preventDefault()
+    setParams(prev => {
+      const p = new URLSearchParams(prev)
+      const term = input.trim()
+      if (term) p.set('q', term)
+      else p.delete('q')
+      return p
+    })
+  }
 
   return (
     <div className="page-wide py-8">
