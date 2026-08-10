@@ -114,6 +114,20 @@ everywhere: one closed line of dropdowns carrying the three facet groups plus wh
 single-select `extras` a page adds, per-value `counts`, and a `histogram`
 (the results-by-year bars, which live inside a Year dropdown).
 
+**A facet selection lives in the URL on every surface, and survives navigation.**
+`useUrlFacets` backs all seven (`?fn=&ax=&app=`, repeated keys for OR within a facet);
+none of them keep facets in component state any more. `facetSearch` in the same file
+extracts just those three params, and the masthead's Home and topic links plus the home
+page's rail links hang the result on their `to`, so a reader who narrows the front page
+and opens Trials stays narrowed. **Only the three facets travel.** They are the one
+vocabulary every page shares, so a value means the same thing wherever it lands; the
+single-select extras must not be carried, because recency is `week|month|year` on the
+feed and `y1|y3|y10` on research and carrying it would set a filter the destination
+cannot read. The search term does not travel either. A carried value with nothing behind
+it still renders as selected with Clear all beside it — `FilterBar` never hides a chosen
+value, so a filter cannot be set with no way to unset it. The wordmark is the deliberate
+exception and goes to `/` plain: it is the one gesture that drops a filter.
+
 **Every filter surface carries counts** — the seven are `/`, `/media`, `/research`,
 `/trials`, `/companies`, `/devices`, `/search` — because a value that would return
 nothing should not cost a click to discover. A count sits beside each value and a

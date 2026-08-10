@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
 import { getNewsFeed, recencyCutoffISO, searchTrials, getRecentClearances, getRecentFundingRounds } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { Loader, EmptyState, Kicker, Byline, RuleHeading, InfoTip, fmtDate, typeWord } from './ui'
 import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
-import FilterBar, { NO_FACETS } from './FilterBar'
+import FilterBar from './FilterBar'
+import { useUrlFacets, facetSearch } from '../lib/useUrlFacets'
 import { StoryFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
 import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
 import { assignImages, leadPicture } from '../lib/image'
@@ -269,10 +270,15 @@ export default function MagazineFeed() {
   const [trials, setTrials] = useState([])
   const [clearances, setClearances] = useState([])
   const [rounds, setRounds] = useState([])
-  const [facets, setFacets] = useState(NO_FACETS)
+  // In the URL, not in component state, so the selection survives the trip into
+  // a topic page — the rails below and the masthead's topic menu hang it on
+  // their links. It also makes a narrowed front page shareable, which is what
+  // the topic pages already got from this hook.
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [type, setType] = useState(null)
   const [sort, setSort] = useState('relevant')
+  const carry = facetSearch(useLocation().search)
 
   useEffect(() => {
     let alive = true
@@ -450,7 +456,7 @@ export default function MagazineFeed() {
           {showSections && (
             <div className="grid lg:grid-cols-2 gap-x-10 gap-y-10 mt-12">
               {notablePapers.length > 0 && (
-                <Rail title="Notable research" note="Highest field-normalized citation impact, past 90 days" tip={<NotableTip />} to="/research" linkLabel="All research">
+                <Rail title="Notable research" note="Highest field-normalized citation impact, past 90 days" tip={<NotableTip />} to={`/research${carry}`} linkLabel="All research">
                   {notablePapers.map((p, i) => (
                     <RecordRow
                       key={p.doi || p.pmid || i}
@@ -473,7 +479,7 @@ export default function MagazineFeed() {
               )}
 
               {trials.length > 0 && (
-                <Rail title="In the clinic" note="Registered on ClinicalTrials.gov" to="/trials" linkLabel="All trials">
+                <Rail title="In the clinic" note="Registered on ClinicalTrials.gov" to={`/trials${carry}`} linkLabel="All trials">
                   {trials.map(t => {
                     const m = t.metadata || {}
                     return (
@@ -492,7 +498,7 @@ export default function MagazineFeed() {
               )}
 
               {rounds.length > 0 && (
-                <Rail title="Funding" note="Private capital from SEC Form D filings" to="/companies" linkLabel="All companies">
+                <Rail title="Funding" note="Private capital from SEC Form D filings" to={`/companies${carry}`} linkLabel="All companies">
                   {rounds.map(r => (
                     <RecordRow
                       key={r.id}
@@ -507,7 +513,7 @@ export default function MagazineFeed() {
               )}
 
               {clearances.length > 0 && (
-                <Rail title="FDA decisions" note="From the openFDA device database" to="/devices" linkLabel="All devices">
+                <Rail title="FDA decisions" note="From the openFDA device database" to={`/devices${carry}`} linkLabel="All devices">
                   {clearances.map(d => (
                     <RecordRow
                       key={d.id}

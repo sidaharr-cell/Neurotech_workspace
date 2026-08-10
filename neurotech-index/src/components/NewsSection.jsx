@@ -4,7 +4,8 @@ import { getNewsFeed, recencyCutoffISO } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { SectionHeading, Loader, EmptyState } from './ui'
 import FilterSelect, { RECENCY_DATE, SORT_SIGNIF } from './Filters'
-import FilterBar, { NO_FACETS } from './FilterBar'
+import FilterBar from './FilterBar'
+import { useUrlFacets } from '../lib/useUrlFacets'
 import NewsList from './NewsList'
 import { entityMatchesFacets, countFacets } from '../lib/facets'
 
@@ -15,7 +16,10 @@ import { entityMatchesFacets, countFacets } from '../lib/facets'
 export default function NewsSection({ kicker, title, sub, entryTypes = null, lead = true, emptyHint }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [facets, setFacets] = useState(NO_FACETS)
+  // In the URL, so a selection made elsewhere survives the trip here and one
+  // made here survives the trip out. One NewsSection to a page (Media is the
+  // only caller) — two would share the one set of params and fight over it.
+  const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [outlet, setOutlet] = useState(null)
   const [sort, setSort] = useState('relevant')
