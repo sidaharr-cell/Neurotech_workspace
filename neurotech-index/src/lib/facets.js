@@ -226,6 +226,44 @@ export function entityMatchesFacets(e, facets = {}) {
 }
 
 /**
+ * Client-side per-facet-value counts, the in-memory twin of facetCounts in
+ * data.js. For each value of each dimension, how many of `items` would remain if
+ * that value were added to the selection, holding the OTHER two dimensions'
+ * current selections fixed. Returns { function:{}, access:{}, application:{},
+ * total }, every offered value present, zero included — a zero is what lets the
+ * bar hide the value, so it has to be stated rather than omitted. `total` is the
+ * size of the current selection, carried so this returns the same shape as
+ * facetCounts in data.js and the two cannot drift apart.
+ *
+ * The pages that use this (the feed, Media, search) hold their whole result set
+ * in memory and filter it there, so unlike the server-side counts these can be
+ * exact about EVERY filter: pass the list with the page's other filters (search
+ * text, recency, outlet, type) already applied and the numbers answer the
+ * question the reader is actually asking.
+ */
+export function countFacets(items = [], facets = {}) {
+  const dims = { function: FUNCTION, access: ACCESS, application: APPLICATION }
+  const arr = v => (Array.isArray(v) ? v : v ? [v] : [])
+  const sel = { function: arr(facets.function), access: arr(facets.access), application: arr(facets.application) }
+  const out = { function: {}, access: {}, application: {}, total: 0 }
+  for (const dim of Object.keys(dims)) {
+    for (const v of dims[dim]) if (v !== 'none' && v !== 'not_applicable') out[dim][v] = 0
+  }
+  const matches = (have, d) => !sel[d].length || sel[d].some(v => have[d].includes(v))
+  for (const item of items) {
+    const have = facetsOfEntity(item)
+    if (Object.keys(dims).every(d => matches(have, d))) out.total += 1
+    for (const dim of Object.keys(dims)) {
+      // Hold the other dimensions fixed; the counted one is left free.
+      const others = Object.keys(dims).filter(d => d !== dim)
+      if (!others.every(d => matches(have, d))) continue
+      for (const v of have[dim]) if (v in out[dim]) out[dim][v] += 1
+    }
+  }
+  return out
+}
+
+/**
  * Short badges for a card: the derived BCI / Closed-loop badges first (they are
  * the most informative), then function labels, then applications — de-duped and
  * capped. Reads only stored columns; computes nothing.

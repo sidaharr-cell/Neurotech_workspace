@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, FlaskConical, ChevronLeft, ChevronRight, ExternalLink, Activity } from 'lucide-react'
-import { searchTrials, yearHistogram, getRecentTrialChanges, getTrialSponsors } from '../lib/data'
+import { searchTrials, yearHistogram, facetCounts, getRecentTrialChanges, getTrialSponsors } from '../lib/data'
 import { SectionHeading, Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate } from '../components/ui'
 import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, withPotentialImpact } from '../components/Filters'
 import FilterBar from '../components/FilterBar'
@@ -97,6 +97,7 @@ export default function Trials() {
   const [{ rows, total }, setResult] = useState({ rows: [], total: 0 })
   const [loading, setLoading] = useState(true)
   const [histogram, setHistogram] = useState(null)
+  const [facetCts, setFacetCts] = useState(null)
   const [year, setYear] = useState(null)
   const [changes, setChanges] = useState([])
   const [sponsors, setSponsors] = useState({})
@@ -130,8 +131,26 @@ export default function Trials() {
     return () => { alive = false }
   }, [facets, query])
 
-  const histReflectsResults = histogram && histogram.length > 1 && !query.trim() && !year && !recency && !phase && !status
-  const shownTotal = histReflectsResults ? histogram.reduce((a, b) => a + b.n, 0) : total
+  // Per-facet-value counts, on the same terms as the histogram: facets and scope
+  // only, hidden during a text search. Trials share news_feed with the press
+  // items, so the count is scoped to entry_type='trial' the way searchTrials is.
+  useEffect(() => {
+    let alive = true
+    if (query.trim()) { setFacetCts(null); return }
+    facetCounts({ table: 'news_feed', facets, kind: ['trial'] })
+      .then(c => { if (alive) setFacetCts(c) })
+    return () => { alive = false }
+  }, [facets, query])
+
+  // searchTrials counts `exact` and scopes to entry_type='trial', so its own
+  // total is right for every filter this page offers, and nothing here needs a
+  // fallback. It used to print the year histogram's bucket sum instead, which
+  // was wrong twice over: the histogram reads the whole news_feed table, so it
+  // counted press items as trials, and it drops any row it cannot place in a
+  // year it emits — on a facet of 155 trials it printed 152, losing one undated
+  // record and two dated 2027. The facet count agrees with this independently,
+  // which is the check that it is right.
+  const shownTotal = total
   const pages = Math.ceil(shownTotal / PAGE_SIZE)
 
   return (
@@ -158,6 +177,7 @@ export default function Trials() {
           histogram={histogram}
           year={year}
           onYear={setYear}
+          counts={facetCts}
           sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={withPotentialImpact(SORT_TRIALS, 'trial')} required />}
           extras={[
             { label: 'Phase', value: phase, onChange: setPhase, options: TRIAL_PHASE, allLabel: 'All phases' },

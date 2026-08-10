@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { NavLink, Link, Outlet, useLocation } from 'react-router-dom'
 import { ChevronDown, Search, Menu, X, Cog, Star } from 'lucide-react'
+import { facetSearch } from '../lib/useUrlFacets'
 
 const TOPICS = [
   { to: '/trials', label: 'Clinical Trials' },
@@ -9,6 +10,29 @@ const TOPICS = [
   { to: '/media', label: 'Media' },
   { to: '/research', label: 'Research' },
 ]
+
+/**
+ * Topic links carry whatever facets are set on the page you are leaving, so a
+ * reader who narrows the front page to implanted BCIs and opens Trials stays
+ * narrowed instead of arriving somewhere unfiltered with no sign their filter
+ * was dropped.
+ *
+ * This menu is on every page, so the carry is not special-cased to the home
+ * page: the facets mean the same thing on all six surfaces, and a filter that
+ * survived one hop and silently died on the next would be worse than one that
+ * never survived at all. A value with nothing behind it on the destination is
+ * still shown as selected, with Clear all beside it — FilterBar never hides a
+ * value that is chosen, precisely so a filter cannot be set with no way to
+ * unset it.
+ */
+function useTopicLinks() {
+  const { search } = useLocation()
+  const carry = facetSearch(search)
+  // Home carries too. It is a destination in this same nav row, and a filter
+  // that survives every hop except the one back to the front page is a filter
+  // the reader has to rebuild for no reason they could predict.
+  return { carry, home: `/${carry}`, topics: TOPICS.map(t => ({ ...t, href: `${t.to}${carry}` })) }
+}
 
 // Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).
 //
@@ -41,6 +65,7 @@ function TopicsDropdown() {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const loc = useLocation()
+  const { topics } = useTopicLinks()
   useOutsideClose(ref, () => setOpen(false))
   useEffect(() => { setOpen(false) }, [loc.pathname])
 
@@ -57,10 +82,10 @@ function TopicsDropdown() {
       </button>
       {open && (
         <div className="absolute left-0 top-full z-50 w-64 bg-paper border border-rule shadow-lg rounded-sm py-1.5 animate-slide-down">
-          {TOPICS.map(t => (
+          {topics.map(t => (
             <NavLink
               key={t.to}
-              to={t.to}
+              to={t.href}
               className={({ isActive }) => `block px-4 py-2 font-serif text-[15px] text-ink hover:bg-canvas transition-colors ${isActive ? 'bg-canvas' : ''}`}
             >
               {t.label}
@@ -74,7 +99,7 @@ function TopicsDropdown() {
 
 function Masthead() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const navigate = useNavigate()
+  const { topics, home } = useTopicLinks()
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
   const navLink = ({ isActive }) =>
@@ -86,6 +111,10 @@ function Masthead() {
       <div className="page-wide">
         <div className="grid grid-cols-3 items-center py-4">
           <div className="hidden sm:block text-[12px] text-muted font-sans">{today}</div>
+          {/* The wordmark stays uncarried while the nav's Home link carries.
+              It is the masthead, so it goes to the front page plain, and that
+              makes it the one gesture that drops a filter without hunting for
+              Clear all. */}
           <Link to="/" className="col-span-2 sm:col-span-1 justify-self-start sm:justify-self-center">
             <Wordmark />
           </Link>
@@ -106,7 +135,7 @@ function Masthead() {
       {/* Nav bar (Search intentionally omitted — it lives top-right) */}
       <div className="border-t border-rule hidden sm:block">
         <nav className="page-wide flex items-center gap-7">
-          <NavLink to="/" end className={navLink}>Home</NavLink>
+          <NavLink to={home} end className={navLink}>Home</NavLink>
           <TopicsDropdown />
         </nav>
       </div>
@@ -114,8 +143,8 @@ function Masthead() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="sm:hidden border-t border-rule px-4 py-3 space-y-1">
-          <MobileLink to="/" label="Home" onClick={() => setMobileOpen(false)} />
-          {TOPICS.map(t => <MobileLink key={t.to} to={t.to} label={t.label} onClick={() => setMobileOpen(false)} />)}
+          <MobileLink to={home} label="Home" onClick={() => setMobileOpen(false)} />
+          {topics.map(t => <MobileLink key={t.to} to={t.href} label={t.label} onClick={() => setMobileOpen(false)} />)}
           <MobileLink to="/watchlist" label="Watchlist" onClick={() => setMobileOpen(false)} />
           <MobileLink to="/search" label="Search" onClick={() => setMobileOpen(false)} />
         </div>
@@ -128,7 +157,9 @@ function MobileLink({ to, label, onClick }) {
   return (
     <NavLink
       to={to}
-      end={to === '/'}
+      // Home now arrives here as '/' or '/?fn=…', and without `end` a bare '/'
+      // prefix-matches every route, which lights Home up on all of them.
+      end={to === '/' || to.startsWith('/?')}
       onClick={onClick}
       className={({ isActive }) => `block py-2 font-sans text-[14px] font-semibold uppercase tracking-[0.08em] ${isActive ? 'text-accent' : 'text-ink'}`}
     >

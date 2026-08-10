@@ -111,9 +111,56 @@ APPLICATION — stored as `text[]` columns with GIN indexes and stamped with
 pages read the stored columns. `src/lib/classify.js` applies it and `applyFacets` in
 `data.js` filters (OR within a facet, AND across facets). `FilterBar.jsx` is the UI
 everywhere: one closed line of dropdowns carrying the three facet groups plus whatever
-single-select `extras` a page adds, and optionally per-value `counts` and a `histogram`
-(the results-by-year bars, which live inside a Year dropdown). `FacetSidebar.jsx` is
-the open left rail it replaced and **is no longer imported by anything** — it held the
+single-select `extras` a page adds, per-value `counts`, and a `histogram`
+(the results-by-year bars, which live inside a Year dropdown).
+
+**A facet selection lives in the URL on every surface, and survives navigation.**
+`useUrlFacets` backs all seven (`?fn=&ax=&app=`, repeated keys for OR within a facet);
+none of them keep facets in component state any more. `facetSearch` in the same file
+extracts just those three params, and the masthead's Home and topic links plus the home
+page's rail links hang the result on their `to`, so a reader who narrows the front page
+and opens Trials stays narrowed. **Only the three facets travel.** They are the one
+vocabulary every page shares, so a value means the same thing wherever it lands; the
+single-select extras must not be carried, because recency is `week|month|year` on the
+feed and `y1|y3|y10` on research and carrying it would set a filter the destination
+cannot read. The search term does not travel either. A carried value with nothing behind
+it still renders as selected with Clear all beside it — `FilterBar` never hides a chosen
+value, so a filter cannot be set with no way to unset it. The wordmark is the deliberate
+exception and goes to `/` plain: it is the one gesture that drops a filter.
+
+**Every filter surface carries counts** — the seven are `/`, `/media`, `/research`,
+`/trials`, `/companies`, `/devices`, `/search` — because a value that would return
+nothing should not cost a click to discover. A count sits beside each value and a
+zero-count value is hidden. `null` counts mean "not counted", which is a different thing
+from zero: nothing is printed and nothing is hidden, and it is what a page falls back to
+rather than show a number it cannot stand behind. Where the results are paginated
+server-side the numbers come from `facetCounts` in `data.js` — ONE grouped `facet_counts`
+RPC (migration 017) answered entirely from a covering index, because a count per value is
+not affordable on papers, where a single facet-filtered count already exceeds the
+statement timeout. Those counts reflect facets, kind, and the scope gate only, so the
+pages hide them during a text search rather than print numbers the results would not
+honour, which is the rule the histogram already followed. Where the page holds its
+results in memory (the feed, Media, search) `countFacets` in `facets.js` counts them
+there, and can be exact about every other control as well. Two invariants: a count holds
+the OTHER dimensions' selections fixed and leaves its own free, or a reader could never
+see what switching within a dimension would give them; and it applies the same scope gate
+as the search it describes — `includeOutOfScope` for organizations, which abstain rather
+than fall out of scope, and the `canonical_id` dedup gate for papers, whose search hides
+rows merged into a canonical version.
+
+**The same query returns the exact total**, and that is what the pages print as
+"N results". Both numbers they printed before were wrong. `searchPapers` and
+`searchPatents` count `estimated` — a planner guess, measured 25-28% low — because an
+exact count over the fat tables used to exceed the statement timeout, which the covering
+index is what fixes. The year histogram's bucket sum, used as the total where the
+estimate was too coarse, is exact only for rows it can PLACE: an unparseable year, or one
+outside the buckets it emits, is counted nowhere, and on Trials it read the whole
+`news_feed` table, so it counted press items as trials. That page printed 152 for a facet
+holding 155. Order of preference per page: the exact count, then the histogram sum where
+the search's own count is an estimate (so a database without migration 017 degrades to
+the old number, not to the estimate), then the search count. Where the search already
+counts `exact` — devices, trials, organizations — its total is simply used.
+`FacetSidebar.jsx` is the open left rail it replaced and **is no longer imported by anything** — it held the
 same controls permanently expanded down a 240px column, which on pages thousands of
 pixels tall left a rail of nothing beside most of the content and took a fifth of the
 width from the results to do it.
