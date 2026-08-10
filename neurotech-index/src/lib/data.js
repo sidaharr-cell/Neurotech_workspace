@@ -60,39 +60,118 @@ function applyFacets(q, facets = {}, includeOutOfScope = false) {
 // Facet columns every card needs to render its badges.
 const FACET_COLS = 'facet_function,facet_access,facet_application,in_scope'
 
-// ── Per-facet-value result counts (Phase 4) ─────────────────────────────────
+// ── Per-facet-value result counts ───────────────────────────────────────────
 const FACET_DIMS = { function: FUNCTION, access: ACCESS, application: APPLICATION }
 const FACET_COL = { function: 'facet_function', access: 'facet_access', application: 'facet_application' }
-// Only the lean tables get live per-value counts. The papers and patents tables
-// are fat (a facet-filtered count already times out on them, see the year
-// histogram note), so counting ~23 values would be slow and flaky there; the
-// sidebar simply shows no counts and hides nothing in that case.
-const COUNTABLE_TABLES = new Set(['devices', 'organizations'])
+// The tables the `facet_counts` RPC knows how to read (migration 017). Anything
+// else returns null and the bar shows no counts.
+const COUNTABLE_TABLES = new Set(['papers', 'devices', 'patents', 'news_feed', 'organizations'])
+// The two tables lean enough to count a value at a time, which is the fallback
+// while migration 017 is unapplied. papers and patents are not on this list and
+// cannot be: a single facet-filtered count over papers already exceeds the
+// statement timeout, so 23 of them is not a slow answer but no answer.
+const PER_VALUE_TABLES = new Set(['devices', 'organizations'])
+// Never offered as a filter, so never worth a count.
+const SENTINELS = new Set(['none', 'not_applicable'])
 
 /**
  * For each value of each facet dimension, count in-scope rows that would match
  * if that value were selected, holding the OTHER dimensions' current selections
  * fixed (standard faceted counts, so a user sees what adding a value yields).
- * Returns { function:{value:n}, access:{...}, application:{...} } or null when
- * the table is not countable or any count fails (the UI then hides counts).
- * `extraFilter(q)` applies a page-specific constraint (for example org type).
+ *
+ * Returns { function:{value:n}, access:{...}, application:{...}, total }, or null
+ * when the counts cannot be had exactly — an unknown table, no Supabase, or a
+ * failed query. Null means "no counts", not "zero": the bar then prints no
+ * numbers and hides nothing, which is the right answer for a number it cannot
+ * stand behind.
+ *
+ * `total` is the exact size of the CURRENT selection. The pages print it as
+ * "N results" whenever nothing outside this function narrows them, because both
+ * numbers they printed before were wrong: searchPapers and searchPatents count
+ * `estimated`, which measured 25-28% low, and the year histogram's bucket sum
+ * drops every row it cannot place in a year it emits.
+ *
+ * One grouped query does the whole thing (`facet_counts`, migration 017). While
+ * that migration is unapplied the RPC is missing, and the two lean tables fall
+ * back to the older value-at-a-time counts so nothing that works today stops.
+ *
+ * `kind` narrows the two tables that hold two collections each: news_feed by
+ * entry_type ('trial', 'news'), organizations by type ('company', 'lab').
+ *
+ * `includeOutOfScope` must match the search the counts describe — searchLabs and
+ * searchCompanies pass it, because an organization that abstains is unclassified
+ * rather than off topic. A count gated where its search is not is a promise the
+ * results do not keep.
+ *
+ * What the counts DO NOT reflect: the free-text search box and the single-select
+ * extras (recency, phase, FDA route, ...). Same contract as yearHistogram — the
+ * pages hide the counts while a text search is running rather than print numbers
+ * the results would not honour.
  */
-export async function facetCounts({ table = 'devices', facets = {}, extraFilter = null } = {}) {
+export async function facetCounts({ table = 'devices', facets = {}, kind = null, includeOutOfScope = false } = {}) {
   if (!supabase || !COUNTABLE_TABLES.has(table)) return null
+  const { data, error } = await supabase.rpc('facet_counts', {
+    p_table: table,
+    p_fn: arr(facets.function),
+    p_ax: arr(facets.access),
+    p_ap: arr(facets.application),
+    p_kind: arr(kind),
+    p_all_scopes: includeOutOfScope,
+  })
+  if (!error && data) {
+    const out = { function: {}, access: {}, application: {}, total: null }
+    // A value the RPC does not mention has no rows. Seed every value at zero so
+    // the bar can tell "none of these" from "not counted", and hide it.
+    for (const dim of Object.keys(FACET_DIMS)) {
+      for (const val of FACET_DIMS[dim]) if (!SENTINELS.has(val)) out[dim][val] = 0
+    }
+    for (const r of data) {
+      if (r.dim === 'total') { out.total = Number(r.n) || 0; continue }
+      if (out[r.dim] && !SENTINELS.has(r.val)) out[r.dim][r.val] = Number(r.n) || 0
+    }
+    return out
+  }
+  console.warn(`facetCounts(${table}): the grouped count failed —`, error?.message || 'no rows returned')
+  return perValueFacetCounts({ table, facets, kind, includeOutOfScope })
+}
+
+/**
+ * The pre-017 fallback: one exact head-count per facet value. Only the lean
+ * tables can afford 23 round trips, and only they are allowed to try.
+ */
+async function perValueFacetCounts({ table, facets, kind, includeOutOfScope }) {
+  if (!PER_VALUE_TABLES.has(table)) return null
+  const kindCol = table === 'organizations' ? 'type' : table === 'news_feed' ? 'entry_type' : null
+  const kinds = arr(kind)
   const sel = k => arr(facets[k])
-  const out = { function: {}, access: {}, application: {} }
+  const out = { function: {}, access: {}, application: {}, total: null }
+  const gate = q => {
+    if (!includeOutOfScope) q = q.eq('in_scope', true)
+    if (kindCol && kinds.length) q = q.in(kindCol, kinds)
+    return q
+  }
   const tasks = []
+  // The total, on the same terms as the RPC's: every dimension applied.
+  tasks.push((async () => {
+    let q = gate(supabase.from(table).select('*', { count: 'exact', head: true }))
+    for (const [dim, col] of Object.entries(FACET_COL)) {
+      const s = sel(dim)
+      if (s.length) q = q.overlaps(col, s)
+    }
+    const { count, error } = await q
+    if (error) throw error
+    out.total = count ?? 0
+  })())
   for (const dim of Object.keys(FACET_DIMS)) {
     for (const val of FACET_DIMS[dim]) {
-      if (val === 'none' || val === 'not_applicable') continue
+      if (SENTINELS.has(val)) continue
       tasks.push((async () => {
-        let q = supabase.from(table).select('*', { count: 'exact', head: true }).eq('in_scope', true)
+        let q = gate(supabase.from(table).select('*', { count: 'exact', head: true }))
         for (const other of Object.keys(FACET_COL)) {
           if (other === dim) continue        // count this dimension's values freely
           const s = sel(other)
           if (s.length) q = q.overlaps(FACET_COL[other], s)
         }
-        if (extraFilter) q = extraFilter(q)
         q = q.overlaps(FACET_COL[dim], [val])
         const { count, error } = await q
         if (error) throw error

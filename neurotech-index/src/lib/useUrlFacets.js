@@ -41,3 +41,33 @@ export function useUrlFacets() {
 
   return [facets, setFacets]
 }
+
+/**
+ * The facet part of a query string, as a `?…` suffix to hang on a link, or ''
+ * when nothing is selected.
+ *
+ * This is what carries a selection from one page to the next: the reader who
+ * narrowed the front page to implanted BCIs and then opened Trials meant to stay
+ * narrowed, and used to arrive at an unfiltered page with no sign their filter
+ * had been dropped.
+ *
+ * ONLY the three facets travel, and that is the whole point rather than a
+ * shortcut. They are the one vocabulary every page shares (src/lib/facets.js),
+ * so a value means the same thing wherever it lands. The single-select extras do
+ * not survive the trip and must not be carried: every page names its own, and
+ * the ones that look common are not. Recency is 'week' | 'month' | 'year' on the
+ * feed and 'y1' | 'y3' | 'y10' on research, so carrying it across would set a
+ * filter to a value the destination cannot read.
+ *
+ * The search box does not travel either. A term typed to find one paper is not a
+ * standing filter, and `q` means something different on every page that has one.
+ */
+const FACET_PARAMS = Object.values(KEYS)
+
+export function facetSearch(search) {
+  const from = new URLSearchParams(search)
+  const out = new URLSearchParams()
+  for (const param of FACET_PARAMS) for (const v of from.getAll(param)) out.append(param, v)
+  const s = out.toString()
+  return s ? `?${s}` : ''
+}
