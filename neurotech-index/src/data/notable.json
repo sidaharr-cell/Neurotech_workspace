@@ -23,7 +23,7 @@
     "fwci": 33.2321,
     "citedBy": 6,
     "relevance": 9,
-    "significance": "This work validates a critical milestone for neurotechnology: sustained, independent operation of an intracortical BCI outside clinical facilities. By demonstrating reliable speech and cursor control during long-term, unsupervised, at-home use, it provides evidence that implantable neural interfaces can achieve the durability, stability, and user-friendly operation required for clinical approval and patient adoption. This represents a landmark step toward practical BCI therapies for people with severe paralysis.",
+    "significance": "Most BCI demonstrations require users to return to the laboratory for setup, calibration, and monitoring, making clinical translation and practical utility questionable. This work reports the first case of a user independently operating an intracortical BCI at home for daily communication and cursor control, with high accuracy sustained over extended use. This landmark result directly addresses the viability question for intracortical BCIs and demonstrates that the technology can work in real-world contexts, a necessary step toward widespread clinical adoption.",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
@@ -34,7 +34,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 1280,
     "image_h": 853,
-    "image_checked_at": "2026-08-09T07:31:35.364Z"
+    "image_checked_at": "2026-08-10T08:17:13.361Z"
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
@@ -181,7 +181,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 1280,
     "image_h": 1855,
-    "image_checked_at": "2026-08-09T07:31:34.596Z",
+    "image_checked_at": "2026-08-10T08:17:12.521Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -221,7 +221,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 1280,
     "image_h": 468,
-    "image_checked_at": "2026-08-09T07:31:35.058Z",
+    "image_checked_at": "2026-08-10T08:17:13.020Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -404,42 +404,17 @@
     "significance": "This paper demonstrates that targeted electrical stimulation of deep spinal muscles can significantly improve chronic low back pain, mobility, and function in patients."
   },
   {
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
     "image_kind": "photo",
     "image_subject": "class",
-    "image_credit": "Mconnell",
-    "image_license": "CC BY 3.0",
-    "image_license_url": "https://creativecommons.org/licenses/by/3.0",
-    "image_source": "wikipedia",
-    "image_source_url": "https://en.wikipedia.org/wiki/Spinal%20cord%20stimulator",
-    "image_w": 966,
-    "image_h": 1362,
-    "image_checked_at": "2026-08-04T16:56:21.566Z",
-    "title": "Fundamental limitations of kilohertz-frequency carriers in afferent fibre recruitment with transcutaneous spinal cord stimulation.",
-    "authors": [
-      "Rodolfo Keesey",
-      "Ursula Hofstoetter",
-      "Zhaoshun Hu",
-      "Lorenzo Lombardi",
-      "Rachel Hawthorn",
-      "Noah Bryson",
-      "Abdallah Alashqar",
-      "Andreas Rowald",
-      "Karen Minassian",
-      "Ismael Seáñez"
-    ],
-    "journal": "Nature Biomedical Engineering",
-    "pmid": "42120752",
-    "doi": "10.1038/s41551-026-01684-w",
-    "url": "https://doi.org/10.1038/s41551-026-01684-w",
-    "publishedAt": "2026-05-12",
-    "pctile": 0.97915819,
-    "fwci": 9.5633,
-    "citedBy": 2,
-    "relevance": 7,
-    "significance": "This study reveals that kilohertz-frequency stimulation cannot selectively recruit proprioceptive fibers needed for motor recovery, challenging assumptions underlying current spinal cord stimulation therapies."
-  },
-  {
+    "image_credit": "Technophant",
+    "image_license": "CC BY-SA 4.0",
+    "image_license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "image_source": "commons",
+    "image_source_url": "https://commons.wikimedia.org/wiki/File:Basic_outpatient_TMS_setup_(cropped).jpg",
+    "image_w": 1280,
+    "image_h": 923,
+    "image_checked_at": "2026-08-09T07:31:32.321Z",
     "title": "Acute Perturbations of Whole-Brain and Triple-Network Connectivity During Low- Frequency-Right TMS for Treatment Resistant Depression.",
     "authors": [
       "Elizabeth Gregory",
@@ -459,17 +434,6 @@
     "fwci": 8.4188,
     "citedBy": 1,
     "relevance": 7,
-    "significance": "",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
-    "image_kind": "photo",
-    "image_subject": "class",
-    "image_credit": "Technophant",
-    "image_license": "CC BY-SA 4.0",
-    "image_license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-    "image_source": "commons",
-    "image_source_url": "https://commons.wikimedia.org/wiki/File:Basic_outpatient_TMS_setup_(cropped).jpg",
-    "image_w": 1280,
-    "image_h": 923,
-    "image_checked_at": "2026-08-09T07:31:32.321Z"
+    "significance": ""
   }
 ]
