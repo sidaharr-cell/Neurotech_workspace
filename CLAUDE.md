@@ -182,6 +182,116 @@ prestige) in `refresh.js`; `trialScore` in `trials.js`. Scores are stored in
 `papers.rank_score`, `organizations.rank_score`, `news_feed.relevance_score` (Claude's
 1–10 centrality) and `news_feed.metadata.rankScore`.
 
+**Feed retention is per entry type, and the two types mean different things.** A
+paper is in `news_feed` because it is NEW, and it graduates to the papers table
+and the notable rail once it stops being new, so it keeps a 7-day churn. News is
+the archive — `/media` is the only surface a press item ever appears on — so it
+keeps the 90-day `CONTENT_WINDOW_MS`, the same window the ingest uses to decide
+what is worth fetching. **Settled 10 Aug 2026:** one blanket 7-day delete over
+every non-trial row held the feed at THIRTY news items for weeks. Nothing was
+broken and nothing failed: the run ingested, scored and stored every night, then
+threw the week away, and no check looked at the table. `verify-cron` now has a
+floor per entry type plus a freshness check on the newest news item, because a
+feed that stopped ingesting looks identical to a healthy one by row count alone.
+Storage quotas are also per type (`NEWS_MAX`): one shared top-60 across papers
+and news was not a ranking decision but an artefact of two scorers writing
+different numbers onto the same 0-1 scale, and research won it every night.
+
+**Reads that slice must order server-side.** `getNewsFeed` took an unordered
+`limit(400)` and filtered `entry_type` in JavaScript, which survived only while
+every non-trial row fit inside the 400. A limit without an order is not a top-N,
+it is an arbitrary N, so the failure at scale would not have been an empty page —
+it would have been the wrong stories, silently. It orders by `published_at`
+(indexed) and applies the composite rank over the slice; ordering by
+`metadata->>rankScore` server-side would sort the whole table on an unindexed
+jsonb field.
+
+**Ingest gates deterministically before it pays a model.** `NEUROTECH_LEXICON` in
+`refresh.js` rejects the half of the candidate pool that is off topic in a way a
+regex can see, and it is deliberately generous: it decides what is worth a
+scoring call, not what is worth publishing — that judgement stays with the model
+and `RELEVANCE_FLOOR`. A false negative there is invisible, so err toward
+passing. Pictures are sourced *after* scoring (`enrichMediaImages`), for stored
+items only; sourcing one costs a scrape, a download and a vision call, and doing
+it up front spent most of that on items the relevance floor then discarded.
+News is scored without the `significance` paragraph — measured 10 Aug 2026 on
+Haiku 4.5, it is about half the cost of the whole run, and no news surface reads
+it (`ItemDetail` already falls back to the summary). Research keeps it, because
+there it is the body text of the notable rail.
+
+**Google News search RSS is ordered by relevance, not recency.** Ten queries
+return ~930 items and roughly two thirds of them are older than the 90-day
+window, so the recent slice is ~290, not ~930. Any estimate of how much a query
+set will yield has to apply the date filter, or it counts years of archive as if
+it were this week's news. Coverage therefore comes from asking MANY narrow
+questions, and from the regional editions (`hl`/`gl`/`ceid`), which rank each
+country's outlets first and return substantially different results for the same
+query.
+
+**A Google News URL cannot be illustrated, and that is the binding constraint on
+pictures.** Its `/rss/articles/CBMi…` payload is opaque — it does not base64-decode
+to a URL, following it lands on a JS page whose canonical points back at Google,
+and there is no meta-refresh. So no Open Graph scrape is possible and the reader
+clicks through a bounce. Measured 11 Aug 2026: 73% of rows with a direct publisher
+URL carry a picture against 7% of rows with an aggregator URL. Two consequences
+the pipeline is built around. Dedup keeps the copy that can be illustrated — an
+image first, then a direct URL, then arrival order — in `fetchMedia` and again in
+`dedupeFeedRows`, because the same story usually arrives from Google News *and*
+somewhere direct. And the general science desks in `CURATED_FEEDS` (Guardian, BBC,
+STAT, WIRED, Ars Technica, IEEE Spectrum, Medical Xpress, New Scientist) are there
+despite publishing little neurotech: what survives the gate arrives with a direct
+URL and a real image, which is worth more per item than anything else fetched.
+**GDELT matters for the same reason** — it returns a direct URL *and* an
+already-extracted `socialimage` — but it enforces one request per five seconds
+and punishes a burst with a long cooldown, so it is paced at ten seconds in the
+nightly run and twenty-five in the backfill, and abandons the pass after three
+consecutive throttles rather than spend six minutes proving the point.
+
+**`scripts/backfill-news.js` fills the archive; `refresh.js` maintains it.** The
+nightly job is a delta and is the wrong shape for filling an empty section: the
+archive needs far more queries than a delta justifies, and re-running the nightly
+job to get it re-scores the whole research side every pass at roughly triple the
+per-item cost of the news it is after. The backfill is dry-run by default, skips
+anything already in `news_feed` (matched on URL *and* normalised title, so a story
+held under a Google News wrapper is not bought again under the publisher's own
+URL), and meters every Anthropic call against `--budget`, checking BEFORE each
+request so the cap is never crossed rather than noticed afterwards.
+`--images-only` re-sources pictures for stored rows without touching scoring,
+which is what to run when the resolution floor moves.
+
+**The lexicon gate is the one step that discards silently**, so it has a test
+(`scripts/lexicon.test.js`) built from headlines earlier versions threw away, and
+it lives in `scripts/lib/lexicon.js` rather than in `refresh.js` so it can be
+tested without live credentials. Three classes of bug it has already had: bare
+compounds missing (`brain implant`, `brain chip` — only the hyphenated
+`brain-computer` was matched, which rejected the field's flagship coverage);
+**en dashes** (`brain–computer interface` is the standard academic form and
+`[- ]` does not match U+2013 — everything is dash-normalised before matching now);
+and trade abbreviations (`spinal cord stim tech`). Market-wire republishers are
+dropped by source, since they pass any lexicon that names companies and are never
+the story. Err toward passing: a false positive costs one scoring call and dies at
+`RELEVANCE_FLOOR`, a false negative is invisible forever.
+
+**Discussion forums are not press.** Reddit was added and removed the same day:
+most items are self-posts whose URL points at a comment thread rather than an
+article, and Reddit's Atom sets `<author><name>` to `/u/username`, which the
+parser prefers over the feed label — so thirteen redditors were briefly listed as
+outlets in a scientific news section.
+
+**`/media` is built from the home page's own components** (`LeadCard`, `StoryCard`,
+`RailRow`, `RuledGrid`, exported from `MagazineFeed.jsx`), not from a copy. A
+reader moving between the front page and a section should not feel they changed
+publications, and a shared component cannot drift the way a copied one does. The
+composition differs, though, and `src/lib/mediapage.js` holds it: the home page is
+a front page with a fixed 43-item budget across eight sections, while `/media` is
+a section archive with hundreds of items and a tail that pages rather than
+truncates. The tail keeps dense text rows on purpose — past the first twenty
+stories a reader is scanning for something specific, and a picture per row makes
+that slower. Cards run through `assignImages`, so a story with no picture of its
+own gets the best unused photograph in the reviewed pool for its technology,
+labelled "Illustration" with its credit; without it a page of BCI coverage runs
+the same conference photograph a dozen times.
+
 **Images are sourced, never generated.** `scripts/lib/images.js` resolves a picture
 for a record and returns it with its provenance: source, credit, licence, and the page
 the file is described on. `image_subject` says what the picture IS — `'item'` (a figure

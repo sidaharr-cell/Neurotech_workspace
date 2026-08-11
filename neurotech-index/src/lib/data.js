@@ -342,18 +342,37 @@ export async function getTrials() {
 
 export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   if (!supabase) return []
-  // Exclude trials at the query level — there are thousands of them and they
-  // have their own page; otherwise they'd crowd out the news items.
-  const { data, error } = await supabase.from('news_feed').select('*').neq('entry_type', 'trial').limit(400)
-  if (error) { console.warn('news_feed fetch error:', error.message); return [] }
 
-  let rows = data || []
-  if (entryTypes) rows = rows.filter(r => entryTypes.includes(r.entry_type))
+  // The type filter and the ordering both belong in the query, and the reason is
+  // that `limit` without `order` is not a top-N — it is an arbitrary N. This read
+  // used to take an unordered 400 rows and filter entry_type in JavaScript, which
+  // was survivable only while every non-trial row fit inside the 400: Media asked
+  // for news and got however many of the arbitrary 400 happened to be news.
+  // Postgres owes no ordering to an unordered limit, so the failure would not have
+  // been a visibly empty page — it would have been a page of the wrong stories,
+  // silently, and it would have arrived the moment the table grew.
+  //
+  // published_at, not rankScore: rankScore lives inside a jsonb blob with no index
+  // on it, so ordering by it server-side means a sort over the whole table. Recency
+  // is indexed and is the right first cut for a feed; the composite rank is applied
+  // below, over the slice, which is what the callers actually order by.
+  let q = supabase.from('news_feed').select('*')
+  if (entryTypes) q = q.in('entry_type', entryTypes)
+  // Trials are thousands of rows with their own page; they would crowd out
+  // everything else in any slice that included them.
+  else q = q.neq('entry_type', 'trial')
+
+  // Overfetch relative to `limit` so the rank re-sort below has something to
+  // choose from, and so the real-image tail is drawn from a real pool.
+  const { data, error } = await q
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .limit(Math.max(400, limit * 4))
+  if (error) { console.warn('news_feed fetch error:', error.message); return [] }
 
   // Order by the composite rank (relevance + engagement + recency) written by
   // refresh.js. Fall back to the raw AI score for any legacy rows.
   const rank = r => (r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10)
-  const sorted = rows.sort((a, b) => rank(b) - rank(a))
+  const sorted = (data || []).sort((a, b) => rank(b) - rank(a))
   const top = sorted.slice(0, limit)
   // Always surface real-image stories (they rank below papers) so the feed has
   // photos to feature; the UI decides how many to actually show.
