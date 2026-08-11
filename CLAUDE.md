@@ -182,12 +182,16 @@ prestige) in `refresh.js`; `trialScore` in `trials.js`. Scores are stored in
 `papers.rank_score`, `organizations.rank_score`, `news_feed.relevance_score` (Claude's
 1–10 centrality) and `news_feed.metadata.rankScore`.
 
-**Feed retention is per entry type, and the two types mean different things.** A
-paper is in `news_feed` because it is NEW, and it graduates to the papers table
-and the notable rail once it stops being new, so it keeps a 7-day churn. News is
-the archive — `/media` is the only surface a press item ever appears on — so it
-keeps the 90-day `CONTENT_WINDOW_MS`, the same window the ingest uses to decide
-what is worth fetching. **Settled 10 Aug 2026:** one blanket 7-day delete over
+**News is never deleted. Papers churn at 7 days.** A paper is in `news_feed`
+because it is NEW, and it graduates to the papers table and the notable rail once
+it stops being new, so ageing it out of the feed loses nothing. News is the
+archive — `/media` is the only surface a press item ever appears on — so a story
+that drops out of it is coverage the site no longer has. `/media` pages backwards
+through the whole record rather than holding a window, so there is no size at
+which old news becomes a problem to prune. `dedupeFeedRows` is the only thing
+that still removes a news row, and it collapses duplicate copies of one story
+rather than dropping a story. The `verify-cron` news floor therefore only ever
+moves up; a fall means something deleted rows it does not own. **Settled 10 Aug 2026:** one blanket 7-day delete over
 every non-trial row held the feed at THIRTY news items for weeks. Nothing was
 broken and nothing failed: the run ingested, scored and stored every night, then
 threw the week away, and no check looked at the table. `verify-cron` now has a
@@ -278,19 +282,52 @@ article, and Reddit's Atom sets `<author><name>` to `/u/username`, which the
 parser prefers over the feed label — so thirteen redditors were briefly listed as
 outlets in a scientific news section.
 
-**`/media` is built from the home page's own components** (`LeadCard`, `StoryCard`,
-`RailRow`, `RuledGrid`, exported from `MagazineFeed.jsx`), not from a copy. A
-reader moving between the front page and a section should not feel they changed
-publications, and a shared component cannot drift the way a copied one does. The
-composition differs, though, and `src/lib/mediapage.js` holds it: the home page is
-a front page with a fixed 43-item budget across eight sections, while `/media` is
-a section archive with hundreds of items and a tail that pages rather than
-truncates. The tail keeps dense text rows on purpose — past the first twenty
-stories a reader is scanning for something specific, and a picture per row makes
-that slower. Cards run through `assignImages`, so a story with no picture of its
-own gets the best unused photograph in the reviewed pool for its technology,
-labelled "Illustration" with its credit; without it a page of BCI coverage runs
-the same conference photograph a dozen times.
+**`/media` shows a story's OWN photograph or no photograph.** It does not use
+`assignImages` and must not: the reviewed class pool holds photographs of
+TECHNOLOGIES, so the same picture legitimately appears against any story about
+that technology — which is fine on a front page of fifteen mixed items and
+corrosive on a news archive. **Settled 11 Aug 2026:** a reader who recognises the
+home page's photograph on a news story has been handed a reason to doubt
+everything else on the page, and the credibility cost is worth more than the
+pictures. `ownPhoto` is `usableImage(item, { own: true })`, which also drops
+anything the vision pass marked `stock` and anything that is a logo. Of 97 stored
+news images, 36 were class assignments, 26 logos and 19 stock; ~16 are genuine
+publisher photographs, and that is what the page renders. The layout is built for
+that ratio: no picture frame is rendered at all when there is nothing to put in
+it, because a fixed grid of card frames standing two thirds empty looks broken in
+a way that a text row does not.
+
+**`/media` is a paged archive, not a front page.** Reverse chronological, forty to
+a page, ordered and counted by the database (`searchNews` in `data.js`) the same
+way `/research` and `/trials` do it — an archive that grows without bound cannot
+have its page 9 answered from an in-memory slice. Ordering is `published_at`
+(indexed); `metadata->>rankScore` is deliberately not used for server-side sort
+because it lives in jsonb with no index. Stories are grouped under date headings,
+which is what makes a reverse-chronological list scannable.
+
+**Free source availability, checked 11 Aug 2026.** X/Twitter has no free read
+path: `api.twitter.com/2` needs a paid key, the syndication widget rate-limits,
+and the surviving nitter instances answer 200 with an empty body. Reddit blocks
+unauthenticated reads (403/429) — `fetchReddit` in the backfill is written to
+extract the *linked article* from each post and attribute it to the publisher's
+domain, never to Reddit or a redditor, but it currently contributes nothing.
+Press releases come from Google News scoped to the wire domains
+(`site:prnewswire.com OR site:businesswire.com OR site:globenewswire.com`), which
+returns 100 announcements per query against 20 from any single wire's own subject
+feed; PR Newswire and GlobeNewswire subject feeds are also in `CURATED_FEEDS`.
+Business Wire is absent because its documented feed IDs answer 200 with an empty
+body.
+
+**The backfill upgrades rows it already holds.** "Already stored" decides whether
+to SCORE something, not whether to ignore it: the same story arrives under several
+URLs, and which copy arrived first decides whether the row has a picture and
+whether its link goes to the publisher or bounces through Google. When an incoming
+copy is strictly better — gains a picture, or a direct URL where the stored one is
+an aggregator wrapper — the stored row is patched in place, keeping its score,
+summary and id. This costs nothing. The first version of that pass reported twelve
+upgrades and performed none, because the stored rows were selected without `id`
+and `.eq('id', undefined)` matches nothing and reports no error; there is now a
+guard that fails loudly instead.
 
 **Images are sourced, never generated.** `scripts/lib/images.js` resolves a picture
 for a record and returns it with its provenance: source, credit, licence, and the page

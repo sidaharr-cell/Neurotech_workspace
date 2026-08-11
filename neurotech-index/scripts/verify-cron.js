@@ -108,7 +108,10 @@ async function run() {
   // legitimately swings with what the world published that week; only a collapse
   // should trip this.
   for (const t of [
-    { label: 'news items', type: 'news', floor: 150 },
+    // News is never pruned, so this floor only ever moves UP. A fall means
+    // something deleted rows it does not own — which is the exact failure this
+    // whole file exists to catch.
+    { label: 'news items', type: 'news', floor: 250 },
     { label: 'feed research', type: 'paper', floor: 40 },
     { label: 'trials', type: 'trial', floor: 6000 },
   ]) {

@@ -39,7 +39,7 @@ const prettyStatus = s => String(s || '').replace(/_/g, ' ').toLowerCase().repla
  */
 const CELL_INDENT = 21   // px: the 1px rule plus 20px (pl-5) of padding
 
-export function RuledGrid({ cols, children }) {
+function RuledGrid({ cols, children }) {
   return (
     <div className="overflow-hidden">
       <div
@@ -52,7 +52,7 @@ export function RuledGrid({ cols, children }) {
   )
 }
 
-export function RuledCell({ children }) {
+function RuledCell({ children }) {
   return <div className="border-l border-rule pl-5 pr-5 h-full">{children}</div>
 }
 
@@ -67,7 +67,7 @@ export function RuledCell({ children }) {
  * The kicker is set light rather than through the shared Kicker class, whose
  * editorial blue is a link colour chosen against white and vanishes on ink.
  */
-export function LeadCard({ item, image }) {
+function LeadCard({ item, image }) {
   const img = leadPicture(item, image)
   return (
     // The lead stretches to whatever height the rail beside it comes out at,
@@ -132,7 +132,7 @@ export function LeadCard({ item, image }) {
  * ninety characters. The photographs it would have shown are handed on by
  * assignImages to the cards below, which run them at a size that reads.
  */
-export function RailRow({ item }) {
+function RailRow({ item }) {
   return (
     <Link to={`/item/${item.id}`} className="group block py-3">
       <div className="mb-1 font-sans text-[11px] font-semibold uppercase tracking-[0.1em] text-accent">
@@ -151,7 +151,7 @@ export function RailRow({ item }) {
  * byline is pushed to the bottom of the cell, so every card in a row lands its
  * metadata on one line however long the headline above it ran.
  */
-export function StoryCard({ item, image, size = 'md' }) {
+function StoryCard({ item, image, size = 'md' }) {
   const big = size === 'lg'
   return (
     <div className="group flex flex-col h-full">
