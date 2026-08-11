@@ -23,18 +23,7 @@
     "fwci": 33.2321,
     "citedBy": 6,
     "relevance": 9,
-    "significance": "Most BCI demonstrations require users to return to the laboratory for setup, calibration, and monitoring, making clinical translation and practical utility questionable. This work reports the first case of a user independently operating an intracortical BCI at home for daily communication and cursor control, with high accuracy sustained over extended use. This landmark result directly addresses the viability question for intracortical BCIs and demonstrates that the technology can work in real-world contexts, a necessary step toward widespread clinical adoption.",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-    "image_kind": "photo",
-    "image_subject": "class",
-    "image_credit": "Official Navy Page from United States of America Sarah Fortney/U.S. Navy",
-    "image_license": "Public domain",
-    "image_license_url": null,
-    "image_source": "commons",
-    "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
-    "image_w": 1280,
-    "image_h": 853,
-    "image_checked_at": "2026-08-10T08:17:13.361Z"
+    "significance": "High-accuracy intracortical brain-computer interfaces for speech and cursor control have been demonstrated in laboratory settings, but clinical viability requires independent operation without supervision or technical support. This work reports the first long-term, independent at-home use of such a system by a person with severe paralysis, demonstrating that BCIs can function reliably and safely outside the clinic. This is a watershed moment for neurotechnology, proving that implanted BCIs can transition from experimental prototypes to practical assistive devices that restore communication and digital access in real-world environments."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
@@ -138,37 +127,6 @@
     "citedBy": 2,
     "relevance": 8,
     "significance": "This trial demonstrates that responsive thalamic stimulation safely reduces seizures in drug-resistant generalized epilepsy patients who lack other effective treatment options."
-  },
-  {
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
-    "image_kind": "photo",
-    "image_subject": "class",
-    "image_credit": "Mconnell",
-    "image_license": "CC BY 3.0",
-    "image_license_url": "https://creativecommons.org/licenses/by/3.0",
-    "image_source": "wikipedia",
-    "image_source_url": "https://en.wikipedia.org/wiki/Spinal%20cord%20stimulator",
-    "image_w": 966,
-    "image_h": 1362,
-    "image_checked_at": "2026-08-04T16:55:39.843Z",
-    "title": "Beyond device parameters: psychological predictors of spinal cord stimulation success and their neurobiological mechanisms-a narrative review.",
-    "authors": [
-      "Anna B Marcinkowska",
-      "Jakub Wiśniewski",
-      "Michał Sobstyl",
-      "Sara Kierońska-Siwak",
-      "Paweł J Winklewski"
-    ],
-    "journal": "Frontiers in Psychology",
-    "pmid": "42212024",
-    "doi": "10.3389/fpsyg.2026.1783577",
-    "url": "https://doi.org/10.3389/fpsyg.2026.1783577",
-    "publishedAt": "2026-05-13",
-    "pctile": 0.99182561,
-    "fwci": 12.6897,
-    "citedBy": 3,
-    "relevance": 6,
-    "significance": "Understanding psychological predictors of spinal cord stimulation success could improve patient selection and outcomes by identifying modifiable factors beyond device technology."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Typical_deep_brain_stimulation_setup.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",

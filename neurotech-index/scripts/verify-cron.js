@@ -97,6 +97,41 @@ async function run() {
   console.log(`  ${idOk ? '✓' : '✗'} ${'lab id stability'.padEnd(22)} ${idOk ? 'unchanged' : (allen?.id || 'row missing')}`)
   if (!idOk) fail.push('a known lab id changed, so /lab/:id links have broken')
 
+  // The feed had no floor at all until 10 Aug 2026, which is the whole reason a
+  // blanket 7-day delete could hold news at thirty rows for weeks without anyone
+  // noticing: every job reported success, and nothing here looked at the table
+  // they were writing to. This is the same lesson as the funding loss, applied to
+  // the other half of the database — check the shape of what should be there, not
+  // the exit code of the job that put it there.
+  //
+  // The floors are deliberately far below the post-expansion baselines. News
+  // legitimately swings with what the world published that week; only a collapse
+  // should trip this.
+  for (const t of [
+    { label: 'news items', type: 'news', floor: 150 },
+    { label: 'feed research', type: 'paper', floor: 40 },
+    { label: 'trials', type: 'trial', floor: 6000 },
+  ]) {
+    const n = await count(sb.from('news_feed').select('id', { count: 'exact', head: true }).eq('entry_type', t.type))
+    const ok = n >= t.floor
+    console.log(`  ${ok ? '✓' : '✗'} ${t.label.padEnd(22)} ${String(n).padStart(5)}   floor ${String(t.floor).padStart(5)}`)
+    if (!ok) fail.push(`${t.label}: ${n}, below the floor of ${t.floor}`)
+  }
+
+  // A feed that stopped ingesting looks identical to a healthy one by row count
+  // alone for as long as retention holds the old rows. Freshness is what tells
+  // the two apart.
+  const { data: newest } = await sb.from('news_feed')
+    .select('first_seen').eq('entry_type', 'news')
+    .order('first_seen', { ascending: false }).limit(1)
+  const seen = newest?.[0]?.first_seen
+  if (seen) {
+    const days = Math.floor((Date.now() - new Date(seen)) / 864e5)
+    const freshOk = days <= 2
+    console.log(`  ${freshOk ? '✓' : '✗'} ${'newest news item'.padEnd(22)} ${String(days).padStart(5)}d   max        2d`)
+    if (!freshOk) fail.push(`no news item ingested in ${days} days; the media pipeline is not running`)
+  } else fail.push('no news items carry a first_seen stamp')
+
   const { data: bad, error: vErr } = await sb.from('funding_validation_failures').select('rule')
   if (vErr) warn.push(`validation view unreadable: ${vErr.message}`)
   else {

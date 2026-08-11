@@ -7,7 +7,7 @@ const TOPICS = [
   { to: '/trials', label: 'Clinical Trials' },
   { to: '/companies', label: 'Companies and Labs' },
   { to: '/devices', label: 'Devices and Patents' },
-  { to: '/media', label: 'Media' },
+  { to: '/media', label: 'News & Press' },
   { to: '/research', label: 'Research' },
 ]
 
