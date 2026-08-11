@@ -16,6 +16,7 @@ import { syncTrials } from './trials.js'
 import { classify } from '../src/lib/classify.js'
 import { scanReproLinks } from '../src/lib/repro.js'
 import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage, FALLBACK_CLASS } from './lib/images.js'
+import { NEUROTECH_LEXICON, onTopicByLexicon } from './lib/lexicon.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -83,7 +84,17 @@ function reproCols(p) {
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 // How far back to pull content. Wider than "this week" so papers are old enough
 // to have accrued citations/engagement, which is a ranking input (see computeRank).
+// Doubles as the retention window for news (see syncToSupabase).
 const CONTENT_WINDOW_MS = 90 * 24 * 60 * 60 * 1000
+
+// How many news items one run may store, cut against other news rather than
+// against papers. This is a ceiling on a DAY's ingest, not on the table: the
+// 90-day retention window is what decides how much accumulates behind it.
+const NEWS_MAX = 400
+// Candidates fetched per run before scoring. The lexicon gate and the relevance
+// floor cut this down; the cap only exists so a source that suddenly returns its
+// whole archive cannot run the scoring bill away unnoticed.
+const MEDIA_CANDIDATE_CAP = 900
 
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms))
@@ -496,25 +507,55 @@ async function fetchArXiv() {
 // the same AI scoring + ranking as papers.
 
 const UA = 'NeuroBaseBot/1.0 (+https://neurobase.app; neurotech research aggregator)'
+// Some publishers 403 an honest bot string. Declared per feed rather than used
+// globally, so the default stays identifiable and the exceptions stay visible.
+const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/128.0 Safari/537.36'
 
 // Worldwide press aggregation via Google News RSS (query-based).
+//
+// Measured 10 Aug 2026: these ten queries return 691 unique neurotech items in a
+// single pass, against 60 for the three queries that preceded them. Google News
+// serves up to 100 items per query and the old code took 20, so most of what the
+// site was missing was never a missing SOURCE — it was this cap. Queries are
+// grouped by what they catch (field, modality, company, regulatory, clinical) so
+// a gap is visible as a missing group rather than a missing keyword.
 const GOOGLE_NEWS_QUERIES = [
   'neurotechnology OR "brain-computer interface" OR "neural implant"',
   '"deep brain stimulation" OR neuroprosthetic OR neurostimulation OR "spinal cord stimulation"',
-  'Neuralink OR Synchron OR "Blackrock Neurotech" OR "Precision Neuroscience" OR "Paradromics"',
+  'Neuralink OR Synchron OR "Blackrock Neurotech" OR "Precision Neuroscience" OR Paradromics',
+  '"Science Corporation" OR "Motif Neurotech" OR INBRAIN OR Axoft OR Subsense OR "Merge Labs"',
+  '"Onward Medical" OR "Neuros Medical" OR "Saluda Medical" OR Nevro OR NeuroPace OR CVRx',
+  '"cochlear implant" OR "retinal implant" OR "visual prosthesis" OR "auditory brainstem implant"',
+  '"vagus nerve stimulation" OR "transcranial magnetic stimulation" OR "focused ultrasound" neuromodulation',
+  '"EEG headset" OR "dry electrode" OR "neural decoding" OR electrocorticography',
+  '"FDA clearance" OR "FDA approval" neural OR neurostimulation OR neurotechnology',
+  '"BCI clinical trial" OR "brain implant" patient OR paralysis speech restored',
 ]
 const googleNewsUrl = q =>
   `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`
+// The gate itself lives in scripts/lib/lexicon.js so it can be unit-tested
+// without live credentials; see scripts/lexicon.test.js. Re-exported below for
+// scripts/backfill-news.js, which runs the same gate.
 
 // Curated science-media RSS feeds (image-rich where possible; fail soft if a
 // URL changes). Off-topic items are filtered out by AI relevance scoring.
 const CURATED_FEEDS = [
   ['https://www.sciencedaily.com/rss/mind_brain/neuroscience.xml', 'ScienceDaily'],
-  ['https://neurosciencenews.com/feed/', 'Neuroscience News'],
+  // 403s the bot UA and serves fine to a browser one. Verified 11 Aug 2026.
+  ['https://neurosciencenews.com/feed/', 'Neuroscience News', { ua: BROWSER_UA }],
   ['https://news.mit.edu/rss/topic/neuroscience', 'MIT News'],
   ['https://spectrum.ieee.org/feeds/topic/biomedical.rss', 'IEEE Spectrum'],
   ['https://www.thetransmitter.org/feed/', 'The Transmitter'],
-  ['https://www.medgadget.com/category/neurology/feed', 'Medgadget'],
+  // Neuro-specific trade press, and the richest picture source of the set: the
+  // feed carries a media tag on essentially every item, so these arrive already
+  // illustrated and never need an Open Graph scrape. It serves a deep archive
+  // rather than a recent slice, hence the raised cap — CONTENT_WINDOW_MS trims
+  // the tail.
+  ['https://neuronewsinternational.com/feed/', 'NeuroNews', { cap: 200 }],
+  ['https://www.medicaldesignandoutsourcing.com/feed/', 'Medical Design and Outsourcing'],
+  // Medgadget removed 11 Aug 2026: the host fails to connect at all, on both UAs,
+  // which is a dead domain rather than a block.
   ['https://www.nature.com/subjects/neuroscience.rss', 'Nature'],
   ['https://elifesciences.org/rss/recent.xml', 'eLife'],
   ['https://www.statnews.com/feed/', 'STAT'],
@@ -524,6 +565,40 @@ const CURATED_FEEDS = [
   ['https://www.sciencedaily.com/rss/health_medicine/nervous_system.xml', 'ScienceDaily'],
   ['https://newatlas.com/index.rss', 'New Atlas'],
   ['https://www.frontiersin.org/journals/neuroscience/rss', 'Frontiers'],
+
+  // ── General science and technology desks ──────────────────────────────────
+  //
+  // Broad feeds, deliberately. They are not neurotech publications and most of
+  // what they carry is filtered out by the lexicon gate — but what survives is
+  // worth more per item than anything else we fetch, because these publish a
+  // DIRECT article URL with a real image attached. Everything arriving through
+  // Google News is a redirect wrapper that cannot be resolved or scraped, so
+  // this block is most of what puts a photograph on a card.
+  //
+  // Verified reachable with image tags on 11 Aug 2026; counts are items/media
+  // tags in one pull.
+  ['https://www.theguardian.com/science/rss', 'The Guardian'],                        // 27 / 81
+  ['https://feeds.bbci.co.uk/news/science_and_environment/rss.xml', 'BBC News'],       // 42 / 42
+  ['https://www.statnews.com/category/health-tech/feed/', 'STAT Health Tech'],         // 20 / 40
+  ['https://www.wired.com/feed/category/science/latest/rss', 'WIRED'],                 // 20 / 40
+  ['https://feeds.arstechnica.com/arstechnica/science', 'Ars Technica'],               // 20 / 40
+  ['https://spectrum.ieee.org/feeds/feed.rss', 'IEEE Spectrum'],                       // 30 / 30
+  ['https://medicalxpress.com/rss-feed/', 'Medical Xpress'],                           // 30 / 30
+  ['https://www.newscientist.com/subject/health/feed/', 'New Scientist'],              // 10 / 10
+  ['https://interestingengineering.com/feed', 'Interesting Engineering'],              // 10 / 6
+
+  // ── Press releases ────────────────────────────────────────────────────────
+  //
+  // The "Press" half of the section's name. Company and institutional
+  // announcements are primary sources — an FDA clearance, a funding round, a
+  // first-in-human — and they reach the wires before any outlet writes them up.
+  // Broad health feeds, filtered by the lexicon gate like everything else.
+  //
+  // Verified 11 Aug 2026. Business Wire is absent on purpose: its documented
+  // feed IDs answer 200 with an empty body, so there is nothing to parse.
+  ['https://www.prnewswire.com/rss/health-latest-news/health-latest-news-list.rss', 'PR Newswire'],
+  ['https://www.prnewswire.com/rss/health/medical-pharmaceuticals-list.rss', 'PR Newswire'],
+  ['https://www.globenewswire.com/RssFeed/subjectcode/26-Health/feedTitle/GlobeNewswire%20-%20Health', 'GlobeNewswire'],
 ]
 
 // GDELT — free global news firehose across thousands of outlets.
@@ -615,8 +690,21 @@ async function measureImage(url) {
   } catch { return null }
 }
 
-// High-resolution threshold for images we're willing to feature.
-const HI_RES = d => !!d && Math.max(d.width, d.height) >= 900 && Math.min(d.width, d.height) >= 500
+/**
+ * The floor for a picture we are willing to feature.
+ *
+ * Relaxed from 900/500 to 700/400 on 11 Aug 2026. The original pair was set
+ * against the home page lead, which is the largest frame on the site; applied
+ * uniformly it was also throwing away pictures that are perfectly sharp in a
+ * card. NeuroNews — a neuro trade title that illustrates every item, and one of
+ * the few direct-URL sources we have — publishes at 766x512, so every one of its
+ * pictures was discarded for being 134 pixels short on the long edge while the
+ * card that wanted it is under 400 wide.
+ *
+ * Still a real floor: it rejects the 300x200 and 400x225 thumbnails that RSS
+ * media tags are full of, which is what this check exists to do.
+ */
+const HI_RES = d => !!d && Math.max(d.width, d.height) >= 700 && Math.min(d.width, d.height) >= 400
 
 /**
  * Classify each item's image as a REAL photograph/microscopy/scientific figure
@@ -748,9 +836,9 @@ async function parseFeed(xml) {
   return out
 }
 
-async function fetchRssFeed(url, label, cap = 15) {
+async function fetchRssFeed(url, label, cap = 15, ua = UA) {
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA } })
+    const res = await fetch(url, { headers: { 'User-Agent': ua }, signal: AbortSignal.timeout(30_000) })
     if (!res.ok) { console.warn(`  ${label} ${res.status} — skipped`); return [] }
     const items = await parseFeed(await res.text())
     return items
@@ -768,65 +856,158 @@ const gdeltDate = d => (d && d.length >= 8 ? `${d.slice(0, 4)}-${d.slice(4, 6)}-
 /** GDELT global news firehose (thousands of outlets), one request per query. */
 async function fetchGdelt() {
   const out = []
-  for (const q of GDELT_QUERIES) {
+  let ok = 0, throttled = 0, failed = 0
+  for (const [n, q] of GDELT_QUERIES.entries()) {
+    // GDELT publishes a hard limit of one request every five seconds and answers
+    // a violation with a 200-shaped plaintext scolding, not an error status. The
+    // old loop slept 300ms and ran `JSON.parse` inside a `catch { continue }`, so
+    // every throttled query parsed as a failure and was skipped in silence: the
+    // step reported success having contributed nothing, and had been doing so for
+    // as long as anyone can tell. Diagnosed 11 Aug 2026.
+    //
+    // Ten seconds, not five. The published limit is a floor, and a burst earns a
+    // cooldown well beyond it; a daily run can afford to be patient with a source
+    // that hands over a direct publisher URL and an already-extracted image.
+    if (n) await sleep(10_000)
+    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q)}` +
+      `&mode=artlist&format=json&maxrecords=250&sort=datedesc&timespan=3w`
     try {
-      const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q)}&mode=artlist&format=json&maxrecords=40&sort=datedesc&timespan=3w`
-      const res = await fetch(url, { headers: { 'User-Agent': UA } })
+      const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(45_000) })
       const text = await res.text()
-      let data
-      try { data = JSON.parse(text) } catch { continue }
-      for (const a of data.articles || []) {
+      if (!text.trimStart().startsWith('{')) {
+        // Throttle replies are plaintext. One retry after a long pause; GDELT is
+        // worth waiting for, but not worth stalling the whole run over.
+        throttled++
+        console.warn(`  GDELT throttled on "${q}" — retrying in 30s`)
+        await sleep(30_000)
+        const retry = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(45_000) })
+        const rtext = await retry.text()
+        if (!rtext.trimStart().startsWith('{')) { console.warn(`  GDELT still throttled on "${q}" — skipped`); continue }
+        for (const a of (JSON.parse(rtext).articles || [])) {
+          if (!a.url || !a.title || a.language !== 'English') continue
+          out.push({ title: a.title, url: a.url, summary: '', source: a.domain || 'GDELT', publishedAt: gdeltDate(a.seendate), image: a.socialimage || null, entry_type: 'news' })
+        }
+        ok++
+        continue
+      }
+      for (const a of (JSON.parse(text).articles || [])) {
         if (!a.url || !a.title || a.language !== 'English') continue
         out.push({ title: a.title, url: a.url, summary: '', source: a.domain || 'GDELT', publishedAt: gdeltDate(a.seendate), image: a.socialimage || null, entry_type: 'news' })
       }
-    } catch { /* skip */ }
-    await sleep(300)
+      ok++
+    } catch (e) {
+      failed++
+      console.warn(`  GDELT error on "${q}": ${e.message}`)
+    }
   }
+  // Say what happened. A source that contributes nothing must not look identical
+  // to one that was never configured.
+  console.log(`      GDELT: ${ok}/${GDELT_QUERIES.length} queries answered, ` +
+    `${out.length} articles (${out.filter(i => i.image).length} with an image)` +
+    `${throttled ? `, ${throttled} throttled` : ''}${failed ? `, ${failed} errored` : ''}`)
+  if (!ok) console.warn('::warning::GDELT returned nothing this run — check rate limiting')
   return out
 }
 
-/** Pull every free media/press/social source in parallel, dedupe, cap. */
+/**
+ * Pull every free media/press/social source in parallel, dedupe, gate, cap.
+ *
+ * This function no longer touches images. Sourcing a picture costs an Open Graph
+ * scrape, an image download to measure it, and a vision call — and it used to run
+ * on every candidate BEFORE anything was scored, so most of that spend went to
+ * items the relevance floor then discarded. Pictures are now sourced in
+ * enrichMediaImages, after scoring, for the items that survived it.
+ */
 async function fetchMedia() {
   const cutoff = Date.now() - CONTENT_WINDOW_MS
   const batches = await Promise.all([
-    ...GOOGLE_NEWS_QUERIES.map(q => fetchRssFeed(googleNewsUrl(q), 'Google News', 20)),
-    ...CURATED_FEEDS.map(([u, l]) => fetchRssFeed(u, l, 12)),
-    ...MASTODON_TAGS.map(t => fetchRssFeed(mastodonUrl(t), `#${t} · Mastodon`, 6)),
+    ...GOOGLE_NEWS_QUERIES.map(q => fetchRssFeed(googleNewsUrl(q), 'Google News', 100)),
+    ...CURATED_FEEDS.map(([u, l, o = {}]) => fetchRssFeed(u, l, o.cap ?? 30, o.ua ?? UA)),
+    ...MASTODON_TAGS.map(t => fetchRssFeed(mastodonUrl(t), `#${t} · Mastodon`, 10)),
     fetchGdelt(),
   ])
 
-  let items = batches.flat().filter(i =>
+  const raw = batches.flat().filter(i =>
     i.title && i.url && (!i.publishedAt || new Date(i.publishedAt).getTime() >= cutoff)
   )
 
-  // Dedupe by URL and by a normalized title (cross-source overlap is common).
-  const seenUrl = new Set(), seenTitle = new Set(), out = []
-  for (const it of items) {
+  // Dedupe by URL and by normalized title. Cross-source overlap is the normal
+  // case, not the exception: the same story arrives from Google News, from the
+  // publisher's own feed, and from GDELT.
+  //
+  // Which copy survives is the whole ballgame for pictures. It used to be
+  // whichever arrived first, and Google News is fetched first, so the aggregator
+  // copy won essentially every contest. A news.google.com URL is a redirect
+  // wrapper around an opaque, non-decodable payload: getOgImage cannot scrape it,
+  // nothing can resolve it to the publisher, and the reader clicks through a
+  // bounce. Measured 11 Aug 2026 on the stored feed: 73% of rows with a direct
+  // publisher URL carried a picture, against 7% of rows with an aggregator URL.
+  // So first-wins was not a neutral tie-break — it was discarding the copy that
+  // could be illustrated in favour of the one that could not.
+  //
+  // Preference order matches dedupeFeedRows, which applies the same rule later
+  // against the database: a copy that already has an image, then a direct
+  // publisher URL, then the earlier arrival.
+  const isAgg = u => /news\.google\.com/i.test(u || '')
+  const better = (a, b) => {
+    if (!!a.image !== !!b.image) return a.image ? a : b
+    if (isAgg(a.url) !== isAgg(b.url)) return isAgg(a.url) ? b : a
+    return a
+  }
+  const byKey = new Map()
+  for (const it of raw) {
+    if (!it.url) continue
     const tkey = it.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60)
-    if (!it.url || seenUrl.has(it.url) || seenTitle.has(tkey)) continue
-    seenUrl.add(it.url); seenTitle.add(tkey); out.push(it)
+    const prev = byKey.get(tkey)
+    byKey.set(tkey, prev ? better(prev, it) : it)
+  }
+  // Title-collapse can still leave two rows on the same URL (different headlines
+  // for one page); drop those too.
+  const seenUrl = new Set(), out = []
+  for (const it of byKey.values()) {
+    if (seenUrl.has(it.url)) continue
+    seenUrl.add(it.url); out.push(it)
   }
 
-  out.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
-  const capped = out.slice(0, 80) // cap to bound scoring cost
+  // The lexicon gate is what makes the wider fetch affordable: it is free, and it
+  // rejects the half of this pool that is off topic in a way a regex can see.
+  const onTopic = out.filter(onTopicByLexicon)
+  onTopic.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
+  const capped = onTopic.slice(0, MEDIA_CANDIDATE_CAP)
 
+  console.log(`      ${raw.length} fetched → ${out.length} unique → ${onTopic.length} on-topic` +
+    `${capped.length < onTopic.length ? ` → ${capped.length} after cap` : ''}`)
+  return capped
+}
+
+/**
+ * Source and vet a picture for each item: Open Graph scrape where the feed gave
+ * us nothing, a dimension check to drop thumbnails, then the vision classifier
+ * that separates a real photograph from stock art.
+ *
+ * Call this AFTER scoring, with only the items that are going to be stored. The
+ * work is three network round trips and a model call per item, and running it on
+ * the full candidate pool is how a 900-item fetch would cost more than the
+ * scoring it feeds.
+ */
+async function enrichMediaImages(items) {
+  if (!items.length) return
   // Fill missing images via Open Graph scrape (direct URLs only), bounded concurrency.
-  const need = capped.filter(i => !i.image && i.url && !i.url.includes('news.google.com'))
+  const need = items.filter(i => !i.image && i.url && !i.url.includes('news.google.com'))
   for (let i = 0; i < need.length; i += 6) {
     await Promise.all(need.slice(i, i + 6).map(async it => { it.image = await getOgImage(it.url) }))
   }
   // Keep only high-resolution images (drop small thumbnails); record dimensions.
-  for (let i = 0; i < capped.length; i += 6) {
-    await Promise.all(capped.slice(i, i + 6).map(async it => {
+  for (let i = 0; i < items.length; i += 6) {
+    await Promise.all(items.slice(i, i + 6).map(async it => {
       if (!it.image) return
       const d = await measureImage(it.image)
       if (HI_RES(d)) { it.imageW = d.width; it.imageH = d.height } else { it.image = null }
     }))
   }
-  const withImg = capped.filter(i => i.image).length
-  console.log(`      ${withImg}/${capped.length} media items have a high-res image`)
-  await classifyImages(capped)
-  return capped
+  const withImg = items.filter(i => i.image).length
+  console.log(`      ${withImg}/${items.length} stored media items have a high-res image`)
+  await classifyImages(items)
 }
 
 // ── NewsAPI ────────────────────────────────────────────────────────────────
@@ -883,12 +1064,34 @@ const TOPIC_TAGS = [
   'Prosthetics', 'Optogenetics', 'Calcium imaging', 'Connectomics',
 ]
 
-async function scoreWithClaude(items) {
+/**
+ * Score items for neurotech relevance, and write the prose the cards show.
+ *
+ * `significance` — the 3-to-4-sentence paragraph — is asked for per call rather
+ * than always, because it is the single most expensive thing this pipeline buys.
+ * Measured 10 Aug 2026 on Haiku 4.5, a batch of five: 927 in / 788 out with the
+ * paragraph, 879 in / 331 out without. Output is billed at five times input, so
+ * the paragraph alone is roughly half the cost of the entire run.
+ *
+ * Research keeps it. It is the body text of the notable rail and of every paper's
+ * detail page, so there it IS the product. News does not: ItemDetail already
+ * falls back to the one-line summary (`metadata?.significance || summary`), no
+ * card or list surface reads the field, and at several hundred stories a day the
+ * paragraph is a paragraph nearly nobody opens.
+ *
+ * @param {object[]} items
+ * @param {{ significance?: boolean, batchSize?: number }} [opts]
+ */
+async function scoreWithClaude(items, { significance = true, batchSize = 5 } = {}) {
   const scored = []
+  // Batches run a few at a time rather than strictly one after another: at eighty
+  // items a serial loop was a rounding error, at several hundred it is the longest
+  // step in the run. Three is chosen against the rate limit, not the clock.
+  const CONCURRENCY = 3
+  const batches = []
+  for (let i = 0; i < items.length; i += batchSize) batches.push(items.slice(i, i + batchSize))
 
-  for (let i = 0; i < items.length; i += 5) {
-    const batch = items.slice(i, i + 5)
-
+  async function runBatch(batch) {
     const prompt = batch
       .map((item, idx) =>
         `[${idx + 1}] TITLE: ${item.title}\nCONTENT: ${(item.abstract || item.summary || '').slice(0, 400)}`
@@ -898,7 +1101,7 @@ async function scoreWithClaude(items) {
     try {
       const response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 3000,
+        max_tokens: significance ? 3000 : 1500,
         messages: [{
           role: 'user',
           content:
@@ -927,8 +1130,10 @@ async function scoreWithClaude(items) {
             `circuits scores low. ` +
             `Differentiate items within this batch.\n` +
             `- "summary": one crisp sentence on why it matters to neurotech practitioners\n` +
-            `- "significance": a single paragraph (3 to 4 sentences) in plain language explaining what this is and why it matters to neurotechnology. Self-contained; do not start with "This paper/article".\n` +
-            `Write summary and significance in clear, punchy prose. Do NOT use em dashes or en dashes (— or –); use commas, periods, colons, or parentheses instead.\n` +
+            (significance
+              ? `- "significance": a single paragraph (3 to 4 sentences) in plain language explaining what this is and why it matters to neurotechnology. Self-contained; do not start with "This paper/article".\n` +
+                `Write summary and significance in clear, punchy prose. Do NOT use em dashes or en dashes (— or –); use commas, periods, colons, or parentheses instead.\n`
+              : `Write the summary in clear, punchy prose. Do NOT use em dashes or en dashes (— or –); use commas, periods, colons, or parentheses instead.\n`) +
             `- "topics": 1–4 tags chosen ONLY from this list: ${TOPIC_TAGS.join(', ')}\n\n` +
             `Items:\n${prompt}\n\n` +
             `Respond with ONLY a JSON array of ${batch.length} objects, no other text.`,
@@ -958,8 +1163,14 @@ async function scoreWithClaude(items) {
       console.warn('Claude scoring error:', err.message)
       batch.forEach(item => scored.push({ ...item, relevanceScore: 5, aiSummary: '', aiSignificance: '', topics: [] }))
     }
+  }
 
-    await sleep(1200)
+  for (let i = 0; i < batches.length; i += CONCURRENCY) {
+    await Promise.all(batches.slice(i, i + CONCURRENCY).map(runBatch))
+    if (i + CONCURRENCY < batches.length) await sleep(600)
+    if (batches.length > 20 && (i / CONCURRENCY) % 10 === 0) {
+      console.log(`      scored ${Math.min(scored.length, items.length)}/${items.length}`)
+    }
   }
 
   return scored
@@ -1014,13 +1225,42 @@ async function syncToSupabase(pubmed, arxiv, news) {
     if (error) console.warn('arxiv upsert error:', error.message)
   }
 
-  // Clear feed entries added more than 7 days ago (by when they entered the
-  // feed, not the paper's publication date — older high-impact papers stay).
-  // Trials are exempt — they have their own long-lived section.
-  await supabase.from('news_feed')
-    .delete()
-    .neq('entry_type', 'trial')
-    .lt('created_at', new Date(Date.now() - SEVEN_DAYS_MS).toISOString())
+  // Retention is per entry type, because the two content kinds answer different
+  // questions. A paper is in the feed because it is NEW, and it graduates to the
+  // papers table and the notable rail once it stops being new, so a 7-day churn
+  // costs nothing. News is the archive: /media is the only surface a press item
+  // ever appears on, and deleting it at day 7 is deleting the section.
+  //
+  // Settled 10 Aug 2026: one blanket 7-day delete held the feed at THIRTY news
+  // rows indefinitely. The daily run worked — it ingested, scored, and stored
+  // every night — and then threw the week away, so the table never grew and
+  // nothing said so. News now keeps the same 90-day window the ingest already
+  // uses to decide what is worth fetching (CONTENT_WINDOW_MS): a story we would
+  // still pull today is a story we should not have deleted yesterday.
+  //
+  // Both measure from created_at (when the row entered the feed) rather than
+  // published_at, so an old-but-newly-surfaced item gets its full window.
+  // Trials are exempt from both — they have their own prune in trials.js.
+  // NEWS IS NEVER DELETED. Not after ninety days, not after a year. /media is an
+  // archive — the only surface a press item ever appears on — and a story that
+  // drops out of it is coverage the site no longer has. The page pages backwards
+  // through it instead of holding a window, so there is no longer any size at
+  // which old news becomes a problem to be pruned.
+  //
+  // Papers keep the 7-day churn, because for them the feed is a NEW-arrivals
+  // list: a paper graduates to the papers table and the notable rail and goes on
+  // being findable there, so ageing it out of the feed loses nothing.
+  //
+  // The only thing that still removes a news row is dedupeFeedRows, and that
+  // collapses duplicate copies of ONE story rather than dropping a story.
+  const RETENTION_MS = { paper: SEVEN_DAYS_MS, preprint: SEVEN_DAYS_MS }
+  for (const [type, ms] of Object.entries(RETENTION_MS)) {
+    const { error } = await supabase.from('news_feed')
+      .delete()
+      .eq('entry_type', type)
+      .lt('created_at', new Date(Date.now() - ms).toISOString())
+    if (error) console.warn(`retention prune (${type}) failed:`, error.message)
+  }
 
   // Attach a composite rank to metadata. Papers/preprints use the research
   // scorer (field-normalized impact); news keeps the recency-led computeRank.
@@ -1106,15 +1346,32 @@ async function syncToSupabase(pubmed, arxiv, news) {
   console.log('  Fetching paper figures...')
   await enrichWithFigures(allItems, 90)
 
-  // Store the top 60 by rank, PLUS any real-image stories that ranked below the
-  // cutoff — so the homepage always has real photos to feature, even though
-  // photo-bearing media tends to rank below papers.
-  const top = allItems.slice(0, 60)
-  const extras = allItems.slice(60).filter(i => i.metadata?.image && i.metadata?.imageSubject !== 'class').slice(0, 30)
-  const toStore = [...top, ...extras]
+  // Quotas are per kind, because one shared cutoff is not a ranking decision —
+  // it is an accident of the two scorers. researchScore and mediaScore produce
+  // numbers on the same 0-1 scale that do not mean the same thing, and papers
+  // sit higher on it, so a combined top-60 handed research most of the slots and
+  // news whatever was left. That is how a day's ingest of eighty press items
+  // became a handful of stored rows.
+  //
+  // Each kind is now cut against its own peers. Research keeps the 60 it always
+  // had; news gets NEWS_MAX of its own, which is a real ceiling rather than a
+  // side effect, and can be raised without taking slots from research.
+  const research = allItems.filter(i => i.entry_type !== 'news')
+  const newsItems = allItems.filter(i => i.entry_type === 'news')
+  const topResearch = research.slice(0, 60)
+  const topNews = newsItems.slice(0, NEWS_MAX)
 
-  for (const item of toStore) {
-    const { error } = await supabase.from('news_feed').upsert(item, {
+  // The homepage's story frames need photographs, and photo-bearing media ranks
+  // below papers, so anything with a real image that missed its quota is still
+  // kept. Unchanged in intent; it now draws from what both quotas left behind.
+  const kept = new Set([...topResearch, ...topNews])
+  const extras = allItems
+    .filter(i => !kept.has(i) && i.metadata?.image && i.metadata?.imageSubject !== 'class')
+    .slice(0, 30)
+  const toStore = [...topResearch, ...topNews, ...extras]
+
+  for (let i = 0; i < toStore.length; i += 100) {
+    const { error } = await supabase.from('news_feed').upsert(toStore.slice(i, i + 100), {
       onConflict: 'url',
       ignoreDuplicates: false,
     })
@@ -1125,7 +1382,8 @@ async function syncToSupabase(pubmed, arxiv, news) {
 
   console.log(
     `✓ Synced: ${pubmed.length} PubMed | ${arxiv.length} arXiv | ${news.length} news` +
-    ` → ${toStore.length} feed items (${extras.length} extra real-image)`
+    ` → ${toStore.length} feed items (${topResearch.length} research, ${topNews.length} news,` +
+    ` ${extras.length} extra real-image)`
   )
 }
 
@@ -1331,9 +1589,15 @@ async function main() {
     return
   }
 
-  console.log(`\n[4/5] Scoring ${total} items with Claude haiku...`)
-  const allItems = [...pubmed, ...arxiv, ...news]
-  const scored = await scoreWithClaude(allItems)
+  // Research and news are scored separately so news can skip the significance
+  // paragraph, which is roughly half the cost of the run and which nothing on a
+  // news surface reads. See scoreWithClaude.
+  const research = [...pubmed, ...arxiv]
+  console.log(`\n[4/5] Scoring ${total} items with Claude haiku` +
+    ` (${research.length} research with significance, ${news.length} news without)...`)
+  const scoredResearch = await scoreWithClaude(research, { significance: true, batchSize: 5 })
+  const scoredNewsAll = await scoreWithClaude(news, { significance: false, batchSize: 10 })
+  const scored = [...scoredResearch, ...scoredNewsAll]
 
   console.log('[5/5] Fetching engagement signals (Semantic Scholar + OpenAlex)...')
   await fetchCitations(scored)
@@ -1341,9 +1605,18 @@ async function main() {
 
   const scoredPubmed = scored.filter(i => i.source === 'pubmed')
   const scoredArxiv = scored.filter(i => i.source === 'arxiv')
-  const scoredNews = scored.filter(i => i.entry_type === 'news' && isOnTopic(i))
-  const dropped = scored.filter(i => i.entry_type === 'news').length - scoredNews.length
+  const scoredNews = scoredNewsAll.filter(isOnTopic)
+  const dropped = scoredNewsAll.length - scoredNews.length
   if (dropped) console.log(`      dropped ${dropped} off-topic media items (relevance < ${RELEVANCE_FLOOR})`)
+
+  // Pictures are sourced only for news that survived the relevance floor, and
+  // only up to what syncToSupabase can actually store. Doing it here rather than
+  // inside fetchMedia is what keeps a 900-candidate fetch cheaper than the old
+  // 80-candidate one.
+  scoredNews.sort((a, b) => mediaScore(b) - mediaScore(a))
+  const needImages = scoredNews.slice(0, NEWS_MAX)
+  console.log(`Sourcing pictures for ${needImages.length} stored media items...`)
+  await enrichMediaImages(needImages)
 
   console.log('\nSyncing to Supabase...')
   await syncToSupabase(scoredPubmed, scoredArxiv, scoredNews)
@@ -1362,6 +1635,18 @@ async function main() {
 }
 
 export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, isOnTopic, relevanceOf, RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+
+// Media-side internals, exported for scripts/backfill-news.js. The backfill runs
+// the same fetch, the same gate and the same picture sourcing as the nightly
+// media path; importing them is what keeps the two from drifting into two
+// different definitions of what a news item is.
+export {
+  UA, BROWSER_UA, CONTENT_WINDOW_MS, NEWS_MAX,
+  GOOGLE_NEWS_QUERIES, CURATED_FEEDS, MASTODON_TAGS, GDELT_QUERIES,
+  googleNewsUrl, mastodonUrl, fetchRssFeed, fetchGdelt,
+  onTopicByLexicon, NEUROTECH_LEXICON,
+  getOgImage, measureImage, HI_RES, classifyImages, classifyImageUrl,
+}
 
 // Only run the daily refresh when executed directly (not when imported by a
 // helper such as scripts/seed-notable.js).
