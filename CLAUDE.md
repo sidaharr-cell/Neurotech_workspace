@@ -182,6 +182,153 @@ prestige) in `refresh.js`; `trialScore` in `trials.js`. Scores are stored in
 `papers.rank_score`, `organizations.rank_score`, `news_feed.relevance_score` (Claude's
 1–10 centrality) and `news_feed.metadata.rankScore`.
 
+**News is never deleted. Papers churn at 7 days.** A paper is in `news_feed`
+because it is NEW, and it graduates to the papers table and the notable rail once
+it stops being new, so ageing it out of the feed loses nothing. News is the
+archive — `/media` is the only surface a press item ever appears on — so a story
+that drops out of it is coverage the site no longer has. `/media` pages backwards
+through the whole record rather than holding a window, so there is no size at
+which old news becomes a problem to prune. `dedupeFeedRows` is the only thing
+that still removes a news row, and it collapses duplicate copies of one story
+rather than dropping a story. The `verify-cron` news floor therefore only ever
+moves up; a fall means something deleted rows it does not own. **Settled 10 Aug 2026:** one blanket 7-day delete over
+every non-trial row held the feed at THIRTY news items for weeks. Nothing was
+broken and nothing failed: the run ingested, scored and stored every night, then
+threw the week away, and no check looked at the table. `verify-cron` now has a
+floor per entry type plus a freshness check on the newest news item, because a
+feed that stopped ingesting looks identical to a healthy one by row count alone.
+Storage quotas are also per type (`NEWS_MAX`): one shared top-60 across papers
+and news was not a ranking decision but an artefact of two scorers writing
+different numbers onto the same 0-1 scale, and research won it every night.
+
+**Reads that slice must order server-side.** `getNewsFeed` took an unordered
+`limit(400)` and filtered `entry_type` in JavaScript, which survived only while
+every non-trial row fit inside the 400. A limit without an order is not a top-N,
+it is an arbitrary N, so the failure at scale would not have been an empty page —
+it would have been the wrong stories, silently. It orders by `published_at`
+(indexed) and applies the composite rank over the slice; ordering by
+`metadata->>rankScore` server-side would sort the whole table on an unindexed
+jsonb field.
+
+**Ingest gates deterministically before it pays a model.** `NEUROTECH_LEXICON` in
+`refresh.js` rejects the half of the candidate pool that is off topic in a way a
+regex can see, and it is deliberately generous: it decides what is worth a
+scoring call, not what is worth publishing — that judgement stays with the model
+and `RELEVANCE_FLOOR`. A false negative there is invisible, so err toward
+passing. Pictures are sourced *after* scoring (`enrichMediaImages`), for stored
+items only; sourcing one costs a scrape, a download and a vision call, and doing
+it up front spent most of that on items the relevance floor then discarded.
+News is scored without the `significance` paragraph — measured 10 Aug 2026 on
+Haiku 4.5, it is about half the cost of the whole run, and no news surface reads
+it (`ItemDetail` already falls back to the summary). Research keeps it, because
+there it is the body text of the notable rail.
+
+**Google News search RSS is ordered by relevance, not recency.** Ten queries
+return ~930 items and roughly two thirds of them are older than the 90-day
+window, so the recent slice is ~290, not ~930. Any estimate of how much a query
+set will yield has to apply the date filter, or it counts years of archive as if
+it were this week's news. Coverage therefore comes from asking MANY narrow
+questions, and from the regional editions (`hl`/`gl`/`ceid`), which rank each
+country's outlets first and return substantially different results for the same
+query.
+
+**A Google News URL cannot be illustrated, and that is the binding constraint on
+pictures.** Its `/rss/articles/CBMi…` payload is opaque — it does not base64-decode
+to a URL, following it lands on a JS page whose canonical points back at Google,
+and there is no meta-refresh. So no Open Graph scrape is possible and the reader
+clicks through a bounce. Measured 11 Aug 2026: 73% of rows with a direct publisher
+URL carry a picture against 7% of rows with an aggregator URL. Two consequences
+the pipeline is built around. Dedup keeps the copy that can be illustrated — an
+image first, then a direct URL, then arrival order — in `fetchMedia` and again in
+`dedupeFeedRows`, because the same story usually arrives from Google News *and*
+somewhere direct. And the general science desks in `CURATED_FEEDS` (Guardian, BBC,
+STAT, WIRED, Ars Technica, IEEE Spectrum, Medical Xpress, New Scientist) are there
+despite publishing little neurotech: what survives the gate arrives with a direct
+URL and a real image, which is worth more per item than anything else fetched.
+**GDELT matters for the same reason** — it returns a direct URL *and* an
+already-extracted `socialimage` — but it enforces one request per five seconds
+and punishes a burst with a long cooldown, so it is paced at ten seconds in the
+nightly run and twenty-five in the backfill, and abandons the pass after three
+consecutive throttles rather than spend six minutes proving the point.
+
+**`scripts/backfill-news.js` fills the archive; `refresh.js` maintains it.** The
+nightly job is a delta and is the wrong shape for filling an empty section: the
+archive needs far more queries than a delta justifies, and re-running the nightly
+job to get it re-scores the whole research side every pass at roughly triple the
+per-item cost of the news it is after. The backfill is dry-run by default, skips
+anything already in `news_feed` (matched on URL *and* normalised title, so a story
+held under a Google News wrapper is not bought again under the publisher's own
+URL), and meters every Anthropic call against `--budget`, checking BEFORE each
+request so the cap is never crossed rather than noticed afterwards.
+`--images-only` re-sources pictures for stored rows without touching scoring,
+which is what to run when the resolution floor moves.
+
+**The lexicon gate is the one step that discards silently**, so it has a test
+(`scripts/lexicon.test.js`) built from headlines earlier versions threw away, and
+it lives in `scripts/lib/lexicon.js` rather than in `refresh.js` so it can be
+tested without live credentials. Three classes of bug it has already had: bare
+compounds missing (`brain implant`, `brain chip` — only the hyphenated
+`brain-computer` was matched, which rejected the field's flagship coverage);
+**en dashes** (`brain–computer interface` is the standard academic form and
+`[- ]` does not match U+2013 — everything is dash-normalised before matching now);
+and trade abbreviations (`spinal cord stim tech`). Market-wire republishers are
+dropped by source, since they pass any lexicon that names companies and are never
+the story. Err toward passing: a false positive costs one scoring call and dies at
+`RELEVANCE_FLOOR`, a false negative is invisible forever.
+
+**Discussion forums are not press.** Reddit was added and removed the same day:
+most items are self-posts whose URL points at a comment thread rather than an
+article, and Reddit's Atom sets `<author><name>` to `/u/username`, which the
+parser prefers over the feed label — so thirteen redditors were briefly listed as
+outlets in a scientific news section.
+
+**`/media` shows a story's OWN photograph or no photograph.** It does not use
+`assignImages` and must not: the reviewed class pool holds photographs of
+TECHNOLOGIES, so the same picture legitimately appears against any story about
+that technology — which is fine on a front page of fifteen mixed items and
+corrosive on a news archive. **Settled 11 Aug 2026:** a reader who recognises the
+home page's photograph on a news story has been handed a reason to doubt
+everything else on the page, and the credibility cost is worth more than the
+pictures. `ownPhoto` is `usableImage(item, { own: true })`, which also drops
+anything the vision pass marked `stock` and anything that is a logo. Of 97 stored
+news images, 36 were class assignments, 26 logos and 19 stock; ~16 are genuine
+publisher photographs, and that is what the page renders. The layout is built for
+that ratio: no picture frame is rendered at all when there is nothing to put in
+it, because a fixed grid of card frames standing two thirds empty looks broken in
+a way that a text row does not.
+
+**`/media` is a paged archive, not a front page.** Reverse chronological, forty to
+a page, ordered and counted by the database (`searchNews` in `data.js`) the same
+way `/research` and `/trials` do it — an archive that grows without bound cannot
+have its page 9 answered from an in-memory slice. Ordering is `published_at`
+(indexed); `metadata->>rankScore` is deliberately not used for server-side sort
+because it lives in jsonb with no index. Stories are grouped under date headings,
+which is what makes a reverse-chronological list scannable.
+
+**Free source availability, checked 11 Aug 2026.** X/Twitter has no free read
+path: `api.twitter.com/2` needs a paid key, the syndication widget rate-limits,
+and the surviving nitter instances answer 200 with an empty body. Reddit blocks
+unauthenticated reads (403/429) — `fetchReddit` in the backfill is written to
+extract the *linked article* from each post and attribute it to the publisher's
+domain, never to Reddit or a redditor, but it currently contributes nothing.
+Press releases come from Google News scoped to the wire domains
+(`site:prnewswire.com OR site:businesswire.com OR site:globenewswire.com`), which
+returns 100 announcements per query against 20 from any single wire's own subject
+feed; PR Newswire and GlobeNewswire subject feeds are also in `CURATED_FEEDS`.
+Business Wire is absent because its documented feed IDs answer 200 with an empty
+body.
+
+**The backfill upgrades rows it already holds.** "Already stored" decides whether
+to SCORE something, not whether to ignore it: the same story arrives under several
+URLs, and which copy arrived first decides whether the row has a picture and
+whether its link goes to the publisher or bounces through Google. When an incoming
+copy is strictly better — gains a picture, or a direct URL where the stored one is
+an aggregator wrapper — the stored row is patched in place, keeping its score,
+summary and id. This costs nothing. The first version of that pass reported twelve
+upgrades and performed none, because the stored rows were selected without `id`
+and `.eq('id', undefined)` matches nothing and reports no error; there is now a
+guard that fails loudly instead.
+
 **Images are sourced, never generated.** `scripts/lib/images.js` resolves a picture
 for a record and returns it with its provenance: source, credit, licence, and the page
 the file is described on. `image_subject` says what the picture IS — `'item'` (a figure
