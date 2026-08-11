@@ -34,7 +34,7 @@
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import {
-  UA, NEWS_MAX,
+  UA, BROWSER_UA, NEWS_MAX,
   CURATED_FEEDS, MASTODON_TAGS, GDELT_QUERIES,
   googleNewsUrl, mastodonUrl, fetchRssFeed,
   onTopicByLexicon, getOgImage, measureImage, HI_RES, classifyImageUrl,
@@ -120,6 +120,17 @@ const BACKFILL_QUERIES = [
   // Research
   'brain implant study Nature OR Science journal',
   'neurotechnology research breakthrough university',
+
+  // ── Press releases ────────────────────────────────────────────────────────
+  // Scoping a Google News query to the wire domains is the highest-yield press
+  // source available: one query returns 100 announcements, against 20 from any
+  // single wire's own subject feed. These are primary sources — the clearance,
+  // the round, the first-in-human — and they land here before the write-ups do.
+  'neurotechnology OR "brain-computer interface" OR neurostimulation site:prnewswire.com OR site:businesswire.com OR site:globenewswire.com',
+  '"neural implant" OR neuromodulation OR "deep brain stimulation" site:prnewswire.com OR site:businesswire.com OR site:globenewswire.com',
+  '"brain-computer interface" press release',
+  'neurostimulation OR neuromodulation FDA clearance announcement',
+  'neurotech company announces trial OR clearance OR funding',
 ]
 
 /**
@@ -180,19 +191,64 @@ async function slowGdelt(days, spacingMs = 25_000) {
 }
 
 /**
- * Reddit was tried here and removed on 11 Aug 2026.
+ * Reddit, as a discovery surface rather than a source.
  *
- * The feed technically works, but what it returns is not press. Most items are
- * self-posts whose URL points back at the comment thread rather than at an
- * article, so they carry no publisher, no picture, and nothing to link a reader
- * to. Worse, Reddit's Atom sets <author><name> to /u/username, and the parser
- * prefers an item's own source over the feed label — so thirteen redditors were
- * added to the outlet list of a scientific news section.
+ * The first attempt stored the posts themselves, which was wrong: a self-post's
+ * URL points at a comment thread, it has no publisher and no picture, and
+ * Reddit's Atom sets <author><name> to /u/username — which the parser prefers
+ * over the feed label, so thirteen redditors were briefly listed as outlets in a
+ * scientific news section.
  *
- * A discussion forum is a fine place to FIND a story and a bad thing to publish
- * as one. If it comes back it should come back as link extraction from the posts,
- * not as the posts themselves.
+ * What a subreddit is actually good for is surfacing an ARTICLE somebody else
+ * published. So this reads each entry's HTML content, pulls the first outbound
+ * link, and emits that — attributed to the publisher's own domain, never to
+ * Reddit or a redditor. Self-posts, with no outbound link, are skipped entirely.
+ *
+ * Reddit rate-limits unauthenticated reads hard and is currently answering 403
+ * and 429 from this host, so in practice this contributes nothing today. It is
+ * written defensively and fails to an empty list rather than an error.
  */
+const REDDIT_SUBS = ['BCI', 'neuro', 'neuroscience', 'Neuralink']
+
+async function fetchReddit() {
+  const out = []
+  let blocked = 0
+  for (const [n, sub] of REDDIT_SUBS.entries()) {
+    if (n) await new Promise(r => setTimeout(r, 4000))
+    try {
+      const res = await fetch(`https://www.reddit.com/r/${sub}/.rss`, {
+        headers: { 'User-Agent': BROWSER_UA }, signal: AbortSignal.timeout(20_000),
+      })
+      if (!res.ok) { blocked++; continue }
+      const xml = await res.text()
+      for (const entry of xml.split('<entry>').slice(1)) {
+        const title = (entry.match(/<title>([\s\S]*?)<\/title>/) || [])[1]
+        const updated = (entry.match(/<updated>([\s\S]*?)<\/updated>/) || [])[1]
+        const html = (entry.match(/<content type="html">([\s\S]*?)<\/content>/) || [])[1] || ''
+        const decoded = html
+          .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
+        const href = [...decoded.matchAll(/href="(https?:\/\/[^"]+)"/g)]
+          .map(m => m[1])
+          .find(h => !/reddit\.com|redd\.it/i.test(h))
+        if (!title || !href) continue      // self-post: nothing to link to
+        let domain = 'Reddit'
+        try { domain = new URL(href).hostname.replace(/^www\./, '') } catch { continue }
+        out.push({
+          title: title.replace(/&amp;/g, '&').trim(),
+          url: href,
+          summary: '',
+          source: domain,               // the publisher, never the redditor
+          publishedAt: updated || null,
+          image: null,
+          entry_type: 'news',
+        })
+      }
+    } catch { blocked++ }
+  }
+  console.log(`  Reddit: ${out.length} linked articles${blocked ? ` (${blocked}/${REDDIT_SUBS.length} subreddits blocked)` : ''}`)
+  return out
+}
 
 /** Hacker News via the free Algolia endpoint. Direct URLs, no key. */
 async function fetchHackerNews(days) {
@@ -243,7 +299,7 @@ const CORE_FOR_EDITIONS = BACKFILL_QUERIES.slice(0, 14)
 
 async function fetchEverything(cutoffMs, days) {
   const editionCalls = CORE_FOR_EDITIONS.length * (EDITIONS.length - 1)
-  console.log(`Fetching (${BACKFILL_QUERIES.length} Google News queries + ${editionCalls} regional, ${CURATED_FEEDS.length} feeds, ${MASTODON_TAGS.length} Mastodon, HN, GDELT)...`)
+  console.log(`Fetching (${BACKFILL_QUERIES.length} Google News queries + ${editionCalls} regional, ${CURATED_FEEDS.length} feeds, ${REDDIT_SUBS.length} subreddits, ${MASTODON_TAGS.length} Mastodon, HN, GDELT)...`)
   const settled = await Promise.allSettled([
     ...BACKFILL_QUERIES.map(q => fetchRssFeed(googleNewsUrl(q), 'Google News', 100)),
     ...CORE_FOR_EDITIONS.flatMap(q =>
@@ -251,6 +307,7 @@ async function fetchEverything(cutoffMs, days) {
     ),
     ...CURATED_FEEDS.map(([u, l, o = {}]) => fetchRssFeed(u, l, o.cap ?? 60, o.ua ?? UA)),
     ...MASTODON_TAGS.map(t => fetchRssFeed(mastodonUrl(t), `#${t} · Mastodon`, 20)),
+    fetchReddit(),
     fetchHackerNews(days),
   ])
   const failed = settled.filter(s => s.status === 'rejected').length
@@ -483,7 +540,10 @@ async function main() {
   // can be re-run safely and one that costs full price every time.
   const existing = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from('news_feed').select('url,title').eq('entry_type', 'news').range(from, from + 999)
+    // id and metadata are needed by the upgrade pass below, which patches these
+    // rows in place. Selecting only url/title made every upgrade a no-op:
+    // `.eq('id', undefined)` matches nothing and reports no error.
+    const { data, error } = await sb.from('news_feed').select('id,url,title,metadata').eq('entry_type', 'news').range(from, from + 999)
     if (error) throw new Error(`reading news_feed: ${error.message}`)
     existing.push(...data)
     if (data.length < 1000) break
@@ -492,6 +552,38 @@ async function main() {
   const haveTitle = new Set(existing.map(r => titleKey(r.title)))
   const fresh = onTopic.filter(i => !haveUrl.has(i.url) && !haveTitle.has(titleKey(i.title)))
   console.log(`  ${existing.length} already stored → ${fresh.length} new to score`)
+
+  // Upgrade before adding.
+  //
+  // "Already stored" is the right test for whether to SCORE something and the
+  // wrong test for whether to ignore it. The same story arrives under several
+  // URLs, and which copy we happened to see first decides whether the row has a
+  // picture and whether its link goes to the publisher or bounces through
+  // Google. GDELT in particular offers a direct URL and an extracted image for
+  // stories we are already holding as bare aggregator wrappers.
+  //
+  // So: match incoming items against stored rows by title, and where the
+  // incoming copy is strictly better, replace the URL and the picture on the row
+  // we already have. The score, the summary and the row's identity are untouched,
+  // so this costs nothing and loses nothing.
+  const storedByTitle = new Map()
+  for (const r of existing) {
+    const k = titleKey(r.title)
+    if (k && !storedByTitle.has(k)) storedByTitle.set(k, r)
+  }
+  const upgrades = []
+  for (const inc of onTopic) {
+    const cur = storedByTitle.get(titleKey(inc.title))
+    if (!cur) continue
+    const gainsPicture = !cur.metadata?.image && !!inc.image
+    const gainsDirectUrl = isAgg(cur.url) && !isAgg(inc.url)
+    if (!gainsPicture && !gainsDirectUrl) continue
+    upgrades.push({ row: cur, inc, gainsPicture, gainsDirectUrl })
+    storedByTitle.delete(titleKey(inc.title))   // one upgrade per stored row
+  }
+  console.log(`  ${upgrades.length} stored rows can be upgraded ` +
+    `(${upgrades.filter(u => u.gainsPicture).length} gain a picture, ` +
+    `${upgrades.filter(u => u.gainsDirectUrl).length} gain a direct publisher URL)`)
 
   const estBatches = Math.ceil(fresh.length / 10)
   const estScore = estBatches * 0.0048
@@ -516,7 +608,38 @@ async function main() {
       .forEach(([s, n]) => console.log(`    ${String(n).padStart(4)}  ${s}`))
     return
   }
-  if (!fresh.length) { console.log('\nNothing new. Done.'); return }
+  // Upgrades first: they need no scoring, so they land even if the budget stops
+  // the ingest below.
+  if (upgrades.length) {
+    console.log(`\nUpgrading ${upgrades.length} stored rows...`)
+    const withPics = upgrades.filter(u => u.gainsPicture).map(u => u.inc)
+    await sourceImages(withPics)
+    let done = 0, urlClash = 0
+    for (const u of upgrades) {
+      const patch = { metadata: { ...u.row.metadata } }
+      if (u.inc.image) {
+        patch.metadata.image = u.inc.image
+        patch.metadata.imageKind = u.inc.imageKind ?? null
+        patch.metadata.imageW = u.inc.imageW ?? null
+        patch.metadata.imageH = u.inc.imageH ?? null
+        patch.metadata.imageSubject = 'item'   // the outlet's own picture
+      }
+      if (u.gainsDirectUrl) patch.url = u.inc.url
+      if (!u.inc.image && !u.gainsDirectUrl) continue
+      // Guard: a missing id silently updates nothing and reports success, which
+      // is how the first version of this pass reported twelve upgrades and made
+      // none. Fail loudly instead.
+      if (!u.row.id) { console.warn('  upgrade skipped: stored row has no id (check the select)'); continue }
+      const { error } = await sb.from('news_feed').update(patch).eq('id', u.row.id)
+      // A direct URL we are moving TO may already be held by another row; the
+      // unique index says so, and keeping the aggregator URL is the right answer.
+      if (error) { if (/duplicate|unique/i.test(error.message)) urlClash++; else console.warn(`  upgrade failed: ${error.message}`) }
+      else done++
+    }
+    console.log(`  upgraded ${done} rows${urlClash ? `, ${urlClash} kept their URL (already held by another row)` : ''}`)
+  }
+
+  if (!fresh.length) { console.log('\nNothing new to score. Done.'); return }
 
   console.log(`\nScoring ${fresh.length} items (news shape, no significance paragraph)...`)
   const { scored, aborted } = await scoreNews(fresh)

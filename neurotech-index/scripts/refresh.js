@@ -586,6 +586,19 @@ const CURATED_FEEDS = [
   ['https://medicalxpress.com/rss-feed/', 'Medical Xpress'],                           // 30 / 30
   ['https://www.newscientist.com/subject/health/feed/', 'New Scientist'],              // 10 / 10
   ['https://interestingengineering.com/feed', 'Interesting Engineering'],              // 10 / 6
+
+  // ── Press releases ────────────────────────────────────────────────────────
+  //
+  // The "Press" half of the section's name. Company and institutional
+  // announcements are primary sources — an FDA clearance, a funding round, a
+  // first-in-human — and they reach the wires before any outlet writes them up.
+  // Broad health feeds, filtered by the lexicon gate like everything else.
+  //
+  // Verified 11 Aug 2026. Business Wire is absent on purpose: its documented
+  // feed IDs answer 200 with an empty body, so there is nothing to parse.
+  ['https://www.prnewswire.com/rss/health-latest-news/health-latest-news-list.rss', 'PR Newswire'],
+  ['https://www.prnewswire.com/rss/health/medical-pharmaceuticals-list.rss', 'PR Newswire'],
+  ['https://www.globenewswire.com/RssFeed/subjectcode/26-Health/feedTitle/GlobeNewswire%20-%20Health', 'GlobeNewswire'],
 ]
 
 // GDELT — free global news firehose across thousands of outlets.
@@ -1228,7 +1241,19 @@ async function syncToSupabase(pubmed, arxiv, news) {
   // Both measure from created_at (when the row entered the feed) rather than
   // published_at, so an old-but-newly-surfaced item gets its full window.
   // Trials are exempt from both — they have their own prune in trials.js.
-  const RETENTION_MS = { news: CONTENT_WINDOW_MS, paper: SEVEN_DAYS_MS, preprint: SEVEN_DAYS_MS }
+  // NEWS IS NEVER DELETED. Not after ninety days, not after a year. /media is an
+  // archive — the only surface a press item ever appears on — and a story that
+  // drops out of it is coverage the site no longer has. The page pages backwards
+  // through it instead of holding a window, so there is no longer any size at
+  // which old news becomes a problem to be pruned.
+  //
+  // Papers keep the 7-day churn, because for them the feed is a NEW-arrivals
+  // list: a paper graduates to the papers table and the notable rail and goes on
+  // being findable there, so ageing it out of the feed loses nothing.
+  //
+  // The only thing that still removes a news row is dedupeFeedRows, and that
+  // collapses duplicate copies of ONE story rather than dropping a story.
+  const RETENTION_MS = { paper: SEVEN_DAYS_MS, preprint: SEVEN_DAYS_MS }
   for (const [type, ms] of Object.entries(RETENTION_MS)) {
     const { error } = await supabase.from('news_feed')
       .delete()

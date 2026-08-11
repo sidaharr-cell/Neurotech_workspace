@@ -1,109 +1,162 @@
-import { useState, useEffect, useMemo } from 'react'
-import { Newspaper } from 'lucide-react'
-import { getNewsFeed, recencyCutoffISO } from '../lib/data'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import { Link } from 'react-router-dom'
+import { Newspaper, ChevronLeft, ChevronRight } from 'lucide-react'
+import { searchNews, getNewsOutlets } from '../lib/data'
 import { supabase } from '../lib/supabase'
-import { Loader, EmptyState, RuleHeading } from '../components/ui'
-import FilterSelect, { RECENCY_DATE, SORT_SIGNIF } from '../components/Filters'
+import { Loader, EmptyState, Kicker, fmtDate } from '../components/ui'
+import FilterSelect, { RECENCY_DATE } from '../components/Filters'
 import FilterBar from '../components/FilterBar'
 import { useUrlFacets } from '../lib/useUrlFacets'
-import { LeadCard, RailRow, StoryCard, RuledGrid, RuledCell } from '../components/MagazineFeed'
-import { ArticleRow } from '../components/NewsList'
-import { entityMatchesFacets, countFacets } from '../lib/facets'
-import { composeMedia, MEDIA_SLOTS, byNewest } from '../lib/mediapage'
-import { assignImages } from '../lib/image'
+import { usableImage, focusOf, objectFitOf } from '../lib/image'
+import { cardBadges } from '../lib/facets'
 
-const NEWS = ['news']
+const PAGE_SIZE = 40
+
+const SORT_NEWS = [
+  { id: 'newest', label: 'Newest first' },
+  { id: 'relevant', label: 'Most significant' },
+]
 
 /**
- * News and Press.
+ * A story's OWN photograph, or nothing.
  *
- * This page was a flat list: one lead headline and then two hundred hairline
- * -separated rows of text, no pictures anywhere, because NewsList renders none.
- * That is a search result, not a section front — and it is the one page on the
- * site whose entire content is the kind of thing that comes WITH a photograph.
+ * `own: true` is the whole point of this page. The reviewed class-image pool
+ * that fills the home page's frames is a pool of photographs of TECHNOLOGIES,
+ * not of stories, and the same picture legitimately appears against any story
+ * about that technology. On a front page of fifteen mixed items that reads as
+ * illustration. On a news archive it reads as stock filler, and a reader who
+ * recognises the same photograph from the home page has been given a reason to
+ * doubt everything else on the page.
  *
- * It is now built from the home page's own components (LeadCard, StoryCard,
- * RailRow, RuledGrid), imported rather than reimplemented. Two reasons. A reader
- * moving between the front page and a section should not feel they have changed
- * publications, and a shared component cannot drift the way a copied one does:
- * the crop ratios, the hairline geometry, the byline treatment and the image
- * credit are all decided once.
+ * So: the outlet's own picture, or no picture. usableImage also drops anything
+ * the vision pass marked `stock`, and logos, which are marks rather than
+ * pictures of anything.
+ */
+const ownPhoto = item => usableImage(item, { own: true })
+
+/** YYYY-MM-DD, for grouping. Undated stories fall into their own bucket. */
+const dayKey = iso => (iso ? String(iso).slice(0, 10) : 'undated')
+
+const DAY_LABEL = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+const dayLabel = key => (key === 'undated'
+  ? 'Date unknown'
+  : new Date(`${key}T12:00:00Z`).toLocaleDateString('en-US', { ...DAY_LABEL, timeZone: 'UTC' }))
+
+/**
+ * One story.
  *
- * The tail keeps the old dense rows on purpose. Past the first twenty or so
- * stories the reader is scanning for a specific thing rather than browsing, and
- * a picture per row makes scanning slower, not faster.
+ * The picture is optional and the row is built so that its absence is not a
+ * hole: no frame is rendered at all when there is nothing to put in it, and the
+ * text simply takes the full measure. That is the layout consequence of "source
+ * images or none" — a fixed grid of card frames would stand two thirds empty,
+ * which looks broken in a way that a text row does not.
+ */
+function StoryRow({ item }) {
+  const img = ownPhoto(item)
+  const badges = cardBadges(item, 2)
+  return (
+    <article className="py-6">
+      <Link to={`/item/${item.id}`} className="group flex gap-6 items-start">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+            <Kicker>News</Kicker>
+            {badges.map(b => (
+              <span key={b} className="font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+                {b}
+              </span>
+            ))}
+          </div>
+          <h2 className="font-serif text-[1.3rem] sm:text-[1.45rem] leading-snug font-semibold text-ink tracking-[-0.01em] headline-link break-words">
+            {item.title}
+          </h2>
+          {item.summary && (
+            <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-soft font-body line-clamp-2 max-w-prose">
+              {item.summary}
+            </p>
+          )}
+          <div className="mt-2.5 font-sans text-[12px] text-muted flex items-center gap-2 flex-wrap">
+            {item.source && <span className="truncate max-w-[18rem]">{item.source}</span>}
+            {item.source && <span className="w-px h-3 bg-rule" aria-hidden />}
+            <span className="tabular-nums">{fmtDate(item.published_at)}</span>
+          </div>
+        </div>
+        {img && (
+          // self-start so the frame keeps its declared ratio instead of being
+          // stretched to the row's height by the flex parent.
+          <div className="hidden sm:block w-[13.5rem] shrink-0 self-start aspect-[16/9] overflow-hidden bg-canvas">
+            <img
+              src={img.url}
+              alt=""
+              loading="lazy"
+              className="w-full h-full group-hover:scale-[1.02] transition-transform duration-500"
+              style={{ objectFit: objectFitOf(img), objectPosition: focusOf(img) }}
+            />
+          </div>
+        )}
+      </Link>
+    </article>
+  )
+}
+
+/**
+ * News and Press — the archive.
+ *
+ * Reverse chronological, paged by the database, forty to a page. Nothing here
+ * is ever deleted upstream, so this is the whole record of what the index has
+ * ever seen, and page 9 is as reachable as page 1.
  */
 export default function Media() {
-  const [items, setItems] = useState([])
+  const [rows, setRows] = useState([])
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [outlets, setOutlets] = useState([])
+
   const [facets, setFacets] = useUrlFacets()
   const [recency, setRecency] = useState(null)
   const [outlet, setOutlet] = useState(null)
-  const [sort, setSort] = useState('relevant')
-  const [tailShown, setTailShown] = useState(MEDIA_SLOTS.tail)
+  const [sort, setSort] = useState('newest')
+  const [page, setPage] = useState(0)
 
-  useEffect(() => {
-    let alive = true
+  useEffect(() => { getNewsOutlets().then(setOutlets) }, [])
+
+  // The key keeps the effect from refiring on a new facet object that holds the
+  // same selection, which would refetch on every render.
+  const facetKey = JSON.stringify(facets)
+
+  const load = useCallback(async () => {
     setLoading(true)
-    getNewsFeed({ entryTypes: NEWS, limit: 400 }).then(d => {
-      if (alive) { setItems(d); setLoading(false) }
+    const res = await searchNews({
+      facets: JSON.parse(facetKey), recency, outlet, sort, page, pageSize: PAGE_SIZE,
     })
-    return () => { alive = false }
-  }, [])
+    setRows(res.rows)
+    setTotal(res.total)
+    setLoading(false)
+  }, [facetKey, recency, outlet, sort, page])
 
-  // Outlet options: the outlets actually present, most-frequent first.
-  const outletOptions = useMemo(() => {
-    const counts = {}
-    items.forEach(i => { if (i.source) counts[i.source] = (counts[i.source] || 0) + 1 })
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 20).map(([s]) => ({ id: s, label: s }))
-  }, [items])
+  useEffect(() => { let alive = true; load().catch(() => { if (alive) setLoading(false) }); return () => { alive = false } }, [load])
 
-  // Everything recency and outlet allow, before any facet is applied. The facet
-  // counts come off this list, so they answer the question the reader is asking:
-  // how many of the stories in front of me does this value hold.
-  const candidates = useMemo(() => {
-    const cutoff = recencyCutoffISO(recency)
-    return items.filter(i =>
-      (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
-      (!outlet || i.source === outlet)
-    )
-  }, [items, recency, outlet])
+  // Any change to what is being asked for returns the reader to the first page;
+  // otherwise a filter applied on page 7 lands them past the end of the result.
+  useEffect(() => { setPage(0) }, [facetKey, recency, outlet, sort])
 
-  const facetCts = useMemo(() => countFacets(candidates, facets), [candidates, facets])
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
-  const shown = useMemo(() => {
-    const out = candidates.filter(i => entityMatchesFacets(i, facets))
-    return sort === 'newest' ? [...out].sort(byNewest) : out
-  }, [candidates, facets, sort])
-
-  const { lead, rail, featured, grid, tail } = useMemo(() => composeMedia(shown, sort), [shown, sort])
-
-  // Reset the tail whenever the filters change, so a reader who has paged deep
-  // into one selection does not land mid-tail in the next.
-  const filterKey = `${JSON.stringify(facets)}|${recency}|${outlet}|${sort}`
-  useEffect(() => { setTailShown(MEDIA_SLOTS.tail) }, [filterKey])
-
-  // Every picture decided in one pass: the story's own photograph where it has
-  // one, otherwise the best unused photograph in the reviewed pool for what the
-  // story is about. Without this, a page of brain-computer interface coverage
-  // runs the same conference photograph a dozen times, and most of these stories
-  // reach us through an aggregator that strips the publisher's image entirely.
-  //
-  // Only the picture-bearing sections are listed. The rail and the tail show no
-  // images, and an item assigned a photograph it never renders takes that
-  // photograph out of the pool for a card that would have shown it.
-  const images = useMemo(
-    () => assignImages([lead, ...featured, ...grid].filter(Boolean)),
-    [lead, featured, grid],
-  )
-  const pictureOf = it => images.get(it?.id) ?? null
+  // Rows are already in date order from the database; this only inserts the
+  // headings between them.
+  const days = useMemo(() => {
+    const out = []
+    for (const r of rows) {
+      const k = dayKey(r.published_at)
+      if (!out.length || out[out.length - 1].key !== k) out.push({ key: k, items: [r] })
+      else out[out.length - 1].items.push(r)
+    }
+    return out
+  }, [rows])
 
   const anyFacet = Boolean(facets.function?.length || facets.access?.length || facets.application?.length)
 
   return (
     <div className="page-wide py-6">
-      {/* Masthead, set to match the front page's: same rank of heading over the
-          same heavy rule, so the two read as one publication. */}
       <div className="flex items-end justify-between gap-4 flex-wrap border-b-2 border-ink pb-2.5">
         <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-none font-semibold text-ink tracking-[-0.015em]">
           News and Press
@@ -113,15 +166,14 @@ export default function Media() {
         </p>
       </div>
 
-      <div className="border-b border-rule mb-8">
+      <div className="border-b border-rule mb-6">
         <FilterBar
           facets={facets}
           onChange={setFacets}
-          counts={facetCts}
-          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />}
+          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_NEWS} required />}
           extras={[
-            ...(outletOptions.length > 1
-              ? [{ label: 'Outlet', value: outlet, onChange: setOutlet, options: outletOptions, allLabel: 'All outlets' }]
+            ...(outlets.length > 1
+              ? [{ label: 'Outlet', value: outlet, onChange: setOutlet, options: outlets, allLabel: 'All outlets' }]
               : []),
             { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
           ]}
@@ -129,79 +181,59 @@ export default function Media() {
       </div>
 
       {!supabase ? (
-        <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
+        <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the archive.</EmptyState>
       ) : loading ? (
         <Loader label="Loading…" />
-      ) : !lead ? (
+      ) : !rows.length ? (
         <EmptyState icon={Newspaper} title="Nothing here yet">
-          {anyFacet ? 'No items match these filters right now.' : 'Media items populate from the daily press-feed ingestion.'}
+          {anyFacet ? 'No stories match these filters.' : 'Stories populate from the daily press-feed ingestion.'}
         </EmptyState>
       ) : (
         <>
-          <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="flex items-center justify-between gap-4 h-9 mb-2 border-b border-rule">
             <span className="text-[13px] font-sans text-muted">
-              {shown.length.toLocaleString()} {shown.length === 1 ? 'story' : 'stories'}
+              {total.toLocaleString()} {total === 1 ? 'story' : 'stories'}
+              {pages > 1 && <> · page {page + 1} of {pages.toLocaleString()}</>}
+            </span>
+            <span className="text-[13px] font-sans text-muted tabular-nums">
+              {sort === 'newest' ? 'Newest first' : 'Most significant first'}
             </span>
           </div>
 
-          {/* Lead plus the rail of more stories */}
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10">
-            <div className="lg:col-span-8 flex flex-col">
-              <LeadCard item={lead} image={pictureOf(lead)} />
-            </div>
-            {rail.length > 0 && (
-              <aside className="lg:col-span-4 lg:border-l lg:border-rule lg:pl-8">
-                <RuleHeading title="More stories" />
-                <div className="divide-rule">
-                  {rail.map((it, i) => <RailRow key={it.id || i} item={it} />)}
-                </div>
-              </aside>
-            )}
-          </div>
-
-          {featured.length > 0 && (
-            <section className="mt-12">
-              <RuleHeading title="Featured" />
-              <RuledGrid cols="sm:grid-cols-2 lg:grid-cols-3">
-                {featured.map((it, i) => (
-                  <RuledCell key={it.id || i}>
-                    <StoryCard item={it} image={pictureOf(it)} size="lg" />
-                  </RuledCell>
-                ))}
-              </RuledGrid>
-            </section>
-          )}
-
-          {grid.length > 0 && (
-            <section className="mt-12">
-              <RuleHeading title="Latest coverage" />
-              <RuledGrid cols="sm:grid-cols-2 lg:grid-cols-4">
-                {grid.map((it, i) => (
-                  <RuledCell key={it.id || i}>
-                    <StoryCard item={it} image={pictureOf(it)} />
-                  </RuledCell>
-                ))}
-              </RuledGrid>
-            </section>
-          )}
-
-          {tail.length > 0 && (
-            <section className="mt-12">
-              <RuleHeading title="More coverage" note={`${tail.length.toLocaleString()} further stories`} />
+          {days.map(({ key, items }) => (
+            <section key={key}>
+              {/* The date heading is what makes a reverse-chronological archive
+                  readable: without it a reader scanning for "last Tuesday" has
+                  to open stories to find out where they are. */}
+              <h2 className="sticky top-0 z-10 bg-paper/95 backdrop-blur-sm py-2 mt-4 border-b border-rule font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
+                {dayLabel(key)}
+              </h2>
               <div className="divide-y divide-rule">
-                {tail.slice(0, tailShown).map((it, i) => <ArticleRow key={it.id || i} item={it} />)}
+                {items.map(it => <StoryRow key={it.id} item={it} />)}
               </div>
-              {tailShown < tail.length && (
-                <div className="pt-6 border-t border-rule">
-                  <button
-                    onClick={() => setTailShown(n => n + MEDIA_SLOTS.tail)}
-                    className="font-sans text-[13px] font-semibold uppercase tracking-[0.1em] text-accent hover:underline"
-                  >
-                    Show {Math.min(MEDIA_SLOTS.tail, tail.length - tailShown)} more
-                  </button>
-                </div>
-              )}
             </section>
+          ))}
+
+          {pages > 1 && (
+            <div className="flex items-center justify-between mt-8 pt-5 border-t border-rule">
+              <button
+                disabled={page === 0}
+                onClick={() => { setPage(p => Math.max(0, p - 1)); window.scrollTo(0, 0) }}
+                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" /> Previous
+              </button>
+              <span className="text-[13px] font-sans text-muted">
+                Page {page + 1} of {pages.toLocaleString()}
+              </span>
+              <button
+                disabled={page + 1 >= pages}
+                onClick={() => { setPage(p => p + 1); window.scrollTo(0, 0) }}
+                className="inline-flex items-center gap-1 text-[13px] font-sans text-ink disabled:text-muted/40 disabled:cursor-not-allowed hover:text-accent transition-colors"
+              >
+                Next <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           )}
         </>
       )}

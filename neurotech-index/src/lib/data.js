@@ -340,6 +340,66 @@ export async function getTrials() {
 
 // ── News feed ───────────────────────────────────────────────────────────────
 
+/**
+ * One page of the news archive, ordered and counted by the database.
+ *
+ * `getNewsFeed` below is a front-page query: fetch a wide slice, rank it in
+ * memory, hand the page whatever it needs. That shape does not survive an
+ * archive. /media now keeps every story it has ever ingested, so the table grows
+ * without bound and the answer to "what is on page 9" cannot come from a slice —
+ * it has to come from an ORDER BY and a RANGE, the same way /research and
+ * /trials already do it.
+ *
+ * Ordering is by published_at descending by default, because the reader's model
+ * of a news section is chronological: newest at the top, older further down, and
+ * page 2 continues where page 1 stopped. `relevance_score` is a real column and
+ * is used for the "Most significant" sort; `metadata->>rankScore` deliberately is
+ * not, because it lives inside jsonb with no index and sorting on it would scan
+ * the whole table.
+ *
+ * The count is `exact`. It is affordable here — the archive is thousands of rows,
+ * not the hundreds of thousands the papers table holds — and an archive whose
+ * page count is a planner guess would let a reader page past the end.
+ */
+export async function searchNews({
+  facets = {}, recency = null, outlet = null, sort = 'newest', page = 0, pageSize = 40,
+} = {}) {
+  if (!supabase) return { rows: [], total: 0 }
+  let b = supabase.from('news_feed').select('*', { count: 'exact' }).eq('entry_type', 'news')
+  b = applyFacets(b, facets)
+  const cutoff = recencyCutoffISO(recency)
+  if (cutoff) b = b.gte('published_at', cutoff)
+  if (outlet) b = b.eq('source', outlet)
+
+  b = sort === 'relevant'
+    ? b.order('relevance_score', { ascending: false }).order('published_at', { ascending: false, nullsFirst: false })
+    : b.order('published_at', { ascending: false, nullsFirst: false })
+
+  const { data, error, count } = await b.range(page * pageSize, page * pageSize + pageSize - 1)
+  if (error) { console.warn('news search error:', error.message); return { rows: [], total: 0 } }
+  return { rows: data || [], total: count ?? 0 }
+}
+
+/**
+ * Outlets present in the archive, most-frequent first, for the Outlet filter.
+ *
+ * PostgREST has no DISTINCT, so this reads the one column and counts client
+ * side. Cheap: a single narrow column, and the filter only needs the head of the
+ * distribution.
+ */
+export async function getNewsOutlets({ limit = 25 } = {}) {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from('news_feed').select('source').eq('entry_type', 'news').limit(5000)
+  if (error || !data) return []
+  const counts = {}
+  for (const r of data) if (r.source) counts[r.source] = (counts[r.source] || 0) + 1
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([s, n]) => ({ id: s, label: s, count: n }))
+}
+
 export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   if (!supabase) return []
 
