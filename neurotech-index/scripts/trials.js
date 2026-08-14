@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
 import { classify } from '../src/lib/classify.js'
 import { trialDesign } from './lib/trial-design.js'
+import { onTopicTrial } from './lib/trial-gate.js'
 
 const UA = 'Mozilla/5.0 (compatible; NeuroBaseBot/1.0; +https://neurobase.app)'
 
@@ -115,7 +116,13 @@ export function trialToRow(t) {
   const score = trialScore(t)
   const row = {
     title: t.title,
-    summary: t.summary ? t.summary.slice(0, 500) : '',
+    // The registry's brief summary, whole. It used to be cut at 500 characters,
+    // which landed mid-sentence on 4,956 of the 8,366 trials — "About this
+    // trial" on the detail page renders this text in full, so the reader saw the
+    // sentence stop dead. Nothing needs the cap: `summary` is an unbounded text
+    // column, and every card that shows a summary clamps it with CSS
+    // (line-clamp), which cuts by rendered line and not mid-word in the store.
+    summary: t.summary || '',
     source: 'clinicaltrials',
     source_id: t.nctId,
     source_url: t.url,
@@ -187,7 +194,20 @@ async function detectTrialChanges(supabase, rows) {
 
 export async function syncTrials(supabase) {
   const trials = await fetchTrials()
-  const rows = trials.map(trialToRow)
+  // Gate BEFORE anything else. ClinicalTrials.gov's `query.term` is a full-text
+  // search with synonym expansion, so the 16 neurotech terms also return
+  // intravitreal eye implants, obstetric anesthesia and dental work — 18% of
+  // what used to be stored. The gate is deterministic regex over the registry's
+  // own fields: no model call, no API, nothing to pay for.
+  //
+  // It has to happen here rather than at the upsert, because the prune below
+  // deletes any stored trial missing from `rows`. Gating here therefore also
+  // clears out anything off topic that a previous run stored, which is what
+  // makes scripts/purge-offtopic-trials.js a one-off rather than a fixture.
+  const kept = trials.filter(t => onTopicTrial(t))
+  const rejected = trials.length - kept.length
+  if (rejected) console.log(`      gate rejected ${rejected} off-topic trials of ${trials.length}`)
+  const rows = kept.map(trialToRow)
 
   // Detect and log status/phase/enrollment changes BEFORE the upsert overwrites
   // the stored rows. The trials view and Phase 8 read this change log.
@@ -221,9 +241,21 @@ export async function syncTrials(supabase) {
       if (data.length < 1000) break
     }
     const staleIds = existing.filter(e => !fetched.has(e.url)).map(e => e.id)
-    for (let i = 0; i < staleIds.length; i += 200)
-      await supabase.from('news_feed').delete().in('id', staleIds.slice(i, i + 200))
-    if (staleIds.length) console.log(`      pruned ${staleIds.length} stale trials no longer in results`)
+    // Proportional brake. The `rows.length > 3000` guard above was calibrated
+    // when `rows` was everything the registry returned; now the gate removes a
+    // fifth of it, so a gate bug is a second way for this prune to empty the
+    // table and would still clear that floor. A day's genuine churn is dozens of
+    // trials, and the one-off gate cleanup is ~18%, so a prune reaching a
+    // quarter of the table means something upstream broke, not that the registry
+    // changed its mind. Refuse it and say so rather than delete on a guess.
+    const share = existing.length ? staleIds.length / existing.length : 0
+    if (share > 0.25) {
+      console.warn(`::warning::trial prune refused: ${staleIds.length} of ${existing.length} stored trials (${(share * 100).toFixed(1)}%) missing from the fetch`)
+    } else {
+      for (let i = 0; i < staleIds.length; i += 200)
+        await supabase.from('news_feed').delete().in('id', staleIds.slice(i, i + 200))
+      if (staleIds.length) console.log(`      pruned ${staleIds.length} stale trials no longer in results`)
+    }
   }
   return rows.length
 }
