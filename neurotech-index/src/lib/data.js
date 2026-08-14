@@ -985,6 +985,20 @@ export async function searchTrials({ query = '', facets = {}, recency = null, ye
 }
 
 /**
+ * Attach each change row's trial title and links. `itemId` is the /item/:id the
+ * change can link to on the site, and it is null unless the trial really is in
+ * news_feed: a change can log a trial_id the index no longer carries, and a link
+ * to a missing record is worse than no link. `title` still falls back to the NCT
+ * id so a row with no resolved trial can name itself.
+ */
+function withTrialTitles(changes, byId) {
+  return changes.map(c => {
+    const t = byId[c.trial_id]
+    return { ...c, title: t?.title || c.nct_id, url: t?.url || null, itemId: t ? c.trial_id : null }
+  })
+}
+
+/**
  * Recent trial status/phase/enrollment changes (Phase 7), newest first, each
  * with its trial title and link. Reads the trial_changes log written by
  * scripts/trials.js on each sync. Empty until a sync detects a change.
@@ -1001,7 +1015,12 @@ export async function getRecentTrialChanges(limit = 20) {
     const { data: trials } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
     for (const t of trials || []) byId[t.id] = t
   }
-  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+  // Drop changes whose trial has left the index. The log outlives the record —
+  // a trial dropped by a purge or a re-ingest keeps its change rows — and such a
+  // row has no title to show and nowhere to link, so it can only render as a
+  // bare NCT number in a list of named trials. It is not something a reader can
+  // act on, so the panel does not carry it.
+  return withTrialTitles(data, byId).filter(c => c.itemId)
 }
 
 /**
@@ -1051,7 +1070,7 @@ export async function getWatchlistChanges(trialIds = [], sinceISO = null) {
     const { data: tr } = await supabase.from('news_feed').select('id,title,url').in('id', ids)
     for (const t of tr || []) byId[t.id] = t
   }
-  return data.map(c => ({ ...c, title: byId[c.trial_id]?.title || c.nct_id, url: byId[c.trial_id]?.url || null }))
+  return withTrialTitles(data, byId)
 }
 
 /**
