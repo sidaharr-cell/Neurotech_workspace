@@ -31,6 +31,7 @@ dist-ssr
 # NeuroBase — local data artifacts (regenerable / recoverable, not source)
 mesh-cache.ndjson
 purged-devices-*.json
+purged-trials-*.json
 pipeline.log
 pipeline-*.log
 
