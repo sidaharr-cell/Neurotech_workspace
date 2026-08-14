@@ -7,6 +7,7 @@ import FilterSelect, { RECENCY_DATE, TRIAL_PHASE, TRIAL_STATUS, withPotentialImp
 import FilterBar from '../components/FilterBar'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { StarButton } from '../components/Watch'
+import { groupTrialChanges, RECENT_CHANGES_FETCH, CHANGES_PER_TRIAL } from '../lib/trial-changes'
 
 const PAGE_SIZE = 20
 // Trials lead with recent status changes; that is the point of the view.
@@ -61,25 +62,50 @@ function TrialRow({ trial, sponsor }) {
   )
 }
 
+const changeText = c => `${c.field}: ${c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to `
+// Local day, to match the date the row prints rather than the UTC stamp.
+const dayOf = iso => (iso ? new Date(iso).toDateString() : '')
+
 /** Recently changed trials: dated status/phase/enrollment transitions. */
 function RecentChanges({ changes }) {
-  if (!changes.length) return null
+  const groups = groupTrialChanges(changes)
+  if (!groups.length) return null
   return (
     <div className="mb-8 border border-rule rounded-sm bg-canvas/50 p-4">
       <div className="flex items-center gap-2 text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-3">
         <Activity className="w-3.5 h-3.5 text-accent" /> Recently changed
       </div>
-      <ul className="flex flex-col divide-y divide-rule">
-        {changes.map(c => (
-          <li key={c.id} className="py-2 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3">
-            <span className="min-w-0 text-[13.5px] font-sans text-ink">
-              <span className="text-muted">{c.field}:</span>{' '}
-              {c.field === 'status' ? prettyStatus(c.old_value) : (c.old_value || 'none')} to <span className="font-medium">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
-              {c.title && <span className="text-muted"> · {c.url ? <a href={c.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent">{c.nct_id}</a> : c.nct_id}</span>}
+      {/* Borders are set per row rather than by `divide-y`, so the first row of
+          each new day can carry a heavier rule and the days read as blocks. */}
+      <ul className="flex flex-col">
+        {groups.map((g, i) => {
+          const newDay = i > 0 && dayOf(g.changedAt) !== dayOf(groups[i - 1].changedAt)
+          return (
+          <li key={g.key} className={`py-2.5 first:pt-0 last:pb-0 flex items-baseline justify-between gap-3 ${i === 0 ? '' : newDay ? 'border-t-2 border-ink/25 mt-1.5 pt-3.5' : 'border-t border-rule'}`}>
+            <span className="min-w-0 font-sans">
+              {/* The trial names itself first, and links to its record here rather
+                  than to ClinicalTrials.gov; a reader following a status change
+                  wants the trial, not the registry entry. Titles run past 150
+                  characters, so the name takes its own line above the changes. */}
+              {/* No `block` alongside line-clamp: both set `display`, and `block`
+                  wins the cascade, so the clamp silently stops clamping. */}
+              {g.itemId
+                ? <Link to={`/item/${g.itemId}`} className="text-[13.5px] text-ink font-medium headline-link line-clamp-2">{g.title}</Link>
+                : <span className="text-[13.5px] text-ink font-medium line-clamp-2">{g.title}</span>}
+              {g.changes.slice(0, CHANGES_PER_TRIAL).map(c => (
+                <span key={c.id} className="block mt-0.5 text-[12.5px] text-muted">
+                  {changeText(c)}<span className="font-medium text-ink-soft">{c.field === 'status' ? prettyStatus(c.new_value) : (c.new_value || 'none')}</span>
+                </span>
+              ))}
+              {g.changes.length > CHANGES_PER_TRIAL && (
+                <span className="block mt-0.5 text-[12.5px] text-muted">+{g.changes.length - CHANGES_PER_TRIAL} earlier {g.changes.length - CHANGES_PER_TRIAL === 1 ? 'change' : 'changes'}</span>
+              )}
             </span>
-            <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(c.changed_at)}</span>
+            {/* The date the trial last changed — the newest of the group. */}
+            <span className="shrink-0 text-[12px] font-mono text-muted tabular-nums">{fmtDate(g.changedAt)}</span>
           </li>
-        ))}
+          )
+        })}
       </ul>
     </div>
   )
@@ -120,8 +146,10 @@ export default function Trials() {
   }, [query, facets, recency, year, phase, status, sort, page])
   useEffect(() => { load() }, [load])
 
-  // Recently changed trials (status/phase/enrollment), loaded once.
-  useEffect(() => { getRecentTrialChanges(12).then(setChanges) }, [])
+  // Recently changed trials (status/phase/enrollment), loaded once. Reads more
+  // change rows than the panel shows trials, because grouping collapses several
+  // rows into one entry and 12 rows would leave the panel short.
+  useEffect(() => { getRecentTrialChanges(RECENT_CHANGES_FETCH).then(setChanges) }, [])
 
   // Histogram reflects facets + scope only; hide it during a text search.
   useEffect(() => {
