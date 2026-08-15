@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  pageText, extractFoundingYear, preferFounding, aboutUrl, ABOUT_PATHS,
+  pageText, extractFoundingYear, extractSchemaFounding, preferFounding, aboutUrl, ABOUT_PATHS,
 } from './founding.js'
 
 const NOW = 2026
@@ -142,7 +142,69 @@ describe('aboutUrl', () => {
     expect(aboutUrl(null, '/about')).toBe(null)
   })
 
-  it('asks the dedicated About page before the homepage', () => {
-    expect(ABOUT_PATHS.indexOf('/about')).toBeLessThan(ABOUT_PATHS.indexOf(''))
+  it('asks the homepage first, where schema.org markup lives', () => {
+    expect(ABOUT_PATHS.indexOf('')).toBe(0)
+    expect(ABOUT_PATHS).toContain('/about')
+  })
+})
+
+// ── schema.org foundingDate ────────────────────────────────────────────────
+
+const ld = obj => `<script type="application/ld+json">${JSON.stringify(obj)}</script>`
+
+describe('extractSchemaFounding', () => {
+  it('reads foundingDate off an Organization node', () => {
+    const html = ld({ '@context': 'https://schema.org', '@type': 'Organization', name: 'Acme Neuro', foundingDate: '2015-04-01' })
+    expect(extractSchemaFounding(html)).toMatchObject({ year: 2015, kind: 'schema_org' })
+  })
+
+  it('accepts a bare year and a fully qualified type', () => {
+    expect(extractSchemaFounding(ld({ '@type': 'Corporation', foundingDate: '2009' })).year).toBe(2009)
+    expect(extractSchemaFounding(ld({ '@type': 'https://schema.org/MedicalOrganization', foundingDate: '2011-01-01' })).year).toBe(2011)
+  })
+
+  it('finds the node inside an @graph or an array', () => {
+    const html = ld({ '@graph': [{ '@type': 'WebSite' }, { '@type': 'Organization', foundingDate: '2018' }] })
+    expect(extractSchemaFounding(html).year).toBe(2018)
+    expect(extractSchemaFounding(ld([{ '@type': 'Organization', foundingDate: '2004' }])).year).toBe(2004)
+  })
+
+  /** A foundingDate on an Event or a Person is a different fact wearing the
+   *  same key, and adopting it would date the company by one of its conferences. */
+  it('ignores foundingDate on a node that is not an organization', () => {
+    expect(extractSchemaFounding(ld({ '@type': 'Event', foundingDate: '1999' }))).toBe(null)
+    expect(extractSchemaFounding(ld({ '@type': 'Person', foundingDate: '1970' }))).toBe(null)
+  })
+
+  it('survives a malformed block rather than throwing', () => {
+    const html = '<script type="application/ld+json">{ not json </script>'
+      + ld({ '@type': 'Organization', foundingDate: '2020' })
+    expect(extractSchemaFounding(html).year).toBe(2020)
+  })
+
+  it('reads the microdata form too', () => {
+    expect(extractSchemaFounding('<meta itemprop="foundingDate" content="2013-06-01">').year).toBe(2013)
+  })
+
+  it('has nothing to say about a page with no markup', () => {
+    expect(extractSchemaFounding('<p>Founded in 2015.</p>')).toBe(null)
+    expect(extractSchemaFounding('')).toBe(null)
+  })
+
+  /** This is why it is checked first: it works on a page with no readable text,
+   *  which is what a JavaScript-rendered site serves. */
+  it('works on a shell page that carries no prose at all', () => {
+    const shell = '<html><head>' + ld({ '@type': 'Organization', foundingDate: '2017' }) + '</head><body><div id="root"></div></body></html>'
+    expect(pageText(shell).length).toBeLessThan(400)
+    expect(extractSchemaFounding(shell).year).toBe(2017)
+  })
+})
+
+describe('preferFounding ranks schema.org above prose', () => {
+  it('takes machine-written markup over a "founded in" sentence', () => {
+    const schema = { kind: 'schema_org', year: 2016, phrase: '' }
+    const prose = { kind: 'founded', year: 2019, phrase: '' }
+    expect(preferFounding(prose, schema)).toEqual(schema)
+    expect(preferFounding(schema, prose)).toEqual(schema)
   })
 })

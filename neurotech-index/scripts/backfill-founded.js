@@ -40,7 +40,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import {
-  pageText, extractFoundingYear, preferFounding, ABOUT_PATHS, aboutUrl,
+  pageText, extractFoundingYear, extractSchemaFounding, preferFounding, ABOUT_PATHS, aboutUrl,
 } from './lib/founding.js'
 
 const UA = { 'User-Agent': 'NeuroBase research@neurobase.app' }
@@ -54,14 +54,53 @@ const LIMIT = (() => {
 const NOW_YEAR = new Date().getFullYear()
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
-/** Company sites are arbitrary and some never answer. A dead host must cost a
- *  few seconds, not the run. */
-async function get(url, timeoutMs = 8000) {
+/**
+ * Company sites are arbitrary and a third of them defeated the first version of
+ * this fetcher. Measured on 30 sampled sites: 10 failed outright — DNS, TLS, or
+ * an 8-second timeout — which was the single largest bucket of misses, larger
+ * than sites that genuinely never state a founding year.
+ *
+ * So: a longer budget, one retry, and the obvious host variants. Small company
+ * sites are slow, often redirect www to apex or the reverse, and a surprising
+ * number still answer only on http.
+ */
+const TIMEOUT_MS = 15000
+
+async function once(url, timeoutMs) {
   const ctrl = new AbortController()
   const t = setTimeout(() => ctrl.abort(), timeoutMs)
   try { return await fetch(url, { headers: UA, signal: ctrl.signal, redirect: 'follow' }) }
   catch { return null }
   finally { clearTimeout(t) }
+}
+
+/** Host variants worth trying when the stored URL does not answer. */
+function variants(url) {
+  try {
+    const u = new URL(url)
+    const host = u.hostname
+    const flipped = host.startsWith('www.') ? host.slice(4) : `www.${host}`
+    const out = [url]
+    const alt = new URL(url); alt.hostname = flipped; out.push(alt.href)
+    if (u.protocol === 'https:') {
+      const http = new URL(url); http.protocol = 'http:'; out.push(http.href)
+    }
+    return out
+  } catch { return [url] }
+}
+
+async function get(url, timeoutMs = TIMEOUT_MS) {
+  for (const candidate of variants(url)) {
+    const res = await once(candidate, timeoutMs)
+    if (res?.ok) return res
+    // One retry on the stored URL only: a slow host often answers the second
+    // time, a wrong host never does.
+    if (candidate === url) {
+      const again = await once(candidate, timeoutMs)
+      if (again?.ok) return again
+    }
+  }
+  return null
 }
 
 const domainOf = u => {
@@ -105,22 +144,42 @@ async function fromWikidata(name, website) {
   return null
 }
 
-/** The company's own account of itself, from its About page. */
+/**
+ * The company's own account of itself.
+ *
+ * The homepage is fetched FIRST and on its own, and a host that cannot answer it
+ * ends the company there. Without that, a dead domain costs three host variants
+ * times a retry times twenty seconds, on each of eight paths — minutes per
+ * company, on the companies least likely to yield anything. Reachability is
+ * decided once; only then is it worth asking for sub-pages.
+ */
 async function fromCompanySite(website) {
+  const root = aboutUrl(website, '')
+  if (!root) return null
+  const rootRes = await get(root)
+  if (!rootRes) return null                 // host is dead: do not try /about on it
+
   let best = null, bestUrl = null
   for (const path of ABOUT_PATHS) {
     const url = aboutUrl(website, path)
-    if (!url) return null
-    const res = await get(url)
+    if (!url) break
+    // The homepage is already in hand; sub-pages get one quick attempt each,
+    // since the host has proven it answers.
+    const res = path === '' ? rootRes : await once(url, 9000)
     await sleep(60)
     if (!res?.ok) continue
     let html = ''
     try { html = await res.text() } catch { continue }
-    const found = extractFoundingYear(pageText(html), NOW_YEAR)
+    // Machine-written markup first: it needs no interpretation and it survives
+    // on JavaScript-rendered sites whose served HTML has no prose at all.
+    const found = preferFounding(
+      extractSchemaFounding(html),
+      extractFoundingYear(pageText(html), NOW_YEAR),
+    )
     if (!found) continue
     const chosen = preferFounding(best, found)
     if (chosen !== best) { best = chosen; bestUrl = res.url || url }
-    if (best.kind === 'founded') break        // strongest claim; stop asking
+    if (best.kind === 'schema_org') break     // nothing on a later page beats it
   }
   if (!best) return null
   return { year: best.year, kind: 'company_site', sourceUrl: bestUrl, evidence: best.phrase }
