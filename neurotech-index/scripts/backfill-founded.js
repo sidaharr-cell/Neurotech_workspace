@@ -9,16 +9,27 @@
  * Requires migration 019. The parse is `extractFoundingYear` in
  * scripts/lib/founding.js, which is pure and tested; this is the sweep.
  *
- * Two sources, strongest first.
+ * Four sources, strongest first. Requires migration 020 for the last two.
  *
- *   wikidata      inception (P571) on an item whose official website (P856)
- *                 matches the domain we already store. Third-party, referenced,
- *                 stable URL.
- *   company_site  the company's own About page. SELF-REPORTED: nobody checked
- *                 it, it can change without notice, and it is a weaker class of
- *                 evidence than anything else in this index. It is here because
- *                 measured on a sample of 40, Wikidata alone reaches 3% of the
- *                 companies without a CIK and the About page reaches 10%.
+ *   wikidata            inception (P571) on an item whose official website
+ *                       (P856) matches the domain we already store.
+ *                       Third-party, referenced, stable URL.
+ *   wikipedia           an infobox founding year on a page whose text carries
+ *                       the company's own domain. Reaches companies that have
+ *                       no structured P571 claim.
+ *   company_site        the company's own site: schema.org foundingDate first,
+ *                       then About-page prose. SELF-REPORTED — nobody checked
+ *                       it and it can change without notice.
+ *   record_description  a founding year already sitting in this index, inside
+ *                       organizations.description. Free, no request, and it
+ *                       structures a sentence the company page already shows.
+ *                       It carries NO source URL, because organizations.source_url
+ *                       is null for every company, and that is why it is last
+ *                       and why the UI renders it differently.
+ *
+ * Incorporation dates are NOT collected here. The UK register's date_of_creation
+ * is the same class of fact as SEC Form D and belongs in incorporated_year from
+ * migration 018 — see scripts/backfill-companies-house.js.
  *
  * Every value is stored with its source URL, its source CLASS, and the sentence
  * it was read from, and the company page prints the class beside the year. A
@@ -185,6 +196,73 @@ async function fromCompanySite(website) {
   return { year: best.year, kind: 'company_site', sourceUrl: bestUrl, evidence: best.phrase }
 }
 
+/**
+ * Wikipedia's infobox, guarded the same way Wikidata is.
+ *
+ * The guard here is that the article text must contain the company's own
+ * domain — almost always as the infobox `website` field. Without it, "Calm" or
+ * "Synchron" match an article about something else entirely.
+ */
+async function fromWikipedia(name, website) {
+  const ours = domainOf(website)
+  if (!ours) return null
+  const sr = await get('https://en.wikipedia.org/w/api.php?action=query&list=search'
+    + `&srsearch=${encodeURIComponent(name)}&srlimit=3&format=json&origin=*`)
+  await sleep(120)
+  if (!sr?.ok) return null
+  let hits = []
+  try { hits = (await sr.json()).query?.search || [] } catch { return null }
+
+  for (const hit of hits) {
+    const wr = await get('https://en.wikipedia.org/w/api.php?action=parse'
+      + `&page=${encodeURIComponent(hit.title)}&prop=wikitext&format=json&origin=*`)
+    await sleep(120)
+    if (!wr?.ok) continue
+    let wikitext = ''
+    try { wikitext = (await wr.json()).parse?.wikitext?.['*'] || '' } catch { continue }
+    if (!wikitext.toLowerCase().includes(ours)) continue        // the namesake guard
+
+    // Infobox first: "| founded = 2015" or "| foundation = 2015 in Boston".
+    const box = wikitext.match(/\|\s*(?:founded|foundation|formed|established)\s*=\s*([^\n|]{0,80})/i)
+    let year = null, how = null
+    if (box) {
+      const m = box[1].match(/((?:19|20)\d{2})/)
+      if (m) { year = Number(m[1]); how = `infobox ${box[1].trim().slice(0, 60)}` }
+    }
+    if (!year) {
+      // Fall back to the article's own prose, through the same tested reader.
+      const prose = extractFoundingYear(wikitext.replace(/\{\{[^}]*\}\}/g, ' ').replace(/[[\]']/g, ' '), NOW_YEAR)
+      if (prose) { year = prose.year; how = prose.phrase.slice(0, 80) }
+    }
+    if (!year || !(year >= 1900 && year <= NOW_YEAR)) continue
+    return {
+      year,
+      kind: 'wikipedia',
+      sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(hit.title.replace(/ /g, '_'))}`,
+      evidence: `Wikipedia "${hit.title}": ${how}`,
+    }
+  }
+  return null
+}
+
+/**
+ * A founding year already in this index, inside the description we display.
+ *
+ * Free and instant. It carries no source URL because organizations.source_url
+ * is null for every company row, so it is the last source asked and the only
+ * one migration 020 exempts from the URL requirement.
+ */
+function fromDescription(description) {
+  const hit = extractFoundingYear(description || '', NOW_YEAR)
+  if (!hit) return null
+  return {
+    year: hit.year,
+    kind: 'record_description',
+    sourceUrl: null,
+    evidence: `NeuroBase record description: ${hit.phrase}`,
+  }
+}
+
 async function run() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
     console.error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required.')
@@ -192,9 +270,9 @@ async function run() {
   }
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
-  const BASE = 'id,name,website'
+  const BASE = 'id,name,website,description'
   const select = cols => sb.from('organizations').select(cols)
-    .eq('type', 'company').not('website', 'is', null).order('name').limit(1200)
+    .eq('type', 'company').order('name').limit(1200)
 
   let { data: orgs, error } = await select(`${BASE},founded_year`)
   if (error && /founded_year/.test(error.message)) {
@@ -209,16 +287,18 @@ async function run() {
   if (error) { console.error('read failed:', error.message); process.exit(1) }
 
   const targets = orgs.slice(0, LIMIT)
-  console.log(`${targets.length} companies with a website${COMMIT ? '' : '  (dry run)'}\n`)
+  console.log(`${targets.length} companies${COMMIT ? '' : '  (dry run)'}\n`)
 
   const now = new Date().toISOString()
   const updates = []
-  const stats = { wikidata: 0, company_site: 0, none: 0 }
+  const stats = { wikidata: 0, wikipedia: 0, company_site: 0, record_description: 0, none: 0 }
   const samples = []
 
   for (const o of targets) {
     const hit = (await fromWikidata(o.name, o.website))
+      || (WIKIDATA_ONLY ? null : await fromWikipedia(o.name, o.website))
       || (WIKIDATA_ONLY ? null : await fromCompanySite(o.website))
+      || fromDescription(o.description)
     if (!hit) { stats.none++; continue }
     stats[hit.kind]++
     if (samples.length < 15) samples.push(`  ${o.name} = ${hit.year} (${hit.kind}) — ${hit.evidence.slice(0, 90)}`)
@@ -235,7 +315,9 @@ async function run() {
   const n = targets.length
   const pct = k => `${k} (${n ? Math.round((100 * k) / n) : 0}%)`
   console.log(`wikidata, domain-verified : ${pct(stats.wikidata)}`)
+  console.log(`wikipedia, domain-verified: ${pct(stats.wikipedia)}`)
   console.log(`company's own site        : ${pct(stats.company_site)}`)
+  console.log(`our own description       : ${pct(stats.record_description)}`)
   console.log(`no founding year found    : ${pct(stats.none)}`)
   console.log(`\nsample of what would be written:\n${samples.join('\n')}`)
 
