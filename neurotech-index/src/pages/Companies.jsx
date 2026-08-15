@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, ArrowUpRight, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '../components/ui'
 import FilterBar from '../components/FilterBar'
-import FundingChart from '../components/FundingChart'
+import FundingChart, { DEFAULT_FUNDING_FILTERS } from '../components/FundingChart'
 import CapitalStageScatter from '../components/CapitalStageScatter'
 import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
 import { useUrlFacets } from '../lib/useUrlFacets'
@@ -81,6 +81,7 @@ export default function Companies() {
   const [facetCts, setFacetCts] = useState(null)    // per-facet-value result counts
   const [loading, setLoading] = useState(false)
   const [board, setBoard] = useState(null)          // funding rows, shared by both charts
+  const [fundingFilters, setFundingFilters] = useState(DEFAULT_FUNDING_FILTERS)
   const debounce = useRef(null)
 
   // One query feeds the funding chart and the capital-versus-stage scatter.
@@ -138,8 +139,14 @@ export default function Companies() {
         right={<span className="font-sans text-[13px] text-muted whitespace-nowrap">{total.toLocaleString()} {kind === 'company' ? 'companies' : 'labs'}</span>}
       />
 
-      <FundingChart board={board} />
-      <CapitalStageScatter board={board} />
+      {/* One set of controls, two figures. The status, modality and stage
+          filters live on the page rather than inside the bar chart, because
+          they describe a company and both figures are drawn from the same
+          companies. The scatter used to ignore them while sitting directly
+          under them, so a reader who narrowed to one modality saw a chart that
+          obeyed and a chart that did not. */}
+      <FundingChart board={board} filters={fundingFilters} onFiltersChange={setFundingFilters} />
+      <CapitalStageScatter board={board} filters={fundingFilters} />
 
       <div className="mb-6">
         <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Filter by organization type</div>

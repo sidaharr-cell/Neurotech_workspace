@@ -116,6 +116,62 @@ minute.
 
 ## What not to do
 
-Do not drop `cleared_510k` to recover the null result, and do not switch to a
-log X axis because it makes the cloud look less structured. Both would be
-adjusting the chart to produce the claim.
+Do not drop `cleared_510k` to recover the null result. That would be adjusting
+the chart to produce the claim.
+
+The original version of this section also said not to switch to a log X axis,
+for the same reason. **Amended 15 Aug 2026: the axis is now log.** The rule was
+aimed at a motive — reaching for a transform *because it makes the cloud look
+less structured* — and it is worth separating that from the mechanics, because
+the mechanics say the transform cannot do what the rule feared. The number this
+page reports is a Spearman correlation, computed on ranks. A log axis is
+monotonic. It therefore moves rho by exactly zero, and `src/lib/swarm.test.js`
+asserts the rank order survives the scale. What it changes is only whether a
+reader can see the points, which the measurements below say they could not.
+
+The prohibition stands for anything that *does* touch the measurement: dropping
+a stage, dropping outliers, fitting a line through the two bands together, or
+re-running the correlation on the transformed values as if it were a new finding.
+
+## Rebuilt 15 Aug 2026
+
+The statistics were sound and the picture was not. Measured on the live figure
+before the change:
+
+| | before | after |
+|---|---|---|
+| points inside the leftmost tenth of the plot | **34 of 45** | 0 |
+| median company's position across the plot width | **3.4%** | 63% |
+| overlapping pairs of points | **46** | **0** |
+| distinct point radii | 2 (a floor and a scale) | 1 |
+
+Four changes, in `src/components/CapitalStageScatter.jsx` and the pure geometry
+in `src/lib/swarm.js`:
+
+1. **Log X.** The set spans $393K to $1.2B, 3.5 decades, so a linear axis spent
+   three quarters of its width on one company and squashed everything under
+   $60M into a 64px smear. Gridlines are decades.
+2. **Beeswarm instead of index jitter.** The old `((i % 5) - 2) * 4.4` chose an
+   offset from a company's position in the array rather than from where its
+   neighbours landed, which is why 46 pairs overlapped. Rows now grow to fit
+   their swarm.
+3. **Each row carries its own n and median.** The four medians in the table
+   above are the finding; the reader was being asked to estimate them from a
+   cloud. Computed from the plotted set, so they cannot go stale.
+4. **Size no longer encodes trailing capital.** It was a dead channel — 27 of 45
+   points sat at the floor radius, having had no round in the window, so the
+   legend's "point size is capital raised in the last 24 months" was false for
+   most of the chart and the floor made "no round" identical to "a rounding
+   error". The scale also did not do what its comment claimed: with the additive
+   floor, a company at a quarter of the maximum drew at 2.3x the area rather
+   than 4x. Recency is now the binary it always was in the data, filled against
+   hollow.
+
+Two things the figure now says that it could not before. A private-only total on
+a company that also raised publicly is drawn as a floor, with an arrow pointing
+the way the true figure lies — the bar chart above daggered these and the scatter
+had shown them as ordinary points. And the figure answers the modality, status
+and stage controls above it, which it had been sitting underneath and ignoring:
+narrowing to implanted BCI takes it from 45 points to 7. The status default now
+matches its neighbour's as well, though no acquired or defunct company currently
+has an evidence-backed stage, so that one closes a gap rather than a live error.
