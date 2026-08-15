@@ -182,16 +182,30 @@ async function run() {
     return
   }
 
-  // Upserts only the columns this script owns, matched on id. Chunked so one
-  // oversized request cannot fail the whole sweep.
+  /**
+   * UPDATE per row, not upsert.
+   *
+   * `upsert` compiles to INSERT ... ON CONFLICT, and Postgres evaluates the
+   * INSERT before it ever reaches the conflict clause — so a payload of
+   * {id, incorporated_*} fails organizations.name's NOT NULL constraint and the
+   * whole batch dies. Adding `name` to the payload would fix the error and
+   * break the rule: this script does not own that column and must not write it.
+   * An UPDATE scoped by id cannot insert a row and cannot touch a column it was
+   * not given, which is the write invariant stated at the top of this file.
+   */
   let written = 0
-  for (let i = 0; i < updates.length; i += 100) {
-    const chunk = updates.slice(i, i + 100)
-    const { error: wErr } = await sb.from('organizations').upsert(chunk, { onConflict: 'id' })
-    if (wErr) { console.error('write failed:', wErr.message); process.exit(1) }
-    written += chunk.length
+  const failures = []
+  for (const { id, ...cols } of updates) {
+    const { error: wErr } = await sb.from('organizations').update(cols).eq('id', id)
+    if (wErr) failures.push(`${id}: ${wErr.message}`)
+    else written++
   }
-  console.log(`\nWrote ${written} rows.`)
+  console.log(`\nWrote ${written} of ${updates.length} rows.`)
+  if (failures.length) {
+    console.error(`${failures.length} failed:`)
+    for (const f of failures.slice(0, 10)) console.error(`  ${f}`)
+    process.exit(1)
+  }
 }
 
 run().catch(e => { console.error(e); process.exit(1) })

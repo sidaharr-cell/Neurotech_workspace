@@ -364,9 +364,20 @@ export function parseIncorporation(xml, filingYear = null) {
 /**
  * Which of two readings to keep for one company.
  *
- * An exact year always beats a bound, whichever filing it came from. Between
- * two bounds the LATER one is tighter: "no later than 2004" and "no later than
- * 2011" are both true of the same company, and 2011 is the more informative.
+ * An exact year always beats a bound, whichever filing it came from.
+ *
+ * Between two bounds the EARLIER one wins. Both are true of the same company —
+ * a 2009 filing saying "over five years ago" gives no later than 2004, a 2016
+ * one gives no later than 2011 — but "no later than 2004" IMPLIES "no later
+ * than 2011", so it is the stronger claim and it is the one that puts a real
+ * floor under the company's age: at least 22 years rather than at least 15.
+ *
+ * This was the wrong way round when first written, and it cost real coverage:
+ * keeping the later bound understated the age of every company that filed more
+ * than once, and dropped binned age-band coverage of the scatter from 38 of 45
+ * to 35 of 45. The claim was never false, only weaker than the evidence — which
+ * is exactly the kind of error nothing downstream can detect.
+ *
  * Between two exact years the earlier wins, since a company that reincorporates
  * declares the new entity's year on later filings and the first declaration is
  * the closest to its actual formation.
@@ -377,7 +388,7 @@ export function preferIncorporation(a, b) {
   if (a.kind === 'exact' && b.kind === 'exact') return a.year <= b.year ? a : b
   if (a.kind === 'exact') return a
   if (b.kind === 'exact') return b
-  if (a.kind === 'bound' && b.kind === 'bound') return a.before >= b.before ? a : b
+  if (a.kind === 'bound' && b.kind === 'bound') return a.before <= b.before ? a : b
   return a.kind === 'bound' ? a : b
 }
 
