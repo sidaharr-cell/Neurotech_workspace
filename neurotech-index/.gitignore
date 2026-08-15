@@ -46,3 +46,4 @@ dedup-log-*.json
 * [0-9].json
 * [0-9].sql
 * [0-9].md
+scratch/

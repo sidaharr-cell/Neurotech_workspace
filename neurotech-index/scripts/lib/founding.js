@@ -126,6 +126,87 @@ const CLAIMS = [
 ]
 
 /**
+ * Hosts a founding year must never be read from.
+ *
+ * Every one of these put a wrong year into the database on the 15 Aug 2026
+ * sweep, because the fetcher followed redirects off the company's own site:
+ *
+ *   hugedomains, brandsly, sedo, afternic — domain-for-sale parking pages.
+ *   EIGHT companies were all dated 2005, which is the parking host's own footer
+ *   year and nothing to do with any of them.
+ *
+ *   linkedin — scraped for two companies, and CLAUDE.md forbids it outright.
+ *
+ * Social and directory hosts are here for the same reason: whatever year they
+ * carry belongs to the platform or to a profile, not to the company.
+ */
+const BLOCKED_HOSTS = /(^|\.)(hugedomains|brandsly|sedo|afternic|dan|namecheap|godaddy|squadhelp|linkedin|facebook|twitter|x|instagram|crunchbase|pitchbook|bloomberg|zoominfo|dnb)\.(com|co\.uk|net|org)$/i
+
+/** The registrable-ish host, for comparing a redirect against where we started. */
+export const hostOf = url => {
+  try { return new URL(String(url)).hostname.replace(/^www\./, '').toLowerCase() } catch { return null }
+}
+
+/**
+ * Did a fetch end up somewhere its year can be believed?
+ *
+ * The final URL after redirects must be the company's own host. An acquirer's
+ * site is the clearest case of why: Axonics was dated 1979 because its domain
+ * redirected to bostonscientific.com, and 1979 is when Boston Scientific was
+ * founded. The year was real and belonged to a different company.
+ *
+ * A one-label difference is allowed, so pajunkusa.com may answer from
+ * pajunk.com, but nothing else is.
+ */
+export function sameSite(finalUrl, storedWebsite) {
+  const a = hostOf(finalUrl), b = hostOf(storedWebsite)
+  if (!a || !b) return false
+  if (BLOCKED_HOSTS.test(a)) return false
+  if (a === b) return true
+  const short = a.length < b.length ? a : b
+  const long = a.length < b.length ? b : a
+  const base = short.split('.')[0]
+  return base.length >= 4 && long.split('.')[0].includes(base)
+}
+
+/** Words that identify no company in particular. */
+const GENERIC = new Set([
+  'inc', 'llc', 'ltd', 'limited', 'corp', 'corporation', 'company', 'the', 'and', 'group',
+  'holdings', 'international', 'global', 'medical', 'health', 'healthcare', 'technologies',
+  'technology', 'systems', 'solutions', 'devices', 'sciences', 'science', 'labs', 'laboratories',
+  'therapeutics', 'diagnostics', 'imaging', 'research', 'institute', 'digital', 'data',
+])
+
+/** The parts of a name that would identify this company in a sentence. */
+export function nameTokens(name) {
+  const all = String(name || '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean)
+  const strong = all.filter(t => t.length >= 4 && !GENERIC.has(t))
+  return strong.length ? strong : all.filter(t => t.length >= 3)
+}
+
+/** "Advanced Brain Technologies" -> "ABT", which is how such a company refers
+ *  to itself in its own About text. */
+export const acronym = name => String(name || '')
+  .split(/[^A-Za-z0-9]+/).filter(Boolean).map(w => w[0]).join('').toUpperCase()
+
+/**
+ * Is this stretch of text talking about the company, or about somebody?
+ *
+ * The guard the 15 Aug 2026 sweep needed and did not have. About pages are full
+ * of founder biographies and patient testimonials, and the extractor read them
+ * as company history: Sana Health was dated 1993 from "he has been pain-free
+ * since 1993", NeuSpera from a surgeon's fellowship record. A founding sentence
+ * that never names the company is not evidence about the company.
+ */
+export function mentionsCompany(window, name) {
+  if (!name) return true
+  const w = String(window || '').toLowerCase()
+  if (nameTokens(name).some(t => w.includes(t))) return true
+  const a = acronym(name)
+  return a.length >= 2 && new RegExp(`\\b${a}\\b`).test(String(window || ''))
+}
+
+/**
  * Read a founding year out of page text.
  *
  * Returns `{ year, kind, phrase }` or null. `phrase` is the sentence fragment the
@@ -135,19 +216,22 @@ const CLAIMS = [
  * @param {string} text        prose, from pageText()
  * @param {number} currentYear used to reject a year in the future
  */
-export function extractFoundingYear(text, currentYear) {
+export function extractFoundingYear(text, currentYear, companyName = null) {
   const prose = scrubbed(text)
   if (!prose) return null
   for (const { kind, re, guard } of CLAIMS) {
     const m = prose.match(re)
     if (!m) continue
+    const at = m.index ?? 0
     // Is this sentence dating the company, or something the company made?
-    if (guard && SINCE_NOT_ABOUT_COMPANY.test(prose.slice(Math.max(0, (m.index ?? 0) - 60), m.index ?? 0))) continue
+    if (guard && SINCE_NOT_ABOUT_COMPANY.test(prose.slice(Math.max(0, at - 60), at))) continue
+    // Does it name the company at all? An About page is full of people.
+    const window_ = prose.slice(Math.max(0, at - 150), at + m[0].length + 150)
+    if (!mentionsCompany(window_, companyName)) continue
     const year = Number(m[1])
     // A founding year before 1900 is a university or a hospital, not a
     // neurotech company, and after this year it is a typo or a roadmap.
     if (!(year >= 1900 && year <= currentYear)) continue
-    const at = m.index ?? 0
     return {
       year,
       kind,

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   pageText, extractFoundingYear, extractSchemaFounding, preferFounding, aboutUrl, ABOUT_PATHS,
+  sameSite, mentionsCompany,
 } from './founding.js'
 
 const NOW = 2026
@@ -206,5 +207,87 @@ describe('preferFounding ranks schema.org above prose', () => {
     const prose = { kind: 'founded', year: 2019, phrase: '' }
     expect(preferFounding(prose, schema)).toEqual(schema)
     expect(preferFounding(schema, prose)).toEqual(schema)
+  })
+})
+
+// ── The guards the 15 Aug 2026 sweep needed and did not have ───────────────
+
+describe('sameSite', () => {
+  it('accepts the company\'s own host and a www variant', () => {
+    expect(sameSite('https://acme.com/about', 'https://acme.com')).toBe(true)
+    expect(sameSite('https://www.acme.com/about', 'https://acme.com')).toBe(true)
+  })
+
+  it('allows a one-label regional variant', () => {
+    expect(sameSite('https://pajunk.com/about', 'https://pajunkusa.com')).toBe(true)
+  })
+
+  /** Axonics was dated 1979 because its domain redirected to Boston Scientific,
+   *  and 1979 is when Boston Scientific was founded. A real year, a different
+   *  company. */
+  it('rejects an acquirer the domain redirects to', () => {
+    expect(sameSite('https://bostonscientific.com/', 'https://axonicsmodulation.com')).toBe(false)
+    expect(sameSite('https://verint.com/', 'https://cogitocorp.com')).toBe(false)
+  })
+
+  /** Eight companies were all dated 2005 — the parking host's own footer year. */
+  it('rejects domain-for-sale parking hosts', () => {
+    for (const h of ['https://www.hugedomains.com/x', 'https://brandsly.com/y', 'https://sedo.com/z']) {
+      expect(sameSite(h, 'https://acme.com'), h).toBe(false)
+    }
+  })
+
+  /** CLAUDE.md forbids it outright, and two companies were scraped from it. */
+  it('rejects LinkedIn and other directories', () => {
+    expect(sameSite('https://www.linkedin.com/company/x', 'https://mddtinc.ca')).toBe(false)
+    expect(sameSite('https://crunchbase.com/organization/x', 'https://acme.com')).toBe(false)
+  })
+
+  it('rejects anything unparseable', () => {
+    expect(sameSite(null, 'https://acme.com')).toBe(false)
+    expect(sameSite('https://acme.com', null)).toBe(false)
+  })
+})
+
+describe('mentionsCompany', () => {
+  it('accepts a window naming the company', () => {
+    expect(mentionsCompany('Founded in 2015, NeuraLace is a technology company', 'NeuraLace Medical')).toBe(true)
+  })
+
+  it('accepts a company referring to itself by its initials', () => {
+    expect(mentionsCompany('ABT was founded in 1998 by Alex Doman', 'Advanced Brain Technologies')).toBe(true)
+  })
+
+  /**
+   * The false positives that made this guard necessary. Both sentences are on
+   * the company's own About page and neither is about the company.
+   */
+  it('rejects a sentence about a person', () => {
+    expect(mentionsCompany('he has been pain-free since 1993. Richard tested his technology', 'Sana Health')).toBe(false)
+    expect(mentionsCompany('for Female Urology and Continence Care since 1993. He has trained over 30 fellows', 'NeuSpera Medical')).toBe(false)
+  })
+
+  it('is not satisfied by a generic word shared with the name', () => {
+    // "Medical" alone must not qualify a sentence as being about this company.
+    expect(mentionsCompany('our medical advisory board since 1998', 'Axonia Medical')).toBe(false)
+  })
+
+  it('imposes nothing when no name is supplied', () => {
+    expect(mentionsCompany('founded in 2011', null)).toBe(true)
+  })
+})
+
+describe('extractFoundingYear with a company name', () => {
+  it('keeps a claim that names the company', () => {
+    expect(extractFoundingYear('Founded in 1998, AXONIA MEDICAL prides itself', NOW, 'Axonia Medical')?.year).toBe(1998)
+  })
+
+  it('drops a claim that names only a person', () => {
+    expect(extractFoundingYear('he has been pain-free since 1993 and built the device', NOW, 'Sana Health')).toBe(null)
+  })
+
+  it('skips the person sentence and takes the company one', () => {
+    const text = 'Richard has been pain-free since 1993. Sana Health was founded in 2016.'
+    expect(extractFoundingYear(text, NOW, 'Sana Health')?.year).toBe(2016)
   })
 })
