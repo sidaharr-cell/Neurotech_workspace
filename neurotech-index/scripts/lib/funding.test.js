@@ -3,6 +3,7 @@ import {
   core, matchIssuer, shouldQueryFormD, unavailableReason, classifyFailure, FAILURE,
   clusterRounds, totalRaised, trailingRaised, filingAmount, parseFilingXml, latestRaise,
   filingIndexUrl, recordViolations, needsVerification, trailingSortReadiness, isUsLocation,
+  parseIncorporation, preferIncorporation,
 } from './funding.js'
 import { initialise, assertSafe } from '../backfill-funding-fields.js'
 
@@ -342,5 +343,90 @@ describe('trailing sort readiness', () => {
 
   it('does not count a company whose rounds sit inside one year', () => {
     expect(trailingSortReadiness({ a: [{ date: '2025-01-01' }, { date: '2025-06-01' }] }).qualifying).toBe(0)
+  })
+})
+
+// ── Form D Item 2: when the issuer says it was incorporated ─────────────────
+
+const yearOfInc = inner => `<?xml version="1.0"?><edgarSubmission><primaryIssuer>
+  <entityName>Example Neuro Inc</entityName>
+  <yearOfInc>${inner}</yearOfInc>
+</primaryIssuer></edgarSubmission>`
+
+describe('parseIncorporation', () => {
+  it('reads the year a young issuer declares', () => {
+    const xml = yearOfInc('<withinFiveYears>true</withinFiveYears><value>2014</value>')
+    expect(parseIncorporation(xml, 2015)).toEqual({ kind: 'exact', year: 2014 })
+  })
+
+  it('turns "over five years ago" into a dated bound', () => {
+    const xml = yearOfInc('<overFiveYears>true</overFiveYears>')
+    expect(parseIncorporation(xml, 2021)).toEqual({ kind: 'bound', before: 2016 })
+  })
+
+  it('will not invent a bound without the filing year', () => {
+    const xml = yearOfInc('<overFiveYears>true</overFiveYears>')
+    expect(parseIncorporation(xml, null)).toEqual({ kind: 'unknown' })
+  })
+
+  it('reports an issuer that did not exist yet at filing time', () => {
+    const xml = yearOfInc('<yetToBeFormed>true</yetToBeFormed>')
+    expect(parseIncorporation(xml, 2020)).toEqual({ kind: 'planned' })
+  })
+
+  it('reports unknown when the form carries no yearOfInc at all', () => {
+    expect(parseIncorporation('<edgarSubmission></edgarSubmission>', 2020))
+      .toEqual({ kind: 'unknown' })
+  })
+
+  /**
+   * The bug the scoping probe actually had. A <value> tag elsewhere in the
+   * document must not be mistaken for the incorporation year: reading it off
+   * the whole document reported 27 of 45 real filings as having no year.
+   */
+  it('ignores a value tag outside the yearOfInc block', () => {
+    const xml = `<?xml version="1.0"?><edgarSubmission>
+      <submissionType><value>D</value></submissionType>
+      <primaryIssuer><yearOfInc><withinFiveYears>true</withinFiveYears><value>2019</value></yearOfInc></primaryIssuer>
+    </edgarSubmission>`
+    expect(parseIncorporation(xml, 2019)).toEqual({ kind: 'exact', year: 2019 })
+  })
+
+  it('is not fooled by a value tag outside the block when there is no year inside', () => {
+    const xml = `<?xml version="1.0"?><edgarSubmission>
+      <submissionType><value>2001</value></submissionType>
+      <primaryIssuer><yearOfInc><overFiveYears>true</overFiveYears></yearOfInc></primaryIssuer>
+    </edgarSubmission>`
+    expect(parseIncorporation(xml, 2021)).toEqual({ kind: 'bound', before: 2016 })
+  })
+})
+
+describe('preferIncorporation', () => {
+  const exact = year => ({ kind: 'exact', year })
+  const bound = before => ({ kind: 'bound', before })
+
+  it('takes whichever reading exists when only one does', () => {
+    expect(preferIncorporation(null, bound(2010))).toEqual(bound(2010))
+    expect(preferIncorporation(exact(2010), null)).toEqual(exact(2010))
+    expect(preferIncorporation(null, null)).toBe(null)
+  })
+
+  it('prefers an exact year to a bound, whichever order they arrive in', () => {
+    expect(preferIncorporation(bound(2016), exact(2009))).toEqual(exact(2009))
+    expect(preferIncorporation(exact(2009), bound(2016))).toEqual(exact(2009))
+  })
+
+  it('keeps the tighter of two bounds', () => {
+    // Both are true of the same company; the later one says more.
+    expect(preferIncorporation(bound(2004), bound(2011))).toEqual(bound(2011))
+  })
+
+  it('keeps the earliest exact year, since reincorporating resets the later one', () => {
+    // Saluda Medical reads 2013 on an early filing and 2023 after redomiciling.
+    expect(preferIncorporation(exact(2023), exact(2013))).toEqual(exact(2013))
+  })
+
+  it('prefers a bound to nothing usable', () => {
+    expect(preferIncorporation({ kind: 'unknown' }, bound(2010))).toEqual(bound(2010))
   })
 })
