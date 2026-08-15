@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { splitCsvLine, yearOfCreation } from './backfill-companies-house-bulk.js'
+import { splitCsvLine, yearOfCreation, looksUk } from './backfill-companies-house-bulk.js'
 
 describe('splitCsvLine', () => {
   it('splits a plain row', () => {
@@ -39,5 +39,40 @@ describe('yearOfCreation', () => {
     expect(yearOfCreation('')).toBe(null)
     expect(yearOfCreation(null)).toBe(null)
     expect(yearOfCreation('not a date')).toBe(null)
+  })
+})
+
+describe('looksUk', () => {
+  /**
+   * The gate that a dry run proved necessary: without it the register matched
+   * ableX in Auckland, AE Studio in Los Angeles and Biomedical Solutions in
+   * Chuo, Japan against British companies that merely share a name.
+   */
+  it('accepts UK locations', () => {
+    for (const l of ['Didcot, UK', 'Exeter, UK', 'London, United Kingdom', 'Cambridge, England',
+      'Glasgow, Scotland', 'Belfast, Northern Ireland', 'Oxford', 'Harwell, Oxfordshire']) {
+      expect(looksUk(l), l).toBe(true)
+    }
+  })
+
+  it('rejects the non-UK locations that produced wrong matches', () => {
+    for (const l of ['Auckland, New Zealand', 'Los Angeles, USA', 'Chuo, Japan', 'Toronto, Canada',
+      'Austin, USA', 'Montmorency, France', 'Bergamo, Italy', 'Vienna, Austria',
+      'Eindhoven / Athens, The Netherlands / Greece']) {
+      expect(looksUk(l), l).toBe(false)
+    }
+  })
+
+  /** Absence is not a UK address, and this is the source with the most
+   *  namesakes in the index. */
+  it('rejects a missing location rather than guessing', () => {
+    expect(looksUk(null)).toBe(false)
+    expect(looksUk('')).toBe(false)
+    expect(looksUk(undefined)).toBe(false)
+  })
+
+  it('does not match a place name buried inside a longer word', () => {
+    expect(looksUk('Yorkville, USA')).toBe(false)
+    expect(looksUk('Newcastle, Australia')).toBe(true)   // known limit: bare city names are ambiguous
   })
 })

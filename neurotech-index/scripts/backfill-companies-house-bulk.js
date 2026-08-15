@@ -34,6 +34,36 @@ import { pickCompany } from './backfill-companies-house.js'
 
 const COMMIT = process.argv.includes('--commit')
 
+/**
+ * Does our record place this company in the UK?
+ *
+ * A hard gate, added after a dry run matched 124 companies of which most were
+ * not British: ableX in Auckland, AE Studio in Los Angeles, Biomedical Solutions
+ * in Chuo, Japan — each against a UK company that merely shares a name, several
+ * of them registered in 2025 or 2026. `pickCompany` guards against name-variant
+ * collisions and has no concept of jurisdiction, so on its own it will happily
+ * date an American company by a British namesake.
+ *
+ * The UK register can only speak about UK-registered companies. A row we place
+ * somewhere else is not evidence about it, however exactly the names agree.
+ * Companies with no location at all are excluded too: absence is not a UK
+ * address, and this is the source with the most namesakes in the index.
+ *
+ * A genuine UK company whose location we hold as somewhere else is lost by this,
+ * and that is the right side to err on — a missing year shows as "Not available"
+ * and a wrong one is indistinguishable from a real one.
+ */
+const UK_LOCATION = new RegExp(
+  '(^|[,\\s])('
+  + 'uk|u\\.k\\.|united kingdom|great britain|england|scotland|wales|northern ireland'
+  + '|london|cambridge|oxford|manchester|bristol|birmingham|leeds|sheffield|liverpool'
+  + '|nottingham|newcastle|glasgow|edinburgh|aberdeen|dundee|cardiff|swansea|belfast'
+  + '|brighton|reading|coventry|leicester|southampton|milton keynes|didcot|exeter|bath'
+  + '|york|norwich|guildford|abingdon|harwell|surrey|kent|essex|hertfordshire|oxfordshire'
+  + ')([,\\s]|$)', 'i')
+
+export const looksUk = location => !!location && UK_LOCATION.test(String(location))
+
 /** One CSV line into fields, honouring quoted commas. The register quotes any
  *  name containing a comma, and a naive split puts half of it in the next
  *  column. */
@@ -76,7 +106,7 @@ async function run() {
 
   // Companies with no incorporation reading yet. A value already established
   // from an SEC filing is not re-litigated against a UK register.
-  const wanted = []
+  const all = []
   for (let from = 0; ; from += 500) {
     const { data, error } = await sb.from('organizations')
       .select('id,name,location,incorporated_year,incorporated_before_year')
@@ -88,9 +118,13 @@ async function run() {
       if (/incorporated_/.test(error.message)) console.error('Run migration 018 first.')
       process.exit(1)
     }
-    wanted.push(...data)
+    all.push(...data)
     if (data.length < 500) break
   }
+  // The jurisdiction gate, applied before anything is looked up.
+  const wanted = all.filter(o => looksUk(o.location))
+  console.error(`${all.length} companies have no incorporation year;`
+    + ` ${wanted.length} of them are UK-located and can be asked of this register`)
 
   // core(name) -> our rows. A collision on our own side is left unresolved for
   // the same reason a collision on the register's side is.
@@ -101,7 +135,7 @@ async function run() {
     if (!byCore.has(k)) byCore.set(k, [])
     byCore.get(k).push(o)
   }
-  console.error(`${wanted.length} companies with no incorporation year; ${byCore.size} distinct names to look for`)
+  console.error(`${byCore.size} distinct names to look for`)
   console.error(`reading the register from stdin${COMMIT ? '' : '  (dry run)'}...`)
 
   // Only rows whose name we are looking for are kept, so memory stays flat
