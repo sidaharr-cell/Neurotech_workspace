@@ -75,17 +75,40 @@ function ControlRow({ label, children }) {
   )
 }
 
-/** `board` lets a page fetch once and share it with the scatter. Left out, the
- *  chart fetches for itself and stays a drop-in component. */
-export default function FundingChart({ limit = 20, board: given = null }) {
+/** The filter state a page can lift out and share with the scatter below. */
+export const DEFAULT_FUNDING_FILTERS = {
+  statuses: DEFAULT_STATUS_FILTER,
+  modalities: [],
+  stageMin: null,
+}
+
+/**
+ * `board` lets a page fetch once and share it with the scatter. Left out, the
+ * chart fetches for itself and stays a drop-in component.
+ *
+ * `filters` and `onFiltersChange` are the same bargain for the controls. These
+ * three dimensions describe a company, not a bar, so the scatter directly below
+ * this chart answers to them as well; a page that passes them owns them, and
+ * one that does not gets its own state as before. Sort and the table toggle
+ * stay internal, because they are properties of this ranking and mean nothing
+ * to a scatter.
+ */
+export default function FundingChart({
+  limit = 20, board: given = null, filters = null, onFiltersChange = null,
+}) {
   const [fetched, setFetched] = useState(null)
   const [loading, setLoading] = useState(!given)
   const board = given || fetched
   const [sort, setSort] = useState(DEFAULT_SORT)
-  const [statuses, setStatuses] = useState(DEFAULT_STATUS_FILTER)
-  const [modalities, setModalities] = useState([])
-  const [stageMin, setStageMin] = useState(null)
+  const [own, setOwn] = useState(DEFAULT_FUNDING_FILTERS)
   const [asTable, setAsTable] = useState(false)
+
+  const active = filters || own
+  const { statuses, modalities, stageMin } = active
+  const update = patch => (onFiltersChange || setOwn)({ ...active, ...patch })
+  const setStatuses = v => update({ statuses: v })
+  const setModalities = v => update({ modalities: v })
+  const setStageMin = v => update({ stageMin: v })
 
   useEffect(() => {
     if (given) return
@@ -132,7 +155,7 @@ export default function FundingChart({ limit = 20, board: given = null }) {
   const anyPartial = data.some(r => r.partialTotal)
 
   const toggleModality = m =>
-    setModalities(ms => (ms.includes(m) ? ms.filter(x => x !== m) : [...ms, m]))
+    setModalities(modalities.includes(m) ? modalities.filter(x => x !== m) : [...modalities, m])
 
   return (
     <figure className="border border-rule rounded-sm bg-canvas/50 p-5 sm:p-6 mb-10">
