@@ -76,9 +76,14 @@ async function run() {
   // Only two types are real. Anything else is an older ingest leaking rows that
   // no query filters for and no prune removes; twelve of them accumulated
   // unnoticed before 29 Jul.
+  //
+  // This is the one full scan of the table, so it also carries funding_checked_at
+  // for the EDGAR sweep block at the bottom, which needs the whole distribution
+  // rather than one ordered row.
   const all = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb.from('organizations').select('type').range(from, from + 999)
+    const { data, error } = await sb.from('organizations')
+      .select('type, funding_checked_at').range(from, from + 999)
     if (error) throw new Error(error.message)
     all.push(...data)
     if (data.length < 1000) break
@@ -142,18 +147,46 @@ async function run() {
     if (bad.length) fail.push(`${bad.length} funding validation failures`)
   }
 
-  // How recently the sweep actually touched anything. Not a pass/fail: with a
-  // 21-day freshness window most nights legitimately check nobody.
-  const { data: fresh } = await sb.from('organizations')
-    .select('funding_checked_at').eq('type', 'company')
-    .not('funding_checked_at', 'is', null)
-    .order('funding_checked_at', { ascending: false }).limit(1)
-  const last = fresh?.[0]?.funding_checked_at
-  if (last) {
-    const days = Math.floor((Date.now() - new Date(last)) / 864e5)
-    console.log(`\n  most recent EDGAR check: ${new Date(last).toISOString().slice(0, 16).replace('T', ' ')}Z (${days}d ago)`)
-    if (days > 25) warn.push(`no company checked against EDGAR in ${days} days; the sweep may be failing`)
-  }
+  // Whether the EDGAR sweep is keeping up. Read the OLDEST stamp for that, not
+  // the newest.
+  //
+  // The newest was the only thing checked here until 15 Aug 2026, and it is a
+  // metric that cannot fail: it resets to 0d the moment ONE company is checked.
+  // A sweep degraded to a handful a night while the rest of the table rotted at
+  // sixty days would print "0d ago" and pass — the same shape as the two failures
+  // this file already exists for, a job reporting success over data nobody looked
+  // at. The back of the queue is what says the sweep is covering the population.
+  //
+  // Still not pass/fail. backfill-funding.js re-checks a company once it passes
+  // STALE_DAYS = 21, oldest first, MAX_PER_RUN = 300 a night, so with ~1,084
+  // companies a full cycle legitimately takes four nights and the last of them is
+  // read at 21 + 3 = 24 days. The threshold sits above that with room for a couple
+  // of failed nights: it should trip on a sweep that is not keeping up, not on one
+  // that is halfway through a catch-up.
+  const OLDEST_MAX_DAYS = 30
+  const STALE_DAYS = 21
+
+  const stamps = all.filter(r => r.type === 'company').map(r => r.funding_checked_at)
+  const dated = stamps.filter(Boolean).sort()
+  const ageDays = t => Math.floor((Date.now() - new Date(t)) / 864e5)
+  const fmt = t => `${new Date(t).toISOString().slice(0, 16).replace('T', ' ')}Z`
+
+  if (dated.length) {
+    const newestAge = ageDays(dated[dated.length - 1])
+    const oldestAge = ageDays(dated[0])
+    // Never-checked rows are the worst case of "behind", so they count as backlog.
+    const backlog = stamps.filter(t => !t || ageDays(t) >= STALE_DAYS).length
+    const oldestOk = oldestAge <= OLDEST_MAX_DAYS
+
+    console.log(`\n  most recent EDGAR check: ${fmt(dated[dated.length - 1])} (${newestAge}d ago)`)
+    console.log(`  ${oldestOk ? '✓' : '!'} oldest EDGAR check:    ${fmt(dated[0])} (${oldestAge}d ago, max ${OLDEST_MAX_DAYS}d)`)
+    console.log(`    ${backlog} of ${stamps.length} companies are due a re-check (>=${STALE_DAYS}d)`)
+
+    if (!oldestOk) {
+      warn.push(`a company has gone ${oldestAge} days without an EDGAR check and ${backlog} are due; ` +
+        'the sweep is not keeping up with the population')
+    }
+  } else warn.push('no company carries a funding_checked_at stamp; the EDGAR sweep has never run')
 
   for (const w of warn) console.log(`\n  ! ${w}`)
 
