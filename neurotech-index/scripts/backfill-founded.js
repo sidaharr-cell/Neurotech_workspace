@@ -271,10 +271,25 @@ async function run() {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
   const BASE = 'id,name,website,description'
-  const select = cols => sb.from('organizations').select(cols)
-    .eq('type', 'company').order('name').limit(1200)
 
-  let { data: orgs, error } = await select(`${BASE},founded_year`)
+  /**
+   * Paged, because Supabase caps rows per request and a bare .limit() past that
+   * cap is silently truncated. An unpaged read returned 1000 of 1084 companies
+   * and reported nothing wrong: 84 would have been dropped from the sweep and
+   * counted as having no founding year.
+   */
+  async function readAll(cols) {
+    const rows = []
+    for (let from = 0; ; from += 500) {
+      const { data, error: e } = await sb.from('organizations').select(cols)
+        .eq('type', 'company').order('name').range(from, from + 499)
+      if (e) return { error: e }
+      rows.push(...data)
+      if (data.length < 500) return { rows }
+    }
+  }
+
+  let { rows: orgs, error } = await readAll(`${BASE},founded_year`)
   if (error && /founded_year/.test(error.message)) {
     if (COMMIT) {
       console.error('Migration 019 has not been applied, so there is nothing to write to.')
@@ -282,7 +297,7 @@ async function run() {
       process.exit(1)
     }
     console.warn('Migration 019 not applied. Reading anyway, since a dry run writes nothing.\n')
-    ;({ data: orgs, error } = await select(BASE))
+    ;({ rows: orgs, error } = await readAll(BASE))
   }
   if (error) { console.error('read failed:', error.message); process.exit(1) }
 
@@ -294,13 +309,30 @@ async function run() {
   const stats = { wikidata: 0, wikipedia: 0, company_site: 0, record_description: 0, none: 0 }
   const samples = []
 
+  /**
+   * Progress, because this is a two-hour job and the first version printed
+   * nothing until it finished. A run that has silently died and a run that is
+   * working look identical without it.
+   */
+  const started = Date.now()
+  let done = 0
+  const tick = () => {
+    done++
+    if (done % 25 && done !== targets.length) return
+    const per = (Date.now() - started) / done / 1000
+    const left = Math.round((targets.length - done) * per / 60)
+    const got = stats.wikidata + stats.wikipedia + stats.company_site + stats.record_description
+    console.log(`  ${done}/${targets.length}  found ${got}  ${per.toFixed(1)}s each  ~${left} min left`)
+  }
+
   for (const o of targets) {
     const hit = (await fromWikidata(o.name, o.website))
       || (WIKIDATA_ONLY ? null : await fromWikipedia(o.name, o.website))
       || (WIKIDATA_ONLY ? null : await fromCompanySite(o.website))
       || fromDescription(o.description)
-    if (!hit) { stats.none++; continue }
+    if (!hit) { stats.none++; tick(); continue }
     stats[hit.kind]++
+    tick()
     if (samples.length < 15) samples.push(`  ${o.name} = ${hit.year} (${hit.kind}) — ${hit.evidence.slice(0, 90)}`)
     updates.push({
       id: o.id,
