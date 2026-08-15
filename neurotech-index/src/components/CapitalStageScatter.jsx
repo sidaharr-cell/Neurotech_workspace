@@ -70,8 +70,27 @@ const W = 800
 const PAD = { l: 190, r: 34, t: 26, b: 58 }
 const R = 4.6             // every point is the same size; see the note above
 const BAND_GAP = 42
-const MIN_ROW = 56
+const MIN_ROW = 48
 const ROW_PAD = 18        // breathing room around a swarm inside its row
+
+/**
+ * Every row names its largest raise, in a strip of headroom reserved above the
+ * swarm. Without it the figure could not be read at all without a pointer: 45
+ * identical circles, and the only way to learn which one is Neuralink was to
+ * hover it. One name per row is the most the space carries before the labels
+ * start colliding with each other, and the largest is the one a reader is most
+ * likely to be looking for.
+ *
+ * The label carries the amount as well as the name, because reading a value off
+ * a log axis by eye is guesswork between the decades.
+ */
+const LABEL_H = 16        // headroom above each swarm, for that row's label
+const LABEL_FONT = 8.5
+/** Inter has no metrics available here, so the width of a label is estimated to
+ *  keep it inside the plot. 0.5em per character runs slightly wide on this
+ *  string mix, which is the safe direction to be wrong in: the cost is a label
+ *  clamped a little early, not one running off the axis. */
+const labelWidth = s => s.length * LABEL_FONT * 0.5
 
 /**
  * A median is a summary, and drawing one over three companies lends it the same
@@ -133,15 +152,18 @@ export default function CapitalStageScatter({ board, filters = null }) {
         .map(s => {
           const members = points.filter(p => p.furthestStage === s)
           const placed = beeswarm(members.map(p => ({ x: x(p.total), key: p.id, p })), R)
+          const swarmH = Math.max(MIN_ROW, 2 * (swarmSpread(placed) + R) + ROW_PAD)
           return {
             stage: s,
             placed,
             n: members.length,
+            top: members.reduce((a, b) => (b.total > a.total ? b : a)),
             // Held back below MIN_MEDIAN_N. The row still states its count, so
             // the reader sees a stage with three companies in it rather than a
             // stage whose summary happens to be missing.
             median: members.length >= MIN_MEDIAN_N ? median(members.map(p => p.total)) : null,
-            height: Math.max(MIN_ROW, 2 * (swarmSpread(placed) + R) + ROW_PAD),
+            swarmH,
+            height: swarmH + LABEL_H,
           }
         })
       if (stages.length) rows.push({ band, stages })
@@ -154,7 +176,9 @@ export default function CapitalStageScatter({ board, filters = null }) {
       group.y0 = y
       for (const row of group.stages) {
         row.y0 = y
-        row.cy = y + row.height / 2
+        // The swarm is centred in what is left of the row AFTER the label strip,
+        // so a label never sits on top of a point.
+        row.cy = y + LABEL_H + row.swarmH / 2
         row.lane = lane++
         y += row.height
       }
@@ -324,9 +348,34 @@ export default function CapitalStageScatter({ board, filters = null }) {
                             a piece of one. Absent below MIN_MEDIAN_N. */}
                         {row.median != null && (
                           <line x1={layout.x(row.median)} x2={layout.x(row.median)}
-                            y1={row.cy - row.height / 2 + 4} y2={row.cy + row.height / 2 - 4}
+                            y1={row.cy - row.swarmH / 2 + 4} y2={row.cy + row.swarmH / 2 - 4}
                             stroke={INK} strokeOpacity="0.62" strokeWidth="1.6" />
                         )}
+
+                        {/* The row's largest raise, named. aria-hidden: the
+                            point itself already carries the name and the amount
+                            in its accessible label, and a second copy would be
+                            read out twice. */}
+                        {(() => {
+                          const mark = row.placed.find(q => q.p.id === row.top.id)
+                          if (!mark) return null
+                          const text = `${row.top.name} · ${fmtUsd(row.top.total)}`
+                          const half = labelWidth(text) / 2
+                          // Kept inside the plot. Where that pulls the label off
+                          // its point, a hairline says which point it belongs to.
+                          const lx = Math.min(Math.max(mark.x, PAD.l + half), W - PAD.r - half)
+                          const ly = row.y0 + LABEL_H - 5
+                          return (
+                            <g aria-hidden>
+                              <line x1={lx} y1={ly + 2.5} x2={mark.x} y2={row.cy + mark.y - R - 1.5}
+                                stroke={INK} strokeOpacity="0.3" strokeWidth="0.8" />
+                              <text x={lx} y={ly} textAnchor="middle" className="fill-muted"
+                                style={{ fontSize: LABEL_FONT }}>
+                                {text}
+                              </text>
+                            </g>
+                          )
+                        })()}
 
                         {row.placed.map(({ p, x: cx, y: dy }) => {
                           const cy = row.cy + dy
