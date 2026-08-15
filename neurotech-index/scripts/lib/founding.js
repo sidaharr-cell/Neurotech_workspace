@@ -16,6 +16,52 @@
  * the two is the error docs/founded-backfill-scope.md exists to prevent.
  */
 
+/**
+ * schema.org foundingDate, from JSON-LD or microdata.
+ *
+ * Checked BEFORE prose, and it is the single biggest thing the first version of
+ * this module missed. It is machine-written rather than marketing copy, so it
+ * needs no pattern guessing, and it survives on JavaScript-rendered sites whose
+ * served HTML carries no readable text at all — measured 15 Aug 2026, 3 of 30
+ * sampled sites returned under 400 characters of prose.
+ *
+ * Only an Organization node is trusted. A foundingDate on an Event or a
+ * Person is a different fact wearing the same key.
+ */
+const ORG_TYPES = /^(organization|corporation|localbusiness|medicalorganization|ngo|company)$/i
+
+function walkForFounding(node, out) {
+  if (!node || typeof node !== 'object') return
+  if (Array.isArray(node)) { for (const v of node) walkForFounding(v, out); return }
+  const types = [].concat(node['@type'] || []).map(String)
+  if (types.some(t => ORG_TYPES.test(t.replace(/^.*\//, '')))) {
+    const d = node.foundingDate ?? node.foundingdate
+    const m = /^((?:19|20)\d{2})/.exec(String(d ?? ''))
+    if (m) out.push({ year: Number(m[1]), name: node.name || null })
+  }
+  for (const k of Object.keys(node)) if (k !== '@type') walkForFounding(node[k], out)
+}
+
+/** Returns { year, kind: 'schema_org', phrase } or null. */
+export function extractSchemaFounding(html) {
+  const found = []
+  const blocks = String(html || '').matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)
+  for (const b of blocks) {
+    try { walkForFounding(JSON.parse(b[1].trim()), found) } catch { /* malformed block */ }
+  }
+  // Microdata fallback: <meta itemprop="foundingDate" content="2015-04-01">
+  const micro = String(html || '').match(/itemprop=["']foundingDate["'][^>]*content=["']((?:19|20)\d{2})/i)
+    || String(html || '').match(/content=["']((?:19|20)\d{2})[^"']*["'][^>]*itemprop=["']foundingDate["']/i)
+  if (micro) found.push({ year: Number(micro[1]), name: null })
+  if (!found.length) return null
+  const best = found.sort((a, b) => a.year - b.year)[0]
+  return {
+    year: best.year,
+    kind: 'schema_org',
+    phrase: `schema.org foundingDate ${best.year}${best.name ? ` on "${best.name}"` : ''}`,
+  }
+}
+
 /** Tags whose contents are never prose about the company. */
 const DEAD_TAGS = /<(script|style|noscript|svg|template)[\s\S]*?<\/\1>/gi
 
@@ -120,7 +166,8 @@ export function extractFoundingYear(text, currentYear) {
  * as incorporation: a later date is usually a rebrand, a relaunch or a regional
  * subsidiary, and the first claim is closest to the company's actual start.
  */
-const STRENGTH = { founded: 4, established: 3, spun_out: 3, started: 2, since: 1 }
+// schema.org outranks prose: it is machine-written and needs no interpretation.
+const STRENGTH = { schema_org: 5, founded: 4, established: 3, spun_out: 3, started: 2, since: 1 }
 
 export function preferFounding(a, b) {
   if (!a) return b || null
@@ -131,11 +178,15 @@ export function preferFounding(a, b) {
 }
 
 /**
- * The pages worth asking, in order. A dedicated About page states a founding
- * year far more often than a homepage does, so it is asked first and the
- * homepage is the fallback rather than the other way round.
+ * The pages worth asking.
+ *
+ * The homepage is FIRST now, not last: schema.org markup lives in the site head
+ * and is served on the root more reliably than on a sub-path, and it is the
+ * strongest claim available. Prose About pages follow.
  */
-export const ABOUT_PATHS = ['/about', '/about-us', '/company', '/our-story', '']
+export const ABOUT_PATHS = [
+  '', '/about', '/about-us', '/about-us/', '/company', '/our-story', '/who-we-are', '/en/about',
+]
 
 /** Absolute URL for one candidate path on a company site, or null if the stored
  *  website is not a usable http(s) URL. */
