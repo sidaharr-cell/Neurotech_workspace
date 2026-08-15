@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
   scatterPoints, filterFunding, STAGE_BANDS, STAGE_LABELS, MODALITY_LABELS, MODALITY_COLOR,
-  DEFAULT_STATUS_FILTER, fmtUsd, fmtMonthYear,
+  DEFAULT_STATUS_FILTER, AGE_BANDS, ageBand, fmtUsd, fmtMonthYear,
 } from '../lib/fundingBoard'
 import { median, logDomain, logScale, decadeTicks, beeswarm, swarmSpread } from '../lib/swarm'
 
@@ -68,7 +68,25 @@ import { median, logDomain, logScale, decadeTicks, beeswarm, swarmSpread } from 
  */
 const W = 800
 const PAD = { l: 190, r: 34, t: 26, b: 58 }
-const R = 4.6             // every point is the same size; see the note above
+/**
+ * Point radius carries company age, in the three bands of AGE_BANDS.
+ *
+ * Size was a dead channel here once before, encoding trailing capital that 27 of
+ * 45 companies did not have, and it is only back because age is banded rather
+ * than continuous: 38 of the 45 carry a band, against 29 that could carry a
+ * continuous size. Areas are roughly 1 : 2 : 3.5, which is readable at three
+ * levels without the largest dot swamping its neighbours.
+ *
+ * The seven that cannot be placed are drawn at UNPLACED_R with a dotted outline
+ * and counted in the legend. They are not defaulted into the middle band: an
+ * unplaceable company is one whose filing does not say, and saying so is the
+ * same discipline as the floor arrows on partial totals.
+ */
+const AGE_R = { young: 3.4, mid: 4.7, old: 6.2 }
+const UNPLACED_R = 3.0
+/** Collision spacing for the swarm. One radius for every point, the largest, so
+ *  no pair can overlap whatever mix of sizes a row happens to hold. */
+const R = 6.2
 const BAND_GAP = 42
 const MIN_ROW = 48
 const ROW_PAD = 18        // breathing room around a swarm inside its row
@@ -193,9 +211,18 @@ export default function CapitalStageScatter({ board, filters = null }) {
   if (!board || all.length < 5) return null
 
   const H = layout.height
+  /** Ages are whole years, so the reader's calendar year is precise enough and
+   *  the figure does not need to know today's date. */
+  const year = new Date().getFullYear()
   const modalities = [...new Set(points.map(p => p.modality).filter(Boolean))]
   const recent = points.filter(p => p.trailing > 0).length
   const partial = points.filter(p => p.partialTotal).length
+  const byAge = points.reduce((acc, p) => {
+    const b = ageBand(p, year)
+    acc[b || 'none'] = (acc[b || 'none'] || 0) + 1
+    return acc
+  }, {})
+  const anyAge = AGE_BANDS.some(b => byAge[b.id])
   const narrowed = all.length - points.length
   const go = r => navigate(r.href)
 
@@ -278,6 +305,29 @@ export default function CapitalStageScatter({ board, filters = null }) {
               </span>
             )}
           </div>
+
+          {anyAge && (
+            <div className="mb-3 pb-1 flex flex-nowrap items-center gap-x-3 overflow-x-auto text-[11px] font-sans">
+              <span className="shrink-0 uppercase tracking-[0.08em] text-muted/70">Age</span>
+              {AGE_BANDS.filter(b => byAge[b.id]).map(b => (
+                <span key={b.id} className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
+                  <svg aria-hidden width="15" height="15" viewBox="0 0 15 15" className="shrink-0">
+                    <circle cx="7.5" cy="7.5" r={AGE_R[b.id]} fill={INK} fillOpacity="0.78" />
+                  </svg>
+                  {b.label} ({byAge[b.id]})
+                </span>
+              ))}
+              {byAge.none > 0 && (
+                <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
+                  <svg aria-hidden width="15" height="15" viewBox="0 0 15 15" className="shrink-0">
+                    <circle cx="7.5" cy="7.5" r={UNPLACED_R} fill={FIG_BG} stroke={INK}
+                      strokeWidth="1.4" strokeDasharray="1.6 1.4" />
+                  </svg>
+                  Age not established ({byAge.none})
+                </span>
+              )}
+            </div>
+          )}
 
           {asTable ? <ScatterTable points={points} /> : (
             // The scale is bracketed at BOTH ends, because everything in an SVG
@@ -381,28 +431,37 @@ export default function CapitalStageScatter({ board, filters = null }) {
                           const cy = row.cy + dy
                           const color = MODALITY_COLOR[p.modality] || '#6B7280'
                           const isRecent = p.trailing > 0
+                          const band = ageBand(p, year)
+                          const pr = band ? AGE_R[band] : UNPLACED_R
+                          const age = p.incorporatedYear
+                            ? ` Incorporated ${p.incorporatedYear}.`
+                            : p.incorporatedBefore
+                              ? ` Incorporated no later than ${p.incorporatedBefore}.`
+                              : ' Incorporation year not established.'
                           const label = `${p.name}. ${fmtUsd(p.total)} raised`
                             + (p.partialTotal ? ', private capital only, so the figure is a floor. ' : '. ')
                             + `${STAGE_LABELS[p.furthestStage]}.`
                             + (p.modality ? ` ${MODALITY_LABELS[p.modality]}.` : '')
                             + (isRecent ? ` ${fmtUsd(p.trailing)} in the last 24 months.`
                               : ' No round in the last 24 months.')
+                            + age
                           return (
                             <g key={p.id} role="link" tabIndex={0} aria-label={label}
                               onClick={() => go(p)}
                               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(p) } }}
                               className="cursor-pointer outline-none focus-visible:[&>circle]:stroke-ink">
                               <title>{label}</title>
-                              <circle cx={cx} cy={cy} r={R}
+                              <circle cx={cx} cy={cy} r={pr}
                                 fill={isRecent ? color : (row.lane % 2 === 0 ? LANE_BG : FIG_BG)}
                                 fillOpacity={isRecent ? 0.78 : 1}
                                 stroke={isRecent ? '#FFFFFF' : color}
-                                strokeWidth={isRecent ? 1.1 : 1.8} />
+                                strokeWidth={isRecent ? 1.1 : 1.8}
+                                strokeDasharray={band ? undefined : '1.6 1.4'} />
                               {/* A private-only total on a company that also
                                   raised publicly is a lower bound, so the point
                                   says which way the truth lies. */}
                               {p.partialTotal && (
-                                <path d={`M${cx + R + 2} ${cy} h7.5 m-3 -2.8 l3 2.8 l-3 2.8`}
+                                <path d={`M${cx + pr + 2} ${cy} h7.5 m-3 -2.8 l3 2.8 l-3 2.8`}
                                   fill="none" stroke={color} strokeOpacity="0.8" strokeWidth="1.3"
                                   strokeLinecap="round" strokeLinejoin="round" />
                               )}
@@ -435,6 +494,14 @@ export default function CapitalStageScatter({ board, filters = null }) {
           small to call it: Spearman rho 0.35 across 19 companies, with a confidence interval that
           crosses zero. In the authorisation band every company sits at 510(k) cleared, so there is
           no spread to read a trend from. Measured 29 July 2026 over the unfiltered set.
+        </p>
+        <p>
+          Point size is the company&apos;s age, from the year of incorporation it declared on its own
+          Form D filing. That is not the same fact as when it was founded: a company can trade for
+          years before incorporating, and redomiciling into the US resets the declared year while the
+          company is unchanged. An issuer formed more than five years before filing declares no year
+          at all, only that it was earlier, which places it in the oldest band when the bound allows
+          and nowhere when it does not.
         </p>
         <p>
           Stage comes from a ClinicalTrials.gov record or an FDA decision. Companies whose stage

@@ -128,6 +128,50 @@ export const STAGE_BANDS = [
   { id: 'regulatory', label: 'FDA authorisation', stages: ['de_novo_granted', 'cleared_510k', 'approved_pma'] },
 ]
 
+/**
+ * Company age, in three bands.
+ *
+ * Banded rather than continuous, and that is what makes it usable at all. Form D
+ * asks for a year of incorporation but an issuer formed more than five years
+ * before filing answers "over five years ago" and gives none, so a quarter of
+ * the set has only an upper bound on the year — which is a LOWER bound on the
+ * age. A continuous scale cannot draw "at least 22 years old". A band can,
+ * whenever the minimum age already lands in the top band.
+ *
+ * Measured 15 Aug 2026 on the 45 companies the scatter plots: 29 declare a year
+ * and 9 of the 16 bounds place, so 38 of 45 carry a band against 29 that would
+ * carry a continuous size. The remaining 7 have minimum ages of 6 to 12 and are
+ * genuinely unplaceable — `null`, and the figure marks them rather than
+ * defaulting them into the middle.
+ *
+ * This is INCORPORATION, not founding. See docs/founded-backfill-scope.md.
+ */
+export const AGE_BANDS = [
+  { id: 'young', label: 'Under 7 years', maxAge: 6 },
+  { id: 'mid', label: '7 to 12 years', maxAge: 12 },
+  { id: 'old', label: 'Over 12 years', maxAge: Infinity },
+]
+
+const bandForAge = age => AGE_BANDS.find(b => age <= b.maxAge)?.id ?? 'old'
+
+/**
+ * Which band a company falls in, or null when the evidence cannot say.
+ *
+ * A bound places a company only when its MINIMUM age already falls in the top
+ * band: "at least 22 years" is unambiguously "over 12", while "at least 8" is
+ * consistent with two different bands and resolves to null rather than guessing
+ * the nearer one.
+ */
+export function ageBand(row, currentYear) {
+  if (!row) return null
+  if (row.incorporatedYear) return bandForAge(currentYear - row.incorporatedYear)
+  if (row.incorporatedBefore) {
+    const minAge = currentYear - row.incorporatedBefore
+    return bandForAge(minAge) === 'old' ? 'old' : null
+  }
+  return null
+}
+
 /** Rows the scatter can honestly plot: a sourced total and a stage that came
  *  from a real record. A stage with no evidence is not a position on any axis. */
 export function scatterPoints(rows = []) {
@@ -339,6 +383,11 @@ const COLUMNS = [
  *  column the moment it has, with no redeploy. */
 const COLUMNS_009 = `${COLUMNS},was_publicly_traded`
 
+/** Added by migration 018. Layered on 009 the same way and for the same reason:
+ *  the chart keeps working on a database where neither has been applied. */
+const COLUMNS_018 =
+  `${COLUMNS_009},incorporated_year,incorporated_before_year,incorporated_source_url`
+
 async function selectFundedOrgs() {
   const query = cols => supabase.from('organizations').select(cols)
     .eq('type', 'company')
@@ -346,8 +395,17 @@ async function selectFundedOrgs() {
     .not('inclusion_basis', 'is', null)
     .order('total_raised_usd', { ascending: false })
     .limit(500)
-  const res = await query(COLUMNS_009)
-  if (res.error && /was_publicly_traded/.test(res.error.message)) return query(COLUMNS)
+  const res = await query(COLUMNS_018)
+  if (!res.error) return res
+  // Fall back one migration at a time, so a database with 009 but not 018 keeps
+  // its partial-total marks instead of losing them alongside the ages.
+  if (/incorporated_/.test(res.error.message)) {
+    const r9 = await query(COLUMNS_009)
+    if (!r9.error) return r9
+    if (/was_publicly_traded/.test(r9.error.message)) return query(COLUMNS)
+    return r9
+  }
+  if (/was_publicly_traded/.test(res.error.message)) return query(COLUMNS)
   return res
 }
 
@@ -385,6 +443,11 @@ export function toRow(o, trailing = 0) {
     stageEvidenceType: o.stage_evidence_type || null,
     stageEvidenceId: o.stage_evidence_id || null,
     stageEvidenceUrl: stageEvidenceUrl(o.stage_evidence_type, o.stage_evidence_id),
+    // Migration 018. Exactly one of these is ever set; `incorporatedBefore` is
+    // an upper bound on the year, so a LOWER bound on the company's age.
+    incorporatedYear: o.incorporated_year ?? null,
+    incorporatedBefore: o.incorporated_before_year ?? null,
+    incorporatedSourceUrl: o.incorporated_source_url ?? null,
     lastVerifiedAt: o.last_verified_at || null,
   }
 }

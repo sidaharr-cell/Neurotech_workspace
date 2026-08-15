@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   rankFunding, trailingTotals, trailingCutoff, toRow, stageEvidenceUrl, sortTitle,
-  DEFAULT_STATUS_FILTER, STAGE_ORDER, unavailableLabel,
+  DEFAULT_STATUS_FILTER, STAGE_ORDER, unavailableLabel, ageBand, AGE_BANDS,
 } from './fundingBoard'
 
 const row = (over = {}) => ({
@@ -175,5 +175,52 @@ describe('STAGE_ORDER', () => {
     expect(STAGE_ORDER[0]).toBe('preclinical')
     expect(STAGE_ORDER.at(-1)).toBe('withdrawn')
     expect(STAGE_ORDER).toHaveLength(10)
+  })
+})
+
+// ── Company age, from an incorporation year or a bound on one ───────────────
+
+describe('ageBand', () => {
+  const NOW = 2026
+  const exact = y => ({ incorporatedYear: y, incorporatedBefore: null })
+  const bound = y => ({ incorporatedYear: null, incorporatedBefore: y })
+
+  it('bands a company that declared a year', () => {
+    expect(ageBand(exact(2023), NOW)).toBe('young')   // 3
+    expect(ageBand(exact(2016), NOW)).toBe('mid')     // 10
+    expect(ageBand(exact(2006), NOW)).toBe('old')     // 20
+  })
+
+  it('puts the band edges where the labels say they are', () => {
+    expect(ageBand(exact(2020), NOW)).toBe('young')   // 6, under 7
+    expect(ageBand(exact(2019), NOW)).toBe('mid')     // 7
+    expect(ageBand(exact(2014), NOW)).toBe('mid')     // 12
+    expect(ageBand(exact(2013), NOW)).toBe('old')     // 13, over 12
+  })
+
+  /**
+   * The whole reason for banding. "Incorporated no later than 2004" means at
+   * least 22 years old, which is one band and no other, so it places — a
+   * continuous size could not have drawn it at all.
+   */
+  it('places a bound whose minimum age is already in the top band', () => {
+    expect(ageBand(bound(2004), NOW)).toBe('old')     // at least 22
+    expect(ageBand(bound(2009), NOW)).toBe('old')     // at least 17
+  })
+
+  it('refuses a bound that spans more than one band', () => {
+    expect(ageBand(bound(2020), NOW)).toBe(null)      // at least 6: any band
+    expect(ageBand(bound(2016), NOW)).toBe(null)      // at least 10: mid or old
+    expect(ageBand(bound(2014), NOW)).toBe(null)      // at least 12: mid or old
+  })
+
+  it('has nothing to say without evidence', () => {
+    expect(ageBand({ incorporatedYear: null, incorporatedBefore: null }, NOW)).toBe(null)
+    expect(ageBand(null, NOW)).toBe(null)
+  })
+
+  it('only ever returns a band that exists', () => {
+    const ids = new Set(AGE_BANDS.map(b => b.id))
+    for (const y of [1995, 2005, 2015, 2025, 2026]) expect(ids.has(ageBand(exact(y), NOW))).toBe(true)
   })
 })
