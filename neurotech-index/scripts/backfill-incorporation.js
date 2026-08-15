@@ -1,6 +1,6 @@
 /**
- * backfill-incorporation.js — when a funded company was incorporated, from its
- * own Form D filing.
+ * backfill-incorporation.js — when a company was incorporated, from its own
+ * Form D filing.
  *
  *   node --env-file=.env scripts/backfill-incorporation.js            # dry run
  *   node --env-file=.env scripts/backfill-incorporation.js --commit
@@ -12,9 +12,15 @@
  * `preferIncorporation` in scripts/lib/funding.js, which are pure and tested;
  * this script is the sweep around them.
  *
- * Measured coverage on 15 Aug 2026, over the 204 companies with a sourced total
- * and a CIK: 149 declare an exact year, 54 declare only "over five years ago",
- * 1 yields nothing. See docs/founded-backfill-scope.md.
+ * Measured coverage on 15 Aug 2026, over the 214 companies with a CIK: 151
+ * declare an exact year, 56 declare only "over five years ago", 7 yield nothing.
+ * The other 870 companies on the site have no CIK and are out of this script's
+ * reach entirely — Form D is a US private-placement filing, and most of the
+ * index has never made one. See docs/founded-backfill-scope.md.
+ *
+ * This is INCORPORATION, not founding. The two differ, and not by rounding:
+ * Merge Labs reads 2025 in `founded` against 2016 on its filing, Saluda Medical
+ * 2013 against 2023. Both are redomiciliations or shell reuse, not errors.
  *
  * What this deliberately does NOT do:
  *
@@ -100,18 +106,22 @@ async function run() {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
   /**
+   * Every company with a CIK, not just the funded ones. A CIK is what makes an
+   * issuer reachable on EDGAR, and having raised a sourced round is a separate
+   * fact — 214 companies have a CIK against 205 with a total, and the ones in
+   * the gap were being skipped for no reason the source cares about.
+   *
    * A dry run works BEFORE migration 018 is applied, because it writes nothing
-   * and previewing the sweep is exactly what you want before changing a schema.
-   * Only --commit requires the columns to exist. Same shape as the COLUMNS_009
-   * fallback in src/lib/fundingBoard.js.
+   * and previewing the sweep is what you want before changing a schema. Only
+   * --commit requires the columns. Same shape as the COLUMNS_009 fallback in
+   * src/lib/fundingBoard.js.
    */
   const BASE = 'id,name,cik,founded'
   const select = cols => sb.from('organizations').select(cols)
     .eq('type', 'company')
-    .not('total_raised_usd', 'is', null)
     .not('cik', 'is', null)
-    .order('total_raised_usd', { ascending: false })
-    .limit(500)
+    .order('name')
+    .limit(1000)
 
   let { data: orgs, error } = await select(`${BASE},incorporated_year,incorporated_before_year`)
   if (error && /incorporated_/.test(error.message)) {
@@ -126,7 +136,7 @@ async function run() {
   if (error) { console.error('read failed:', error.message); process.exit(1) }
 
   const targets = orgs.slice(0, LIMIT)
-  console.log(`${targets.length} funded companies with a CIK${COMMIT ? '' : '  (dry run)'}\n`)
+  console.log(`${targets.length} companies with a CIK${COMMIT ? '' : '  (dry run)'}\n`)
 
   const now = new Date().toISOString()
   const updates = []
