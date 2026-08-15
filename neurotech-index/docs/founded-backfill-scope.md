@@ -160,3 +160,70 @@ first-filing date, incorporation state, or anything else that is not the
 company's own declaration. Do not size the dots by age on 64% coverage: an
 encoding that is false for a third of the marks is the defect this figure was
 just rebuilt to remove.
+
+---
+
+# Measured 15 Aug 2026: does age confound the capital/stage relationship?
+
+Run before building anything, on the 29 plotted companies whose incorporation
+year Form D states exactly. Incorporation year stands in for age, with the
+caveat above that the two are not the same fact.
+
+Spearman throughout, on average ranks so the heavy ties at `first_in_human` are
+handled. Intervals are Fisher z; the partial spends one extra degree of freedom.
+
+## The clinical band, which is the only band where the question can be asked
+
+Every company in the authorisation band sits at `510(k) cleared`, so stage has no
+variance there and a capital-versus-stage correlation does not exist to be
+adjusted. 12 of that band's 19 companies have an exact year.
+
+| | n | rho | 95% CI |
+|---|---|---|---|
+| capital vs stage, whole band | 19 | 0.328 | [-0.15, 0.68] |
+| capital vs stage, the 12 with a year | 12 | 0.301 | [-0.33, 0.75] |
+| capital vs age | 12 | **0.078** | [-0.52, 0.62] |
+| stage vs age | 12 | 0.317 | [-0.31, 0.75] |
+| **capital vs stage, controlling for age** | 12 | **0.292** | [-0.37, 0.76] |
+
+**Controlling for age moves the correlation by -0.009.** The mechanism is
+visible in the rows above it: a confounder has to correlate with both variables,
+and age correlates with stage (0.317, older companies are further along, as one
+would expect) but not with capital (0.078). So it cannot be carrying the
+capital-stage relationship.
+
+The 12 are not a biased draw on the thing being adjusted: the band's rho is 0.328
+across all 19 and 0.301 across the 12, so the subset is representative of the
+relationship itself.
+
+## Why this does not go in the caption
+
+**n = 12, and every interval above crosses zero by a wide margin.**
+`funding-stage-scatter-finding.md` already settled what to do with a result like
+this, when the same figure sat at n=18: *a wide confidence interval around zero
+is ignorance, not a finding, and shipping it as one would have been the exact
+failure the brief warns about.* A partial rho of 0.292 with an interval of
+[-0.37, 0.76] is that same non-finding. Printing it beside the existing rho would
+dress ignorance up as a control.
+
+There is a second reason, and it is the one from the scope above. The companies
+missing an exact year are systematically the oldest, so the 12 span a truncated
+age range, and a restricted range attenuates exactly the capital-versus-age
+correlation this rests on. The weakest link in the argument is weakest precisely
+where the missing data is.
+
+So: **no evidence that age confounds it, on evidence too thin to clear it.** The
+honest state is that the question is open, which is where it stays until the
+backfill lifts the clinical band's coverage.
+
+## Two other things the run turned up
+
+The caption's `rho 0.35 across 19 companies` now measures **0.328** on the same
+band. The caption is dated "Measured 29 July 2026" so it is not wrong, but the
+underlying set has moved and the number should be re-measured whenever that
+sentence is next touched.
+
+Among the 17 authorisation-band companies with a year, capital versus age is
+**-0.276** [-0.67, 0.24]: older 510(k) companies have raised slightly less, on an
+interval that crosses zero. Consistent with the pathway being cheap and crowded
+with small firms, and not evidence of anything on its own.
