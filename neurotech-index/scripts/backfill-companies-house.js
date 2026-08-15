@@ -4,10 +4,25 @@
  *   node --env-file=.env scripts/backfill-companies-house.js            # dry run
  *   node --env-file=.env scripts/backfill-companies-house.js --commit
  *
- * Needs COMPANIES_HOUSE_KEY in .env. The key is free: register at
- * https://developer.company-information.service.gov.uk/ and create an
- * application. Without it this script exits with that instruction rather than
- * pretending it ran.
+ * STATUS as of 15 Aug 2026: NOT RUN. This script needs COMPANIES_HOUSE_KEY, the
+ * project decided against the registration step, and nothing here has ever
+ * written a row. It is kept because the search API is the precise way to do this
+ * and the matcher below is tested; it is inert, not abandoned.
+ *
+ * There is a keyless alternative for the same fact, verified reachable on
+ * 15 Aug 2026:
+ *
+ *   https://download.companieshouse.gov.uk/BasicCompanyDataAsOneFile-YYYY-MM-01.zip
+ *
+ * No registration, HTTP 200, ~493 MB zipped, one row per UK company with
+ * CompanyName, CompanyNumber and IncorporationDate. Matching offline against
+ * that file needs no key and no rate limiting, at the cost of the download and
+ * roughly 2.5 GB unzipped. It would reach the 90 UK-located companies that have
+ * no incorporation year — 8% of the index.
+ *
+ * Whichever route is used, `pickCompany` below is the part that matters and is
+ * unchanged by the choice: the register is full of namesakes and this takes a
+ * hit only when exactly one entry survives.
  *
  * This writes incorporated_year (migration 018), NOT founded_year.
  *
