@@ -52,15 +52,45 @@ import { median, logDomain, logScale, decadeTicks, beeswarm, swarmSpread } from 
  * window, hollow means none.
  */
 
-const W = 780
-const PAD = { l: 150, r: 30, t: 20, b: 48 }
-const R = 3.6             // every point is the same size; see the note above
-const BAND_GAP = 30
-const MIN_ROW = 30
-const ROW_PAD = 10        // breathing room around a swarm inside its row
+/**
+ * ── Why the figure is shaped the way it is ─────────────────────────────────
+ *
+ * Everything in an SVG scales with its container, type included, so the only
+ * thing that fixes a size is the ratio of that size to W. At 780 wide with
+ * 9px gutter labels, a 640px viewport rendered them at 7.4px and drew the
+ * points 5.9px across. The figure was also 3.5:1, which is a letterbox strip
+ * rather than a plot.
+ *
+ * So: fewer units of width per unit of height, larger type as a share of W,
+ * and a min-width on the element (below) that makes a narrow screen SCROLL
+ * rather than shrink. That last one is the rule FundingChart already follows —
+ * squeezing costs the marks the thing they are read for.
+ */
+const W = 800
+const PAD = { l: 190, r: 34, t: 26, b: 58 }
+const R = 4.6             // every point is the same size; see the note above
+const BAND_GAP = 42
+const MIN_ROW = 56
+const ROW_PAD = 18        // breathing room around a swarm inside its row
+
+/**
+ * A median is a summary, and drawing one over three companies lends it the same
+ * authority as one drawn over twenty-six. The rows here run from 3 to 26, so
+ * below this count the row states its n and no median is drawn: the reader is
+ * told what is there rather than handed a centre line to read a trend off.
+ */
+const MIN_MEDIAN_N = 5
 
 const GRID = '#E4E2DC'
 const INK = '#16181D'
+/** Alternate stage rows carry a faint lane, because the thing a reader must not
+ *  get wrong is which stage a point belongs to, and a swarm that bulges puts
+ *  points close to the row above it. */
+const LANE = '#EDEBE4'
+/** LANE at 50% over FIG_BG, precomputed. A hollow point is filled with whatever
+ *  its own lane is, so it reads as a hole in both, and so the gridline behind it
+ *  does not run through the middle of the ring. */
+const LANE_BG = '#F4F3EF'
 /** Module-level so an uncontrolled figure gets the same object every render and
  *  the layout memo is not rebuilt on every parent update. */
 const NO_FILTERS = { statuses: DEFAULT_STATUS_FILTER, modalities: [], stageMin: null }
@@ -107,7 +137,10 @@ export default function CapitalStageScatter({ board, filters = null }) {
             stage: s,
             placed,
             n: members.length,
-            median: median(members.map(p => p.total)),
+            // Held back below MIN_MEDIAN_N. The row still states its count, so
+            // the reader sees a stage with three companies in it rather than a
+            // stage whose summary happens to be missing.
+            median: members.length >= MIN_MEDIAN_N ? median(members.map(p => p.total)) : null,
             height: Math.max(MIN_ROW, 2 * (swarmSpread(placed) + R) + ROW_PAD),
           }
         })
@@ -115,10 +148,16 @@ export default function CapitalStageScatter({ board, filters = null }) {
     }
 
     let y = PAD.t
+    let lane = 0     // counts across bands, so two adjacent rows always differ
     for (const [i, group] of rows.entries()) {
       if (i > 0) y += BAND_GAP
       group.y0 = y
-      for (const row of group.stages) { row.cy = y + row.height / 2; y += row.height }
+      for (const row of group.stages) {
+        row.y0 = y
+        row.cy = y + row.height / 2
+        row.lane = lane++
+        y += row.height
+      }
       group.y1 = y
     }
     return { rows, x, domain, height: y + PAD.b }
@@ -186,14 +225,14 @@ export default function CapitalStageScatter({ board, filters = null }) {
           <div className="mb-3 pb-1 flex flex-nowrap items-center gap-x-3 overflow-x-auto text-[11px] font-sans">
             <span className="shrink-0 uppercase tracking-[0.08em] text-muted/70">Marks</span>
             <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
-              <svg aria-hidden width="11" height="11" viewBox="0 0 11 11" className="shrink-0">
-                <circle cx="5.5" cy="5.5" r="3.6" fill={INK} fillOpacity="0.78" />
+              <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" className="shrink-0">
+                <circle cx="6" cy="6" r="4.2" fill={INK} fillOpacity="0.78" />
               </svg>
               Raised in the last 24 months ({recent})
             </span>
             <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
-              <svg aria-hidden width="11" height="11" viewBox="0 0 11 11" className="shrink-0">
-                <circle cx="5.5" cy="5.5" r="3.6" fill={FIG_BG} stroke={INK} strokeWidth="1.4" />
+              <svg aria-hidden width="12" height="12" viewBox="0 0 12 12" className="shrink-0">
+                <circle cx="6" cy="6" r="4.2" fill={FIG_BG} stroke={INK} strokeWidth="1.8" />
               </svg>
               No round in that window ({points.length - recent})
             </span>
@@ -201,14 +240,14 @@ export default function CapitalStageScatter({ board, filters = null }) {
               <svg aria-hidden width="7" height="11" viewBox="0 0 7 11" className="shrink-0">
                 <line x1="3.5" x2="3.5" y1="1" y2="10" stroke={INK} strokeOpacity="0.62" strokeWidth="1.6" />
               </svg>
-              Median for the stage
+              Median, where the stage holds {MIN_MEDIAN_N} or more
             </span>
             {partial > 0 && (
               <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted">
-                <svg aria-hidden width="13" height="11" viewBox="0 0 13 11" className="shrink-0">
-                  <circle cx="4" cy="5.5" r="3.6" fill={INK} fillOpacity="0.78" />
-                  <path d="M9 5.5 h3 m-2.2 -2.2 l2.2 2.2 l-2.2 2.2" fill="none"
-                    stroke={INK} strokeOpacity="0.6" strokeWidth="1.1"
+                <svg aria-hidden width="15" height="12" viewBox="0 0 15 12" className="shrink-0">
+                  <circle cx="4.5" cy="6" r="4.2" fill={INK} fillOpacity="0.78" />
+                  <path d="M10.5 6 h4 m-2.6 -2.4 l2.6 2.4 l-2.6 2.4" fill="none"
+                    stroke={INK} strokeOpacity="0.65" strokeWidth="1.3"
                     strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 Private total only, so the point is a floor ({partial})
@@ -217,55 +256,77 @@ export default function CapitalStageScatter({ board, filters = null }) {
           </div>
 
           {asTable ? <ScatterTable points={points} /> : (
+            // The scale is bracketed at BOTH ends, because everything in an SVG
+            // scales with its container and there is no font size that is right
+            // at 640px and at 1500px. Below the floor the figure scrolls, the
+            // rule FundingChart already follows and at the same 820px. Above the
+            // ceiling it stops growing and centres, because a card 1380px wide
+            // was drawing 22px stage labels next to 13px body text and turning
+            // the plot back into a ribbon. Between the two, type varies by a
+            // fifth across every viewport the site sees.
             <div className="overflow-x-auto">
-              <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto min-w-[640px]" role="img"
+              <svg viewBox={`0 0 ${W} ${H}`} role="img"
+                className="block mx-auto w-full h-auto min-w-[820px] max-w-[1120px]"
                 aria-label={`Capital raised against verified stage for ${points.length} companies, on a logarithmic axis, banded into clinical evidence and FDA authorisation.`}>
+                {/* ── Lanes ───────────────────────────────────────────────
+                    Drawn first, under everything. Each stage gets a band the
+                    full width of the figure, label included, so a point that
+                    bulges out of a crowded swarm still reads as belonging to
+                    the row its label is in. */}
+                {layout.rows.flatMap(g => g.stages).filter(r => r.lane % 2 === 0).map(row => (
+                  <rect key={`lane-${row.stage}`} x="0" y={row.y0} width={W - PAD.r} height={row.height}
+                    fill={LANE} fillOpacity="0.5" />
+                ))}
+
                 {/* ── X axis: one gridline per decade ─────────────────────── */}
                 {decadeTicks(layout.domain).map(v => (
                   <g key={v}>
                     <line x1={layout.x(v)} x2={layout.x(v)} y1={PAD.t} y2={H - PAD.b}
                       stroke={GRID} strokeWidth="1" />
-                    <text x={layout.x(v)} y={H - PAD.b + 16} textAnchor="middle"
+                    <text x={layout.x(v)} y={H - PAD.b + 20} textAnchor="middle"
                       className="fill-muted" style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace' }}>
                       {fmtUsd(v)}
                     </text>
                   </g>
                 ))}
-                <text x={PAD.l + (W - PAD.l - PAD.r) / 2} y={H - PAD.b + 34} textAnchor="middle"
-                  className="fill-muted" style={{ fontSize: 10.5, letterSpacing: '0.08em' }}>
+                <text x={PAD.l + (W - PAD.l - PAD.r) / 2} y={H - PAD.b + 42} textAnchor="middle"
+                  className="fill-muted" style={{ fontSize: 10, letterSpacing: '0.08em' }}>
                   TOTAL PRIVATE CAPITAL RAISED · EACH GRIDLINE IS TEN TIMES THE LAST
                 </text>
 
                 {layout.rows.map(group => (
                   <g key={group.band.id}>
-                    <text x={4} y={group.y0 - 5} className="fill-muted/70"
+                    <text x={4} y={group.y0 - 9} className="fill-muted/70"
                       style={{ fontSize: 9.5, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
                       {group.band.label}
                     </text>
-                    <line x1={PAD.l - 12} x2={W - PAD.r} y1={group.y0 - 1} y2={group.y0 - 1}
-                      stroke={GRID} strokeWidth="1" />
+                    <line x1={0} x2={W - PAD.r} y1={group.y0 - 1} y2={group.y0 - 1}
+                      stroke={GRID} strokeWidth="1.5" />
 
                     {group.stages.map(row => (
                       <g key={row.stage}>
                         {/* The stage, then what its row holds. The medians are
                             the finding; printing them beats asking a reader to
                             estimate a centre from a cloud of 26 dots. */}
-                        <text x={PAD.l - 14} y={row.cy - 1} textAnchor="end"
+                        <text x={PAD.l - 18} y={row.cy - 3} textAnchor="end"
                           className="fill-ink-soft" style={{ fontSize: 11.5 }}>
                           {STAGE_LABELS[row.stage]}
                         </text>
-                        <text x={PAD.l - 14} y={row.cy + 10} textAnchor="end"
+                        <text x={PAD.l - 18} y={row.cy + 12} textAnchor="end"
                           className="fill-muted/80"
                           style={{ fontSize: 9, fontFamily: 'ui-monospace, monospace' }}>
-                          {row.n} · median {fmtUsd(row.median)}
+                          {row.n} {row.n === 1 ? 'company' : 'companies'}
+                          {row.median != null && ` · median ${fmtUsd(row.median)}`}
                         </text>
 
                         {/* Behind the points, so it never hides one. Darker and
                             thicker than a gridline, or at this size it reads as
-                            a piece of one. */}
-                        <line x1={layout.x(row.median)} x2={layout.x(row.median)}
-                          y1={row.cy - row.height / 2 + 2.5} y2={row.cy + row.height / 2 - 2.5}
-                          stroke={INK} strokeOpacity="0.62" strokeWidth="1.6" />
+                            a piece of one. Absent below MIN_MEDIAN_N. */}
+                        {row.median != null && (
+                          <line x1={layout.x(row.median)} x2={layout.x(row.median)}
+                            y1={row.cy - row.height / 2 + 4} y2={row.cy + row.height / 2 - 4}
+                            stroke={INK} strokeOpacity="0.62" strokeWidth="1.6" />
+                        )}
 
                         {row.placed.map(({ p, x: cx, y: dy }) => {
                           const cy = row.cy + dy
@@ -284,16 +345,16 @@ export default function CapitalStageScatter({ board, filters = null }) {
                               className="cursor-pointer outline-none focus-visible:[&>circle]:stroke-ink">
                               <title>{label}</title>
                               <circle cx={cx} cy={cy} r={R}
-                                fill={isRecent ? color : FIG_BG}
+                                fill={isRecent ? color : (row.lane % 2 === 0 ? LANE_BG : FIG_BG)}
                                 fillOpacity={isRecent ? 0.78 : 1}
                                 stroke={isRecent ? '#FFFFFF' : color}
-                                strokeWidth={isRecent ? 1 : 1.4} />
+                                strokeWidth={isRecent ? 1.1 : 1.8} />
                               {/* A private-only total on a company that also
                                   raised publicly is a lower bound, so the point
                                   says which way the truth lies. */}
                               {p.partialTotal && (
-                                <path d={`M${cx + R + 1.5} ${cy} h6 m-2.4 -2.2 l2.4 2.2 l-2.4 2.2`}
-                                  fill="none" stroke={color} strokeOpacity="0.75" strokeWidth="1.1"
+                                <path d={`M${cx + R + 2} ${cy} h7.5 m-3 -2.8 l3 2.8 l-3 2.8`}
+                                  fill="none" stroke={color} strokeOpacity="0.8" strokeWidth="1.3"
                                   strokeLinecap="round" strokeLinejoin="round" />
                               )}
                             </g>

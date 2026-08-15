@@ -167,6 +167,46 @@ in `src/lib/swarm.js`:
    than 4x. Recency is now the binary it always was in the data, filled against
    hollow.
 
+### Second pass, same day: the marks were right and the figure was still small
+
+The changes above fixed what the figure encoded and not how much room it had to
+say it in. Measured after the first pass, at a 649px viewport: the SVG hit its
+min-width, scaled DOWN to 0.82, and rendered its gutter labels at 7.4px with the
+points 5.9px across. At a 1500px viewport the same figure scaled UP to 1.66 and
+drew 22px stage labels beside 13px body text. Everything inside an SVG scales
+with its container, type included, so there is no font size that is right at
+both ends and the only fix is to bound the scale.
+
+| | first pass | now |
+|---|---|---|
+| aspect ratio | 3.49:1 | 2.29:1 |
+| scale at a 649px viewport | 0.82 | 1.02 |
+| scale at a 1500px viewport | 1.66 | 1.40 |
+| point diameter, rendered | 5.9–16.6px | 9.4–12.9px |
+| gutter label, rendered | 7.4–17.4px | 9.2–12.6px |
+
+- **The scale is bracketed at both ends**, `min-w-[820px] max-w-[1120px]`. The
+  floor is FundingChart's rule and its exact number: below it the figure scrolls
+  inside its own container rather than squeezing, and the page body still does
+  not scroll sideways. The ceiling is new, and stops a 1380px card from inflating
+  the plot back into a ribbon with oversized labels.
+- **Rows are twice as tall and points are bigger**, which is where the aspect
+  ratio came from.
+- **Alternate stage rows carry a faint lane** running the full width of the
+  figure, label included. The thing a reader must not get wrong is which stage a
+  point belongs to, and a swarm that bulges puts points close to the row above
+  it. Hollow points are filled with their own lane's colour so they read as
+  holes in both tints.
+
+### A median needs a minimum n
+
+`MIN_MEDIAN_N = 5`. The rows hold 3, 4, 12 and 26 companies, and a median tick
+drawn over three of them carried exactly as much visual authority as one drawn
+over twenty-six. Below the threshold no tick is drawn and the row states only its
+count, so the reader sees a stage with three companies in it rather than a stage
+whose summary is unaccountably missing. Today that suppresses Pivotal (3) and
+Feasibility (4). The legend says the rule rather than leaving the gap unexplained.
+
 Two things the figure now says that it could not before. A private-only total on
 a company that also raised publicly is drawn as a floor, with an arrow pointing
 the way the true figure lies — the bar chart above daggered these and the scatter
