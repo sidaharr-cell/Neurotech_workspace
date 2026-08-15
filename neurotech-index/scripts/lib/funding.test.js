@@ -416,9 +416,18 @@ describe('preferIncorporation', () => {
     expect(preferIncorporation(exact(2009), bound(2016))).toEqual(exact(2009))
   })
 
-  it('keeps the tighter of two bounds', () => {
-    // Both are true of the same company; the later one says more.
-    expect(preferIncorporation(bound(2004), bound(2011))).toEqual(bound(2011))
+  it('keeps the stronger of two bounds, which is the earlier one', () => {
+    // Both are true of the same company, but "no later than 2004" implies "no
+    // later than 2011", so it is the claim with more in it: at least 22 years
+    // old rather than at least 15. Keeping 2011 understates the company's age.
+    expect(preferIncorporation(bound(2004), bound(2011))).toEqual(bound(2004))
+    expect(preferIncorporation(bound(2011), bound(2004))).toEqual(bound(2004))
+  })
+
+  it('does not let a weaker bound from a later filing overwrite a stronger one', () => {
+    // The order the sweep sees them in must not change the answer.
+    const seen = [bound(2016), bound(2004), bound(2011)]
+    expect(seen.reduce((acc, r) => preferIncorporation(acc, r), null)).toEqual(bound(2004))
   })
 
   it('keeps the earliest exact year, since reincorporating resets the later one', () => {
