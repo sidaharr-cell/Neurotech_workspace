@@ -2184,5 +2184,230 @@
   "evidence": "Company boilerplate, consistent across several releases: \"The company was founded in 2016 by Co-CEOs Jake Junkil Been and Donghyeon Kim, who developed the next-generation neuro-navigation system.\"",
   "confidence": "high",
   "caveat": "Squarely in scope: AI brain-image analysis and stimulation planning — Neurophet AQUA for MRI, SCALE PET, and tES/TMS LAB for e-field modelling. Active and growing, with preliminary Kosdaq listing approval and a Roche partnership."
+ },
+ {
+  "name": "Mentice",
+  "year": 1999,
+  "kind": "company_site",
+  "url": "https://www.mentice.com/about-us",
+  "evidence": "\"Launched in 1999, Mentice is the leading provider of software and hardware simulation solutions for image guided interventional therapies.\" The site also references a 25-year anniversary, consistent with 1999.",
+  "confidence": "high",
+  "caveat": "Listed on Nasdaq Stockholm; acquired Vascular Simulations in 2020. SCOPE: endovascular simulation for clinician training, covering neurovascular thrombectomy alongside cardiac and peripheral — a training simulator vendor rather than a nervous-system technology."
+ },
+ {
+  "name": "EYSZ Inc.",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://epilepsynorcal.org/research-spotlight/",
+  "evidence": "Epilepsy Foundation of Northern California: \"In 2018, Dr. Rachel Kuperman founded Eysz Inc\", leading a team developing an eye tracker to identify seizures and medication side effects.",
+  "confidence": "medium",
+  "caveat": "A nonprofit secondary source; ZoomInfo independently gives 2018. Genuinely in scope — oculometric analysis to detect absence seizures, an NIH SBIR Fast-Track grantee with trial NCT04439656. LOCATION: sources place it in San Francisco or Piedmont rather than the Los Gatos the index records."
+ },
+ {
+  "name": "Mediagnost",
+  "year": 1985,
+  "kind": "company_site",
+  "url": "https://mediagnost.de/en/company/",
+  "evidence": "Company page: Mediagnost Gesellschaft fuer Forschung und Herstellung von Diagnostika GmbH was founded in Tuebingen in 1985 and developed into a modern biotechnology company.",
+  "confidence": "high",
+  "caveat": "SCOPE: a laboratory diagnostics reagents manufacturer making ELISA and immunoassay kits for infectiology and endocrinology. No nervous-system product line at all. LOCATION: founded in Tuebingen; Reutlingen is the current technology-park address."
+ },
+ {
+  "name": "Keystone Heart",
+  "year": 2004,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/smt-research-and-development",
+  "evidence": "Tracxn profile for SMT Research and Development, Herzliya, gives 2004; CB Insights indexes Keystone Heart under the same predecessor name.",
+  "confidence": "low",
+  "caveat": "Aggregator only. RENAMED from SMT Research & Development Ltd to Keystone Heart Ltd in 2012 — that rename must not be read as a founding. Acquired by Venus Medtech of Hangzhou, merger completed 26 December 2018. SCOPE: TriGUARD 3 is a cerebral embolic protection filter deployed in the aortic arch during TAVR — its endpoint is brain protection but the device is cardiovascular hardware that never touches the nervous system."
+ },
+ {
+  "name": "Blazepod",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/coyotta",
+  "evidence": "Crunchbase records BlazePod, formerly Coyotta, as founded March 2015 by Yaniv Shneiderman.",
+  "confidence": "low",
+  "conflict": "A related Crunchbase person profile gives Coyotta 1 December 2014 against the company profile's March 2015. Both are aggregator-sourced and neither is primary."
+ },
+ {
+  "name": "Northstar Neuroscience",
+  "year": 1999,
+  "kind": "press",
+  "url": "https://www.implantable-device.com/2011/12/22/northstar-neurosciences-renova-cortical-stimulation-system/",
+  "evidence": "\"Northstar was founded in 1999 as Vertis Neuroscience headquartered in Seattle, WA.\" Renamed Northstar Neuroscience in 2003 on pivoting to the Renova cortical stimulation system for post-stroke upper-limb recovery.",
+  "confidence": "medium",
+  "caveat": "The year belongs to the original name, Vertis Neuroscience. IPO May 2006 raising about $113.9M; the EVEREST pivotal trial missed its primary endpoint in January 2008 and the company closed on 2 July 2009. Genuinely in scope. NOTE: an earlier automated pass dated this company from a Wikipedia article about \"North Star Mall\"; this source has nothing to do with that."
+ },
+ {
+  "name": "Cogstate Ltd.",
+  "year": 1999,
+  "kind": "company_site",
+  "url": "https://www.cogstate.com/about-cogstate/",
+  "evidence": "Founded in 1999 when a group of neuroscientists in Australia worked with angel investors to build the first code base, the idea coming from work with indigenous communities in central Australia where language and culture limited existing cognitive assessments. Founders David Darby and Paul Maruff.",
+  "confidence": "high",
+  "caveat": "LOCATION: an Australian company headquartered at 367 Collins Street, Melbourne, listed on the ASX as CGS; the index's New Haven is a satellite office, not the origin."
+ },
+ {
+  "name": "Ceretrieve",
+  "year": 2016,
+  "kind": "accelerator",
+  "url": "https://www.trendlines.com/company/ceretrieve/",
+  "evidence": "The Trendlines Group portfolio page gives 2016. Crunchbase independently gives December 2016.",
+  "confidence": "medium",
+  "caveat": "A neuro-thrombectomy system: an aspiration catheter with an expandable soft tip and integrated embolic protection for extracting clots from large cerebral vessels in acute ischaemic stroke. In scope."
+ },
+ {
+  "name": "CIMHS - Centre for Interactive Mental Health Solutions",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://cimhs.com/about.html",
+  "evidence": "\"After reviewing the academic research, writing an entire therapy manual adapted for an online setting, and building the website to deliver it all, we formed and launched CIMHS in 2013.\"",
+  "confidence": "medium",
+  "conflict": "The site footer reads \"Copyright 2010-2025\", which would imply 2010. That is a copyright range rather than a founding statement and the about page is explicit, but the discrepancy exists."
+ },
+ {
+  "name": "Atlas Neuroengineering",
+  "year": 2012,
+  "kind": "registry",
+  "url": "https://www.northdata.com/Atlas%20Neuroengineering%20B%C2%B7V%C2%B7,%20Leuven/KBO%200845.478.625",
+  "evidence": "Belgian KBO enterprise number 0845.478.625, registration 24 April 2012, initial capital 18,600 euro.",
+  "confidence": "low",
+  "caveat": "An incorporation date. The probe technology came out of the EU FP-6 NeuroProbes project so informal activity likely predates it, and the company's own about page states no year. In scope: high-density silicon neural probes, a spin-off of imec Leuven and IMTEK Freiburg. Still filing accounts as of September 2025, so active despite being very small."
+ },
+ {
+  "name": "Long Good",
+  "year": 2011,
+  "kind": "company_site",
+  "url": "https://en.longgood.com.tw/about",
+  "evidence": "\"He founded LongGood MediTech in 2011 with the vision of delivering comprehensive rehabilitation training and assessment solutions.\"",
+  "confidence": "high",
+  "caveat": "The proper name is LongGood MediTech; \"Long Good\" is a shortened form. An interactive telerehabilitation system with GaitBEST gait analysis and HappyGoGo training, serving neurological rehabilitation alongside musculoskeletal and orthopaedic — rehab technology broadly rather than neurotechnology specifically."
+ },
+ {
+  "name": "Leucadia Therapeutics Inc",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.fightaging.org/archives/2021/12/leucadia-therapeutics-towards-the-prevention-of-alzheimers-disease/",
+  "evidence": "Doug Ethell published his hypothesis on the trigger for Alzheimer's in 2014 and founded Leucadia Therapeutics in 2015 to develop a therapy based on it. The Methuselah Foundation funding announcement of December 2015 is consistent.",
+  "confidence": "medium",
+  "caveat": "Despite the name this is a DEVICE company, not a drug developer: its own science page describes Arethusta as \"a specially designed device that can be implanted in an outpatient procedure to open a drain in the cribriform plate\", on the thesis that Alzheimer's pathology follows reduced CSF drainage. In scope. leucadiatx.com has no about page and gives no address, so the Riverside location could not be verified."
+ },
+ {
+  "name": "WellTrack",
+  "year": 2010,
+  "kind": "press",
+  "url": "https://entrevestor.com/home/entry/welltrack-hits-400000-in-arr",
+  "evidence": "Darren Piercey, a tenured UNB psychology professor, established WellTrack — legal name CyberPsyc Software Solutions — in 2010 to build an online tool for anxiety and depression, securing funding in 2012.",
+  "confidence": "medium",
+  "conflict": "Crunchbase and CB Insights give 2012, which Entrevestor's narrative shows to be the funding year. The two are reconcilable, but 2012 being the incorporation of a successor entity cannot be fully ruled out."
+ },
+ {
+  "name": "Nibs",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/nibs-neuroscience-technologies/__kHN-oIZpC5q23WsUl9G75QuMBkc7RvGlQiAoDQkivMg",
+  "evidence": "\"NIBS NeuroScience Technologies... founded in 2014 by Iftach Dolev\", Israel.",
+  "confidence": "low",
+  "caveat": "Aggregator only; Startup Nation Central returned 403. The entity is effectively now QuantalX Neuroscience Ltd under the same founder, and DELPhI became the Delphi-MD system, FDA De Novo authorised in November 2025 — a rename and continuation, not a death, though aggregators list the old name as deadpooled. LOCATION: Ramat Gan, not Zur Moshe."
+ },
+ {
+  "name": "Wazi",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://www.startuplist.africa/startups/wazi",
+  "evidence": "StartupList Africa: \"Founded: 2018\" — Wazi, Nairobi, founders Alex Royea and David Henia.",
+  "confidence": "low",
+  "conflict": "Founders Factory Africa's own portfolio page gives mid-2020 against StartupList Africa and Business Daily Africa's 2018. 2020 may be when FFA invested or the current entity incorporated, and 2018 when the founders started building. Unresolved."
+ },
+ {
+  "name": "hiMoment",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.f6s.com/company/himoment",
+  "evidence": "hiMoment, Vienna, founded 2016 by Christoph Schnedlitz and Jan Hruby.",
+  "confidence": "low",
+  "caveat": "Aggregator-grade: every Austrian press article attempted returned 403 or 410, so no primary sentence was read. Circumstantially consistent with a \"Best Idea\" award at a PrimeCROWD event in November 2016. SCOPE: a gratitude journalling app whose marketing claims it combines neuroscience with AI, but with no sensing of any kind."
+ },
+ {
+  "name": "Qynapse",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://qynapse.com/company/",
+  "evidence": "\"Founded in Paris, France in 2015, as a spin-off from the CATI consortium of neuroimaging research laboratories.\" Founded by Olivier Courreges with clinicians and researchers from CATI.",
+  "confidence": "high",
+  "caveat": "Clearly in scope: QyScore is CE-marked and FDA-cleared brain MRI volumetry, with QyPredict for clinical-trial patient selection. Dual HQ Paris and Boston."
+ },
+ {
+  "name": "Clutch Cognition",
+  "year": 2019,
+  "kind": "registry",
+  "url": "https://profiler.dk/40559833",
+  "evidence": "Danish CVR register: Clutch Cognition ApS, CVR 40559833, established 03.06.2019, Hojbjerg; status AKTIV; directors Rune Ronhave Laursen and Martin Ekin Kilic.",
+  "confidence": "low",
+  "caveat": "An incorporation date, normally the founding for a small ApS but labelled honestly. SCOPE: it trades as Clutch Nutrition and sells a plant-based caffeine-free \"brain health\" functional drink. There is no device, sensing or measurement — it appears to have been included on the word \"Cognition\". Clutch Nutrition ApS appears against the same CVR, so a rename is likely."
+ },
+ {
+  "name": "HumanCharger",
+  "year": 2007,
+  "kind": "company_site",
+  "url": "https://humancharger.com/pages/history-of-the-humancharger",
+  "evidence": "\"Valkee OY was launched in 2007 by scientist Juuso Nissila and engineer Antti Aunio in collaboration with researchers at the University of Oulu\"; the first bright light headset followed in 2010. Corroborated by Yle, the Finnish public broadcaster.",
+  "confidence": "high",
+  "caveat": "HumanCharger is the product; the company was Valkee Oy of Oulu, which filed for bankruptcy on 22 November 2021 per Yle. The product was taken over in 2022 by Humancharger.com ApS in the Copenhagen area, so the 2007 year belongs to a dead Finnish company and the brand is now Danish."
+ },
+ {
+  "name": "Tactical Information Systems",
+  "year": 2009,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/95057-92",
+  "evidence": "\"Tactical Information Systems was founded in 2009 and is headquartered in Austin, TX\", developing cloud-based biometric software. Consistent across PitchBook, CB Insights and RocketReach, which also describe it as an EDWOSB formed in 2009.",
+  "confidence": "low",
+  "caveat": "Aggregator only, unverified against any primary source. SCOPE: a defence and law-enforcement biometrics contractor doing cloud fingerprint, palmprint, face and iris matching. No nervous-system connection whatsoever. tacticalinfosys.com fails TLS entirely and the last notable press is from 2011, so it may no longer operate."
+ },
+ {
+  "name": "DrOmnibus",
+  "year": 2013,
+  "kind": "press",
+  "url": "http://startuppoland.org/startup/dromnibus-3/",
+  "evidence": "Startup Poland, a national startup association: \"a seed company based in Krakow (Poland), founded in 2013 by Bogumila Matuszewska, Michal Rys and Katarzyna Chrabaszcz.\" Tracxn independently gives 2013, with a first funding round in August 2014 that is consistent.",
+  "confidence": "medium",
+  "caveat": "Not verified against the Polish KRS. ABA DrOmnibus is applied behaviour analysis therapy software for children with autism, Down syndrome and ADHD — behavioural therapy software rather than instrumented neurotechnology. dromnibus.com failed to load on repeated attempts."
+ },
+ {
+  "name": "Breathwrk",
+  "year": 2019,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/437088-07",
+  "evidence": "PitchBook and Crunchbase both give 2019; Los Angeles; founders Max Gomez and Addie Conner.",
+  "confidence": "low",
+  "caveat": "Aggregator only: breathwrk.com/about is a contact page with no history, and a July 2021 founder Q&A states no year. SCOPE: a consumer breathing-exercise app with audio and visual pacing cues. Autonomic framing, but a wellness app rather than neurotechnology."
+ },
+ {
+  "name": "Cupcake Sweet Entertainment",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/cupcake-sweet-entertainment",
+  "evidence": "Founded 2012, Porto Alegre, by Joao Vitor de Souza. Tracxn and PitchBook list the same entity under a shortened name.",
+  "confidence": "low",
+  "caveat": "SCOPE: a mobile games studio building free-to-play casual word and puzzle titles — Letters of Gold, Words of Gold, Numbers of Gold. The only connection to neurotechnology is marketing copy about exercising the mind. It now trades as Cupcake Entertainment, so the index name is stale too."
+ },
+ {
+  "name": "Braincare Health Tecnology",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://revistapesquisa.fapesp.br/en/keeping-the-skull-intact/",
+  "evidence": "Revista Pesquisa FAPESP: in 2014 Sergio Mascarenhas and two colleagues — Gustavo Frigieri Vilela, who did his doctorate under him at USP, and engineer Rodrigo Andrade — took the decision to create the startup.",
+  "confidence": "medium",
+  "caveat": "The row is stale and misspelled. The legal entity is Braincare Desenvolvimento e Inovacao Tecnologica S.A. and it now trades as brain4care. A confirmed USP spin-off from the Sao Carlos Institute of Physics. Strong fit: non-invasive intracranial pressure and compliance monitoring with active trials in Brazil's public health system."
+ },
+ {
+  "name": "Medsurant Health",
+  "year": 2009,
+  "kind": "aggregator",
+  "url": "https://www.zippia.com/medsurant-health-careers-2118774/",
+  "evidence": "Founded October 2009; corporate office West Conshohocken, Pennsylvania.",
+  "confidence": "low",
+  "caveat": "Aggregator only; the company's own about and scope-of-service pages carry no founding statement. Acquired by MPOWERHealth in January 2025 and its site now renders as \"an mpowerhealth company\". SCOPE: it supplies technologists and supervising neurologists performing intraoperative neurophysiological monitoring, developing no hardware or software of its own — a clinical services and staffing business."
  }
 ]
