@@ -627,7 +627,10 @@ export async function searchCompanies({
     sort === 'oldest' ? q.order('age_year', { ascending: true, nullsFirst: false }).order('name')
       : sort === 'newest' ? q.order('age_year', { ascending: false, nullsFirst: false }).order('name')
         // rank_score puts funded companies first, then a stable quality order.
-        : q.order('rank_score', { ascending: false }).order('name'))
+        // id last, always: these are paginated reads and every column above can
+        // tie. Without a unique tiebreaker a page boundary shuffles, so a row
+        // appears on two pages and another is never shown at all.
+        : q.order('rank_score', { ascending: false }).order('name')).order('id')
 
   let { data, count, error } = await ordered(base())
   if (error && /(rank_score|age_year)/.test(error.message)) {

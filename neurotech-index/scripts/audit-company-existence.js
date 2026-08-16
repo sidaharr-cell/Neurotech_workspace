@@ -175,7 +175,7 @@ async function run() {
       .select('id,name,website,location,founded_year,incorporated_year,incorporated_before_year')
       .eq('type', 'company')
       .is('founded_year', null).is('incorporated_year', null).is('incorporated_before_year', null)
-      .order('name').range(from, from + 499)
+      .order('name').order('id').range(from, from + 499)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     all.push(...data)
     if (data.length < 500) break

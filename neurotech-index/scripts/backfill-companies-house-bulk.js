@@ -112,7 +112,7 @@ async function run() {
       .select('id,name,location,incorporated_year,incorporated_before_year')
       .eq('type', 'company')
       .is('incorporated_year', null).is('incorporated_before_year', null)
-      .order('name').range(from, from + 499)
+      .order('name').order('id').range(from, from + 499)
     if (error) {
       console.error('read failed:', error.message)
       if (/incorporated_/.test(error.message)) console.error('Run migration 018 first.')

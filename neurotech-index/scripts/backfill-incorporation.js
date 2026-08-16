@@ -120,7 +120,7 @@ async function run() {
   const select = cols => sb.from('organizations').select(cols)
     .eq('type', 'company')
     .not('cik', 'is', null)
-    .order('name')
+    .order('name').order('id')
     .limit(1000)
 
   let { data: orgs, error } = await select(`${BASE},incorporated_year,incorporated_before_year`)

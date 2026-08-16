@@ -55,7 +55,7 @@ async function run() {
   for (let from = 0; ; from += 500) {
     const { data, error } = await sb.from('organizations')
       .select('id,name,founded_year,incorporated_year,incorporated_before_year')
-      .eq('type', 'company').order('name').range(from, from + 499)
+      .eq('type', 'company').order('name').order('id').range(from, from + 499)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     orgs.push(...data)
     if (data.length < 500) break
