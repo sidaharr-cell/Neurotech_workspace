@@ -5,6 +5,8 @@ import { SectionHeading, Kicker, EmptyState, Loader, DeviceClassLabels } from '.
 import FilterBar from '../components/FilterBar'
 import FundingChart, { DEFAULT_FUNDING_FILTERS } from '../components/FundingChart'
 import CapitalStageScatter from '../components/CapitalStageScatter'
+import FoundingLine from '../components/FoundingLine'
+import { foundingLine } from '../lib/founded-display'
 import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { fmtMonthYear, getFundingBoard } from '../lib/fundingBoard'
@@ -35,7 +37,9 @@ function OrgRow({ org, counts }) {
       </h3>
       <p className="mt-1 flex items-center gap-1 text-[13px] text-muted font-sans">
         {org.location && <><MapPin className="w-3.5 h-3.5" />{org.location}</>}
-        {!isLab && org.founded && <><span aria-hidden>·</span>Founded {org.founded}</>}
+        {/* Sourced years only. The legacy `founded` column has no provenance
+            and disagrees with filings where both exist. */}
+        {!isLab && foundingLine(org) && <><span aria-hidden>·</span><FoundingLine row={org} compact /></>}
         {/* Form D does not name the round, so this is the amount and month of
             the most recent filing rather than a "Series C" label. */}
         {!isLab && org.latestRaise > 0 && (
