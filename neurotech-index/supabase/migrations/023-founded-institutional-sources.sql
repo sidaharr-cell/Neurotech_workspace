@@ -1,6 +1,6 @@
 -- 023-founded-institutional-sources.sql
 --
--- Two more source kinds: `university` and `accelerator`.
+-- Three more source kinds: `university`, `accelerator` and `registry`.
 --
 -- The web-search sweep kept landing on a class of source the constraint had no
 -- name for: an institution announcing its OWN spin-off. IDIBELL's newsroom
@@ -17,6 +17,15 @@
 --
 -- Both are `weak: false` in SOURCE_CLASS, so they render with their host and no
 -- caveat, unlike `aggregator`.
+--
+-- `registry` fixes an error rather than adding a capability. The only registry
+-- kind was `companies_house`, which the UI renders as "UK register" — so three
+-- companies were credited to the wrong country: SensArs to the UK when its
+-- source is the Swiss commercial register (UID CHE-130.906.673), and Avantari
+-- and TerraBlue XT to the UK when theirs is the Indian MCA register. A national
+-- company register is a strong source and deserved a name that is not a British
+-- one. `companies_house` stays, because the bulk-download pipeline writes it and
+-- for those 35 rows it is accurate.
 --
 -- The constraint is the reason this migration exists at all rather than being a
 -- one-line change to a JavaScript set. `organizations_founded_year_sourced`
@@ -37,7 +46,7 @@ alter table organizations
       founded_source_kind in (
         'company_site', 'wikidata', 'wikipedia', 'record_description',
         'companies_house', 'press', 'aggregator',
-        'university', 'accelerator'
+        'university', 'accelerator', 'registry'
       )
       and (founded_source_url is not null or founded_source_kind = 'record_description')
     )
@@ -45,6 +54,7 @@ alter table organizations
 
 comment on column organizations.founded_source_kind is
   'press | wikidata | wikipedia | companies_house | university (a parent institute announcing its own '
-  'spin-off) | accelerator (an incubator''s own record) | company_site (self-reported) '
+  'spin-off) | accelerator (an incubator''s own record) | registry (a national company '
+  'register that is not the UK one) | company_site (self-reported) '
   '| aggregator (unsourced compilation) | record_description (our own text, no URL). '
   'Incorporation dates belong in incorporated_year.';

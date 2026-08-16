@@ -1096,5 +1096,209 @@
   "verdict": "renamed",
   "note": "Year recorded as 2007. The row is named after the parent but the live brand is Avaz Inc: inventionlabs.in is legacy and its about page returns a 500, while the operating site is avazapp.com. Legal name Invention Labs Engineering Products Private Limited, an IIT Madras incubated company; founder Ajit Narayanan. Avaz is an AAC app for children with speech disability and autism.",
   "url": "https://avazapp.com/about-us/"
+ },
+ {
+  "name": "Encope",
+  "verdict": "existence-unverified",
+  "note": "Two searches, Danish CVR and neurotech-startup angles, returned zero mentions of any company named Encope in Copenhagen or anywhere. The index website field is the literal placeholder \"https://Web\", so no site was ever recorded. Likely a data-entry artefact, a misspelling, or a defunct entity that left no web footprint.",
+  "url": "https://neurobase-live.vercel.app"
+ },
+ {
+  "name": "HomeoLux",
+  "verdict": "renamed",
+  "note": "homeolux.com now redirects to beacon40.com: the company rebranded to BEACON40, with Homeolux, Inc. still the legal entity. Founder and chairman Terry Moore built it after his wife's Alzheimer's diagnosis, on the MIT 40Hz gamma work. A 2018 year circulates on CB Insights alone, with no primary source, so none is recorded. SCOPE: the site explicitly markets a \"non-wearable, non-medical device\" wellness lamp. Do not confuse with Cognito Therapeutics of Boston, a different gamma-stimulation company.",
+  "url": "https://beacon40.com"
+ },
+ {
+  "name": "Nerve renew",
+  "verdict": "not-a-company",
+  "note": "Not a company on any axis. Nerve Renew is a dietary supplement — a B-vitamin, R-alpha-lipoic-acid and benfotiamine blend for peripheral neuropathy, listed in the NIH Dietary Supplement Label Database. The URL in the index, fitbitehealth.com, is an affiliate review site that self-describes as \"Guide Health Pills Verified Customer Reviews\" and is not the publisher. The actual seller is Neuropathy Treatment Group, dba Life Renew, of Boise, Idaho, not Princeton. NutraIngredients-USA reported the maker dropped advertising claims in 2021 after a Council for Responsible Nutrition challenge.",
+  "url": "https://fitbitehealth.com/nerve-renew/"
+ },
+ {
+  "name": "Lief Therapeutics",
+  "verdict": "year-disputed",
+  "note": "One source gives 2012; others state only that Rohan Dixit \"has been CEO of Lief since 2015\", which establishes existence by 2015 and not a founding. Neither traces to a primary source. The gap is wide enough that one is probably a different milestone. Real and active: an HRV-biofeedback wearable patch out of Harvard and Stanford meditation research, now selling Lief Rx as a prescription device. The primary site has moved to lief.ai; getlief.com still takes orders.",
+  "url": "https://lief.ai"
+ },
+ {
+  "name": "Terenz",
+  "verdict": "dead-domain",
+  "note": "terenz.ai does not resolve. The entity is real — 주식회사 테렌즈, a Busan AI medical-imaging startup co-founded by Dr James Sathya of Inje University and Kim Jong-chul, named best innovative startup at BOUNCE 2019, so it existed by 2019 — but no source states a founding year. A possible successor entity, Terenz Labs, also appears in Busan sources. SCOPE: general AI medical imaging; a Parkinson's screening angle is the only neuro tie.",
+  "url": "http://www.busan.com/view/busan/view.php?code=2020032918593122386"
+ },
+ {
+  "name": "mindreach",
+  "verdict": "dead-domain",
+  "note": "mindreach.org issues a 307 redirect to GoDaddy's for-sale parking page. No entity of this name in Lisbon surfaced in search, and it could not be established whether it was a company, a nonprofit or a project. Looks like a stale entry harvested from a domain that has since lapsed.",
+  "url": "https://forsale.godaddy.com/forsale/mindreach.org"
+ },
+ {
+  "name": "Farol VR",
+  "verdict": "existence-unverified",
+  "note": "farolvr.com.br does not resolve. Two searches in Portuguese and English returned nothing for Farol VR or FarolVR beyond unrelated Brazilian VR firms. The entity could not be confirmed to exist, let alone to be neurotech. A Brazilian CNPJ lookup would be the next step.",
+  "url": "https://farolvr.com.br/"
+ },
+ {
+  "name": "Cognition Medical",
+  "verdict": "no-year",
+  "note": "The company site says only \"Alex founded Cognition Medical while completing his PhD\" and states no year anywhere. Crunchbase shows 2012, which is hard to reconcile with a 2019 interview in which CEO Alex Turjman said he started the company \"a couple years back\" and with first patent applications filed in December 2015; no arithmetic was done on that phrase. Genuinely in scope: interventional neurovascular clot-retrieval devices for acute ischaemic stroke, out of Prof. Elazer Edelman's lab at MIT and Brigham and Women's. The Massachusetts corporate registry would settle it.",
+  "url": "https://www.cognitionmedical.com/about-us"
+ },
+ {
+  "name": "Neurorobotics Research Laboratory",
+  "verdict": "not-a-company",
+  "note": "A university research laboratory at Berliner Hochschule fuer Technik, Fachbereich VII, led by Prof. Dr Manfred Hild, professor for Digital Systems there since 2014 — a biography date that must not be used as a founding year. Research is on morphologies and distributed neural systems for autonomous robots: neural-network-inspired robotics, not neurotechnology acting on a nervous system.",
+  "url": "http://www.neurorobotik.de/index_en.php"
+ },
+ {
+  "name": "DataNovo, Inc.",
+  "verdict": "scope",
+  "note": "A patent and legal analytics company: AI-driven prior art search across 80M+ references, validity scoring, litigation outcome forecasting. Clients are patent offices, law firms and IP investors. The only plausible reason it landed in a neurotech index is the phrase \"neural network\" in its AI marketing. Its own site states no founding year; Tracxn gives 2015, aggregator-only, so none is recorded. Its stored description is also one of the seventeen corrupted ones, reading \"USA - SF/Bay Area\".",
+  "url": "https://tracxn.com/d/companies/datanovo/"
+ },
+ {
+  "name": "Roshi",
+  "verdict": "product-not-company",
+  "note": "ROSHI is a product line — ROSHI, pROSHI, ROSHIWave EEG neurofeedback and brainwave-entrainment devices — created by Chuck Davis, listed as CEO of \"ROSHI Corporation\". The only date found, 1988, is when the underlying software and hardware were developed, not a company founding. roshi.com sits behind a WAF with a mismatched certificate and would not load. The Pasadena location is weak and possibly mis-derived: Davis worked at JPL there decades ago and a separate Pasadena neurofeedback clinic uses the device. Recent marketing comes from mindmachines.com, a reseller.",
+  "url": "https://www.psychologytoday.com/us/blog/integrative-mental-health-care/202006/the-roshi-innovative-approach-brainwave-entrainment"
+ },
+ {
+  "name": "CerQana",
+  "verdict": "scope",
+  "note": "An Android launcher that simplifies a smartphone to four large pictogram buttons with GPS location, sold for elderly people and people with autism or Down syndrome so caregivers can check on them. No sensing, stimulation or neural signal. The only dates are relative and mutually inconsistent — \"todo comenzo hace un ano\" in February 2016 against an idea emerging in February 2014 — and no arithmetic was done on either. One 2022 source says CerQana no longer exists; cerqana.com returned HTTP 429 on three attempts.",
+  "url": "https://eldiario.es/aragon/sociedad/aplicacion-Zaragoza-autonomia-personas-dependientes_0_480852079.html"
+ },
+ {
+  "name": "BrainFul",
+  "verdict": "wrong-location",
+  "note": "No founding year: the site carries only a copyright line and marketing copy, with no about page. Real and neurotech-adjacent — Brainful Inc., founder and CEO Christopher deCharms, the same deCharms behind Omneuron, which is a different entity and must not be merged. LOCATION: the index says San Francisco but the live site's contact address is in Vega Baja, Puerto Rico. Aggregator years around 2014 could not be verified.",
+  "url": "http://www.brainful.com/"
+ },
+ {
+  "name": "My Sensory Locations",
+  "verdict": "dead-domain",
+  "note": "Broken on three axes. mysensorytools.com redirects to a HugeDomains for-sale page. The row name does not match the domain and reads as a mangled nickname. And the only live \"My Sensory Tools\" findable is a fidget and sensory toy shop in Lebanon, Ohio — not Doylestown, Pennsylvania, and a toy retailer rather than a neurotechnology company.",
+  "url": "https://www.mysensorytools.com/"
+ },
+ {
+  "name": "Imexco",
+  "verdict": "no-year",
+  "note": "imexco.com resolves to IMEXCO General Ltd fronting an antiques online catalogue, with no about page and no founding year. The neurotech classification is nonetheless defensible: IMEXCO General Ltd of Ramat HaSharon is a project-oriented R&D house founded by Giora Ram, working on medical diagnostic equipment in neurology, cardiology and pain monitoring including a chronic-pain detection application. The same domain also hosts Ram's antiques business, which makes it look like a personal holding domain. Subdomains nuke.imexco.com and edu.imexco.com do not resolve. The Start-Up Nation Central page returns 403 and is the best remaining lead.",
+  "url": "https://www.imexco.com/"
+ },
+ {
+  "name": "PathMaker Neurosystems",
+  "verdict": "no-year",
+  "note": "The about page states no founding year; its only date marker is a copyright range beginning 2015, which is not usable. Crunchbase gives 2015 alone, weakly echoed by that range, and no primary source corroborates it. Real and active: clinical-stage non-invasive trans-spinal direct current stimulation, lead device MyoRegulator for spasticity, plus an ALS programme. CEO Nader Yaghoubi; scientific founder Dr Zaghloul Ahmed of CUNY Staten Island. Dates that are NOT foundings: first MyoRegulator trial with the Feinstein Institute in April 2016, and a French-American Business Award in 2018.",
+  "url": "https://pmneuro.com/about-us/"
+ },
+ {
+  "name": "Aural Analytics",
+  "verdict": "acquired",
+  "note": "Year recorded as 2015, aggregator-only. Acquired by Linus Health in March 2024 and no longer independent. An Arizona State University spinout commercialising speech analytics for neurological disease; the index location is correct.",
+  "url": "https://lifesciencehistory.com/companies/aural-analytics/"
+ },
+ {
+  "name": "Phosphoenix",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2019. The index says Delft; the company is a spin-off of the Netherlands Institute for Neuroscience in Amsterdam, and other sources place it there. Delft may be an operational address but Amsterdam is the origin. Genuinely in scope: a cortical visual prosthesis.",
+  "url": "https://www.bionic-vision.org/companies/phosphoenix"
+ },
+ {
+  "name": "BioAxone Therapeutic",
+  "verdict": "scope",
+  "note": "Year recorded as 2000. SCOPE: a drug developer, not device or software neurotech — Cethrin/BA-210 is a Rho antagonist for acute spinal cord injury. bioaxone.com refuses connections and the Canadian entity is effectively defunct; founder Lisa McKerracher acquired the assets and formed BioAxone BioSciences, Inc. in Cambridge, Massachusetts around 2011. The two must not be merged.",
+  "url": "https://www.biospace.com/article/releases/bioaxone-therapeutic-inc-study-demonstrates-positive-interim-results-for-spinal-cord-injury-/"
+ },
+ {
+  "name": "Reha Technology",
+  "verdict": "dissolved",
+  "note": "Year recorded as 2011, and it is an incorporation date rather than a founding. Bankruptcy proceedings were opened on 31 July 2025 by the district court president of Olten-Goesgen; the Swiss registry name is now \"Reha Technology AG in Liquidation\". The website was still serving when checked, so the site being up is not evidence the company is.",
+  "url": "https://www.moneyhouse.ch/en/company/reha-technology-ag-3481687511"
+ },
+ {
+  "name": "Medibrane",
+  "verdict": "scope",
+  "note": "Year recorded as 2015, well sourced. SCOPE: polymeric covers and coatings for nitinol stent scaffolds, made by sutureless lamination, dipping and spraying. The \"brane\" is membrane, not brain. This is a name-based false inclusion rather than ordinary scope drift — the same shape as DataNovo and Vita Beans Neural Solutions.",
+  "url": "https://chamfr.com/blog/my-medtech-life-medibranes-elad-einav/"
+ },
+ {
+  "name": "Nervex Neurotechnologies",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2021. The URL in the index, nervexneurotech.com, is not the live site; the company operates at nervex.tech. A University of Toronto spinout whose original product ANIMO is a genuine adaptive neural implant for epilepsy, but the current site foregrounds NXVET, an AI stethoscope attachment measuring temperature, pulse and respiration in animals — a pivot toward veterinary vital signs worth a scope re-check.",
+  "url": "https://nervex.tech/about/"
+ },
+ {
+  "name": "BioBeat",
+  "verdict": "scope",
+  "note": "Year recorded as 2016. The correct styling is Biobeat, one word. SCOPE: wearable remote patient monitoring — a disposable chest patch and wrist monitor covering around thirteen parameters including cuffless PPG blood pressure, pulse, respiratory rate, SpO2 and ECG, FDA-cleared and CE marked. Cardiovascular and vital-signs monitoring with nothing acting on the nervous system. bio-beat.com/about returns 404.",
+  "url": "https://www.prnewswire.com/news-releases/biobeat-wearables-for-enhanced-remote-patient-monitoring-partners-with-best-buy-healths-care-at-home-platform-current-health-302009370.html"
+ },
+ {
+  "name": "Juno Biomedical Inc.",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2014. The company release datelines Mountain View, California, not the San Jose the index records. Regenerative and bioelectric therapy for stroke and TBI. No evidence of activity after about 2017, so operating status is unknown.",
+  "url": "https://www.prnewswire.com/news-releases/juno-biomedical-moving-forward-with-regenerative-stroke-treatment-300363890.html"
+ },
+ {
+  "name": "Axorus",
+  "verdict": "scope",
+  "note": "Year recorded as 2019, disputed against 2018. The company states it \"definitively abandoned its neuro-electronic implant technology in 2021, and its invasive photoacoustic implants in early 2025\", and is now positioned as a non-invasive photoacoustic contact lens for dry AMD. That pushes it toward ophthalmic devices and away from neurotechnology.",
+  "url": "https://www.axorus.com/"
+ },
+ {
+  "name": "Neuroenhancement Lab",
+  "verdict": "renamed",
+  "note": "Year recorded as 2017, aggregator-only. Renamed to NeuroLight, Inc. on 25 October 2022, moving from transcranial electrical stimulation to light and sound photobiomodulation; the product is the NeuroMask, first targeting insomnia. neuroenhancementlab.com returns HTTP 526 and the live site is neurolight.co. Despite the name it is a company, not a clinic, so it stays in scope.",
+  "url": "https://neurolight.co/neuroenhancement-lab-inc-announces-rebrand-as-neurolight/"
+ },
+ {
+  "name": "Mira Rehab",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2012, aggregator-only. Both mirarehab.com and www.mirarehab.com fail DNS resolution entirely, not merely 404. Software turning physiotherapy and cognitive exercises into depth-sensor-tracked video games, with UK and Romania locations; current operating status unclear.",
+  "url": "https://golden.com/wiki/Mira_Rehab-EAVZ9B8"
+ },
+ {
+  "name": "Ybrain",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2013 from the company's own history page, the best-sourced result in its batch. The index spells the location \"Seongman\"; it is Seongnam-si, Gyeonggi-do, at 54 Changeop-ro, Sujeong-gu.",
+  "url": "https://www.ybrain.com/en/company/"
+ },
+ {
+  "name": "NextMind",
+  "verdict": "acquired",
+  "note": "Year recorded as 2017. Acquired by Snap Inc., announced 23 March 2022. It did not wind down: the roughly twenty-person team stayed in Paris and was folded into Snap Lab, Snap's hardware R&D group, while the consumer Dev Kit headband was discontinued and next-mind.com should be treated as defunct. The spin-out parent is Ecole Normale Superieure, not the Institut de la Vision.",
+  "url": "https://techcrunch.com/2022/03/23/snap-buys-mind-controlled-headband-maker-nextmind"
+ },
+ {
+  "name": "Rithmi",
+  "verdict": "scope",
+  "note": "Year recorded as 2016. SCOPE: atrial fibrillation detection through a wearable and the FlashCheck app, which uses the phone camera and flash for photoplethysmography. Marketed as a \"pulsera antiictus\", stroke prevention — but AF is a cardiac arrhythmia and this is cardiovascular prevention, not neurotechnology. LOCATION: born in Castellon and later based in Valencia.",
+  "url": "https://valenciaplaza.com/valenciaplaza/rithmi-la-camara-del-movil-puede-salvar-la-vida"
+ },
+ {
+  "name": "Sands Research",
+  "verdict": "scope",
+  "note": "Year recorded as 2008 from the company's own profile. SCOPE: neuromarketing — EEG-based advertising research, best known for an annual Super Bowl ad neuro ranking — rather than clinical or device neurotech. Has since merged with Neurons Inc., a Danish neuromarketing firm, so the standalone entity may no longer be independent.",
+  "url": "https://sandsresearch.com/company-profile.html"
+ },
+ {
+  "name": "See-Mode Technologies",
+  "verdict": "acquired",
+  "note": "Year recorded as 2017. Acquired by RadNet, announced June 2025, and folded into its AI arm DeepHealth; see-mode.com now redirects to deephealth.com and the standalone company no longer exists under that name. It operated across Singapore and Melbourne, so the Singapore location is defensible but incomplete.",
+  "url": "https://www.sginnovate.com/investments/see-mode-technologies"
+ },
+ {
+  "name": "EMVision Medical",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2017. A University of Queensland spin-out making a portable microwave brain scanner for stroke, listed on the ASX. The index says Brisbane, which tracks the UQ origin, but the registered corporate office is Sydney. Note for anyone re-checking: this listed via a conventional IPO trading from 13 December 2018, not a reverse takeover, so that 2018 date is a listing and not a second founding.",
+  "url": "https://stockhead.com.au/ipo-watch/brain-scanner-emvision-medical-devices-joins-the-asx-today-after-a-6m-ipo/"
+ },
+ {
+  "name": "Neuvana Life",
+  "verdict": "renamed",
+  "note": "Year recorded as 2014, against the company's own claim of 2016. The entity chain is Nervana LLC to Neuvana; 2016 is the rebrand. The Xen vagus-nerve-stimulation earbud is still sold through a live storefront with HSA and FSA eligibility. It is marketed as a consumer wellness device rather than a regulated medical device.",
+  "url": "https://neuvanalife.com/pages/about-us"
  }
 ]

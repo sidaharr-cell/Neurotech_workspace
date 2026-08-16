@@ -4,11 +4,11 @@
 
 Read this first if you are picking the work up. The short version: the schema,
 the pipelines, the guards and the UI are finished and verified. The web-search
-sweep has reached 181 of 1,084 companies and is running in batches; it cannot be
+sweep has reached 289 of 1,084 companies and is running in batches; it cannot be
 left unattended, for the reason in "What cannot be automated" below.
 
 **The sweep's most valuable output is no longer the years.** It is
-`scripts/data/founding-unresolved.json` — 97 entries recording, with URLs, that
+`scripts/data/founding-unresolved.json` — 183 entries recording, with URLs, that
 the index contains rename-duplicates, rows named after products rather than
 companies, rows that are not companies at all, dead domains, wrong locations and
 wrong descriptions. See "What the sweep found that nobody was looking for".
@@ -32,13 +32,15 @@ year first and falling back to incorporation.
 
 | | count | of 1,084 |
 |---|---|---|
-| sourced founding year | 320 | 30% |
+| sourced founding year | 392 | 36% |
 | incorporation year or bound only | 184 | 17% |
-| either (`age_year`) | 504 | 46% |
-| neither | 580 | 54% |
+| either (`age_year`) | 576 | 53% |
+| neither | 508 | 47% |
 
-By source kind: 96 Wikidata, 93 company site, 57 press, 37 our own record
-description, 35 aggregator, 2 Wikipedia.
+By source kind: 111 company site, 96 Wikidata, 82 press, 58 aggregator, 37 our
+own record description, 5 Wikipedia, 3 UK register.
+
+These numbers move every round. Re-measure rather than quoting them.
 
 Those last two need explaining, because Wikipedia was **withdrawn as an
 automated source** — 33 of its 47 matches pointed at the wrong article, dating
@@ -48,13 +50,13 @@ corroborated it elsewhere; the evidence string on each records the corroboration
 The lesson is that the failure was in matching a name to an article without
 reading it, not in the encyclopedia.
 
-The 35 aggregator-sourced years render with a visible caveat rather than being
+The 58 aggregator-sourced years render with a visible caveat rather than being
 hidden or trusted silently.
 
 ## What cannot be automated
 
 `WebSearch` is a tool invoked one call at a time inside a turn. It is not
-scriptable the way the scrapers are, so the remaining ~580 companies without an
+scriptable the way the scrapers are, so the remaining ~508 companies without an
 `age_year` need many rounds of prompting and searching. Background subagents make
 each round wider — four agents at nine companies each is the configuration that
 finishes without stalling — but nothing here runs unattended to completion.
@@ -85,21 +87,43 @@ Every one of these came out of searching for a year and reading what came back.
 None of it is deleted or changed — each is a decision for a person — but the
 evidence is in `scripts/data/founding-unresolved.json` against the company name.
 
-**Two companies are in the index twice under names that share no letters.**
-G-Therapeutics SA of Lausanne became GTX Medical and then ONWARD Medical of
-Eindhoven; both rows describe the same spinal-cord stimulation product. Eegapps
-Medical is Incereb. No string comparison reaches either — `audit-duplicate-orgs.js`
-says so in its own header. Catching renames needs an alias list.
+Every entry carries one verdict from the controlled vocabulary in
+`scripts/lib/verdicts.js`, so the register can be counted:
 
-**Four rows are named after a product, not a company.** Sleepio is Big Health's
-product; BioMind is Hanalytics'; Pegaces belongs to NeuroGeneces; PENTAS is the
-reverse case, a company row carrying a product's name. The founding year in each
-case belongs to a company the index never names, which is why they cannot simply
-be written.
+| verdict | count | meaning |
+|---|---|---|
+| `scope` | 71 | probably not neurotechnology |
+| `not-a-company` | 11 | a project, consortium, society, facility or book |
+| `dead-domain` | 11 | does not resolve, parked, or resold |
+| `no-year` | 10 | searched, nothing findable |
+| `product-not-company` | 9 | the year belongs to a parent the index never names |
+| `renamed` | 8 | one company, trading under another name |
+| `wrong-location` | 6 | the location field is wrong |
+| `wrong-entity` | 5 | describes a different company than its name says |
+| `year-disputed` | 5 | sources disagree, none decisive |
+| `duplicate` | 3 | the same company as another row |
+| `dissolved` | 2 | confirmed closed by a registry |
 
-**Several rows are not companies.** BIOTIC is a hospital facility, MyLeg an EU
-grant, The Virtual Brain an academic consortium, Neuroscientia a content farm,
-Splaysoft a classroom-app publisher.
+`normalise()` throws on an unrecognised verdict rather than defaulting, because
+the field had already drifted into 60-odd strings for these 18 categories before
+anyone noticed — "no year", "no year found", "no founding year found" and "no
+founding year established" all meaning one thing.
+
+**Rows that are not companies** include BrainGate, an academic BCI consortium;
+the San Francisco chapter of the IEEE Engineering in Medicine and Biology
+Society; EyeWire, a citizen-science game from Sebastian Seung's lab; SAM App, a
+UWE Bristol project; Panic Away, a self-help book; and the Neurorobotics Research
+Laboratory at Berliner Hochschule für Technik.
+
+**Rows named after a product** include Sleepio (Big Health), BioMind
+(Hanalytics), Pegaces (NeuroGeneces), NeuroFUS (Sonic Concepts), URGONight
+(URGOTECH), BrainVoyager (Brain Innovation B.V.) and Mightier (Neuromotion Inc).
+
+**Included on the name rather than the business.** Medibrane makes polymer covers
+for stents — the "brane" is membrane. DataNovo is patent analytics whose only
+neuro connection is the phrase "neural network" in its AI marketing. Vita Beans
+Neural Solutions is edtech whose name comes from an AI origin story. This is a
+distinct failure mode from ordinary scope drift, and worth a targeted pass.
 
 **Facts that are simply wrong.** Neutun is in Toronto, not Palo Alto; Lucid Care
 in Palo Alto, not Los Angeles; Brainbit in California, not New York; NeuroCrowd
@@ -151,6 +175,25 @@ worth recording why: the scope audit paginated on `rank_score` with no unique
 tiebreaker, so page boundaries shuffled and 1,084 rows came back holding 1,061
 distinct ids — 23 served twice, 23 never read. Every paginated read over
 organizations now ends with `.order('id')`.
+
+**Seventeen descriptions hold a region instead of a description.** customKYnetics
+reads "USA - Southeast", DeepMind reads "UK", Deep Brain Innovations reads
+"USA - Chicago/Midwest". They sit at alphabetical positions 278 to 294 with NO
+gaps — a contiguous run of seventeen, which is a single batch write rather than
+seventeen coincidences. Every one already has a `location` that is strictly more
+specific than its description ("Cleveland, USA" against "USA - Chicago/Midwest"),
+so the description is both wrong and redundant and can be cleared without losing
+anything.
+
+A caution about how NOT to date this: every row in the table carries
+`first_seen` of 2026-07-29, because the whole table was rebuilt that day after
+the funding data loss. That timestamp therefore says nothing about which rows the
+bad write touched, and an earlier draft of this note wrongly cited it as
+evidence. The contiguity is the evidence.
+
+A further eleven rows carry the literal string "N/A" or "n/a" as their
+description. Those are scattered rather than contiguous and look like an ordinary
+missing-value defect, not the same bug.
 
 **301 descriptions that never mention the nervous system.** A description
 problem far more often than a scope problem — electroCore makes a vagus nerve

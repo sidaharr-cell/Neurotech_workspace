@@ -41,6 +41,10 @@ export const SOURCE_CLASS = {
   // the parent's own record, not a journalist's summary of one.
   university: { label: 'parent institution', weak: false },
   accelerator: { label: 'accelerator or incubator', weak: false },
+  // A national company register that is not the UK one. Separate from
+  // companies_house because that label reads "UK register", and three companies
+  // were briefly credited to Britain on the strength of Swiss and Indian records.
+  registry: { label: 'company register', weak: false },
   company_site: { label: 'company’s own site', weak: false, selfReported: true },
   aggregator: { label: 'unsourced compilation', weak: true },
   record_description: { label: 'NeuroBase record', weak: true, noLink: true },
