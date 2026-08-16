@@ -219,6 +219,38 @@ export function brandKey(website) {
   return label
 }
 
+/** A location reduced to something comparable: case, punctuation and spacing. */
+export const placeKey = loc =>
+  String(loc || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim() || null
+
+/**
+ * Is one of these two names a longer form of the other, in the same place?
+ *
+ * The third duplicate signal, and the only pairwise one. Braincare of Sao Carlos
+ * is in this index twice, as "Braincare" at brain4.care and as "Braincare Health
+ * Tecnology" at braincare.com.br. The names differ, the domains differ, and the
+ * brands differ — so neither `core` equality nor `websiteKey` nor `brandKey`
+ * sees it. What the two rows DO share is a city and a name that one extends.
+ *
+ * Neither half is usable alone. A shared location groups hundreds of unrelated
+ * companies in Tel Aviv; a name prefix alone would merge every company starting
+ * "Neuro". Together, over the whole index, they return exactly two pairs and no
+ * false positives.
+ *
+ * The prefix must end at a word boundary, so "Neura" does not match "Neuralink",
+ * and the shorter name must be at least six characters, so "Brain" matches
+ * nothing.
+ */
+export function longerFormOf(a, b) {
+  const pa = placeKey(a.location), pb = placeKey(b.location)
+  if (!pa || !pb || pa !== pb) return false
+  const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim()
+  const x = norm(a.name), y = norm(b.name)
+  if (!x || !y || x === y) return false
+  const [short, long] = x.length < y.length ? [x, y] : [y, x]
+  return short.length >= 6 && long.startsWith(short + ' ')
+}
+
 /**
  * Did a fetch end up somewhere its year can be believed?
  *

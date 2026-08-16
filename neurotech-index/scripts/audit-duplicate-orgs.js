@@ -17,7 +17,7 @@
  * for one company means the two names differ by punctuation, a suffix or an
  * accent — enough to hash apart, not enough to be different companies.
  *
- * THREE SIGNALS, because the first was missing the interesting half.
+ * FOUR SIGNALS, because the first was missing the interesting half.
  *
  * `core` name equality finds a company entered twice under punctuation variants.
  * It found exactly one pair: "Precision Neuroscience" against
@@ -46,6 +46,14 @@
  * not evidence of anything. A loose version of this signal invents duplicates,
  * which is worse than missing them.
  *
+ * A LONGER FORM of the same name in the SAME PLACE is the fourth, and the only
+ * pairwise one. Braincare of Sao Carlos is here as "Braincare" at brain4.care
+ * and as "Braincare Health Tecnology" at braincare.com.br: names differ, domains
+ * differ, brands differ. Neither half of that signal works alone — a shared
+ * location groups hundreds of unrelated companies in Tel Aviv, and a name prefix
+ * alone would merge everything starting "Neuro" — but together, over the whole
+ * index, they return exactly two pairs and no false positives.
+ *
  * STILL NOT FOUND: a rename where the site moved too. G-Therapeutics SA of
  * Lausanne became GTX Medical and then ONWARD Medical of Eindhoven; the rows
  * share neither name nor domain, and that pair surfaced only because a person
@@ -64,7 +72,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { core } from './lib/funding.js'
-import { websiteKey, brandKey } from './lib/founding.js'
+import { websiteKey, brandKey, longerFormOf } from './lib/founding.js'
 
 const MERGE = process.argv.includes('--merge')
 
@@ -110,10 +118,18 @@ async function run() {
   const byDomain = groupBy(r => websiteKey(r.website))
   // Weaker: the same brand under two TLDs, which exact host equality misses.
   const byBrand = groupBy(r => brandKey(r.website))
+  // Pairwise, not a key: one name extending another IN THE SAME PLACE. Braincare
+  // of Sao Carlos is here twice under names, domains and brands that all differ.
+  const byPlace = []
+  for (let i = 0; i < rows.length; i++) {
+    for (let j = i + 1; j < rows.length; j++) {
+      if (longerFormOf(rows[i], rows[j])) byPlace.push([rows[i], rows[j]])
+    }
+  }
 
   const signals = new Map()   // id of a member -> Set of signal names
   const merged = []
-  for (const [signal, groups] of [['name', byName], ['website', byDomain], ['brand', byBrand]]) {
+  for (const [signal, groups] of [['name', byName], ['website', byDomain], ['brand', byBrand], ['place', byPlace]]) {
     for (const g of groups) {
       const existing = merged.find(m => m.some(r => g.some(x => x.id === r.id)))
       const target = existing || (merged.push([]), merged[merged.length - 1])
@@ -128,7 +144,7 @@ async function run() {
   const allCols = GROUPS.flat()
 
   console.log(`${rows.length} companies; ${dupes.length} appear more than once`)
-  console.log(`  ${byName.length} by name, ${byDomain.length} by shared website, ${byBrand.length} by brand across TLDs\n`)
+  console.log(`  ${byName.length} by name, ${byDomain.length} by shared website, ${byBrand.length} by brand across TLDs, ${byPlace.length} by longer name in the same place\n`)
 
   const report = []
   const patches = []
