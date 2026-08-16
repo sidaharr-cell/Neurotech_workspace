@@ -22,6 +22,13 @@ export const VALID_KINDS = new Set([
   // renders as "UK register", so using it for the Swiss commercial register and
   // the Indian MCA credited three companies to the wrong country.
   'registry',
+  // A regulatory filing: an SEC 10-K corporate history, a Reg CF offering
+  // statement. Distinct from `registry`, which is a national COMPANY register.
+  // Bionik's 10-K states the incorporation date of the Canadian entity and the
+  // date its Delaware shell was renamed; that is a document filed under penalty,
+  // not a directory entry, and calling it either "press" or "company register"
+  // would misdescribe it.
+  'filing',
 ])
 
 /**
