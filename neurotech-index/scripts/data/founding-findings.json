@@ -1071,5 +1071,75 @@
   "evidence": "Company archived homepage, verbatim: Founded in 2014, and rooted in hundreds of years of psychological and sociological study. Co-founders Gerard Lebar Jr and Eric Lewandowski, Dallas TX.",
   "confidence": "medium",
   "conflict": "Read from the Wayback Machine because garlew.com no longer resolves. The company appears defunct."
+ },
+ {
+  "name": "Akili Interactive",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.businesswire.com/news/home/20210526005311/en/PureTech-Founded-Entity-Akili-Secures-160-Million-in-Financing-Poised-to-Deliver-on-the-Promise-of-Digital-Therapeutics",
+  "evidence": "PureTech Health founded Akili Interactive Labs in 2011 as a Founded Entity, on cognitive-training technology licensed from Adam Gazzaley lab at UCSF",
+  "confidence": "medium",
+  "conflict": "Went public via SPAC Aug 2022 as Akili Inc (Nasdaq AKLI), then ACQUIRED by Virtual Therapeutics via tender offer completed 1 July 2024 at $0.4340/share. Not a wind-down, as I had suggested in the brief."
+ },
+ {
+  "name": "Carl Zeiss",
+  "year": 1846,
+  "kind": "company_site",
+  "url": "https://www.zeiss.com/corporate/en/about-zeiss/past/history.html",
+  "evidence": "ZEISS own history page: in 1846, Carl Zeiss opened a workshop for precision mechanics and optical instruments in Jena, specifically 17 November 1846. The 175 Years of ZEISS anniversary in 2021 is arithmetically consistent.",
+  "confidence": "high"
+ },
+ {
+  "name": "Oura",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://ouraring.com/blog/history-of-oura/",
+  "evidence": "Company blog history: began in 2013 in Oulu, Finland, founded by Petteri Lahtela, Kari Kivela and Markku Koskela. The first-generation ring came later via Kickstarter, so 2013 is founding rather than product launch.",
+  "confidence": "high"
+ },
+ {
+  "name": "PrecisionNeuroscience",
+  "year": 2021,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Precision_Neuroscience",
+  "evidence": "Founded 2021 by Benjamin Rapoport, a Neuralink founding member, with Michael Mager, Demetrios Papageorgiou and Mark Hettick; Wikipedia cites STAT News July 2022 and CNBC corroborates in Jan 2023",
+  "confidence": "high",
+  "conflict": "This row is the DUPLICATE of Precision Neuroscience already identified by the dedup audit — the two names hash to different UUIDv5 ids."
+ },
+ {
+  "name": "Sleepio",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://digitalplaybook.co.uk/companies/big-health/",
+  "evidence": "Sleepio is the PRODUCT; the company is Big Health, co-founded by Peter Hames and Prof Colin Espie of Oxford. Investor and aggregator profiles give 2010.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. Neither Big Health About page, the Sleepio Wikipedia article nor two press boilerplates state a founding year. A 2014 TechCrunch piece implies the idea originated around 2009 and Wikipedia dates the Sleepio launch to 2012; neither is a founding claim. OUR ROW IS NAMED AFTER THE PRODUCT."
+ },
+ {
+  "name": "Ginger",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://mitsloan.mit.edu/ideas-made-to-matter/how-a-virtual-mental-health-company-survived-and-scaled-a-pivot",
+  "evidence": "MIT Sloan: mental health has been at the heart of Ginger vision since it launched in 2011. Founded by Anmol Madan and Karan Singh out of the MIT Media Lab, commercialising Madan passive-mobile-sensing research.",
+  "confidence": "high",
+  "conflict": "Merged with Headspace in 2021 to form Headspace Health. 2011 is the original founding."
+ },
+ {
+  "name": "MyndVR",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.fiercehealthcare.com/health-tech/startup-myndvr-inks-partnership-expand-virtual-reality-solutions-seniors",
+  "evidence": "Fierce Healthcare: MyndVR began in 2016, founded by Chris Brickler and Shawn Wiora. Tracxn, PitchBook and Dealroom concur.",
+  "confidence": "medium",
+  "conflict": "The company own site publishes no year, and myndvr.com now redirects to myndimmersive.com — a rebrand to Mynd Immersive, not a new founding."
+ },
+ {
+  "name": "BioMind",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://www.sgpbusiness.com/company/Hanalytics-Pte-Ltd",
+  "evidence": "The legal entity behind BioMind is Hanalytics Pte Ltd, UEN 201706114W, incorporated in Singapore 5 March 2017; the UEN prefix encodes the registration year. Founders Raymond Moh and Zhenzhou Wu.",
+  "confidence": "medium",
+  "conflict": "This is an INCORPORATION date standing in for a founding date. OUR ROW IS NAMED AFTER THE PRODUCT — the company is Hanalytics. The BioMind neuroimaging product launched publicly in 2018 with Beijing Tiantan Hospital."
  }
 ]
