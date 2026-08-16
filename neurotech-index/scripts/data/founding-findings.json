@@ -467,5 +467,299 @@
   "evidence": "Company archived About page, headed How Novela Neurotech Started: Founded in 2018, San Francisco, describing a decade of epilepsy neurotechnology research at the University of Waterloo",
   "confidence": "low",
   "conflict": "Medical Tech Outlook says incorporated in 2013 as a spin-off from Canadian universities and SickKids, with R&D started in 2007. novelaneuro.com is dead; the product lives at neureka.ai."
+ },
+ {
+  "name": "Inteliclinic",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://innpoland.pl/133565,niebywaly-sukces-totalna-klapa-i-znowu-sukces-inteliclinic-to-wanka-wstanka-polskiego-rynku-start-upow",
+  "evidence": "Polish tech press: formed 2013 by Kamil Adamczyk, Janusz Fraczek, Michal Szumski and Tomasz Kolodziejak, ahead of the late-2013 Neuroon Kickstarter. Company reported out of business as of 2022.",
+  "confidence": "medium",
+  "conflict": "The 2013 date is corroborated mainly by aggregators (Dealroom gives December 2013); no company About page survives."
+ },
+ {
+  "name": "EEGSmart",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "http://www.eegsmart.com/en/home.html",
+  "evidence": "Company boilerplate: Shenzhen EEGSmart Technology Co Ltd founded March 2015 as an EEG-centred bioinformatics sensor and AI provider. The site was unreachable at fetch time, so this rests on the indexed copy.",
+  "confidence": "medium",
+  "conflict": "PitchBook and Crunchbase both give 2016."
+ },
+ {
+  "name": "Setagon, Inc",
+  "year": 2000,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/54586-45",
+  "evidence": "PitchBook: Setagon Inc, Charlottesville VA, founded 2000, nanoporous surface-modification for drug delivery; acquired by Medtronic 1 Nov 2007",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. No primary or institutional source found and no live company site to check."
+ },
+ {
+  "name": "infiBond",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://app.dealroom.co/companies/infibond",
+  "evidence": "Dealroom, Tracxn and Crunchbase list infiBond, Tel Aviv, established 2013, founded by Yoram Kraus. Company is deadpooled.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. Press coverage exists but returned 403 and could not be checked for a founding year."
+ },
+ {
+  "name": "Chronaly Inc.",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/chronaly/__gM6UyGHXoz0bXOIr7hWymcuLvmsO28UrV8kuD672AE8",
+  "evidence": "Tracxn: Chronaly, Los Angeles, founded 2015 by Edmond Banayan and Lily Francus; Crunchbase marks it permanently closed",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY, and chronaly.com no longer resolves at all, so the company own page cannot be checked."
+ },
+ {
+  "name": "BETA Implants",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://socios.bioga.org/en/partner/beta-implants/",
+  "evidence": "Bioga, the Galician biotech cluster association, member profile, verbatim: BETA Implants is a company founded in 2013 located in Salvaterra do Mino",
+  "confidence": "medium",
+  "conflict": "Institutionally hosted but likely company-supplied text."
+ },
+ {
+  "name": "Emotional ABCs",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/emotional-abcs",
+  "evidence": "CB Insights and Crunchbase: founded 2010 by Ross Brodie and Cynthia Sikes",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company own About page was checked and states no founding year at all."
+ },
+ {
+  "name": "CogniScent",
+  "year": 2019,
+  "kind": "aggregator",
+  "url": "https://www.eu-startups.com/directory/cogniscent/",
+  "evidence": "EU-Startups directory, Tracxn and CB Insights: CogniScent, Berlin, founders Micol De Ruvo and Kai Lammel, Entrepreneur First backed, founded 2019. Company has ceased operations.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The directory page returned 403 on direct fetch and Entrepreneur First no longer lists the company."
+ },
+ {
+  "name": "Kinestica",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.fitness-gaming.com/news/health-and-rehab/bimeo-uses-virtual-games-for-interactive,-evidence-based-neurological-rehabilitation.html",
+  "evidence": "Kinestica Ltd founded early 2012 by three of the Bimeo development team (Mihelj, Kamnik, Hribar) as a spin-out of the University of Ljubljana Robotics Laboratory",
+  "confidence": "medium"
+ },
+ {
+  "name": "EpiNeuron Technologies",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/epineuron/__KFYcS8vA4D0D7vnE1UhCe-JxLrg28b6Xf4ARSdgaP9U",
+  "evidence": "Tracxn: founded 2016 by Mike Willand and Sergio Aguirre",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company About page, University of Toronto Entrepreneurship profile and Ontario Centre of Innovation coverage all give no year; the only dated institutional milestone is the 2018 FDA Breakthrough Device designation."
+ },
+ {
+  "name": "Kendall Research Systems",
+  "year": 2011,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Christian_Wentz",
+  "evidence": "Wentz founded Kendall Research Systems LLC in 2011 on wireless optogenetic neural interface technology from Ed Boyden MIT lab; MIT Technology Review covered the startup in Jan 2012 as already operating. Device efforts acquired by Kernel in 2017.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Sim&Cure",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://siliconcanals.com/french-medtech-startup-simcure-raises-e3m-to-revolutionise-brain-surgery/",
+  "evidence": "Founded 2014 by Mathieu Sanchez and Vincent Costalat, head of neuroradiology at CHU Montpellier; consistent with winning the French i-Lab deep-tech contest in 2014 and 2015",
+  "confidence": "medium"
+ },
+ {
+  "name": "Tibion Bionic Technologies",
+  "year": 2002,
+  "kind": "press",
+  "url": "https://ifr.org/news/the-tibion-bionic-leg-wins-the-iera-2013-award/",
+  "evidence": "IFR and IEEE-RAS award coverage: Tibion Inc founded 2002 by Robert Horst and Kern Bhugra, first Bionic Leg sold 2009. Acquired by AlterG June 2013.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Mediaire",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://www.healthcapital.de/news/artikel/berliner-startup-revolutioniert-die-neuroradiologie/",
+  "evidence": "Berlin-Brandenburg HealthCapital cluster agency: the team moved from Heidelberg to Berlin in Feb 2018 and founded mediaire on 13 April 2018 (Andreas Lemke, Joerg Doepfert, Henrik Michaely). Not a Charite spin-off.",
+  "confidence": "high"
+ },
+ {
+  "name": "Holberg EEG",
+  "year": 2009,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/natus-acquires-holberg-eeg-expanding-innovation-in-neurodiagnostic-ai-solutions-302570347.html",
+  "evidence": "Natus acquisition release, Sept 2025: Founded in 2009, Holberg EEG — a spin-off from Haukeland University Hospital, Bergen. The company own page confirms the spin-off but gives no year.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Filterlex Medical",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://nocamels.com/2019/07/israel-medical-device-filterlex/",
+  "evidence": "Founded June 2016 inside the Alon MedTech Ventures incubator, began operating independently August 2018",
+  "confidence": "medium",
+  "conflict": "Some profiles carry 2018, which is the spin-out to independence rather than the founding."
+ },
+ {
+  "name": "Lumendo",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://ethz-foundation.ch/en/pioneer-fellows/lumendo/",
+  "evidence": "Lumendo AG founded March 2018 by Andreas Schmocker and Mark Bispinghoff, a joint spin-off of EPFL and ETH Zurich; corroborated by EPFL spin-off listings and startupticker",
+  "confidence": "medium"
+ },
+ {
+  "name": "BalanSeat",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/balanseat/__rzmLFdFokqFrc5cZSKcfWLyvCV8LTqlKWy8QEDOkoBk",
+  "evidence": "Tracxn and Crunchbase: BalanSeat, a product of MoPair Technologies Ltd (Uri Halperin), founded 2012",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company About page gives no year, only a 2017 copyright line and that it was founded by a Feldenkrais practitioner."
+ },
+ {
+  "name": "Miyabi Labs",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/miyabi-labs",
+  "evidence": "Crunchbase: Guadalajara VR-for-ADHD startup founded by Josep Maria Tomas Sanahuja. Company appears deadpooled.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY and contested: Tracxn gives 2016. The Mexico Business News interview with the CEO gives no founding date."
+ },
+ {
+  "name": "MindPlay",
+  "year": 1981,
+  "kind": "company_site",
+  "url": "https://mindplay.com/about-us/",
+  "evidence": "Company site: for over 40 years MindPlay Education has been providing learning content. Profiles date the origin to 1981, when Judith Bliss founded Methods and Solutions Inc.",
+  "confidence": "medium",
+  "conflict": "1981 is the PREDECESSOR entity, Methods and Solutions Inc, which later became MindPlay. The reading software itself dates from about 1995. This is lineage, not a founding under the current name."
+ },
+ {
+  "name": "Amissa",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://www.amissa.com/our-story",
+  "evidence": "Company Our Story page: founded 2017 in Charlotte NC to support Alzheimer research through real-world data; Tracxn agrees (founder Jon Corkey). Direct fetch was rate-limited, so this rests on the indexed text plus the aggregator.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Neurocern",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/neurocern",
+  "evidence": "Crunchbase: founded 2014 by Marguerite Manteau-Rao and Anitha Rao-Frisch",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. A MATTER member profile of Dr Rao from April 2016 describes the company as already created but gives no year."
+ },
+ {
+  "name": "ALA Diagnostics",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://infonif.economia3.com/ficha-empresa/ala-diagnostics-sl",
+  "evidence": "Spanish company register, ALA DIAGNOSTICS SL, NIF B88430939: constitution date 02/07/2019, Madrid. Capital Cell and Biotech Spain also describe a 2019 founding by Oscar Fernandez and Jose Ramon Montero.",
+  "confidence": "high",
+  "conflict": "The register date is incorporation, which may post-date the founders starting work."
+ },
+ {
+  "name": "Neurosynergy Games",
+  "year": 2009,
+  "kind": "press",
+  "url": "https://www.vision-net.ie/Company-Info/Neurosynergy-Games-Limited-467931",
+  "evidence": "Irish CRO, company 467931: Neurosynergy Games Limited registered 27 Feb 2009 in Co. Carlow under software consultancy; dissolved 29 Sept 2025",
+  "confidence": "low",
+  "conflict": "Incorporation only. No source describes the founding of the neurotech venture itself, so the 2009 registration may predate or differ from the neurotech activity."
+ },
+ {
+  "name": "Brain Power",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://techcrunch.com/2014/12/23/brain-power/",
+  "evidence": "Contemporaneous Boston press (TechCrunch Dec 2014, NBC Boston, CBS Boston): founded 2013 by neuroscientist Dr Ned Sahin in Cambridge MA",
+  "confidence": "medium"
+ },
+ {
+  "name": "NeuraMatrix",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://www.qbitai.com/2021/11/30403.html",
+  "evidence": "Chinese tech press (QbitAI, Leiphone, Guangming Daily): NeuraMatrix founded November 2019, incubated by Tsinghua University, co-founded by Tsinghua and CAS professors. The Nov 2021 Series A is a funding round, not the founding.",
+  "confidence": "high"
+ },
+ {
+  "name": "Tivic Health",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.sec.gov/Archives/edgar/data/1787740/000110465922041068/tm229804d2_10k.htm",
+  "evidence": "FY2021 Form 10-K: incorporated in California on 22 September 2016, reincorporated in Delaware 7 June 2021",
+  "confidence": "medium",
+  "conflict": "That is an INCORPORATION date; no source states a founding. tivichealth.com now redirects to valionbio.com, so the company appears to have rebranded or pivoted."
+ },
+ {
+  "name": "Emotra AB",
+  "year": 2009,
+  "kind": "press",
+  "url": "https://www.stockpicker.se/analyser/emissioner/teckna-aktier-i-emotra",
+  "evidence": "Swedish financial media, verbatim: Emotra grundades 2009 och boersnoterades 2013",
+  "confidence": "medium",
+  "conflict": "Unverified against a primary register or prospectus. Emotra own About page, its Spotlight IR page and the 2014 annual report are all silent on the founding year."
+ },
+ {
+  "name": "Neutun Labs",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/neutun-labs",
+  "evidence": "Crunchbase, Tracxn and Gust all give 2014, founders Alexander and Eric Dolan. Technical.ly (Oct 2015) describes the prototype built at a hackathon the previous year, consistent but not a stated founding.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY, and the LOCATION in our index is wrong: press and aggregators place Neutun Labs in Toronto, and briefly Philadelphia via DreamIt Health, not Palo Alto. neutun.com no longer resolves."
+ },
+ {
+  "name": "Therapy-Box",
+  "year": 2009,
+  "kind": "company_site",
+  "url": "https://www.therapybox.co.uk/about-us",
+  "evidence": "Company About page: Therapy Box was founded in 2009 by Rebecca Bright MBE and Swapnil Gadgil, to build an iPad app for people with motor neuron disease",
+  "confidence": "high"
+ },
+ {
+  "name": "Sincrolab",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://sincrolab.es/sincrolab-compania/",
+  "evidence": "Company page in the founders own voice: Fundamos Sincrolab en noviembre de 2013 (Maria Laorden, Nacho de Ramon, Daniel Garrido)",
+  "confidence": "high",
+  "conflict": "Some media and aggregator profiles give 2015; treated as an unconfirmed secondary claim against the founders own statement."
+ },
+ {
+  "name": "Pegaces",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://longevity.technology/news/neurotech-trailblazer-focus-neurogeneces/",
+  "evidence": "Trade press: Established in 2016, NeuroGeneces is developing an EEG sleep wearable measuring brain-health biomarkers; founded by Karen Crow with Jason Worchel MD",
+  "confidence": "medium",
+  "conflict": "PEGACES IS NOT THE COMPANY. pegaces.com redirects to neurogeneces.com and PEGACES is a USPTO trademark filed March 2018 by NeuroGeneCES LLC. Our row is named after the product."
+ },
+ {
+  "name": "Clara Biotech",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://news.ku.edu/news/article/2021/12/08/biotech-company-ku-roots-wins-national-competition-secures-funding-help-move-research",
+  "evidence": "University of Kansas news: Clara Biotech launched in 2018 with an SBIR grant from the National Cancer Institute; KU spinout founded by Jim West and Mei He",
+  "confidence": "high"
+ },
+ {
+  "name": "Neotrope",
+  "year": 2007,
+  "kind": "press",
+  "url": "https://annuaire-entreprises.data.gouv.fr/entreprise/neotrope-neotrope-500363270",
+  "evidence": "French government company register, SIREN 500363270, Tourcoing: company created 2007. Inactive since 26/09/2023 after a closure judgment for insufficient assets.",
+  "confidence": "medium",
+  "conflict": "Registration date, not an explicit founding statement."
  }
 ]

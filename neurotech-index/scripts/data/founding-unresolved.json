@@ -226,5 +226,119 @@
   "verdict": "scope question",
   "note": "Home infusion therapy provider and pump supplier, part of VitalAire/Air Liquide. The only neuro-adjacent item is a discontinued RF electrode and generator for pain. Year written regardless.",
   "url": "https://www.omtmed.com/"
+ },
+ {
+  "name": "Neuralis",
+  "verdict": "no founding year; likely not a company",
+  "note": "Sweden Vinnova records Neuralis - Suicide Risk Estimation with Artificial Intelligence as a SEK 300,000 PROJECT running Oct 2017 to Jun 2018, coordinated by Neural Informatics Sweden Ek. for. That is a grant period, not a founding. neuralis.se no longer resolves. SCOPE: clinical decision-support software over registry data, no nervous-system interface.",
+  "url": "https://www.vinnova.se/en/p/neuralis---suicide-risk-estimation-with-artificial-intelligence/"
+ },
+ {
+  "name": "Setagon, Inc",
+  "verdict": "scope question",
+  "note": "Nanoporous drug-eluting surface coating for stents. Vascular, including neurovascular vessels, but does not interface with, measure or modulate the nervous system. Acquired by Medtronic 2007.",
+  "url": "https://pitchbook.com/profiles/company/54586-45"
+ },
+ {
+  "name": "infiBond",
+  "verdict": "scope question",
+  "note": "AI and AR human-analytics personality inference (EmpathAI). No nervous-system interface. Deadpooled.",
+  "url": "http://blog.infibond.com"
+ },
+ {
+  "name": "Chronaly Inc.",
+  "verdict": "scope question",
+  "note": "Mobile logging and tracking app for autism and developmental disabilities. No nervous-system interface. Domain dead, company closed.",
+  "url": "https://www.chronaly.com"
+ },
+ {
+  "name": "BETA Implants",
+  "verdict": "scope question",
+  "note": "Traumatology, orthopaedic and veterinary implants — structural osteosynthesis hardware. Does not measure or modulate neural activity.",
+  "url": "http://www.betaimplants.com"
+ },
+ {
+  "name": "Emotional ABCs",
+  "verdict": "scope question",
+  "note": "Childrens social-emotional learning curriculum. General education software; fails INCLUSION_RULE.",
+  "url": "https://emotionalabcs.com"
+ },
+ {
+  "name": "CogniScent",
+  "verdict": "scope question",
+  "note": "Software-only olfactory test scoring smell loss as an early Parkinson or Alzheimer biomarker. Measures a nervous-system function but has no hardware interface, and sits close to the diagnostic-service exclusion. Ceased operations.",
+  "url": "http://www.cogniscent.io/"
+ },
+ {
+  "name": "Sim&Cure",
+  "verdict": "scope question",
+  "note": "Patient-specific simulation and sizing software for endovascular aneurysm devices. Cerebrovascular, not a neural interface.",
+  "url": "https://sim-and-cure.com/"
+ },
+ {
+  "name": "Filterlex Medical",
+  "verdict": "scope question",
+  "note": "Aortic embolic protection filter for TAVR. Prevents stroke but does not interface with, measure or modulate the nervous system.",
+  "url": "http://www.filterlex.com"
+ },
+ {
+  "name": "Lumendo",
+  "verdict": "scope question",
+  "note": "Light-cured injectable implant fillers for dental and bone, with claimed spinal applications. Primary product is not a neural interface.",
+  "url": "https://www.lumendo.ch/"
+ },
+ {
+  "name": "MindPlay",
+  "verdict": "scope question",
+  "note": "K-12 reading and maths instruction software. General education software, an excluded category.",
+  "url": "https://mindplay.com/"
+ },
+ {
+  "name": "Neurocern",
+  "verdict": "scope question",
+  "note": "Web-based dementia care management and predictive analytics for insurers. Records and claims analytics, no nervous-system interface.",
+  "url": "https://neurocern.com/"
+ },
+ {
+  "name": "ALA Diagnostics",
+  "verdict": "scope question",
+  "note": "ELISA-based in vitro blood test for multiple sclerosis. Assays a blood analyte; does not interface with or measure the nervous system itself.",
+  "url": "https://aladiagnostics.com/"
+ },
+ {
+  "name": "BrainTalk",
+  "verdict": "no year; domain dead and namesakes everywhere",
+  "note": "Only a description surfaced: speech-sample detection of cognitive deficits, a collaboration between Israel National Institute for the Rehabilitation of the Brain Injured and US firm SentiMetrix. No founding year. braintalkpro.com does not resolve, the Startup Nation Central page returns 403, and results are contaminated by BrainQ, BrainTalk Communities, Brain Talk Foundation and Emory BrainTalk. Our description also calls it stroke prediction, while sources describe cognitive-deficit detection.",
+  "url": "https://finder.startupnationcentral.org/company_page/braintalk"
+ },
+ {
+  "name": "Pegaces",
+  "verdict": "WRONG NAME IN THE INDEX",
+  "note": "Pegaces is a product trademark, not a company. pegaces.com redirects to neurogeneces.com and PEGACES was filed at the USPTO in March 2018 by NeuroGeneCES LLC. The company is NeuroGeneces, established 2016, founded by Karen Crow with Jason Worchel MD. The row should be renamed.",
+  "url": "https://trademarks.justia.com/878/17/pegaces-87817061.html"
+ },
+ {
+  "name": "Tivic Health",
+  "verdict": "rebrand",
+  "note": "tivichealth.com now 301-redirects to valionbio.com, so the company appears to have rebranded or pivoted to Valion Bio. The index row and website need updating.",
+  "url": "https://valionbio.com"
+ },
+ {
+  "name": "Neutun Labs",
+  "verdict": "location wrong",
+  "note": "Our index places Neutun Labs in Palo Alto. Press and aggregators place it in Toronto, and briefly Philadelphia via DreamIt Health. The domain no longer resolves and the company may be defunct.",
+  "url": "https://technical.ly/startups/neutun-smartwatch-seizures-eric-dolan/"
+ },
+ {
+  "name": "Therapy-Box",
+  "verdict": "scope question",
+  "note": "AAC, text-to-speech and speech-therapy apps. Assistive software with no nervous-system interface or measurement.",
+  "url": "http://therapy-box.co.uk/"
+ },
+ {
+  "name": "Clara Biotech",
+  "verdict": "scope question",
+  "note": "Microfluidic exosome isolation instrumentation for lab and diagnostic sample prep. No nervous-system interface. Reportedly acquired by InnovaPrep in Oct 2023.",
+  "url": "https://clarabio.tech"
  }
 ]
