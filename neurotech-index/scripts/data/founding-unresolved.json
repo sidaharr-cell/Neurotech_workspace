@@ -502,5 +502,53 @@
   "verdict": "scope question",
   "note": "ACTIVATE is Yale-derived computerised cognitive and executive-function training for ADHD. Software-based training with no sensing or modulation hardware, so it sits close to the general education software exclusion.",
   "url": "https://www.c8sciences.com"
+ },
+ {
+  "name": "Eegapps Medical",
+  "verdict": "DUPLICATE OF INCEREB - confirmed",
+  "note": "Eegapps Medical and Incereb are ONE COMPANY. The Irish Times reports the firm was founded as EEG Apps in 2011, starting in IT Tallaght Synergy Centre, which matches our stored Tallaght address, and incereb.ie was its site. Incereb product is the neon disposable neonatal EEG sensor array. The two rows should be MERGED, keeping Incereb. This is the second rename-duplicate found (after G-Therapeutics/Onward Medical) and again invisible to name matching. incereb.ie is now dead.",
+  "url": "https://www.irishtimes.com/business/health-pharma/irish-firm-s-device-speeds-up-vital-brain-test-for-newborn-babies-1.2438259"
+ },
+ {
+  "name": "NeuroChat",
+  "verdict": "incorporation only, no founding statement",
+  "note": "Russian register: OOO NeuroChat, INN 7730203648, registered 19.05.2016, Moscow Skolkovo, director N.V. Galkina. The company own project history gives a timeline but no founding year; its earliest milestone is a December 2016 first neuroheadset demo, with R&D completed summer 2019. One of the first NeuroNet projects of the Russian National Technology Initiative. Consistent with 2016 but never stated as a founding.",
+  "url": "https://www.rusprofile.ru/id/10483725"
+ },
+ {
+  "name": "Your Brain Training",
+  "verdict": "dead domain, no company entity",
+  "note": "yourbraintraining.com resolves to HostGator shared hosting and returns a 195-byte error page. Archived versions show an SEO content site selling home neurofeedback training, coaching and meditation MP3s, with no About page, no founding year and no named company entity. SCOPE: content marketing and coaching, not a product company.",
+  "url": "http://yourbraintraining.com"
+ },
+ {
+  "name": "Classic Attention",
+  "verdict": "dead domain, almost certainly defunct",
+  "note": "classicattention.com does not resolve at all. The archived homepage is titled Google Glass Treatment Intervention For Attentional Deficit Disorder and carries a CMS post date of 2014-10-24, which is not a founding date. No About page, no company entity, no incorporation record. The product was built on Google Glass, discontinued in 2015. SCOPE: behaviour modification software delivering pre-recorded teacher praise on a reinforcement schedule; neither measures nor modulates the nervous system.",
+  "url": "http://classicattention.com"
+ },
+ {
+  "name": "icTus.io",
+  "verdict": "site is password-gated, not abandoned",
+  "note": "CORRECTION TO MY OWN BRIEF: I told the agent the temp-hosting URL usually means an abandoned site. It does not here — box5348.temp.domains/~ictusio redirects to ictus.io, which is live but behind a WordPress password wall, so no About content is publicly readable. The earliest asset path is dated December 2017, which is a file date and not a founding year. Public description: stroke symptom recognition and rehabilitation apps using ML.",
+  "url": "https://ictus.io/"
+ },
+ {
+  "name": "Clearhead",
+  "verdict": "scope question",
+  "note": "AI triage chatbot and therapist-matching platform. No nervous-system measurement or modulation; a mental-health service marketplace.",
+  "url": "https://www.clearhead.org.nz/"
+ },
+ {
+  "name": "Elevatr",
+  "verdict": "scope question",
+  "note": "Peer-and-counsellor chat marketplace for depression and anxiety. No nervous-system interface.",
+  "url": "http://www.Elevatr.com"
+ },
+ {
+  "name": "Garlew",
+  "verdict": "scope question",
+  "note": "Self-reflection and journaling app for addiction, anxiety and negativity, plus a workplace engagement platform. Psychology-informed software with no nervous-system measurement.",
+  "url": "https://garlew.com"
  }
 ]
