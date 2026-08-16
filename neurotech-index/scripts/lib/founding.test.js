@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   pageText, extractFoundingYear, extractSchemaFounding, preferFounding, aboutUrl, ABOUT_PATHS,
-  sameSite, mentionsCompany,
+  sameSite, mentionsCompany, websiteKey,
 } from './founding.js'
 
 const NOW = 2026
@@ -340,5 +340,53 @@ describe('a month between "in" and the year', () => {
   /** The month must not become a way in for an unrelated year. */
   it('does not reach across a sentence to find a year', () => {
     expect(year('Acme was founded in Boston. The building dates from 1890.')).toBe(null)
+  })
+})
+
+describe('websiteKey', () => {
+  it('returns the registrable host, ignoring scheme, www and path', () => {
+    expect(websiteKey('https://www.acme.com/about')).toBe('acme.com')
+    expect(websiteKey('http://acme.com')).toBe('acme.com')
+    expect(websiteKey('acme.com')).toBe('acme.com')
+  })
+
+  it('matches two rows that renamed but kept the site', () => {
+    // Phobious became Psious became Amelia Virtual Care. The first two names
+    // share no normalised form, so `core` equality cannot see them.
+    expect(websiteKey('https://www.phobious.com')).toBe(websiteKey('https://phobious.com/'))
+  })
+
+  it('refuses aggregator hosts, which are absence of a website and not identity', () => {
+    // Five rows in this index record linkedin.com: companies in Moscow, Berlin,
+    // Montreal, Cape Town and Chennai. Treating that host as identity would
+    // merge all five.
+    for (const u of [
+      'https://www.linkedin.com/company/aesthetic-bionic-prosthetics/',
+      'https://www.crunchbase.com/organization/neuralcubes',
+      'https://www.f6s.com/sofialabsllc',
+      'https://tracxn.com/d/companies/x', 'https://gust.com/companies/y',
+      'https://pitchbook.com/profiles/company/1', 'https://app.dealroom.co/companies/z',
+    ]) expect(websiteKey(u)).toBe(null)
+  })
+
+  it('refuses domain-parking hosts', () => {
+    // frasen.com now serves a HugeDomains sale page; eight companies were once
+    // all dated 2005 from that host's own footer.
+    expect(websiteKey('https://www.hugedomains.com/domain_profile.cfm?d=frasen')).toBe(null)
+  })
+
+  it('refuses placeholders stored in the website column', () => {
+    for (const s of ['n/a', 'N/A', 'na', 'none', '-', 'TBD', 'unknown', '', '   ', null, undefined])
+      expect(websiteKey(s)).toBe(null)
+  })
+
+  it('refuses a bare word that is not a host', () => {
+    expect(websiteKey('https://n/a')).toBe(null)
+    expect(websiteKey('localhost')).toBe(null)
+  })
+
+  it('keeps a real company host that merely resembles a blocked one', () => {
+    expect(websiteKey('https://goldenhelix.com')).toBe('goldenhelix.com')
+    expect(websiteKey('https://angelmed.com')).toBe('angelmed.com')
   })
 })

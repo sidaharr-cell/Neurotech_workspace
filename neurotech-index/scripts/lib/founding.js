@@ -151,11 +151,38 @@ const CLAIMS = [
  * Social and directory hosts are here for the same reason: whatever year they
  * carry belongs to the platform or to a profile, not to the company.
  */
-const BLOCKED_HOSTS = /(^|\.)(hugedomains|brandsly|sedo|afternic|dan|namecheap|godaddy|squadhelp|linkedin|facebook|twitter|x|instagram|crunchbase|pitchbook|bloomberg|zoominfo|dnb)\.(com|co\.uk|net|org)$/i
+const BLOCKED_HOSTS = /(^|\.)(hugedomains|brandsly|sedo|afternic|dan|namecheap|godaddy|squadhelp|linkedin|facebook|twitter|x|instagram|crunchbase|pitchbook|bloomberg|zoominfo|dnb|f6s|gust|tracxn|owler|golden|dealroom|angel|wellfound|cbinsights)\.(com|co|co\.uk|net|org|io|ai)$/i
 
 /** The registrable-ish host, for comparing a redirect against where we started. */
 export const hostOf = url => {
   try { return new URL(String(url)).hostname.replace(/^www\./, '').toLowerCase() } catch { return null }
+}
+
+/** Strings stored in `website` that mean "we have no website for this company". */
+const PLACEHOLDER = /^(n\/?a|none|null|undefined|-|tbd|unknown)$/i
+
+/**
+ * The host that IDENTIFIES a company, or null when the stored website does not
+ * identify anybody.
+ *
+ * Two rows sharing this key are the same company. That is worth having because
+ * it catches what `core` name equality cannot: a company that RENAMED. Phobious
+ * became Psious became Amelia Virtual Care; the first two names share no
+ * normalised form and both rows sit in the index pointing at the same site.
+ *
+ * The null cases are the whole point, and getting them wrong would invent
+ * duplicates rather than find them. Five rows in this index record
+ * `linkedin.com` as their website, three record the literal string "n/a", and
+ * two each record `crunchbase.com` and `f6s.com`. Those rows have NO website;
+ * treating the aggregator's host as identity would merge five unrelated
+ * companies in Moscow, Berlin, Montreal, Cape Town and Chennai into one.
+ */
+export function websiteKey(website) {
+  const raw = String(website || '').trim()
+  if (!raw || PLACEHOLDER.test(raw)) return null
+  const h = hostOf(raw.startsWith('http') ? raw : `https://${raw}`)
+  if (!h || !h.includes('.') || BLOCKED_HOSTS.test(h)) return null
+  return h
 }
 
 /**
