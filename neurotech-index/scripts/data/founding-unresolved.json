@@ -38,13 +38,13 @@
  {
   "name": "MedEngine",
   "verdict": "ambiguous - two companies",
-  "note": "Two distinct companies share the name. MedEngine Oy, Helsinki, founded 2014, is pharma medical data science. MedEngine GmbH, Berlin, founded 2017, makes a Parkinson tracking wristwatch. Our record says Helsinki AND Parkinson, which matches neither cleanly. Needs a person to decide which company the row is.",
+  "note": "Two distinct companies share the name. MedEngine Oy, Helsinki, founded 2014, is pharma medical data science. MedEngine GmbH, Berlin, founded 2017, makes a Parkinson tracking wristwatch. Our record says Helsinki AND Parkinson, which matches neither cleanly. Needs a person to decide which company the row is. VERIFIED: medengine.fi is a pharma consulting agency (market access, medical communications), acquired by Voisin Consulting Life Sciences in 2023 — not neurotech. MedEngine GmbH Berlin, founded 2017, Techstars 20, built the Flytta Parkinson wearable and ceased operations around Aug 2023; that is almost certainly the company this row means.",
   "url": "https://www.medengine.fi/medengine/"
  },
  {
   "name": "Brainguard",
   "verdict": "year is inferred, not stated",
-  "note": "A Berkeley News piece of Jan 2020 says BrainGuard was founded by Robert Knight eight years earlier, implying 2012. No source states a year outright. An arithmetic inference from a rounded phrase is not a sourced fact.",
+  "note": "A Berkeley News piece of Jan 2020 says BrainGuard was founded by Robert Knight eight years earlier, implying 2012. No source states a year outright. An arithmetic inference from a rounded phrase is not a sourced fact. A verifier additionally found Bicycle Retailer (Jul 2026) stating \"Founded in 2011\", which conflicts with the Berkeley arithmetic and may itself be aggregator-derived. Still unresolved.",
   "url": "https://news.berkeley.edu/2020/01/13/new-helmet-design-can-deal-with-sports-twists-and-turns/"
  },
  {
@@ -76,5 +76,11 @@
   "verdict": "no year found",
   "note": "Perfuse Inc, Los Angeles, AI for stroke care. Crunchbase lists the company but gives no founding year. Two similarly named companies exist and are NOT this one: Perfuse Therapeutics (San Francisco, 2018, ocular) and Perfusio (Greenville NC, 2016, burn imaging).",
   "url": "https://www.crunchbase.com/organization/perfuse"
+ },
+ {
+  "name": "Neuronoff",
+  "verdict": "withdrawn after verification",
+  "note": "I wrote 2013 from Tracxn. An independent verifier found only aggregators carry any year, spread across 2013 (Tracxn) and 2017 (CB Insights, Crunchbase, PitchBook), with no primary or press source stating one and nothing on the company site. A four-year spread from aggregators alone is not a fact.",
+  "url": "https://www.cbinsights.com/company/neuronoff"
  }
 ]
