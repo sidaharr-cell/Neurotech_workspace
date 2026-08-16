@@ -4,11 +4,11 @@
 
 Read this first if you are picking the work up. The short version: the schema,
 the pipelines, the guards and the UI are finished and verified. The web-search
-sweep has reached 289 of 1,084 companies and is running in batches; it cannot be
+sweep has reached 361 of 1,084 companies and is running in batches; it cannot be
 left unattended, for the reason in "What cannot be automated" below.
 
 **The sweep's most valuable output is no longer the years.** It is
-`scripts/data/founding-unresolved.json` — 183 entries recording, with URLs, that
+`scripts/data/founding-unresolved.json` — 248 entries recording, with URLs, that
 the index contains rename-duplicates, rows named after products rather than
 companies, rows that are not companies at all, dead domains, wrong locations and
 wrong descriptions. See "What the sweep found that nobody was looking for".
@@ -32,13 +32,14 @@ year first and falling back to incorporation.
 
 | | count | of 1,084 |
 |---|---|---|
-| sourced founding year | 392 | 36% |
+| sourced founding year | 437 | 40% |
 | incorporation year or bound only | 184 | 17% |
-| either (`age_year`) | 576 | 53% |
-| neither | 508 | 47% |
+| either (`age_year`) | 621 | 57% |
+| neither | 463 | 43% |
 
-By source kind: 111 company site, 96 Wikidata, 82 press, 58 aggregator, 37 our
-own record description, 5 Wikipedia, 3 UK register.
+By source kind: 117 company site, 99 press, 96 Wikidata, 66 aggregator, 37 our
+own record description, 9 national register, 5 Wikipedia, 5 parent institution,
+3 accelerator.
 
 These numbers move every round. Re-measure rather than quoting them.
 
@@ -50,13 +51,13 @@ corroborated it elsewhere; the evidence string on each records the corroboration
 The lesson is that the failure was in matching a name to an article without
 reading it, not in the encyclopedia.
 
-The 58 aggregator-sourced years render with a visible caveat rather than being
+The 66 aggregator-sourced years render with a visible caveat rather than being
 hidden or trusted silently.
 
 ## What cannot be automated
 
 `WebSearch` is a tool invoked one call at a time inside a turn. It is not
-scriptable the way the scrapers are, so the remaining ~508 companies without an
+scriptable the way the scrapers are, so the remaining ~463 companies without an
 `age_year` need many rounds of prompting and searching. Background subagents make
 each round wider — four agents at nine companies each is the configuration that
 finishes without stalling — but nothing here runs unattended to completion.
@@ -92,17 +93,28 @@ Every entry carries one verdict from the controlled vocabulary in
 
 | verdict | count | meaning |
 |---|---|---|
-| `scope` | 71 | probably not neurotechnology |
-| `not-a-company` | 11 | a project, consortium, society, facility or book |
-| `dead-domain` | 11 | does not resolve, parked, or resold |
-| `no-year` | 10 | searched, nothing findable |
-| `product-not-company` | 9 | the year belongs to a parent the index never names |
-| `renamed` | 8 | one company, trading under another name |
-| `wrong-location` | 6 | the location field is wrong |
-| `wrong-entity` | 5 | describes a different company than its name says |
-| `year-disputed` | 5 | sources disagree, none decisive |
-| `duplicate` | 3 | the same company as another row |
-| `dissolved` | 2 | confirmed closed by a registry |
+| `scope` | 96 | probably not neurotechnology |
+| `not-a-company` | 18 | a project, consortium, society, division, facility or book |
+| `no-year` | 17 | searched, nothing findable |
+| `dead-domain` | 17 | does not resolve, parked, or resold |
+| `wrong-location` | 16 | the location field is wrong |
+| `renamed` | 16 | one company, trading under another name |
+| `product-not-company` | 14 | the year belongs to a parent the index never names |
+| `year-disputed` | 9 | sources disagree, none decisive |
+| `acquired` | 8 | absorbed, no longer independent |
+| `wrong-entity` | 6 | describes a different company than its name says |
+| `existence-unverified` | 6 | could not be shown to exist at all |
+| `dissolved` | 6 | confirmed closed by a registry |
+| `stale-url` | 6 | alive, but the website has moved |
+| `duplicate` | 4 | the same company as another row |
+| `no-website` | 3 | no usable website recorded |
+| `incorporation-only` | 3 | only an incorporation date exists |
+| `withdrawn` | 2 | a year recorded and then retracted |
+| `wrong-description` | 1 | the description describes something else |
+
+**Nearly a quarter of every row examined has failed on scope.** 96 of 361
+searched, and the rate has not fallen as the sweep has gone down the ranking.
+That is the one finding here that is a decision rather than a repair.
 
 `normalise()` throws on an unrecognised verdict rather than defaulting, because
 the field had already drifted into 60-odd strings for these 18 categories before
