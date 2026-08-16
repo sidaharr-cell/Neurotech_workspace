@@ -57,6 +57,10 @@ import {
 const UA = { 'User-Agent': 'NeuroBase research@neurobase.app' }
 const COMMIT = process.argv.includes('--commit')
 const WIKIDATA_ONLY = process.argv.includes('--wikidata-only')
+/** Re-read only organizations.description. No network at all, so it is cheap to
+ *  re-run whenever the extractor learns a new phrasing — which is exactly what
+ *  happened when it learned to read "founded in June 2010". */
+const DESCRIPTIONS_ONLY = process.argv.includes('--descriptions-only')
 const LIMIT = (() => {
   const i = process.argv.indexOf('--limit')
   return i > -1 ? Number(process.argv[i + 1]) : Infinity
@@ -289,7 +293,7 @@ async function run() {
     }
   }
 
-  let { rows: orgs, error } = await readAll(`${BASE},founded_year`)
+  let { rows: orgs, error } = await readAll(`${BASE},founded_year,founded_source_kind`)
   if (error && /founded_year/.test(error.message)) {
     if (COMMIT) {
       console.error('Migration 019 has not been applied, so there is nothing to write to.')
@@ -326,7 +330,13 @@ async function run() {
   }
 
   for (const o of targets) {
-    const hit = (await fromWikidata(o.name, o.website))
+    // A description is the weakest source there is. It never displaces a year
+    // already established from a filing, a press report or Wikidata.
+    if (DESCRIPTIONS_ONLY && o.founded_year && o.founded_source_kind !== 'record_description') {
+      stats.none++; tick(); continue
+    }
+    const hit = DESCRIPTIONS_ONLY ? fromDescription(o.description)
+      : (await fromWikidata(o.name, o.website))
       || (WIKIDATA_ONLY ? null : await fromWikipedia(o.name, o.website))
       || (WIKIDATA_ONLY ? null : await fromCompanySite(o.website))
       || fromDescription(o.description)
