@@ -1300,5 +1300,191 @@
   "verdict": "renamed",
   "note": "Year recorded as 2014, against the company's own claim of 2016. The entity chain is Nervana LLC to Neuvana; 2016 is the rebrand. The Xen vagus-nerve-stimulation earbud is still sold through a live storefront with HSA and FSA eligibility. It is marketed as a consumer wellness device rather than a regulated medical device.",
   "url": "https://neuvanalife.com/pages/about-us"
+ },
+ {
+  "name": "Medtronic Vascular",
+  "verdict": "scope",
+  "note": "A subsidiary of Medtronic plc, not an independent company, and three years must not be blended: 1949 is Medtronic's founding, 1991 is Arterial Vascular Engineering of Santa Rosa whose entity and site became Medtronic Vascular, and 1998-99 is the acquisition. The name itself is post-acquisition branding, so no year is recorded here. SCOPE: coronary, peripheral and aortic stents. It touches neurovascular indications, but that is vascular access to the brain rather than neurotechnology; Medtronic's neuro business is a separate division. The Santa Rosa site is being closed, with departures from spring 2027. NOTE: this index holds three Medtronic rows, and the one simply called \"Medtronic\" carries medina-medical.com, the domain of a neurovascular company Medtronic acquired in 2015.",
+  "url": "https://www.pressdemocrat.com/2026/05/07/medtronic-leaving-sonoma-santa-rosa/"
+ },
+ {
+  "name": "Upcard",
+  "verdict": "existence-unverified",
+  "note": "upcard.io fails TLS negotiation and one search result flagged the domain as possibly for sale. Serious name collision: UPCARD SAS is a Colombian fintech, and there is an unrelated UpCard digital business card app. The entity that would plausibly match Uppsala is an accessibility platform of digital picture cards for children with autism and ADHD, but the Uppsala Innovation Centre portfolio does not list it and no legal name or year could be confirmed. Verify the company exists before assigning anything.",
+  "url": "https://upcard.io/"
+ },
+ {
+  "name": "Artificial Cognition, Inc.",
+  "verdict": "no-year",
+  "note": "artificialcognition.ai refuses connections and Crunchbase obfuscates the founded date for this profile. Consistently reported as a New York company of roughly one to ten people, founder and CEO Robert Polkowski, building AI wearables to mitigate cognitive impairment including dementia — a legitimate adjacency if it still operates, which could not be confirmed. Searches are pulled toward the unrelated and far larger Cognition AI, founded 2023; that year must not leak in.",
+  "url": "https://www.crunchbase.com/organization/artificial-cognition"
+ },
+ {
+  "name": "Tickments",
+  "verdict": "scope",
+  "note": "Incorporated 16 May 2017 per Corporations Canada, ID 10237817, Ottawa, and DISSOLVED 27 September 2024. The site is a stale shell for a beta school app and carries a 2017 footer, which was not used — the register gives the same year independently. SCOPE: no discernible nervous-system connection at all. This reads as an education and scheduling app and nothing found explains why it is in a neurotechnology index.",
+  "url": "https://federalcorporation.ca/corporation/10237817"
+ },
+ {
+  "name": "Idox Health",
+  "verdict": "not-a-company",
+  "note": "A brand and division of Idox Group plc, and the legal entity behind the name was DISSOLVED on 27 December 2022. Three competing years and no clean answer: 1991 is the incorporation of the entity that later became Idox Health Limited but was then Peter Wright Software; 1999 is given by aggregators for Blithe Computer Systems, the Burton-on-Trent EPR business that is the real operational ancestor, which contradicts the register's 1997 rename; and 2011 is a marketing claim about market entry. SCOPE: health records and case-management software. Managing a stroke or dementia caseload is not neurotechnology.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/02585086"
+ },
+ {
+  "name": "Handl Medical",
+  "verdict": "no-year",
+  "note": "A real neuromodulation venture — a drug-free portable device stimulating peripheral nerves in the palm to treat migraine, genuinely in scope — but no source states a founding year. It appears in the QB3 and Rosenman Institute portfolios dated 22 June 2018, which is a portfolio listing and was not used. Both accelerator pages are now broken. The index's \"https://N/A\" is accurate; no live site exists. Beware the name collision with Handl Therapeutics of Leuven, a gene-therapy company acquired by UCB in November 2020, which dominates search results.",
+  "url": "https://qb3.org/portfolio-detail/2018/6/22/n6v1v7meyki5crm4y7f5o3cj3ik7h5"
+ },
+ {
+  "name": "Centro de Psicología Álava Reyes",
+  "verdict": "not-a-company",
+  "note": "A private psychology clinic in Madrid directed by Maria Jesus Alava Reyes, staffed by psychologists, psychiatrists, neuropsychologists and speech therapists, offering talk therapy. Employing neuropsychologists is not neurotechnology; it builds and sells no device, software or measurement technology. Its own site gives only a decade — \"desde su creacion en los anos ochenta\" — and the \"more than 40 years\" figure on directory sites is a rolling marketing claim, so no year is recorded and no arithmetic was done.",
+  "url": "https://alavareyes.com/quienes-somos/"
+ },
+ {
+  "name": "MieronVR",
+  "verdict": "year-disputed",
+  "note": "The company's own About page states no year. Tracxn says 2015, founded by Josh Dubon; the Las Vegas Review-Journal in January 2020 says he and co-founder Jessica Maslin got the founding phone call \"two and a half years ago\" and a April 2020 piece says \"around three years ago\", both pointing at about 2017 — relative phrases that were not converted. The 2015 against 2017 gap is too wide to paper over. Real and in scope: VR neurotherapy for spinal cord and traumatic brain injury rehabilitation. The legal entity is Mieron, Inc. and two domains are live.",
+  "url": "https://mieronvr.com/about/"
+ },
+ {
+  "name": "Suva Technologies Inc.",
+  "verdict": "dead-domain",
+  "note": "suva.ca redirects to a domain-parking sale page. A real Victoria BC mobile-EEG software house founded by Dr Nolan Beise, whose product Aspire launched at CES in January 2019 — genuinely neurotech — but the only year available, 2017, traces to aggregator data and could not be confirmed on any page. Beise has since founded Circl, and SUVA appears defunct or dormant. Do not confuse with suva-tech.com, an unrelated Uruguayan bat-acoustics company.",
+  "url": "https://www.suva.ca"
+ },
+ {
+  "name": "Ampere Medical",
+  "verdict": "scope",
+  "note": "A real, live Hong Kong company — Ampere Medical Limited, Kowloon, directed by Dr Frank Zhu — but a DISTRIBUTOR and training provider rather than a technology developer. It resells Nexstim's navigated TMS and Soterix Medical's transcranial electrical stimulation in Hong Kong and China and sells paid nTMS courses. No page states a founding year and the only date is a 2025 copyright footer, which was not used. The earliest hard datapoint is a 2018 Nexstim distribution agreement, a commercial milestone that postdates the company.",
+  "url": "https://amperemedical.com.hk/"
+ },
+ {
+  "name": "Carevium",
+  "verdict": "scope",
+  "note": "carevium.com redirects to a GoDaddy for-sale page and the company appears defunct. Aggregators give 2014; no primary source exists, so no year is recorded. SCOPE: web-based resident-care management software for assisted and senior living — CRM, eMAR, billing, census reporting. Its only neuro link is that some customers run memory-care units; it neither measures nor acts on the nervous system.",
+  "url": "https://gust.com/companies/carevium"
+ },
+ {
+  "name": "NewTouch Digital",
+  "verdict": "renamed",
+  "note": "newtouchdigital.com redirects to neurorpm.com: the company now trades as NeuroRPM Inc., legal entity historically New Touch Digital, Inc. Founders Atila Omer, Jonathan Pomeraniec and Alexander Ksendzovsky. Clearly in scope — FDA-cleared AI monitoring of Parkinson's motor symptoms on Apple Watch. Aggregators give 2017 but the company's own site and team page state no year and carry only a 2023-2026 copyright, so none is recorded.",
+  "url": "https://www.neurorpm.com/"
+ },
+ {
+  "name": "Sidekicks",
+  "verdict": "product-not-company",
+  "note": "Sidekicks is an app; the company is The Affinity Project, founded by the Pulitzer-winning journalist Ron Suskind in Cambridge, Massachusetts, inspired by his book and documentary Life, Animated. The app is an avatar-based communication aid for autistic children, built with input from a co-inventor of Siri. sidekicks.com returns 503 on repeated attempts and the company's own site is the-affinity-project.com. Tracxn gives 2015, aggregator-only, so no year is recorded. Beware collisions with a Boston home-improvement startup and a UK Sidekicks Services Ltd.",
+  "url": "https://ronsuskind.com/the-affinity-project/"
+ },
+ {
+  "name": "LocateMotion",
+  "verdict": "scope",
+  "note": "A subsidiary of MarkiTech founded by Nauman Jaffar, now operating mainly as SenSights.AI; locatemotion.com would not load, so the indexed URL is likely stale. LOCATION: Toronto, which the index records as unknown. Aggregators give 2017 with no primary source, so no year is recorded. SCOPE: IoT caregiver wearables and remote patient monitoring for seniors including people with dementia — location tracking and vital-signs monitoring, where the dementia angle is a target market rather than a mechanism.",
+  "url": "https://www.healthcaretechoutlook.com/locatemotion"
+ },
+ {
+  "name": "Marmot Labs",
+  "verdict": "dissolved",
+  "note": "Year recorded as 2017, an incorporation date. DISSOLVED 15 February 2022 and marmotlabs.io no longer resolves; the SETsquared accelerator page for it now 404s. The business was VR plus biofeedback software for anxiety and phobia therapy, with generic software-development SIC codes. LOCATION: the registered office was Watford, not London.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/10951128"
+ },
+ {
+  "name": "RemindMe",
+  "verdict": "product-not-company",
+  "note": "Year recorded as 2012. RemindMeCare, also written ReMindMe or ReMeLife, is the product; the company is Health-Connected Ltd of the UK, founders reported as Etienne Abrahams and Simon Hooper. Companies House lists a Leeds registered office while the operating base is usually given as London. The product launched around 2016, several years after the incorporation.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/07987967"
+ },
+ {
+  "name": "VRapeutic",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2017, weakly. The site now lists 1344 Notting Hill Avenue, Ottawa, Ontario and the entity styles itself VRapeutic Inc.; the index's Alexandria, Egypt is the origin rather than the current base. VR therapy modules for children with ADHD and autism plus wearable bio-sensors for motor training — defensible in a broad reading, but not a brain-interface technology.",
+  "url": "https://myvrapeutic.com/"
+ },
+ {
+  "name": "Twenty Billion Neurons",
+  "verdict": "scope",
+  "note": "Year recorded as 2015 from the company's own account. SCOPE: video understanding, a 220k-clip labelled human-action dataset, synthetic training data and \"common sense\" avatars for smart home, fitness and automotive. General-purpose machine learning where \"Neurons\" is the only neuro connection — the same name-based inclusion pattern as Medibrane and DataNovo. Qualcomm acquired the team in July 2021 and the operating business no longer exists.",
+  "url": "https://twentybn.com/"
+ },
+ {
+  "name": "Interactive Productline",
+  "verdict": "renamed",
+  "note": "Year recorded as 2002 from the Swedish register. RENAMED to Mentalytics AB on the same org.nr, 556633-2036, so it is one legal entity and the founding year carries over. The row is also named after its product, Mindball, which originated as research at the Swedish Interactive Institute in October 2002 with the first game shipping in 2003. The index should carry Mentalytics AB and probably a new website.",
+  "url": "https://www.allabolag.se/5566332036/interactive-productline-ip-ab"
+ },
+ {
+  "name": "Q30 Innovations",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2012, disputed against 2013. The live site is q30.com, not the indexed q30innovations.com. Two entity names circulate, Q30 Innovations, LLC and Q30 Sports Science, LLC, and a Senate release calls it Norwalk-based rather than Westport. Strongly in scope: the Q-Collar applies light pressure to the jugular veins to reduce brain movement on impact, FDA-cleared 26 February 2021 as the first device of its kind, with a $2.8M USAMRDC contract in October 2022. Neither the clearance nor the September 2021 launch is a founding date.",
+  "url": "https://q30.com"
+ },
+ {
+  "name": "Brainsgate",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2000, aggregator-only. brainsgate.com and www.brainsgate.com both fail TLS validation: the certificate presented belongs to stick.tyco.co.il, an unrelated Israeli host, so the domain's hosting appears repointed. The correct styling is BrainsGate. Investors included Medtronic, J&J Development, Boston Scientific, Elron and Pitango; the last notable news is a $14M raise in December 2020, so operating status is worth re-checking.",
+  "url": "https://finder.startupnationcentral.org/company_page/brainsgate"
+ },
+ {
+  "name": "Whale Imaging",
+  "verdict": "scope",
+  "note": "Year recorded as 1998, aggregator-only and contested against 2009. SCOPE: the G-Arm bi-plane mobile surgical fluoroscopy system and Sigma portable diagnostic ultrasound — general surgical and diagnostic imaging hardware. Its marketing lists neurosurgery alongside orthopaedics, spine and pain management, but the device is not nervous-system-specific and neither measures nor modulates neural activity. This looks like a row included because \"neurosurgery\" appears in a specialty list.",
+  "url": "https://www.cbinsights.com/company/whale-imaging"
+ },
+ {
+  "name": "Pocketcoach",
+  "verdict": "scope",
+  "note": "Year recorded as 2019 from two independent Austrian startup outlets. SCOPE: a text-based CBT chatbot for anxiety and stress, later certified for German statutory insurance reimbursement. No sensor, no signal acquisition, no nervous-system interface. The Crunchbase record resolves under the name Stresscoach, so the company or product may have been renamed.",
+  "url": "https://www.trendingtopics.eu/pocketcoach-app-launch/"
+ },
+ {
+  "name": "Brain Resource",
+  "verdict": "renamed",
+  "note": "Year recorded as 2000, aggregator-only. Founded by Dr Evian Gordon out of the Brain Dynamics Centre at Westmead Hospital and the University of Sydney; it built the first standardised international brain database and listed on the ASX as BRC, now delisted. The platform became MyBrainSolutions and then Total Brain in 2018, and Total Brain has since been acquired by SonderMind. LOCATION: Sydney in origin, not San Francisco. brainresource.com no longer resolves.",
+  "url": "https://www.prnewswire.com/news-releases/mybrainsolutions-announces-name-change-to-total-brain-and-repositions-its-offering-with-new-and-expanded-product-capabilities-300715070.html"
+ },
+ {
+  "name": "MitoDys Therapeutics Ltd",
+  "verdict": "dissolved",
+  "note": "Year recorded as 2012, an incorporation date. DISSOLVED 21 June 2022; mitodys.com is a leftover. SCOPE: a virtual drug-discovery company repositioning small molecules against mitochondrial dysfunction in Parkinson's and rare neurodegenerative disease — therapeutics rather than a device or software. LOCATION: the registered office was Chipping Norton, Oxfordshire, not Oxford.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/08227300"
+ },
+ {
+  "name": "Mindset Health",
+  "verdict": "scope",
+  "note": "Year recorded as 2018 from Y Combinator. SCOPE: hypnotherapy delivered by app — Nerva for IBS, Evia for menopausal hot flushes, Finito for smoking cessation. Gut-brain-axis behavioural therapeutics with no sensing, stimulation or neural interface. The row is also named after an app: the indexed themindsetapp.com is a legacy product domain and the corporate site is mindsethealth.com.",
+  "url": "https://www.ycombinator.com/companies/mindset-health"
+ },
+ {
+  "name": "BrainMARC",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2013. LOCATION: an Israeli company headquartered in Yokneam, described by NoCamels as American-Israeli; the index's Hoboken is wrong. brainmarc.com does not resolve at all, which suggests the company may no longer be operating. Genuinely in scope: EEG headsets producing a Brain Engagement Index measuring attention during cognitive therapy.",
+  "url": "https://nocamels.com/2018/08/brain-tech-israel-health/"
+ },
+ {
+  "name": "Joyable",
+  "verdict": "acquired",
+  "note": "Year recorded as 2013. Acquired by AbleTo on 6 March 2019 for an undisclosed eight-figure sum, with co-founder Peter Shalek becoming AbleTo's chief product officer; AbleTo was itself later acquired by UnitedHealth/Optum, so the company no longer exists independently. SCOPE: online CBT with human coaching — behavioural health software with no neural sensing or stimulation.",
+  "url": "https://medium.com/carbon-five/founder-five-pete-shalek-and-steve-marks-from-joyable-3dcb4114e6fe"
+ },
+ {
+  "name": "Teledyne Scientific & Imaging",
+  "verdict": "scope",
+  "note": "Year recorded as 1962, for the R&D institution rather than the named entity. A wholly-owned subsidiary of Teledyne Technologies, not an independent company, sharing the Thousand Oaks complex with the parent's corporate headquarters. SCOPE: a general corporate R&D house — infrared and visible imaging sensors, advanced ceramics, liquid-crystal displays, high-speed electronics. Not a neurotechnology company; any neuro connection is incidental to its sensors turning up in scientific instrumentation broadly.",
+  "url": "https://clui.org/projects/remote-sensing/aerospace-southern-california/teledyne-thousand-oaks"
+ },
+ {
+  "name": "Proneuron Biotechnologies",
+  "verdict": "scope",
+  "note": "Year recorded as 1996, aggregator-only. SCOPE: a cell-therapy developer, not a device company — ProCord was autologous activated macrophages injected into the injured spinal cord, licensed from Yeda, scientific founder Prof. Michal Schwartz of the Weizmann Institute. FDA orphan drug designation September 2004 and Phase II with Craig Hospital; the trial was reportedly halted and there has been no activity in roughly two decades. LOCATION: an Israeli company in Ness Ziona with a US shell for the trials; New York is wrong. proneuron.com redirects to a sale page.",
+  "url": "https://www.crunchbase.com/organization/proneuron-biotechnologies"
+ },
+ {
+  "name": "Eodyne Systems",
+  "verdict": "duplicate",
+  "note": "Year recorded as 2014. CONFIRMED DUPLICATE of the row simply called \"Eodyne\": eodyne.com redirects to eodynesystems.com and both rows are Barcelona. The two should be merged. A spin-off of the SPECS group at Universitat Pompeu Fabra and ICREA, commercialising the Rehabilitation Gaming System invented by Paul F.M.J. Verschure — VR-based neurorehabilitation for stroke, validated in clinical trials and deployed in hospitals. Legitimately neurotech.",
+  "url": "https://www.upf.edu/en/web/e-noticies/archive/-/asset_publisher/wEpPxsVRD6Vt/content/id/2681868/maximized"
  }
 ]
