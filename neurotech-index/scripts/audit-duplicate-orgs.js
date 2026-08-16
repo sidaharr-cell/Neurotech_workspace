@@ -14,8 +14,17 @@
  * read here ends with .order('id').
  *
  * Ids are a deterministic UUIDv5 of the name (scripts/lib/uuid.js), so two rows
- * for one company means the two names differ by punctuation, a suffix or a
+ * for one company means the two names differ by punctuation, a suffix or an
  * accent — enough to hash apart, not enough to be different companies.
+ *
+ * WHAT THIS CANNOT FIND: a company that RENAMED. G-Therapeutics SA of Lausanne
+ * became GTX Medical and then ONWARD Medical of Eindhoven, and both rows are in
+ * the index describing the same spinal-cord stimulation product. The two names
+ * share no letters, so no normalisation reaches it. That one surfaced only
+ * because a verifier reading Onward's history mentioned the former name.
+ * Catching renames needs an alias list — the same shape as
+ * scripts/data/company-aliases.json, which the funding pipeline already keeps
+ * for exactly this reason — not a cleverer string comparison.
  *
  * This NEVER DELETES, and that is deliberate rather than timid. Every row may be
  * pointed at by relationships, funding_rounds, devices matched on manufacturer,

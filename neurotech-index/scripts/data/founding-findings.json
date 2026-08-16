@@ -2,35 +2,37 @@
  {
   "name": "AAVAA",
   "year": 2019,
-  "kind": "aggregator",
-  "url": "https://pitchbook.com/profiles/company/366551-29",
-  "evidence": "PitchBook and CB Insights both give 2019; Montreal BCI wearables company",
-  "confidence": "medium"
+  "kind": "company_site",
+  "url": "https://aavaa.com/aavaa-inc-announces-completion-of-2-0-million-seed-round/",
+  "evidence": "Company press release boilerplate: AAVAA was formed in 2019 to pursue attention-detection; incubated at TandemLaunch by founder Naeem Komeilipoor.",
+  "confidence": "high",
+  "conflict": "BetaKit says launched 2021, which reads as commercial launch and CEO arrival rather than formation."
  },
  {
   "name": "Cortivision",
-  "year": 2020,
-  "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/cortivision/__-T9jlu8_FCt1qgI_gAULKF9WJ0ncOuNc6dxOkEel7BA",
-  "evidence": "Tracxn gives 2020, Lublin fNIRS company, co-founded by Slawomir Sobotka and Wojciech Broniatowski",
-  "confidence": "medium"
+  "year": 2019,
+  "kind": "press",
+  "url": "https://www.invest-in-lublin.com/info-centre/blog/cortivision-explores-power-of-mind/",
+  "evidence": "Founder interview via Lublin municipal investment agency: officially operating as a company since March 2019, concept formed in a Warsaw accelerator late 2018. Verifier corrected my 2020.",
+  "confidence": "medium",
+  "conflict": "Tracxn gives 2020. The 2019 statement describes formal registration, so it is closer to incorporation than to a distinct founding moment."
  },
  {
   "name": "Neuright Labs",
   "year": 2018,
   "kind": "press",
   "url": "https://umaine.edu/news/blog/2020/06/24/umaine-spinout-neuright-receives-225000-nsf-small-business-technology-transfer-award/",
-  "evidence": "University of Maine news release describes Neuright as a UMaine spinout; Crunchbase and PitchBook give 2018",
-  "confidence": "high"
+  "evidence": "Company-authored text says founded in Maine in 2018 as a C-corp, which is an incorporation statement. UMaine coverage confirms Blaszkiewicz and Townsend formed Neuright out of MIRTA but states no year.",
+  "confidence": "medium"
  },
  {
   "name": "Onward Medical",
   "year": 2014,
   "kind": "press",
-  "url": "https://www.eu-startups.com/2026/04/eindhovens-onward-medical-raises-e40-6-million-in-capital-increase-to-advance-spinal-cord-injury-therapies/",
-  "evidence": "EPFL spinout, Eindhoven",
-  "confidence": "low",
-  "conflict": "Sources disagree: 2014 and 2015 both reported"
+  "url": "https://eqtgroup.com/thinq/healthcare/meet-onward-medical-giving-hope-to-people-with-spinal-cord-injuries",
+  "evidence": "Founded 2014 in Eindhoven by the EPFL team behind the 2012 spinal-stimulation results (Bloch, Deckers, Courtine). Founded AS G-Therapeutics / GTX Medical; ONWARD is a 2020 rebrand.",
+  "confidence": "high",
+  "conflict": "The 2015 figure elsewhere appears to track the rebrand rather than the founding. Verifier found no credible source against 2014."
  },
  {
   "name": "Axonics Modulation Technologies",
@@ -53,8 +55,8 @@
   "name": "INBRAIN Neuroelectronics",
   "year": 2019,
   "kind": "press",
-  "url": "https://icn2.cat/en/business-and-innovation/spin-off-companies/4597-inbrain-neuroelectronics-s-l",
-  "evidence": "ICN2 (Catalan Institute of Nanoscience and Nanotechnology) lists INBRAIN as its spin-off, established 2019; founded by Jose A. Garrido, Kostas Kostarelos, Anton Guimera",
+  "url": "https://www.icrea.cat/impact/innovation/spin-offs-companies/35/inbrain-neuroelectronics-sl/",
+  "evidence": "ICREA official spin-off registry: InBrain Neuroelectronics SL born December 2019. Corroborated by ICN2 spin-off page.",
   "confidence": "high"
  },
  {
@@ -68,19 +70,19 @@
  {
   "name": "Braingaze",
   "year": 2013,
-  "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/braingaze/__oEj2jWZ8hL6BbB9LfKJmjlF7ycuQf4nL8uHLtsTCJ_s",
-  "evidence": "Tracxn gives 2013, founded in Mataro by Laszlo Bax and Hans Super; corroborated by EU-Startups directory listing",
-  "confidence": "medium"
+  "kind": "press",
+  "url": "https://www.icrea.cat/impact/innovation/spin-offs-companies/8/braingaze-sl/",
+  "evidence": "ICREA official spin-off registry: Braingaze SL born September 2013; ICREA/University of Barcelona spin-off co-founded by Hans Super and Laszlo Bax.",
+  "confidence": "high"
  },
  {
   "name": "Chronolife",
   "year": 2015,
-  "kind": "press",
-  "url": "https://www.eu-startups.com/2019/12/paris-based-chronolife-raises-funding-and-launches-washable-smart-nexkin-t-shirt-that-monitors-your-health/",
-  "evidence": "EU-Startups reports Chronolife founded 2015 in Paris, co-founded by iBionext",
-  "confidence": "medium",
-  "conflict": "One source gives 2014; the majority and the more recent give 2015"
+  "kind": "company_site",
+  "url": "https://chronolife.net/press-release/",
+  "evidence": "Company press boilerplate: co-founded in November 2015, iBionext majority shareholder since creation.",
+  "confidence": "high",
+  "conflict": "One aggregator floats 2014; no primary source supports it."
  },
  {
   "name": "BrainSigns",
@@ -92,19 +94,21 @@
  },
  {
   "name": "Synergia Medical",
-  "year": 2014,
-  "kind": "aggregator",
-  "url": "https://www.cbinsights.com/company/synergia-medical",
-  "evidence": "CB Insights and Crunchbase give 2014; founded by Pascal Doguet and Attila Borbath, Mont-Saint-Guibert Belgium",
-  "confidence": "medium"
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.synergia-medical.com/about-us/",
+  "evidence": "Company About page: backed by investors since its founding in 2015. I had written 2014 from CB Insights.",
+  "confidence": "low",
+  "conflict": "Genuinely unresolved. MecaTech, the Walloon competitiveness cluster, says founded 2014 by Pascal Doguet and Attila Borbath; the company own site says 2015."
  },
  {
   "name": "BRAINCONTROL",
   "year": 2010,
   "kind": "press",
   "url": "https://www.braincontrol.eu/en/who-we-are/",
-  "evidence": "BrainControl is a brand of LiquidWeb Srl, founded in Siena in 2010; corroborated by PR Newswire coverage of its 2018 funding round",
-  "confidence": "high"
+  "evidence": "BrainControl is a brand of LiquidWeb Srl, founded in Siena in 2010 by Pasquale Fedele; first prototype shown Oct 2010. 2010 is the PARENT company founding, not a separate entity.",
+  "confidence": "medium",
+  "conflict": "Product versus parent: BrainControl is a brand, not a separately founded company. Both resolve to 2010."
  },
  {
   "name": "Salvia BioElectronics",

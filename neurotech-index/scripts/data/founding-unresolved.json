@@ -82,5 +82,11 @@
   "verdict": "withdrawn after verification",
   "note": "I wrote 2013 from Tracxn. An independent verifier found only aggregators carry any year, spread across 2013 (Tracxn) and 2017 (CB Insights, Crunchbase, PitchBook), with no primary or press source stating one and nothing on the company site. A four-year spread from aggregators alone is not a fact.",
   "url": "https://www.cbinsights.com/company/neuronoff"
+ },
+ {
+  "name": "G-therapeutics",
+  "verdict": "duplicate of Onward Medical under a former name",
+  "note": "G-Therapeutics SA (Lausanne) was renamed GTX Medical and then ONWARD Medical (Eindhoven) in 2020. Both rows describe implantable spinal cord stimulation for SCI rehabilitation. They are one company, and audit-duplicate-orgs.js CANNOT find this: it matches on normalised names, and a rename shares no letters. Found only because a verifier noted that Onward was founded under the G-Therapeutics name. Left in place; merging two rows is a decision about which /company/:id stops working.",
+  "url": "https://eqtgroup.com/thinq/healthcare/meet-onward-medical-giving-hope-to-people-with-spinal-cord-injuries"
  }
 ]
