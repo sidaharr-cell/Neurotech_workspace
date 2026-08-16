@@ -12,10 +12,10 @@ import { fmtMonthYear, unavailableLabel } from '../lib/fundingBoard'
 import { StarButton } from '../components/Watch'
 import FoundingLine from '../components/FoundingLine'
 import { foundingLine } from '../lib/founded-display'
+import { siteUrl, siteLabel } from '../lib/website'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
-const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 const fmtDate = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
 const monthYear = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
 
@@ -292,8 +292,8 @@ export default function CompanyPage() {
           <FoundingLine row={company} compact />
         </>}
         {company.funding > 0 && <><span aria-hidden>·</span><span className="inline-flex items-center gap-1 text-accent font-medium"><Banknote className="w-3.5 h-3.5" />{fmtMoney(company.funding)} raised</span></>}
-        {company.website && <><span aria-hidden>·</span>
-          <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">{host(company.website)}<ExternalLink className="w-3 h-3" /></a>
+        {siteUrl(company.website) && <><span aria-hidden>·</span>
+          <a href={siteUrl(company.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">{siteLabel(company.website)}<ExternalLink className="w-3 h-3" /></a>
         </>}
         <span aria-hidden>·</span>
         <a href={ctgovUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
@@ -565,8 +565,8 @@ export default function CompanyPage() {
         <BizSub title="Talent">
           <p className="text-[14px] text-muted font-body mb-3">Open roles are listed on the company's own careers page. NeuroBase does not scrape individual postings or use LinkedIn or any source that prohibits it; it links you to the source instead.</p>
           <div className="flex flex-wrap gap-3">
-            {company.website && (
-              <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
+            {siteUrl(company.website) && (
+              <a href={siteUrl(company.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
                 Company site <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}

@@ -5,6 +5,7 @@ import { getLabById } from '../lib/data'
 import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { StarButton } from '../components/Watch'
+import { siteUrl } from '../lib/website'
 
 function Section({ icon: Icon, title, note, children }) {
   return (
@@ -67,8 +68,8 @@ export default function LabPage() {
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {lab.institution && <span>{lab.institution}</span>}
         {lab.location && <><span aria-hidden>·</span><span>{lab.location}</span></>}
-        {lab.website && <><span aria-hidden>·</span>
-          <a href={lab.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">Lab site<ExternalLink className="w-3 h-3" /></a>
+        {siteUrl(lab.website) && <><span aria-hidden>·</span>
+          <a href={siteUrl(lab.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">Lab site<ExternalLink className="w-3 h-3" /></a>
         </>}
       </div>
 
