@@ -113,9 +113,9 @@
  {
   "name": "Salvia BioElectronics",
   "year": 2017,
-  "kind": "press",
-  "url": "https://siliconcanals.com/salvia-bioelectronics-raises-53m/",
-  "evidence": "Silicon Canals: Eindhoven clinical-stage medical device company founded 2017 by Hubert Martens; corroborated by High Tech Campus Eindhoven profile",
+  "kind": "company_site",
+  "url": "https://www.salviabioelectronics.com/about",
+  "evidence": "Company About page boilerplate: Founded in 2017 and headquartered in Eindhoven. Secondary reporting adds incorporation 3 Mar 2017 by Hubert Martens, Daniel Schobben and Wim Pollet.",
   "confidence": "high"
  },
  {
@@ -123,24 +123,25 @@
   "year": 2019,
   "kind": "press",
   "url": "https://www.dtu.dk/english/news/all-news/nyhed?id=55a5d850-d94c-424c-bdd0-16924bac9a2d",
-  "evidence": "DTU spinout founded 2019 by DTU AI professors with a Harvard epilepsy professor; low-cost EEG for epilepsy diagnosis",
+  "evidence": "DTU institutional news, verbatim: once the concept was shaped, the company, BrainCapture, was established in 2019. The underlying research idea dates to 2011 at DTU Compute; the company was spun out in 2019.",
   "confidence": "high"
  },
  {
   "name": "BrainCo",
   "year": 2015,
-  "kind": "wikipedia",
-  "url": "https://en.wikipedia.org/wiki/BrainCo",
-  "evidence": "Founded February 2015 by Bicheng Han while at Harvard Center for Brain Science, incubated at Harvard Innovation Lab",
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/brainco-raises-55-million-in-pre-a-funding-300378289.html",
+  "evidence": "Company-issued release boilerplate: BrainCo was founded in February of 2015 and incubated from the Harvard Innovation Lab. Wikipedia agrees independently.",
   "confidence": "high"
  },
  {
   "name": "Actipulse Neuroscience",
   "year": 2017,
-  "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/actipulse-neuroscience/__HKtgwniB2cU1Fori5fsxvV6kpABcV8Y6_jlka6XRaw4",
-  "evidence": "Tracxn and PitchBook give 2017; co-founder and CEO Adrien Chatillon; portable TMS device for depression, Alzheimer and Parkinson",
-  "confidence": "medium"
+  "kind": "press",
+  "url": "https://www.sec.gov/Archives/edgar/data/1860502/000186050222000001/actipulseformc-ar.pdf",
+  "evidence": "SEC Form C-AR: operating entity Actipulse International SA de CV incorporated 17 Apr 2017; Adrien Chatillon listed as CEO and Founder from January 2017. Y Combinator also lists 2017.",
+  "confidence": "medium",
+  "conflict": "The same filing shows a Delaware holding entity organised 27 Jun 2019 which acquired the Mexican company in a 2021 share swap. That 2019 is restructuring, not founding."
  },
  {
   "name": "Accure Therapeutics",
@@ -155,33 +156,35 @@
   "name": "ADMdx",
   "year": 2010,
   "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/admdx/__aaOZKT2-1RFtZYiEIKU7uZ-muNlfNpfD-RH9OaGUEJs",
-  "evidence": "Tracxn and PitchBook give 2010; neuroimaging diagnostic software for Alzheimer and other dementias, Northbrook Illinois",
+  "url": "https://sam.directory/contractors/adm-diagnostics-inc-rm7gk4plcxk9",
+  "evidence": "Federal contractor record: ADM Diagnostics Inc of Northbrook IL, in business since 2010, registered 23 Mar 2010. Every aggregator agrees on 2010; the company own site states no founding year anywhere.",
   "confidence": "low",
-  "conflict": "One source describes a predecessor co-founded in Chicago in 2001; 2010 is the consistent date across recent sources."
+  "conflict": "An Alzheimer Drug Discovery Foundation grant to ADM Diagnostics LLC covers 8/1/09-7/31/10, so the company was active before the claimed 2010 start. A separate account describes a Chicago predecessor from 2001. Neither is resolved."
  },
  {
   "name": "Activas Diagnostics",
   "year": 2009,
   "kind": "press",
-  "url": "https://www.nia.nih.gov/research/sbir/nia-small-business-showcase/activas-diagnostics-llc",
-  "evidence": "NIH National Institute on Aging small business showcase; founded by University of Maine professors Marie Hayes and Ali Abedi; SleepMove sensor undersheet for Alzheimer and TBI detection",
-  "confidence": "high"
+  "url": "https://www.pressherald.com/2019/02/25/when-engineers-and-psychologists-meet/",
+  "evidence": "Portland Press Herald, verbatim: Activas Diagnostics, established in 2009 and based in the UpStart Center for Entrepreneurship in Orono. UMaine ECE confirms the spin-off and founders but states no year.",
+  "confidence": "medium",
+  "conflict": "One aggregator gives 2010, uncited."
  },
  {
   "name": "Cortexplore",
   "year": 2018,
   "kind": "press",
-  "url": "https://www.derbrutkasten.com/cortexplore/",
-  "evidence": "Brutkasten (Austrian startup press) on the Linz startup built around neuroscientist Stefan Schaffelhofer; CB Insights and Tracxn both give 2018",
-  "confidence": "high"
+  "url": "https://www.tech2b.at/en/startup/cortexplore-gmbh/",
+  "evidence": "tech2b, the Upper Austrian public startup incubator, lists project start 2018; Austrian commercial register shows registration 03.12.2018. The company own About page states no year.",
+  "confidence": "medium",
+  "conflict": "All sources converge on 2018 but none is a primary founding statement; the register date is incorporation."
  },
  {
   "name": "Aspen Neuroscience",
   "year": 2018,
-  "kind": "press",
-  "url": "https://www.genengnews.com/gen-edge/aspen-neuroscience-pursues-autologous-cell-therapies-for-parkinsons-with-147-5m-series-b/",
-  "evidence": "GEN: launched 2018 by Jeanne Loring of Scripps Research with $6.5M seed led by Domain Associates and Axon Ventures",
+  "kind": "company_site",
+  "url": "https://aspenneuroscience.com/aspen-neuroscience-announces-expansion-of-autologous-cell-therapy-manufacturing-in-san-diego/",
+  "evidence": "Company boilerplate, verbatim: the Loring lab team formed Aspen Neuroscience in 2018. The widely cited Dec 2019 event was the public launch with a $6.5M seed, not the founding.",
   "confidence": "high"
  },
  {
