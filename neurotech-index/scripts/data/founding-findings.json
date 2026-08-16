@@ -364,5 +364,108 @@
   "evidence": "Y Combinator company directory, company-supplied: Founded 2018, with the Winter 2019 batch listed separately so 2018 is not the batch date",
   "confidence": "medium",
   "conflict": "Longevity.Technology says BrainKey got off the ground in 2019 when YC backed them, while noting it began as a Stanford postdoc project in 2018. The 2019 marker is accelerator backing."
+ },
+ {
+  "name": "Alpha Trace",
+  "year": 1980,
+  "kind": "company_site",
+  "url": "https://alphatrace.at/wp-content/uploads/2022/11/AI725-0-Alphatrace-Welcome-book-ENGLISH-2022.pdf",
+  "evidence": "Company 2022 welcome book: Dr Dieter Grossegger established alpha trace in 1980 from his European base in Austria. Austrian Firmenbuch FN 97208 d gives incorporation 4 Dec 1980, the same year.",
+  "confidence": "high"
+ },
+ {
+  "name": "BrainUp (脑陆科技)",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://www.cyzone.cn/article/578260.html",
+  "evidence": "Cyzone: BrainUp came into being in 2018; wearable brain-signal device and KANG sleep product. Chinese register mirrors give incorporation 2018-04-19, the same year. The company own domain no longer serves the company.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Great Lakes NeuroTechnologies Inc.",
+  "year": 2010,
+  "kind": "press",
+  "url": "https://www.nia.nih.gov/research/sbir/nia-small-business-showcase/great-lakes-neurotechnologies",
+  "evidence": "NIH National Institute on Aging showcase, Company Milestones, verbatim: 2010, GLNT founded as a spinoff from Cleveland Medical Devices Inc",
+  "confidence": "medium",
+  "conflict": "GLNT own release of 23 Mar 2011 announces the formation of the company with the transition expected over the following months, reading as a public announcement of a spinoff formed earlier. Its About pages carry no year, so the conflict cannot be closed from the company site."
+ },
+ {
+  "name": "FK Biotecnologia",
+  "year": 1999,
+  "kind": "company_site",
+  "url": "https://web.archive.org/web/20210227074418/http://www.fkbiotec.com.br/",
+  "evidence": "Company Nossa Historia section, archived: founded 1999 in Brazil by PhD MD Fernando Thome Kreutz. The live domain no longer resolves. Press notes commercial operations began 2002, which is first revenue.",
+  "confidence": "high"
+ },
+ {
+  "name": "Neurolink Medical",
+  "year": 2007,
+  "kind": "press",
+  "url": "https://www.sec.gov/Archives/edgar/data/1500351/000150035110000001/primary_doc.xml",
+  "evidence": "SEC Form D filed 2010-10-18 by Neurolink Inc, San Antonio TX: Year of Incorporation 2007. Strictly an incorporation year; no source states a founding. Technology originated at InCube Labs.",
+  "confidence": "medium",
+  "conflict": "No source states founding as opposed to incorporation. The filing self-classifies the industry as Pharmaceuticals."
+ },
+ {
+  "name": "Woebot",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://woebothealth.com/about-us/",
+  "evidence": "Company About page: since our 2017 founding by clinical research psychologist Dr Alison Darcy. Wikipedia agrees independently.",
+  "confidence": "high"
+ },
+ {
+  "name": "BIOS",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.bios.health/about-us",
+  "evidence": "Company About page: founded in 2015 by Cambridge graduates Emil Hewage and Oliver Armitage. UK Companies House shows BIOS HEALTH LTD incorporated 5 May 2015 as Cambridge Bio-Augmentation Systems Ltd; the later name is a rebrand.",
+  "confidence": "high"
+ },
+ {
+  "name": "Quantib",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.radnet.com/about-radnet/news/radnet-completes-acquisitions-aidence-holding-bv-and-quantib-bv-address",
+  "evidence": "RadNet acquisition release, Jan 2022, boilerplate: founded in 2012 and based in Rotterdam",
+  "confidence": "medium",
+  "conflict": "RadNet own DeepHealth product timeline says Quantib founded in Rotterdam as an Erasmus MC spin-off in 2013. The acquirer contradicts itself and Erasmus MC offers no tiebreak."
+ },
+ {
+  "name": "TuSion",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://gust.com/companies/tusionapp",
+  "evidence": "Gust profile, company-authored: founded December 2016, St Petersburg, platform for cognitive training with portable EEG. CB Insights agrees. tusion.xyz returned no readable content.",
+  "confidence": "low",
+  "conflict": "Aggregator-only, though the Gust profile is company-authored. No independent source."
+ },
+ {
+  "name": "Optimal Medical Therapies",
+  "year": 2000,
+  "kind": "company_site",
+  "url": "https://web.archive.org/web/20160708030942/http://omtmed.com/en/historie.php",
+  "evidence": "Company archived history timeline opens: 2000 Formation of OMT, followed by product milestones from 2001. The current live page says only more than 25 years ago, with no year.",
+  "confidence": "high",
+  "conflict": "Handelsregister shows first registration 8 Jan 2007 as OMT GmbH at Amtsgericht Stuttgart, converted 2009. That is incorporation of the legal entity, not founding."
+ },
+ {
+  "name": "Molecular NeuroImaging",
+  "year": 2000,
+  "kind": "company_site",
+  "url": "https://web.archive.org/web/20101217072859/http://www.mnimaging.com/history.html",
+  "evidence": "Company archived History page: MNI was founded in 2000 by Drs Kenneth Marek and John Seibyl. Acquired by inviCRO Feb 2016.",
+  "confidence": "medium",
+  "conflict": "MNI own earlier (2003) Founders page says the team united in March 2001 to form Molecular NeuroImaging LLC, and notes Marek was at Yale until March 2001."
+ },
+ {
+  "name": "Novela Neuro",
+  "year": 2018,
+  "kind": "company_site",
+  "url": "https://web.archive.org/web/20210118004638/https://www.novelaneuro.com/about/",
+  "evidence": "Company archived About page, headed How Novela Neurotech Started: Founded in 2018, San Francisco, describing a decade of epilepsy neurotechnology research at the University of Waterloo",
+  "confidence": "low",
+  "conflict": "Medical Tech Outlook says incorporated in 2013 as a spin-off from Canadian universities and SickKids, with R&D started in 2007. novelaneuro.com is dead; the product lives at neureka.ai."
  }
 ]
