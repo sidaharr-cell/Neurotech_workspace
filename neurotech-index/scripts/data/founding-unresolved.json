@@ -550,5 +550,35 @@
   "verdict": "scope question",
   "note": "Self-reflection and journaling app for addiction, anxiety and negativity, plus a workplace engagement platform. Psychology-informed software with no nervous-system measurement.",
   "url": "https://garlew.com"
+ },
+ {
+  "name": "Sleepio",
+  "verdict": "row is named after a product",
+  "note": "Sleepio is the first product of Big Health, co-founded by Peter Hames and Prof Colin Espie. The row should be the company. SCOPE: automated CBT software with no measurement or modulation of the nervous system.",
+  "url": "https://www.bighealth.com"
+ },
+ {
+  "name": "BioMind",
+  "verdict": "row is named after a product",
+  "note": "BioMind is the product; the company is Hanalytics Pte Ltd, Singapore. SCOPE: AI diagnostic software over brain MRI and CT — it analyses neuroimaging but does not interface with or modulate the nervous system.",
+  "url": "https://www.sgpbusiness.com/company/Hanalytics-Pte-Ltd"
+ },
+ {
+  "name": "Carl Zeiss",
+  "verdict": "scope question",
+  "note": "A general optics, semiconductor and metrology conglomerate founded 1846. Its nervous-system-adjacent products, chiefly surgical microscopes, are a minor line rather than the primary product.",
+  "url": "http://www.zeiss.com"
+ },
+ {
+  "name": "Ginger",
+  "verdict": "scope question",
+  "note": "Teletherapy and coaching service provider — behavioural health care delivery, not neurotechnology. Merged into Headspace Health in 2021.",
+  "url": "http://ginger.io"
+ },
+ {
+  "name": "MyndVR",
+  "verdict": "rebrand",
+  "note": "myndvr.com redirects to myndimmersive.com; the company now trades as Mynd Immersive. SCOPE: VR sensory content for older adults, therapeutic intent but no neural measurement or modulation.",
+  "url": "https://myndimmersive.com"
  }
 ]
