@@ -1,0 +1,175 @@
+[
+ {
+  "name": "AAVAA",
+  "year": 2019,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/366551-29",
+  "evidence": "PitchBook and CB Insights both give 2019; Montreal BCI wearables company",
+  "confidence": "medium"
+ },
+ {
+  "name": "Cortivision",
+  "year": 2020,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/cortivision/__-T9jlu8_FCt1qgI_gAULKF9WJ0ncOuNc6dxOkEel7BA",
+  "evidence": "Tracxn gives 2020, Lublin fNIRS company, co-founded by Slawomir Sobotka and Wojciech Broniatowski",
+  "confidence": "medium"
+ },
+ {
+  "name": "Neuright Labs",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://umaine.edu/news/blog/2020/06/24/umaine-spinout-neuright-receives-225000-nsf-small-business-technology-transfer-award/",
+  "evidence": "University of Maine news release describes Neuright as a UMaine spinout; Crunchbase and PitchBook give 2018",
+  "confidence": "high"
+ },
+ {
+  "name": "Onward Medical",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.eu-startups.com/2026/04/eindhovens-onward-medical-raises-e40-6-million-in-capital-increase-to-advance-spinal-cord-injury-therapies/",
+  "evidence": "EPFL spinout, Eindhoven",
+  "confidence": "low",
+  "conflict": "Sources disagree: 2014 and 2015 both reported"
+ },
+ {
+  "name": "Axonics Modulation Technologies",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://www.sec.gov/Archives/edgar/data/1603756/000160375622000061/axnx-080422x424b5document.htm",
+  "evidence": "SEC Form 424B5: incorporated in Delaware March 2012 as American Restorative Medicine Inc, renamed Axonics Modulation Technologies August 2013, commenced operations late 2013",
+  "confidence": "high",
+  "incorporatedYear": 2012
+ },
+ {
+  "name": "Kernel",
+  "year": 2016,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Kernel_(neurotechnology_company)",
+  "evidence": "Founded 2016 by Bryan Johnson with a $54M investment; corroborated by kernel.com/about",
+  "confidence": "high"
+ },
+ {
+  "name": "INBRAIN Neuroelectronics",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://icn2.cat/en/business-and-innovation/spin-off-companies/4597-inbrain-neuroelectronics-s-l",
+  "evidence": "ICN2 (Catalan Institute of Nanoscience and Nanotechnology) lists INBRAIN as its spin-off, established 2019; founded by Jose A. Garrido, Kostas Kostarelos, Anton Guimera",
+  "confidence": "high"
+ },
+ {
+  "name": "Forest Neurotech",
+  "year": 2023,
+  "kind": "press",
+  "url": "https://www.convergentresearch.org/ecosystem/forest",
+  "evidence": "Convergent Research lists Forest Neurotech as a Focused Research Organization it incubated, established 2023 and launched October 2023",
+  "confidence": "high"
+ },
+ {
+  "name": "Braingaze",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/braingaze/__oEj2jWZ8hL6BbB9LfKJmjlF7ycuQf4nL8uHLtsTCJ_s",
+  "evidence": "Tracxn gives 2013, founded in Mataro by Laszlo Bax and Hans Super; corroborated by EU-Startups directory listing",
+  "confidence": "medium"
+ },
+ {
+  "name": "Chronolife",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.eu-startups.com/2019/12/paris-based-chronolife-raises-funding-and-launches-washable-smart-nexkin-t-shirt-that-monitors-your-health/",
+  "evidence": "EU-Startups reports Chronolife founded 2015 in Paris, co-founded by iBionext",
+  "confidence": "medium",
+  "conflict": "One source gives 2014; the majority and the more recent give 2015"
+ },
+ {
+  "name": "BrainSigns",
+  "year": 2010,
+  "kind": "company_site",
+  "url": "https://www.brainsigns.com/en/company/about",
+  "evidence": "Company About page: born as a spin-off of the University of Rome Sapienza in 2010",
+  "confidence": "high"
+ },
+ {
+  "name": "Synergia Medical",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/synergia-medical",
+  "evidence": "CB Insights and Crunchbase give 2014; founded by Pascal Doguet and Attila Borbath, Mont-Saint-Guibert Belgium",
+  "confidence": "medium"
+ },
+ {
+  "name": "BRAINCONTROL",
+  "year": 2010,
+  "kind": "press",
+  "url": "https://www.braincontrol.eu/en/who-we-are/",
+  "evidence": "BrainControl is a brand of LiquidWeb Srl, founded in Siena in 2010; corroborated by PR Newswire coverage of its 2018 funding round",
+  "confidence": "high"
+ },
+ {
+  "name": "Salvia BioElectronics",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://siliconcanals.com/salvia-bioelectronics-raises-53m/",
+  "evidence": "Silicon Canals: Eindhoven clinical-stage medical device company founded 2017 by Hubert Martens; corroborated by High Tech Campus Eindhoven profile",
+  "confidence": "high"
+ },
+ {
+  "name": "Neuronoff",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/neuronoff/__3Hr8uQ7zDq4UMB1dmavqawlOpGftInSGdNORSuy7pfc",
+  "evidence": "Tracxn gives 2013; Cleveland, Injectrode injectable electrode for chronic pain",
+  "confidence": "low",
+  "conflict": "CB Insights gives 2017; Tracxn gives 2013. Unresolved."
+ },
+ {
+  "name": "BrainCapture",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://www.dtu.dk/english/news/all-news/nyhed?id=55a5d850-d94c-424c-bdd0-16924bac9a2d",
+  "evidence": "DTU spinout founded 2019 by DTU AI professors with a Harvard epilepsy professor; low-cost EEG for epilepsy diagnosis",
+  "confidence": "high"
+ },
+ {
+  "name": "BrainCo",
+  "year": 2015,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/BrainCo",
+  "evidence": "Founded February 2015 by Bicheng Han while at Harvard Center for Brain Science, incubated at Harvard Innovation Lab",
+  "confidence": "high"
+ },
+ {
+  "name": "Actipulse Neuroscience",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/actipulse-neuroscience/__HKtgwniB2cU1Fori5fsxvV6kpABcV8Y6_jlka6XRaw4",
+  "evidence": "Tracxn and PitchBook give 2017; co-founder and CEO Adrien Chatillon; portable TMS device for depression, Alzheimer and Parkinson",
+  "confidence": "medium"
+ },
+ {
+  "name": "Accure Therapeutics",
+  "year": 2020,
+  "kind": "press",
+  "url": "https://www.pcb.ub.edu/en/accure-therapeutics-starts-up-in-the-barcelona-science-park-after-the-closing-of-a-first-round-of-7-6-m-e/",
+  "evidence": "Barcelona Science Park: Accure started up in 2020 after a EUR 7.6M Series A, formed by the merger of Iproteos and Bionure",
+  "confidence": "high"
+ },
+ {
+  "name": "ADMdx",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/admdx/__aaOZKT2-1RFtZYiEIKU7uZ-muNlfNpfD-RH9OaGUEJs",
+  "evidence": "Tracxn and PitchBook give 2010; neuroimaging diagnostic software for Alzheimer and other dementias, Northbrook Illinois",
+  "confidence": "low",
+  "conflict": "One source describes a predecessor co-founded in Chicago in 2001; 2010 is the consistent date across recent sources."
+ },
+ {
+  "name": "Activas Diagnostics",
+  "year": 2009,
+  "kind": "press",
+  "url": "https://www.nia.nih.gov/research/sbir/nia-small-business-showcase/activas-diagnostics-llc",
+  "evidence": "NIH National Institute on Aging small business showcase; founded by University of Maine professors Marie Hayes and Ali Abedi; SleepMove sensor undersheet for Alzheimer and TBI detection",
+  "confidence": "high"
+ }
+]
