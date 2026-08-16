@@ -18,6 +18,10 @@ export const VALID_KINDS = new Set([
   // Brain Innovation. These were being refused as "unknown source kind" and
   // downgraded to press, which understated them.
   'university', 'accelerator',
+  // A national company register that is NOT the UK one. `companies_house`
+  // renders as "UK register", so using it for the Swiss commercial register and
+  // the Indian MCA credited three companies to the wrong country.
+  'registry',
 ])
 
 /**
