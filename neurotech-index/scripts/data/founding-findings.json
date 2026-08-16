@@ -115,15 +115,6 @@
   "confidence": "high"
  },
  {
-  "name": "Neuronoff",
-  "year": 2013,
-  "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/neuronoff/__3Hr8uQ7zDq4UMB1dmavqawlOpGftInSGdNORSuy7pfc",
-  "evidence": "Tracxn gives 2013; Cleveland, Injectrode injectable electrode for chronic pain",
-  "confidence": "low",
-  "conflict": "CB Insights gives 2017; Tracxn gives 2013. Unresolved."
- },
- {
   "name": "BrainCapture",
   "year": 2019,
   "kind": "press",
@@ -153,7 +144,8 @@
   "kind": "press",
   "url": "https://www.pcb.ub.edu/en/accure-therapeutics-starts-up-in-the-barcelona-science-park-after-the-closing-of-a-first-round-of-7-6-m-e/",
   "evidence": "Barcelona Science Park: Accure started up in 2020 after a EUR 7.6M Series A, formed by the merger of Iproteos and Bionure",
-  "confidence": "high"
+  "confidence": "medium",
+  "conflict": "2020 is a newly created merger vehicle over Iproteos (founded 2011) and Bionure. If the index counts predecessor lineage, 2011 applies."
  },
  {
   "name": "ADMdx",
@@ -191,11 +183,10 @@
  {
   "name": "Sunrise",
   "year": 2015,
-  "kind": "aggregator",
-  "url": "https://www.cbinsights.com/company/sunrise-4",
-  "evidence": "CB Insights gives 2015; founders Laurent and Pierre Martinot; mandibular movement sensor for sleep apnea",
-  "confidence": "medium",
-  "conflict": "Sources place it in Namur, Belgium; our record says Antwerp. Same company, but the location should be checked."
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/sunrise-secures-6-5-million-in-funding-to-deploy-its-sleep-apnea-diagnostic-solution-internationally-301445409.html",
+  "evidence": "Company-issued release boilerplate: Founded in 2015 by Laurent and Pierre Martinot. Independently verified.",
+  "confidence": "high"
  },
  {
   "name": "ModiusHealth",
@@ -203,7 +194,8 @@
   "kind": "press",
   "url": "https://www.prnewswire.com/news-releases/modius-aims-to-help-people-achieve-leaner-bodies-through-neuroscience-with-careable-tech-device-modius-headset-300500982.html",
   "evidence": "Founded by Dr Paul McGeoch and Dr Jason McKeown in 2015; now operates as Neurovalens from Belfast and San Diego",
-  "confidence": "medium"
+  "confidence": "low",
+  "conflict": "Verifier found NEUROVALENS LIMITED (NI617853) incorporated 12 Apr 2013 at UK Companies House, and coverage giving 2015. 2013 is incorporation, not founding. Unresolved between 2013 and 2015."
  },
  {
   "name": "Emotion ID",
