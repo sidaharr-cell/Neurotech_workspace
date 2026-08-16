@@ -171,5 +171,21 @@
   "url": "https://www.nia.nih.gov/research/sbir/nia-small-business-showcase/activas-diagnostics-llc",
   "evidence": "NIH National Institute on Aging small business showcase; founded by University of Maine professors Marie Hayes and Ali Abedi; SleepMove sensor undersheet for Alzheimer and TBI detection",
   "confidence": "high"
+ },
+ {
+  "name": "Cortexplore",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://www.derbrutkasten.com/cortexplore/",
+  "evidence": "Brutkasten (Austrian startup press) on the Linz startup built around neuroscientist Stefan Schaffelhofer; CB Insights and Tracxn both give 2018",
+  "confidence": "high"
+ },
+ {
+  "name": "Aspen Neuroscience",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://www.genengnews.com/gen-edge/aspen-neuroscience-pursues-autologous-cell-therapies-for-parkinsons-with-147-5m-series-b/",
+  "evidence": "GEN: launched 2018 by Jeanne Loring of Scripps Research with $6.5M seed led by Domain Associates and Axon Ventures",
+  "confidence": "high"
  }
 ]
