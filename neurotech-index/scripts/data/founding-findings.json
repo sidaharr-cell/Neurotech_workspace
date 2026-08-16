@@ -1986,5 +1986,203 @@
   "evidence": "Singularity Hub coverage hosted on the company site: \"In 2007, the year he defended his thesis, Low founded a company to develop his inventions.\" Philip Low's UCSD and Salk PhD produced the SPEARS algorithm and the iBrain wireless EEG monitor.",
   "confidence": "high",
   "caveat": "The company is active, not dormant: iBrain US launch announcements in 2024 and a TIME Best Inventions listing in October 2025. Treat the \"world's most valuable neurotech company\" framing with heavy scepticism — it is an unaudited private valuation claim and is not a founding date."
+ },
+ {
+  "name": "Marmot Labs",
+  "year": 2017,
+  "kind": "registry",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/10951128",
+  "evidence": "Companies House: MARMOT LABS LTD., company 10951128, incorporated 7 September 2017; previously ABSOLUTE MARMOT LTD from 7 Sep 2017 to 13 Sep 2018.",
+  "confidence": "low",
+  "conflict": "An incorporation date, and the name \"Marmot Labs\" only existed from September 2018. Dating by the name gives 2018; dating by the entity gives 2017."
+ },
+ {
+  "name": "RemindMe",
+  "year": 2012,
+  "kind": "registry",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/07987967",
+  "evidence": "Companies House: HEALTH-CONNECTED LIMITED, company 07987967, incorporated 12 March 2012, active. Tracxn independently gives 2012.",
+  "confidence": "low",
+  "caveat": "An incorporation date. The row is named after a product: RemindMeCare, also written ReMindMe or ReMeLife, is dementia care software and the company is Health-Connected Ltd. The product itself launched around 2016. SCOPE: reminiscence-therapy software, cognitive health without device or signal acquisition."
+ },
+ {
+  "name": "VRapeutic",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://disruptafrica.com/2019/11/29/egypts-vrapeutic-is-using-virtual-reality-to-tackle-learning-difficulties/",
+  "evidence": "Disrupt Africa: \"Launched in 2017 by Ahmad Al-Kabbany, who researched VR for his PhD in electrical engineering, VRapeutic designs 3D virtual environments.\" Co-founder Yahya Alaa.",
+  "confidence": "low",
+  "caveat": "The company site gives no founding year, and \"launched\" may mean the product rather than the company. LOCATION: the site now lists an Ottawa, Ontario address and the entity styles itself VRapeutic Inc.; the index's Alexandria reflects its origin."
+ },
+ {
+  "name": "Twenty Billion Neurons",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://twentybn.com/",
+  "evidence": "The company's own account of itself, now a liquidation notice: \"TwentyBN was an AI start-up founded in Berlin, Germany in 2015 with a subsidiary in Toronto, Canada.\" Founder Roland Memisevic.",
+  "confidence": "high",
+  "caveat": "SCOPE: video understanding, large labelled human-action datasets and synthetic training data — general machine learning, where \"Neurons\" is essentially the only neuro connection. Qualcomm acquired the team and assets in July 2021; the residual shell was renamed Twentyone bc GmbH and moved to Hamburg to liquidate."
+ },
+ {
+  "name": "Meltin MMI",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://www.meltin.jp/en/news/293/",
+  "evidence": "Company boilerplate: established 19 July 2013, HQ Shinjuku-ku Tokyo, CEO Masahiro Kasuya. Corroborated by a founder interview and by JAXA's space-company directory.",
+  "confidence": "high",
+  "caveat": "Spun out of an incubator at the University of Electro-Communications, Tokyo. Cyborg technology on EMG and neural signal processing plus robotics, and the MELTANT avatar robot line. Now generally styled MELTIN. The 2018 raise of about 2 billion yen is a funding round, not a founding."
+ },
+ {
+  "name": "Interactive Productline",
+  "year": 2002,
+  "kind": "registry",
+  "url": "https://www.allabolag.se/5566332036/interactive-productline-ip-ab",
+  "evidence": "Swedish register: Interactive Productline IP AB, org.nr 556633-2036, registered 2002-10-09, Stockholm. Company material: \"founded in 2002 together with Interactive Institute II AB (now a part of RISE) under the name Interactive Productline IP AB.\"",
+  "confidence": "high",
+  "caveat": "The row is named after a product: Mindball is an EEG-driven two-player game where the more relaxed player wins. RENAMED to Mentalytics AB on the same org.nr 556633-2036, so the founding year carries over. One of the earliest commercial EEG products anywhere."
+ },
+ {
+  "name": "Q30 Innovations",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/q30-innovations",
+  "evidence": "Crunchbase, Dealroom and others give 2012, founders Tom Hoey and Bruce Angus. Hoey in a company release: \"Since 2012, we've worked with the leading medical, academic, engineering and design experts to develop a product.\"",
+  "confidence": "low",
+  "conflict": "Tracxn gives 2013. The founder's \"since 2012\" describes when the work started rather than proving incorporation that year, so the disagreement is not settled."
+ },
+ {
+  "name": "Brainsgate",
+  "year": 2000,
+  "kind": "aggregator",
+  "url": "https://finder.startupnationcentral.org/company_page/brainsgate",
+  "evidence": "Startup Nation Finder: \"BrainsGate was founded in 2000... based in Caesarea, Israel.\" Consistent with CB Insights.",
+  "confidence": "low",
+  "caveat": "The correct styling is BrainsGate. Squarely in scope: an implanted electrode in the roof of the mouth stimulating the sphenopalatine ganglion to raise cerebral blood flow in acute ischaemic stroke, with the ImpACT-24B pivotal trial published in The Lancet in 2019. brainsgate.com fails TLS with a certificate for stick.tyco.co.il, an unrelated host, so the company's own statement could not be read."
+ },
+ {
+  "name": "Whale Imaging",
+  "year": 1998,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/whale-imaging",
+  "evidence": "\"Whale Imaging was founded in 1998 and is based in Waltham, Massachusetts.\"",
+  "confidence": "low",
+  "conflict": "At least one aggregator gives 2009 against the 1998 carried by CB Insights and ZoomInfo. No primary source adjudicates, and whaleimaging.com returns 403 to automated fetches."
+ },
+ {
+  "name": "Pocketcoach",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://www.trendingtopics.eu/pocketcoach-app-launch/",
+  "evidence": "\"Gegruendet wurde Pocketcoach von Manuel Kraus und Philipp Omenitsch erst dieses Jahr in Wien\" — founded in Vienna in the year of the article. brutkasten independently reports spring 2019.",
+  "confidence": "medium",
+  "caveat": "SCOPE: a text-based CBT chatbot for anxiety, panic and stress. No sensor, no signal acquisition, no nervous-system interface. The Crunchbase record resolves under the name Stresscoach, so a rename may have occurred."
+ },
+ {
+  "name": "Brain Resource",
+  "year": 2000,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/brain-resource",
+  "evidence": "Founded 2000 by Evian Gordon out of the Brain Dynamics Centre at Westmead Hospital and the University of Sydney; first listed on the ASX on 28 August 2001, which is consistent.",
+  "confidence": "low",
+  "caveat": "LOCATION: the origin is Sydney, not the San Francisco the index records, which reflects a later US move. The platform was renamed MyBrainSolutions and then Total Brain in 2018 — a product rename, not a founding — and Total Brain has since been acquired by SonderMind. brainresource.com no longer resolves."
+ },
+ {
+  "name": "Thymia",
+  "year": 2020,
+  "kind": "registry",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/12609104",
+  "evidence": "Companies House: THYMIA LIMITED, company 12609104, incorporated 18 May 2020, active, registered in London. Founded by Dr Emilia Molimpakis, Stefano Goria and Gabrielle Powell.",
+  "confidence": "medium",
+  "caveat": "An incorporation date, but it coincides with the widely reported 2020 founding — \"launched at the very beginning of the pandemic\" — so the two corroborate. LOCATION: the index records none; it is London. SCOPE: digital-biomarker mental-health assessment from speech, video and gamified neuropsychology tasks — behavioural rather than a neuro device."
+ },
+ {
+  "name": "CorTec",
+  "year": 2010,
+  "kind": "company_site",
+  "url": "https://cortec-neuro.com/company/",
+  "evidence": "\"CorTec was founded in September 2010 and in the summer of 2018 we moved into new premises near the Airport Campus of the University of Freiburg with our own cleanroom facilities.\"",
+  "confidence": "high",
+  "caveat": "A spin-off of Albert-Ludwigs-Universitaet Freiburg; the university's Bernstein Center and Science|Business independently describe it as a 2010 Freiburg spin-off. Implantable brain-computer interfaces and the Brain Interchange system."
+ },
+ {
+  "name": "MitoDys Therapeutics Ltd",
+  "year": 2012,
+  "kind": "registry",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/08227300",
+  "evidence": "Companies House: MITODYS THERAPEUTICS LIMITED, company 08227300, incorporated 25 September 2012, SIC 72110 research and experimental development on biotechnology.",
+  "confidence": "low",
+  "caveat": "An incorporation date with no independent founding statement. DISSOLVED 21 June 2022. SCOPE: a virtual drug-discovery company repositioning small molecules against mitochondrial dysfunction in Parkinson's and rare neurodegenerative disease — not a device or software acting on the nervous system. LOCATION: the registered office was Chipping Norton, not Oxford."
+ },
+ {
+  "name": "Sensome",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://norbert-segard.org/instent-sensome/",
+  "evidence": "Fondation Norbert Segard award profile: \"Aujourd'hui renommee Sensome, Instent SAS est une jeune spin-off de l'Ecole polytechnique, creee en avril 2014\", with support from LadHyX and LPICM at Ecole polytechnique and SATIE at ENS Cachan.",
+  "confidence": "high",
+  "caveat": "Founded as Instent SAS by Franz Bozsak and Prof. Abdul Barakat and renamed Sensome around 2016-17; the rename is not the founding. The Clotild connected guidewire uses impedance micro-sensors and machine learning to characterise clot composition during stroke thrombectomy. The original site was Palaiseau; Massy is current."
+ },
+ {
+  "name": "Mindset Health",
+  "year": 2018,
+  "kind": "accelerator",
+  "url": "https://www.ycombinator.com/companies/mindset-health",
+  "evidence": "Y Combinator company profile: \"Founded: 2018 ... Batch: Summer 2019 ... Location: Melbourne, Australia.\" Founders Alex and Chris Naoumidis.",
+  "confidence": "high",
+  "caveat": "SCOPE: hypnotherapy delivered by app — Nerva for IBS, Evia for menopausal hot flushes, Finito for smoking cessation. Gut-brain-axis behavioural therapeutics with no sensing, stimulation or neural interface. The indexed themindsetapp.com is a legacy product domain; the corporate site is mindsethealth.com."
+ },
+ {
+  "name": "BrainMARC",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://nocamels.com/2018/08/brain-tech-israel-health/",
+  "evidence": "NoCamels, August 2018: BrainMARC founded 2013 by Dr Goded Shahaf and Dr Yael Rozen. CB Insights and Tracxn concur and no source disagrees.",
+  "confidence": "medium",
+  "caveat": "EEG headsets producing a Brain Engagement Index measuring attention during cognitive therapy for brain injury, ADHD and depression — in scope. LOCATION: an Israeli company headquartered in Yokneam; Hoboken is wrong. brainmarc.com does not resolve at all, so operating status is unknown."
+ },
+ {
+  "name": "Joyable",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://medium.com/carbon-five/founder-five-pete-shalek-and-steve-marks-from-joyable-3dcb4114e6fe",
+  "evidence": "Founder interview: co-founder Steve Marks says he and Pete Shalek \"started working together late 2013.\" Crunchbase, Tracxn and Dealroom independently list 2013.",
+  "confidence": "medium",
+  "caveat": "SCOPE: online CBT with human phone and text coaching for social anxiety and depression — behavioural health software with no neural sensing or stimulation. Acquired by AbleTo on 6 March 2019 for an undisclosed eight-figure sum; AbleTo was itself later acquired by UnitedHealth/Optum."
+ },
+ {
+  "name": "Teledyne Scientific & Imaging",
+  "year": 1962,
+  "kind": "press",
+  "url": "https://clui.org/projects/remote-sensing/aerospace-southern-california/teledyne-thousand-oaks",
+  "evidence": "The Thousand Oaks laboratory was founded by North American Aviation in 1962 as the North American Science Center, renamed the Rockwell International Science Center in 1973, spun off as Rockwell Scientific after the 2001 Rockwell breakup, and sold to Teledyne in 2006.",
+  "confidence": "low",
+  "conflict": "Two defensible years for two different things: 1962 for the R&D institution, and 2006 for the legal entity named Teledyne Scientific & Imaging, LLC, created when Teledyne completed its $167.5M acquisition of Rockwell Scientific on 18 September 2006. 2006 is an acquisition and rebrand, not a founding."
+ },
+ {
+  "name": "Proneuron Biotechnologies",
+  "year": 1996,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/proneuron-biotechnologies",
+  "evidence": "Crunchbase, Tracxn and PitchBook list 1996, based on the research of Prof. Michal Schwartz of the Weizmann Institute. Tracxn also records the company as no longer active.",
+  "confidence": "low",
+  "caveat": "No primary or institutional source carries the year: BioCentury is paywalled and Startup Nation Central returned 403. SCOPE: a cell-therapy developer — ProCord was autologous activated macrophages injected into the injured spinal cord, licensed from Yeda. FDA orphan drug designation September 2004; the Phase II was reportedly halted and there has been no activity in about two decades. LOCATION: an Israeli company in Ness Ziona, with a US shell for the trials; New York is wrong. proneuron.com now redirects to a GoDaddy sale page."
+ },
+ {
+  "name": "Eodyne Systems",
+  "year": 2014,
+  "kind": "university",
+  "url": "https://www.upf.edu/en/web/e-noticies/archive/-/asset_publisher/wEpPxsVRD6Vt/content/id/2681868/maximized",
+  "evidence": "Universitat Pompeu Fabra news item of 3 November 2014, \"Eodyne Systems: a SPECS research spin-off company\", announcing the creation of Eodyne Systems SL as a spin-off of the SPECS group under UPF's Autonomous Systems and Neuro-Robotics Centre project.",
+  "confidence": "medium",
+  "conflict": "Not about the year: this row and the row simply called \"Eodyne\" are the same company. eodyne.com redirects to eodynesystems.com and both are Barcelona. The rows should be merged and 2014 recorded once."
+ },
+ {
+  "name": "NEUROPHET",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/neurophet-showcases-brain-imaging-ai-solutions-at-bio-usa-accelerates-global-business-development-collaborations-302797881.html",
+  "evidence": "Company boilerplate, consistent across several releases: \"The company was founded in 2016 by Co-CEOs Jake Junkil Been and Donghyeon Kim, who developed the next-generation neuro-navigation system.\"",
+  "confidence": "high",
+  "caveat": "Squarely in scope: AI brain-image analysis and stimulation planning — Neurophet AQUA for MRI, SCALE PET, and tES/TMS LAB for e-field modelling. Active and growing, with preliminary Kosdaq listing approval and a Roche partnership."
  }
 ]
