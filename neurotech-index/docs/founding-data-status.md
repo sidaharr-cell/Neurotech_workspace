@@ -77,9 +77,17 @@ filings give an *incorporation* year: Saluda Medical's filing reads 2023 for a
 company that predates it by a decade, so the overwrite would have made it worse.
 The decision is still open.
 
-**Nine duplicate company rows.** Ensodata, Chronolife, BrainSigns, ApexNeuro,
-BrainwaveBank, BetterMynd, Brain+, Avertus and one other each appear twice in the
-index. Found incidentally by the scope audit; not addressed.
+**One duplicate company row.** "Precision Neuroscience" and
+"PrecisionNeuroscience" hash to different UUIDv5 ids and both exist.
+`audit-duplicate-orgs.js` reports it and can merge fields onto the fuller row; it
+never deletes, because which `/company/:id` stops working is a decision for a
+person.
+
+An earlier version of this document said NINE duplicates. That was wrong, and
+worth recording why: the scope audit paginated on `rank_score` with no unique
+tiebreaker, so page boundaries shuffled and 1,084 rows came back holding 1,061
+distinct ids — 23 served twice, 23 never read. Every paginated read over
+organizations now ends with `.order('id')`.
 
 **301 descriptions that never mention the nervous system.** A description
 problem far more often than a scope problem — electroCore makes a vagus nerve
@@ -111,5 +119,7 @@ tempted by the same mistakes.
   of every company that filed Form D more than once.
 - **A Supabase read was silently truncated at 1,000 rows** of 1,084, which would
   have counted 84 companies as having no founding year without anyone noticing.
+- **Paginated reads ordered on a non-unique column** served 23 rows twice and
+  skipped 23 entirely, which is where the phantom "nine duplicates" came from.
 
 Every one of those is now a test with the real string in it.
