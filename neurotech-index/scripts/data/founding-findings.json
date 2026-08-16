@@ -1376,5 +1376,220 @@
   "evidence": "Company-issued release dated 12 September 2023: \"Established in 2020 and currently in its early stages, the company is diligently crafting a functional system prototype.\"",
   "confidence": "medium",
   "conflict": "Tracxn says 2018; Crunchbase records 12 June 2020. The company own 2023 release says 2020, agreeing with Crunchbase against Tracxn. 2020 may also be the incorporation date rather than the start of the venture; the release does not distinguish."
+ },
+ {
+  "name": "Phobious",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://espacio.fundaciontelefonica.com/empresa/psious/",
+  "evidence": "Corporate profile hosted by Fundacion Telefonica: \"ANO DE FUNDACION: 2013\". Established July 2013 by physics classmates Xavier Palomer and Dani Roig, VR exposure therapy for phobias.",
+  "confidence": "medium",
+  "conflict": "Dealroom and Crunchbase-derived summaries give 2014. Spanish primary-adjacent sources consistently say 2013 and the founding narrative supports it, but the disagreement is unresolved."
+ },
+ {
+  "name": "Psious",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://espacio.fundaciontelefonica.com/empresa/psious/",
+  "evidence": "Same company as the Phobious row: Phobious was renamed Psious. Fundacion Telefonica profile gives founding year 2013, founders Xavier Palomer and Dani Roig.",
+  "confidence": "medium",
+  "conflict": "Dealroom and Crunchbase give 2014. Separately, this row and \"Phobious\" are the same company under two names and one of them should not exist."
+ },
+ {
+  "name": "Synergetics USA",
+  "year": 1991,
+  "kind": "press",
+  "url": "https://retinatoday.com/articles/2011-may-june/retina-on-wall-street-synergetics-usa-inc",
+  "evidence": "Retina Today: \"Synergetics was founded in August, 1991, as a designer and manufacturer of microsurgical instruments initially focused on vitreoretinal and subretinal ophthalmic procedures.\" Founders Kurt W. Gampp and Gregg D. Scheller.",
+  "confidence": "high",
+  "conflict": "The name \"Synergetics USA\" dates only from the 2005 reverse merger with Valley Forge Scientific, after which it traded as NASDAQ: SURG. 1991 is the founding of the operating business; 2005 created the named public entity."
+ },
+ {
+  "name": "Mindable Health",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://healthcare-startups.de/mindable-health/",
+  "evidence": "German healthcare trade press dates the founding explicitly to April 2019.",
+  "confidence": "medium",
+  "conflict": "Startbase states a founding year of 2018. A Handelsregister lookup for Mindable Health GmbH would settle it. Not resolved."
+ },
+ {
+  "name": "Neuroverse",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://gizmodo.com/the-best-brain-reader-your-money-cant-buy-yet-1767234908",
+  "evidence": "Gizmodo: \"Based in La Jolla, California, Neuroverse was founded in 2012 by Salk Institute neuroscientist Ricardo Gil-da-Costa (now Neuroverse CEO) and the University of California, San Diego's Todd Coleman.\"",
+  "confidence": "high",
+  "caveat": "The company site confirms Gil-da-Costa co-founded it but states no year, hence the news citation. Public activity appears thin in recent years and current status is unconfirmed."
+ },
+ {
+  "name": "Cerenion",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://ouluhealth.fi/company/cerenion/",
+  "evidence": "OuluHealth, the regional health innovation ecosystem body: \"Founded in 2017 in Oulu.\" A University of Oulu spin-off; product C-Trend applies machine learning to standard EEG to quantify brain function in intensive care.",
+  "confidence": "high",
+  "caveat": "Tracxn records a first funding round in February 2018, which is consistent with a 2017 founding and is not itself a founding date."
+ },
+ {
+  "name": "Calm",
+  "year": 2012,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Calm_(company)",
+  "evidence": "\"Calm was established on May 4, 2012 by Michael Acton Smith and Alex Tew.\" Corroborated by the founders' own interviews.",
+  "confidence": "high",
+  "caveat": "The company help-centre page returned 403, hence the encyclopedia citation. SCOPE: a consumer meditation and sleep subscription app with no hardware, neural interface or biosignal acquisition."
+ },
+ {
+  "name": "Nanology Labs",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://app.dealroom.co/companies/nanology_labs",
+  "evidence": "Dealroom, Crunchbase and PitchBook give 2018. A University of Toronto article notes \"Since June 2018, Nanology Labs has picked up significant funding support\", which corroborates the window without stating a founding year.",
+  "confidence": "low",
+  "caveat": "Aggregator only; the University of Toronto piece never states a founding year and was not used as the source. The company has since been renamed QurCan Therapeutics Inc."
+ },
+ {
+  "name": "EndoSpan",
+  "year": 2009,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/54534-88",
+  "evidence": "PitchBook and Tracxn both give 2009, founders Alon Shalev and Rafi Benary, Herzliya.",
+  "confidence": "low",
+  "caveat": "endospan.com has no history page and states no founding year; its only date is a copyright footer, which was not used. Hints of 2008 appear in aggregator-adjacent listings and could not be checked. Acquired by Artivion in May 2026."
+ },
+ {
+  "name": "Triumf Health",
+  "year": 2016,
+  "kind": "company_site",
+  "url": "https://www.triumf.health/about",
+  "evidence": "Company about page: \"Kadri Haljas founded Triumf Health in October 2016, driven by her passion for mental health innovation and her extensive background in child psychology.\"",
+  "confidence": "high",
+  "caveat": "Origin is Estonian, founded in Tartu county; the Helsinki location in the index is a later registered seat rather than where it started."
+ },
+ {
+  "name": "Sooma Medical",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://soomamedical.com/about-sooma/",
+  "evidence": "Company about page: \"Sooma Medical (Sooma Oy) is a Finnish medical device manufacturer established in 2013.\" Transcranial direct current stimulation devices for depression and chronic pain.",
+  "confidence": "high",
+  "caveat": "The wording is \"established\", read here as founding. The Finnish trade register was not consulted, so this is not an incorporation date."
+ },
+ {
+  "name": "Epitech",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.ventureradar.com/organisation/EpiTech%20Mag/3e4506ff-0c60-4172-8223-5ef491f0adc0",
+  "evidence": "VentureRadar gives 2015 and lists epitechmag.com as the company website. Crunchbase and PitchBook agree on 2015.",
+  "confidence": "low",
+  "conflict": "Dealroom gives 2016. No primary source resolves it."
+ },
+ {
+  "name": "Brain Science Tools",
+  "year": 2011,
+  "kind": "company_site",
+  "url": "https://www.brainsciencetools.com/en/team/bas-neggers/",
+  "evidence": "Founder Bas Neggers in the first person on the company's own domain: \"I founded the startup company Brain Science Tools BV in November 2011 as a spinoff from UMC Utrecht.\"",
+  "confidence": "high",
+  "caveat": "This is a team biography page, normally refused as a source. The exception is that it is an explicit first-person founding statement on the company's own site, not an incidental date in a blurb."
+ },
+ {
+  "name": "Brain.fm",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://www.brain.fm/about",
+  "evidence": "Company about page: \"Started as a focus-music company in 2014.\" Corroborated by Inc., which reports founders Adam Hewett and Junaid Kalmadi meeting at a conference in 2014.",
+  "confidence": "high",
+  "caveat": "Co-founder Hewett's earlier separate company Transparent dates to 2003 and appears in the same sources; that year is not Brain.fm's. SCOPE: an audio subscription with a neuroscience rationale, no device and no neural recording."
+ },
+ {
+  "name": "Advantis",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.eu-startups.com/2019/03/greek-startup-advantis-medical-imaging-raises-e700k-for-its-tech-to-diagnose-brain-conditions/",
+  "evidence": "EU-Startups reports Advantis Medical Imaging as founded in 2016 after roughly five years of research in advanced neuroimaging, with offices in Athens and Eindhoven.",
+  "confidence": "medium",
+  "caveat": "The article body returned 403 so this rests on the search-index summary. The company was formerly named TomoTECH, so 2016 may date the earlier name or the rebrand. advantis.io has no about page and the Elevate Greece registry entry carries no founding year."
+ },
+ {
+  "name": "Swap",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://swap-gps.com/qui-sommes-nous",
+  "evidence": "Company about page: \"Swap GPS voit le jour en 2014 a l'occasion d'un concours d'entrepreneuriat sponsorise par le Credit Agricole.\" Founder Guillaume Eberwein, a biomedical engineering student at Ecole des Mines de Saint-Etienne.",
+  "confidence": "high",
+  "conflict": "A November 2016 article by La Fabrique Hexagonale was summarised as \"created in 2016\". That looks like the article's own publication year bleeding into the summary, and the company's own page plus several French outlets give 2014."
+ },
+ {
+  "name": "ZAPIENS",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://asturtic.es/zapiens-innovacion-asturiana-en-gestion-del-conocimiento-empresarial/",
+  "evidence": "Asturian regional tech-cluster press: \"Zapiens, fundada en 2014.\" Founders Daniel Suarez Sanchez and Samuel Ordieres, Oviedo.",
+  "confidence": "medium",
+  "caveat": "A founder interview describes 2014 as when the idea was seeded rather than when the company came into existence; the AsturTIC piece states it as the founding year. zapiens.ai refused connections so its own wording could not be checked. SCOPE: enterprise knowledge-management AI, not neurotechnology."
+ },
+ {
+  "name": "Sensae",
+  "year": 2020,
+  "kind": "aggregator",
+  "url": "https://thehub.io/startups/sensae",
+  "evidence": "The Hub, a Danish startup platform, lists founding year 2020 for the Copenhagen company combining neuroscience, psychology and haptics in biofeedback for stress and anxiety.",
+  "confidence": "low",
+  "caveat": "Aggregator only; no company page, news article or accelerator announcement states a year. The website in the index is wrong: sensae.co now serves an unrelated UK perfume brand. The Hub lists the company site as sensae.com."
+ },
+ {
+  "name": "Mensior",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/mensior",
+  "evidence": "CB Insights: founded 2015, Milan; an EEG-sensor application measuring mental activity for consumer and business use.",
+  "confidence": "low",
+  "caveat": "Aggregator only, and mensior.com does not resolve. No registry record for Mensior S.r.l. was found. The 2015 date coincides with the Imperial College Smart Helmet EEG publications and the product shares that name, so the year may be a confusion rather than a fact."
+ },
+ {
+  "name": "NBT Analytics",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.nbt-analytics.com/",
+  "evidence": "Company site: \"NBT Analytics BV is a spin-off company from the VU Amsterdam. The company was founded in August 2015 by Dr. Klaus Linkenkaer-Hansen and Dr. Simon-Shlomo Poil.\" EEG biomarker analysis for CNS drug development.",
+  "confidence": "high"
+ },
+ {
+  "name": "Ginger Tiger",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://finder.startupnationcentral.org/company_page/ginger-tiger",
+  "evidence": "Startup Nation Finder lists Ginger Tiger as founded 2013 in Tel Aviv by Orna Altman; Tracxn and Crunchbase agree.",
+  "confidence": "low",
+  "caveat": "The company's own about page states no founding year at all, and the Startup Nation Central page returned 403 so it was read only through the search index. SCOPE: special-needs educational software with no EEG, BCI or neural interface."
+ },
+ {
+  "name": "Stroke Medical",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/stroke-medical",
+  "evidence": "CB Insights gives 2016; independent Chinese industry sources describe the company as established in 2016.",
+  "confidence": "medium",
+  "caveat": "The row name is a nickname taken from the domain. The company is Shanghai HeartCare Medical Technology Corporation Limited, listed in Hong Kong as 6609.HK, making neuro-interventional devices for stroke. strokemedical.com refused HTTPS connections, so the year rests on databases rather than the company or its HKEX prospectus."
+ },
+ {
+  "name": "SpinTech Imaging",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://www.prweb.com/releases/spintech-mri-announces-6-5-million-series-a-financing-to-expand-deployment-of-stage-tm-software-to-speed-diagnosis-and-treatment-of-brain-diseases-850719056.html",
+  "evidence": "Company boilerplate in its own Series A release: \"SpinTech MRI was founded 2017 by internationally recognized MRI industry professionals.\"",
+  "confidence": "high",
+  "caveat": "Now trades as SpinTech MRI, Bingham Farms, Michigan; acquired MR Innovations in February 2021. It has close Wayne State University research ties but no source describes it as a formal spin-off, so it is not recorded as one."
+ },
+ {
+  "name": "Nextstem",
+  "year": 2020,
+  "kind": "press",
+  "url": "https://inc42.com/startups/can-this-startup-lead-indias-neurotech-revolution-with-its-brain-signal-reading-tech/",
+  "evidence": "Inc42: \"In 2020, while the duo was still in college, they set up Nexstem.\" Founders Siddhant Dangi and Deepansh Goyal, BITS Pilani alumni; non-invasive BCI headset and developer stack.",
+  "confidence": "medium",
+  "conflict": "Location only, not the year: Inc42 and other outlets place the company in Bengaluru while the index says Gurugram. The name is also misspelled in the index; the company is Nexstem, matching nexstem.ai."
  }
 ]
