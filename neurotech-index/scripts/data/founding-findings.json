@@ -187,5 +187,30 @@
   "url": "https://www.genengnews.com/gen-edge/aspen-neuroscience-pursues-autologous-cell-therapies-for-parkinsons-with-147-5m-series-b/",
   "evidence": "GEN: launched 2018 by Jeanne Loring of Scripps Research with $6.5M seed led by Domain Associates and Axon Ventures",
   "confidence": "high"
+ },
+ {
+  "name": "Sunrise",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/sunrise-4",
+  "evidence": "CB Insights gives 2015; founders Laurent and Pierre Martinot; mandibular movement sensor for sleep apnea",
+  "confidence": "medium",
+  "conflict": "Sources place it in Namur, Belgium; our record says Antwerp. Same company, but the location should be checked."
+ },
+ {
+  "name": "ModiusHealth",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/modius-aims-to-help-people-achieve-leaner-bodies-through-neuroscience-with-careable-tech-device-modius-headset-300500982.html",
+  "evidence": "Founded by Dr Paul McGeoch and Dr Jason McKeown in 2015; now operates as Neurovalens from Belfast and San Diego",
+  "confidence": "medium"
+ },
+ {
+  "name": "Emotion ID",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/emotion-id",
+  "evidence": "Crunchbase gives 2014; Bratislava; founders Milan Martinkovic and Filip Stano; camera-based emotion detection",
+  "confidence": "medium"
  }
 ]

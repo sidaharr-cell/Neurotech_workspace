@@ -34,5 +34,35 @@
   "verdict": "scope question",
   "note": "Autologous iPSC-derived dopamine neuron replacement THERAPY for Parkinson (ANPD001) — a cell therapy drug, not a device or software interfacing with the nervous system. INCLUSION_RULE excludes drug developers. Year written; scope is a separate decision.",
   "url": "https://aspenneuroscience.com/technology-overview/"
+ },
+ {
+  "name": "MedEngine",
+  "verdict": "ambiguous - two companies",
+  "note": "Two distinct companies share the name. MedEngine Oy, Helsinki, founded 2014, is pharma medical data science. MedEngine GmbH, Berlin, founded 2017, makes a Parkinson tracking wristwatch. Our record says Helsinki AND Parkinson, which matches neither cleanly. Needs a person to decide which company the row is.",
+  "url": "https://www.medengine.fi/medengine/"
+ },
+ {
+  "name": "Brainguard",
+  "verdict": "year is inferred, not stated",
+  "note": "A Berkeley News piece of Jan 2020 says BrainGuard was founded by Robert Knight eight years earlier, implying 2012. No source states a year outright. An arithmetic inference from a rounded phrase is not a sourced fact.",
+  "url": "https://news.berkeley.edu/2020/01/13/new-helmet-design-can-deal-with-sports-twists-and-turns/"
+ },
+ {
+  "name": "Gaia Wearables",
+  "verdict": "no year stated",
+  "note": "RIT alumni startup (Brent Chase, Joseph Clifford, Liam Herlihy), wearable for children with autism; founders graduated 2017 and coverage is 2018, but no source states a founding year. Now trades as Pal.",
+  "url": "https://www.crunchbase.com/organization/gaia-wearables"
+ },
+ {
+  "name": "ALS Automated Lab Solutions",
+  "verdict": "sources disagree, unresolved",
+  "note": "One source gives 1998 and another 2011, with nothing to adjudicate between them. Jena, Germany; CellCelector cell-picking platform; acquired by Sartorius in Dec 2021. Also a scope question: automated cell-picking for lab work is not obviously a product that interfaces with the nervous system.",
+  "url": "https://www.als-jena.com/index.php?id=22&L=1"
+ },
+ {
+  "name": "Emotion ID",
+  "verdict": "scope question",
+  "note": "Camera-based facial emotion detection, not EEG or any nervous-system interface, despite the description in our index implying otherwise. Year written; scope worth checking against INCLUSION_RULE.",
+  "url": "https://www.crunchbase.com/organization/emotion-id"
  }
 ]
