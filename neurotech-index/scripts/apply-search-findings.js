@@ -36,7 +36,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'node:fs'
-import { core } from './lib/funding.js'
+import { core, stripInvisible } from './lib/funding.js'
 
 const COMMIT = process.argv.includes('--commit')
 const FILE = 'scripts/data/founding-findings.json'
@@ -78,7 +78,7 @@ async function run() {
   const skipped = []
 
   for (const f of findings) {
-    const rows = byCore.get(core(f.name)) || []
+    const rows = byCore.get(core(stripInvisible(f.name))) || []
     if (rows.length !== 1) {
       skipped.push(`${f.name}: matches ${rows.length} rows in the database`)
       continue

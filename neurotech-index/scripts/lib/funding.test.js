@@ -3,7 +3,7 @@ import {
   core, matchIssuer, shouldQueryFormD, unavailableReason, classifyFailure, FAILURE,
   clusterRounds, totalRaised, trailingRaised, filingAmount, parseFilingXml, latestRaise,
   filingIndexUrl, recordViolations, needsVerification, trailingSortReadiness, isUsLocation,
-  parseIncorporation, preferIncorporation,
+  parseIncorporation, preferIncorporation, stripInvisible, norm,
 } from './funding.js'
 import { initialise, assertSafe } from '../backfill-funding-fields.js'
 
@@ -437,5 +437,34 @@ describe('preferIncorporation', () => {
 
   it('prefers a bound to nothing usable', () => {
     expect(preferIncorporation({ kind: 'unknown' }, bound(2010))).toEqual(bound(2010))
+  })
+})
+
+describe('invisible characters in stored names', () => {
+  /**
+   * A real row: "DeepBrainz​" carries a trailing zero-width space. It is
+   * invisible everywhere, and it made the company reappear in the unsearched
+   * queue after it had been recorded, because two strings that looked identical
+   * were not.
+   */
+  it('normalises a name carrying a zero-width space', () => {
+    expect(core('DeepBrainz​')).toBe(core('DeepBrainz'))
+    expect(norm('DeepBrainz​')).toBe('deepbrainz')
+  })
+
+  it('strips the whole family of invisible marks', () => {
+    for (const ch of ['​', '‌', '‍', '⁠', '﻿', '‎']) {
+      expect(core(`Acme${ch} Neuro`), JSON.stringify(ch)).toBe(core('Acme Neuro'))
+    }
+  })
+
+  it('exposes the strip on its own, for callers comparing raw names', () => {
+    expect(stripInvisible('DeepBrainz​')).toBe('DeepBrainz')
+    expect(stripInvisible('plain')).toBe('plain')
+    expect(stripInvisible(null)).toBe('')
+  })
+
+  it('leaves visible characters alone', () => {
+    expect(stripInvisible('Sim&Cure — Grabels')).toBe('Sim&Cure — Grabels')
   })
 })

@@ -472,5 +472,35 @@
   "verdict": "scope question",
   "note": "AI software scaffolding for executive-function support after mild TBI or ADHD. Assistive workplace software; it does not measure or modulate the nervous system despite the neurorehabilitation label.",
   "url": "http://cogaid.com"
+ },
+ {
+  "name": "novapace",
+  "verdict": "three candidate years, none of them a founding statement",
+  "note": "The Darmstadt commercial register (HRB 99810) shows novapace GmbH registered 16 Dec 2019 — incorporation. TU Darmstadt own news (3 Dec 2019) says Patrick Scholl began the work in 2016 and has been in a team with Simon Staffa and Lukas Braisz since 2017, never using a founding year. Aggregators say 2018. No primary source calls any of them the founding, so none was written.",
+  "url": "https://www.northdata.com/novapace%20GmbH,%20Darmstadt/HRB%2099810"
+ },
+ {
+  "name": "Cortech Solutions",
+  "verdict": "scope question",
+  "note": "Self-describes as a reseller for recognised equipment brands for neuroscience research. Primarily a DISTRIBUTOR, which the index excludes, though it makes small integration components and acquired the EMSE software in 2015.",
+  "url": "https://cortechsolutions.com/"
+ },
+ {
+  "name": "MazeEngineers",
+  "verdict": "scope question and a rebrand",
+  "note": "Manufactures behavioural testing apparatus (mazes) for rodents — measures behaviour, not the nervous system. The domain now redirects to conductscience.com, so it is a product line under the ConductScience brand rather than a standalone company.",
+  "url": "https://conductscience.com/mazeengineers/"
+ },
+ {
+  "name": "Ornim Medical",
+  "verdict": "defunct",
+  "note": "ornim.com redirects to a HugeDomains for-sale parking page. This is one of the eight companies my first website sweep wrongly dated 2005 from that same parking page footer — now confirmed as the domain genuinely being for sale rather than a scraping error alone.",
+  "url": "https://www.hugedomains.com/domain_profile.cfm?d=ornim.com"
+ },
+ {
+  "name": "C8 Sciences",
+  "verdict": "scope question",
+  "note": "ACTIVATE is Yale-derived computerised cognitive and executive-function training for ADHD. Software-based training with no sensing or modulation hardware, so it sits close to the general education software exclusion.",
+  "url": "https://www.c8sciences.com"
  }
 ]
