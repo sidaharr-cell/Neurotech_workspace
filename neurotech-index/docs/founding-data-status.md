@@ -1,11 +1,17 @@
 # Founding and incorporation data: where this stands
 
-**Written 15 Aug 2026. Branch `revamp`, not merged, not pushed.**
+**Written 15 Aug 2026, revised 16 Aug. Branch `revamp`, not merged, not pushed.**
 
 Read this first if you are picking the work up. The short version: the schema,
 the pipelines, the guards and the UI are finished and verified. The web-search
-sweep is 26 companies into 1,084 and cannot be finished without a person driving
-it, for the reason in "What cannot be automated" below.
+sweep has reached 181 of 1,084 companies and is running in batches; it cannot be
+left unattended, for the reason in "What cannot be automated" below.
+
+**The sweep's most valuable output is no longer the years.** It is
+`scripts/data/founding-unresolved.json` — 97 entries recording, with URLs, that
+the index contains rename-duplicates, rows named after products rather than
+companies, rows that are not companies at all, dead domains, wrong locations and
+wrong descriptions. See "What the sweep found that nobody was looking for".
 
 ## What a reader sees now
 
@@ -26,21 +32,37 @@ year first and falling back to incorporation.
 
 | | count | of 1,084 |
 |---|---|---|
-| sourced founding year | 192 | 18% |
-| incorporation year or bound | 242 | 22% |
-| either (`age_year`) | 376 | 35% |
-| neither | 708 | 65% |
+| sourced founding year | 320 | 30% |
+| incorporation year or bound only | 184 | 17% |
+| either (`age_year`) | 504 | 46% |
+| neither | 580 | 54% |
 
-By source: 96 Wikidata, 86 company site, 28 our own record description, 13 from
-web search. Wikipedia was tried and **withdrawn** — 33 of its 47 matches pointed
-at the wrong article.
+By source kind: 96 Wikidata, 93 company site, 57 press, 37 our own record
+description, 35 aggregator, 2 Wikipedia.
+
+Those last two need explaining, because Wikipedia was **withdrawn as an
+automated source** — 33 of its 47 matches pointed at the wrong article, dating
+Otsimo from "World Autism Awareness Day". Kernel and Kendall Research Systems
+survive because a *person-driven search* landed on the right article and
+corroborated it elsewhere; the evidence string on each records the corroboration.
+The lesson is that the failure was in matching a name to an article without
+reading it, not in the encyclopedia.
+
+The 35 aggregator-sourced years render with a visible caveat rather than being
+hidden or trusted silently.
 
 ## What cannot be automated
 
 `WebSearch` is a tool invoked one call at a time inside a turn. It is not
-scriptable the way the scrapers are, so the remaining ~1,068 companies need
-roughly a hundred rounds of a person prompting and the model searching. There is
-no way to leave it running.
+scriptable the way the scrapers are, so the remaining ~580 companies without an
+`age_year` need many rounds of prompting and searching. Background subagents make
+each round wider — four agents at nine companies each is the configuration that
+finishes without stalling — but nothing here runs unattended to completion.
+
+The per-agent search budget is real and was learned the hard way: at seventeen
+companies per agent, four of six agents exhausted their budget partway and
+returned nothing for the tail of their list. Nine companies with an explicit
+"2-3 searches each, then move on" cap completed 4 of 4.
 
 Everything else here IS scriptable and has been run to completion.
 
@@ -55,10 +77,44 @@ Everything else here IS scriptable and has been run to completion.
 | `apply-search-findings.js` | `scripts/data/founding-findings.json` | run; rerun after each batch of searches |
 | `audit-company-existence.js` | company websites | run over 703; verified 8 |
 | `audit-scope.js` | stored text | run; reports only |
+| `next-founding-batch.js` | Supabase + the two data files | picks what to search next |
+
+## What the sweep found that nobody was looking for
+
+Every one of these came out of searching for a year and reading what came back.
+None of it is deleted or changed — each is a decision for a person — but the
+evidence is in `scripts/data/founding-unresolved.json` against the company name.
+
+**Two companies are in the index twice under names that share no letters.**
+G-Therapeutics SA of Lausanne became GTX Medical and then ONWARD Medical of
+Eindhoven; both rows describe the same spinal-cord stimulation product. Eegapps
+Medical is Incereb. No string comparison reaches either — `audit-duplicate-orgs.js`
+says so in its own header. Catching renames needs an alias list.
+
+**Four rows are named after a product, not a company.** Sleepio is Big Health's
+product; BioMind is Hanalytics'; Pegaces belongs to NeuroGeneces; PENTAS is the
+reverse case, a company row carrying a product's name. The founding year in each
+case belongs to a company the index never names, which is why they cannot simply
+be written.
+
+**Several rows are not companies.** BIOTIC is a hospital facility, MyLeg an EU
+grant, The Virtual Brain an academic consortium, Neuroscientia a content farm,
+Splaysoft a classroom-app publisher.
+
+**Facts that are simply wrong.** Neutun is in Toronto, not Palo Alto; Lucid Care
+in Palo Alto, not Los Angeles; Brainbit in California, not New York; NeuroCrowd
+in Mexico City, not Houston. Zed Medical's stored description calls it a cerebral
+aneurysm device — it is a coronary catheter.
+
+**Roughly fifteen websites are dead, parked, or now serve something unrelated.**
+A parked domain still returns 200 and still has a footer year, which is how eight
+companies were once all dated 2005 from `hugedomains.com`.
 
 ## How to resume the search
 
-1. Pick the next companies: highest `rank_score` with `age_year is null`.
+0. `node --env-file=.env scripts/next-founding-batch.js 36` prints the next
+   companies, skipping every name already in the findings or unresolved file.
+1. Or pick them by hand: highest `rank_score` with `age_year is null`.
 2. Search. Record each result into `scripts/data/founding-findings.json` with `name`,
    `year`, `kind`, `url`, `evidence`, `confidence`, and `conflict` where sources
    disagree.
@@ -77,11 +133,18 @@ filings give an *incorporation* year: Saluda Medical's filing reads 2023 for a
 company that predates it by a decade, so the overwrite would have made it worse.
 The decision is still open.
 
-**One duplicate company row.** "Precision Neuroscience" and
-"PrecisionNeuroscience" hash to different UUIDv5 ids and both exist.
-`audit-duplicate-orgs.js` reports it and can merge fields onto the fuller row; it
-never deletes, because which `/company/:id` stops working is a decision for a
-person.
+**Three duplicate company rows, found two different ways.** "Precision
+Neuroscience" and "PrecisionNeuroscience" hash to different UUIDv5 ids and both
+exist; `audit-duplicate-orgs.js` finds that one by normalising the name. The
+other two — G-Therapeutics/ONWARD Medical and Eegapps Medical/Incereb — are
+renames, share no letters, and were found only because a searcher read a company
+history. The audit never deletes, because which `/company/:id` stops working is a
+decision for a person.
+
+This has a live consequence: Precision Neuroscience's founding year, 2021, is
+sitting in `founding-findings.json` and **cannot be written**. The applier refuses
+it with "matches 2 rows in the database" rather than picking one. Merge the rows
+and it lands.
 
 An earlier version of this document said NINE duplicates. That was wrong, and
 worth recording why: the scope audit paginated on `rank_score` with no unique
