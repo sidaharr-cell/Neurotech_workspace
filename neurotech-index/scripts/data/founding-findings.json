@@ -212,5 +212,21 @@
   "url": "https://www.crunchbase.com/organization/emotion-id",
   "evidence": "Crunchbase gives 2014; Bratislava; founders Milan Martinkovic and Filip Stano; camera-based emotion detection",
   "confidence": "medium"
+ },
+ {
+  "name": "MicroVention Terumo",
+  "year": 1997,
+  "kind": "press",
+  "url": "https://www.terumoneuro.com/newsroom/press-releases/microvention-celebrates-25-years-in-neuroendovascular-technologies-that",
+  "evidence": "Company press release marking 25 years in neuroendovascular technologies; founded 1997 in Southern California, acquired by Terumo 2006, rebranded Terumo Neuro Sept 2024",
+  "confidence": "high"
+ },
+ {
+  "name": "Avalon AI",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://gust.com/companies/avalon-ai",
+  "evidence": "Gust startup profile gives 2015; London; ML on brain MRI to predict MCI-to-dementia progression, trained on 70,000 scans via Cambridge, Donders and Imperial partnerships",
+  "confidence": "medium"
  }
 ]
