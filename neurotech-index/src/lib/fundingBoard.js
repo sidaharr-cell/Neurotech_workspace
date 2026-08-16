@@ -140,11 +140,13 @@ export const STAGE_BANDS = [
  *
  * Measured 15 Aug 2026 on the 45 companies the scatter plots: 29 declare a year
  * and 9 of the 16 bounds place, so 38 of 45 carry a band against 29 that would
- * carry a continuous size. The remaining 7 have minimum ages of 6 to 12 and are
- * genuinely unplaceable — `null`, and the figure marks them rather than
- * defaulting them into the middle.
+ * carry a continuous size. The genuinely unplaceable ones are `null`, and the
+ * figure marks them rather than defaulting them into the middle.
  *
- * This is INCORPORATION, not founding. See docs/founded-backfill-scope.md.
+ * The age itself comes from a FOUNDING year where one is known and falls back to
+ * incorporation otherwise — see ageBand. The two are different facts and the
+ * founding one is what "how old is this company" asks; incorporation can trail
+ * it by years or reset entirely. See docs/founded-backfill-scope.md.
  */
 export const AGE_BANDS = [
   { id: 'young', label: 'Under 7 years', maxAge: 6 },
@@ -164,11 +166,25 @@ const bandForAge = age => AGE_BANDS.find(b => age <= b.maxAge)?.id ?? 'old'
  */
 export function ageBand(row, currentYear) {
   if (!row) return null
+  // A founding year first: it is what "how old is this company" actually asks,
+  // and incorporation can trail it by years or reset entirely on a
+  // redomiciliation. Axonics incorporated in 2012 and began operating in 2013;
+  // Saluda's filing reads 2023 for a company that long predates it.
+  if (row.foundedYear) return bandForAge(currentYear - row.foundedYear)
   if (row.incorporatedYear) return bandForAge(currentYear - row.incorporatedYear)
   if (row.incorporatedBefore) {
     const minAge = currentYear - row.incorporatedBefore
     return bandForAge(minAge) === 'old' ? 'old' : null
   }
+  return null
+}
+
+/** Where a company's age came from, for a reader who wants to weigh it. */
+export function ageBasis(row) {
+  if (!row) return null
+  if (row.foundedYear) return { year: row.foundedYear, kind: 'founded', sourceKind: row.foundedSourceKind, url: row.foundedSourceUrl, conflict: row.foundedConflict }
+  if (row.incorporatedYear) return { year: row.incorporatedYear, kind: 'incorporated', url: row.incorporatedSourceUrl }
+  if (row.incorporatedBefore) return { before: row.incorporatedBefore, kind: 'incorporated_bound', url: row.incorporatedSourceUrl }
   return null
 }
 
@@ -388,6 +404,11 @@ const COLUMNS_009 = `${COLUMNS},was_publicly_traded`
 const COLUMNS_018 =
   `${COLUMNS_009},incorporated_year,incorporated_before_year,incorporated_source_url`
 
+/** Migrations 019 and 021: a sourced FOUNDING year, which is a different fact
+ *  from incorporation and the better one for company age. */
+const COLUMNS_019 = `${COLUMNS_018},founded_year,founded_source_kind,founded_source_url,`
+  + 'founded_evidence,founded_conflict'
+
 async function selectFundedOrgs() {
   const query = cols => supabase.from('organizations').select(cols)
     .eq('type', 'company')
@@ -395,8 +416,13 @@ async function selectFundedOrgs() {
     .not('inclusion_basis', 'is', null)
     .order('total_raised_usd', { ascending: false })
     .limit(500)
-  const res = await query(COLUMNS_018)
+  const res = await query(COLUMNS_019)
   if (!res.error) return res
+  if (/founded_(year|conflict|evidence|source)/.test(res.error.message)) {
+    const r18 = await query(COLUMNS_018)
+    if (!r18.error) return r18
+    res.error = r18.error
+  }
   // Fall back one migration at a time, so a database with 009 but not 018 keeps
   // its partial-total marks instead of losing them alongside the ages.
   if (/incorporated_/.test(res.error.message)) {
@@ -448,6 +474,13 @@ export function toRow(o, trailing = 0) {
     incorporatedYear: o.incorporated_year ?? null,
     incorporatedBefore: o.incorporated_before_year ?? null,
     incorporatedSourceUrl: o.incorporated_source_url ?? null,
+    // Migrations 019/021. A founding year is the better answer for age and is
+    // preferred over incorporation wherever it exists; see ageBand.
+    foundedYear: o.founded_year ?? null,
+    foundedSourceKind: o.founded_source_kind ?? null,
+    foundedSourceUrl: o.founded_source_url ?? null,
+    foundedEvidence: o.founded_evidence ?? null,
+    foundedConflict: o.founded_conflict ?? null,
     lastVerifiedAt: o.last_verified_at || null,
   }
 }
