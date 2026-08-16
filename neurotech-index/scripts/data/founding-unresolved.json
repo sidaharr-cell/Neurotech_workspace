@@ -68,7 +68,7 @@
  {
   "name": "Brainwave Science",
   "verdict": "sources disagree, unresolved",
-  "note": "2005 in some sources, 2012 in others, with nothing to adjudicate. Southborough MA; iCognative brain-fingerprinting for interrogation and deception detection. Also a scope question: marketed for counterterrorism, border security and deception detection rather than as a clinical neurotechnology.",
+  "note": "2005 in some sources, 2012 in others, with nothing to adjudicate. Southborough MA; iCognative brain-fingerprinting for interrogation and deception detection. Also a scope question: marketed for counterterrorism, border security and deception detection rather than as a clinical neurotechnology. VERIFIED: the company FAQ says \"In 2012, Brainwave acquired patents and exclusive rights to Brain Fingerprinting\" — an ASSET ACQUISITION, not a founding. The About page gives no year, saying only the company was established in a post-9/11 world. The aggregators 2012 is probably derived from that acquisition line.",
   "url": "https://brainwavescience.com/"
  },
  {
@@ -92,7 +92,7 @@
  {
   "name": "Bellabee",
   "verdict": "no year found",
-  "note": "Wearable neurofeedback headband. No source states a founding year; results are dominated by Bellabeat, a different company (women health tracker) with a near-identical name. Our record says Austin; product pages point to bellabee.pro.",
+  "note": "Wearable neurofeedback headband. No source states a founding year; results are dominated by Bellabeat, a different company (women health tracker) with a near-identical name. Our record says Austin; product pages point to bellabee.pro. VERIFIED: no primary source gives a year, and Bellabee appears to be a rebrand or successor of the earlier ELF Emmit headband, so any date found may belong to a predecessor entity.",
   "url": "https://www.bellabee.pro/"
  },
  {
@@ -130,5 +130,11 @@
   "verdict": "cannot search",
   "note": "Stored website is the literal string https://N/A, so there is no site to check and the name is too generic to search reliably. The bad website value is itself worth fixing.",
   "url": null
+ },
+ {
+  "name": "Cerebian",
+  "verdict": "withdrawn after verification",
+  "note": "I wrote 2008 from Tracxn while noting it sat oddly against the company first appearing in Ontario Brain Institute programmes in 2018. A verifier established why: the company own site has placeholder Lorem Ipsum where its story should be, the OBI release states no year, CB Insights lists none, and founder Kareem Ayyad was a school class of 2012 and 27 years old in spring 2021 — a 2008 founding would have him starting the company at about fourteen. Year cleared.",
+  "url": "https://cerebian.com/"
  }
 ]
