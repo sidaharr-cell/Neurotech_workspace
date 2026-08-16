@@ -370,5 +370,107 @@
   "verdict": "scope question",
   "note": "Outsourced intraoperative neuromonitoring SERVICE, staffing neurophysiologists for surgery, rather than a product company. Absorbed into NuVasive Clinical Services in 2011; domain dead.",
   "url": "https://www.impulsemonitoring.com"
+ },
+ {
+  "name": "Sensoree",
+  "verdict": "no year",
+  "note": "The company own About page gives no founding year, saying only that SENSOREE began as Future Speculation for Healthcare from Master Thesis design research by Kristin Neidlinger. Press coverage runs 2013-2014 and never states a year. SCOPE: biosensing affective wearables reading galvanic skin response, i.e. autonomic arousal — arguably in scope.",
+  "url": "https://www.sensoree.com/about/"
+ },
+ {
+  "name": "DeepBrainz",
+  "verdict": "no founding year; scope question",
+  "note": "The only date is an INCORPORATION: DeepBrainz Technologies Private Limited, 18 Nov 2019, ROC Bangalore. No About page or press statement gives a founding year. SCOPE: general enterprise AI cloud and edge-to-cloud services — nothing neural despite the name.",
+  "url": "https://www.deepbrainz.com"
+ },
+ {
+  "name": "Amind",
+  "verdict": "no year, and the location looks wrong",
+  "note": "The company Nosotros page gives no founding year. The only year on the site belongs to its Swedish PARTNER Livanda, founded 2001. The site presents as a Spanish-language operation, not the San Ramon USA our index records. SCOPE: internet-delivered CBT with a psychologist, a therapy service.",
+  "url": "https://www.amindterapia.com/nosotros"
+ },
+ {
+  "name": "Lucid Care",
+  "verdict": "location and product both look wrong",
+  "note": "Aggregators give 2017 with founders Yahav Tako and Rebecca Mandel Ben-Artzy, based in PALO ALTO, not the Los Angeles we record, with a VR digital therapeutic for addiction. But lucid.care today is Lucid.Care Labs Inc selling a mental-health symptom-tracking app with wearable integration and NO VR anywhere. The two may not be the same entity, so no year was written.",
+  "url": "https://lucid.care"
+ },
+ {
+  "name": "Dizziness App",
+  "verdict": "TWO DIFFERENT PRODUCTS CONFLATED",
+  "note": "Tracxn dates DizzyTrack to 2015 and places it in COPENHAGEN, and dizzytrack.com names Danish institutions (Rigshospitalet, Aleris-Hamlet) as supporters. Separately, Dizziness App is a Brazilian optokinetic-treatment app described in a Brazilian Computer Society paper and published on Google Play. Our row merges the two, with a Salvador Brazil location and the DizzyTrack domain. Cannot be resolved without deciding which company the row means.",
+  "url": "https://www.dizzytrack.com/"
+ },
+ {
+  "name": "Eos Neuroscience",
+  "verdict": "scope question",
+  "note": "Optogenetic gene therapy developer using AAV-delivered opsins. Excluded as a gene-therapy developer.",
+  "url": "http://eosneuroscience.com/"
+ },
+ {
+  "name": "Avanix srl",
+  "verdict": "scope question",
+  "note": "GPS trackers and wearable vital-sign monitors (OiX Care for Alzheimer patients, PaciBreath infant pacifier). No nervous-system measurement or modulation.",
+  "url": "http://www.avanix.it/en/"
+ },
+ {
+  "name": "Resproly",
+  "verdict": "scope question",
+  "note": "Inhaled respiratory drug formulation technology and delivery devices. A pharmaceutical developer, unrelated to the nervous system.",
+  "url": "http://www.resproly.com/"
+ },
+ {
+  "name": "Amind, Cloud 9, Wellnite, GoMentor, Spriteli, Simple Steps Autism",
+  "verdict": "scope questions - six therapy or wellness services in one batch",
+  "note": "Amind is internet CBT with a psychologist; Cloud 9 is a telehealth care-collaboration platform for first responders; Wellnite is online therapy and medication management; GoMentor is a marketplace connecting users to therapists; Spriteli was two-minute coaching videos; Simple Steps Autism is a charity ABA training programme. None has a nervous-system interface, and all fall under the index own exclusions for therapy providers, service marketplaces, charities and education software.",
+  "url": null
+ },
+ {
+  "name": "Neuroscientia",
+  "verdict": "NOT A COMPANY - content farm",
+  "note": "neuroscientia.com is live but is a general health and lifestyle content blog, Your Pocket Health Care, whose contact address is GuestPost@GeniusUpdates.com — the hallmark of a link-selling content farm. No About page, no founder, no company registration, and no Nigeria or Ikeja connection visible anywhere. Searches surfaced only the unrelated Lithuanian biometrics firm Neurotechnology. This row should not be in a neurotech company index.",
+  "url": "https://www.neuroscientia.com/"
+ },
+ {
+  "name": "Splaysoft",
+  "verdict": "NOT NEUROTECH - mis-described row",
+  "note": "Only surviving presence is a Weebly page and App Store listings, with no founding year, location or About content. The app portfolio is Common Core Look-fors, GroupMaker, Heads or Tails, LiteLite, Sketchiness, Color Tap, Captured Faces — classroom utilities, a coin-flip app and novelty apps. Zero mention of brain, neuro, EEG or health anywhere. Does not belong in the index.",
+  "url": "http://splaysoft.weebly.com/"
+ },
+ {
+  "name": "Really",
+  "verdict": "STALE ROW - domain now belongs to someone else",
+  "note": "really.ai no longer belongs to the described company. It serves a coming-soon placeholder for Really AI, an AUSTRALIAN events organisation about what AI actually does, with an Aboriginal land acknowledgement — nothing to do with Palo Alto or neurodegenerative disease detection. The name is effectively unsearchable, and the domain was the only lever available.",
+  "url": "https://really.ai"
+ },
+ {
+  "name": "Introspect Therapeutics",
+  "verdict": "subsidiary launch, not a founding",
+  "note": "atai Life Sciences created and LAUNCHED IntroSpect Digital Therapeutics as a portfolio platform company at the end of June 2020, CEO David Keene. It is an atai subsidiary rather than an independent founding, so 2020 is a launch date. introspectme.com fails TLS — the certificate is a Squarespace wildcard that does not cover the hostname, i.e. an abandoned pointer.",
+  "url": "https://www.fiercebiotech.com/biotech/atai-dives-into-digital-therapeutics-to-boost-mental-healthcare"
+ },
+ {
+  "name": "Mentia",
+  "verdict": "no year",
+  "note": "Aggregators give 2017, San Francisco, co-founders Mandy Salomon and Serge Soudoplatoff, but three of the company own pages were checked and NONE states a founding year. The origin is a doctoral research project, AVED, which became DevaWorld — so a company founding date is genuinely distinct from the project start and neither is stated. The product is DevaWorld, not Deevio as I had guessed. SCOPE: dementia-friendly virtual world and caregiver training game; nothing measures or modulates the nervous system.",
+  "url": "https://www.mentia.me/"
+ },
+ {
+  "name": "HealthTechApps",
+  "verdict": "scope question",
+  "note": "Apps that log and track brain-health and concussion symptoms by self-report and video, rather than measuring the nervous system. Domain parked for sale; company winding down.",
+  "url": "https://www.healthtechapps.com"
+ },
+ {
+  "name": "NEXT Integrative Minds Life Sciences Ltd.",
+  "verdict": "scope question",
+  "note": "The NEXT System and NEXT University of Life are neuroplasticity-framed personal-performance training and neuro-literacy education. A training curriculum, not a device or measurement product.",
+  "url": "https://nextltd.com"
+ },
+ {
+  "name": "CogAid",
+  "verdict": "scope question",
+  "note": "AI software scaffolding for executive-function support after mild TBI or ADHD. Assistive workplace software; it does not measure or modulate the nervous system despite the neurorehabilitation label.",
+  "url": "http://cogaid.com"
  }
 ]

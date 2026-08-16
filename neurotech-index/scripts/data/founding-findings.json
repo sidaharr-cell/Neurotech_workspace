@@ -814,5 +814,156 @@
   "evidence": "Phoenix startup directory lists Movement Interactive Inc founded 2013, founder and CEO Dr Eric Luster",
   "confidence": "low",
   "conflict": "AGGREGATOR-ONLY. No company-site or filing confirmation, and no founding year in its press coverage."
+ },
+ {
+  "name": "GAIA",
+  "year": 1997,
+  "kind": "company_site",
+  "url": "https://gaia-group.com/en/news.html",
+  "evidence": "GAIA press boilerplate: developing health-care management and e/m-Health solutions since 1997",
+  "confidence": "medium",
+  "conflict": "A German life-sciences directory gives 2001, likely an entity registration year. The current homepage says only over 20 years of experience, with no year."
+ },
+ {
+  "name": "Pajunk Medical Systems",
+  "year": 1965,
+  "kind": "company_site",
+  "url": "https://pajunk.com/company/",
+  "evidence": "PAJUNK own history page, 60 Years of Medical Technology Excellence: brothers Horst and Heinrich Pajunk started the business in 1965 in a garage in Geisingen. The About page is titled Medical Technology since 1965.",
+  "confidence": "high",
+  "conflict": "1965 is the GERMAN PARENT, PAJUNK GmbH. Our row is the US subsidiary, PAJUNK Medical Systems LP of Norcross GA, which aggregators date to 2001 and whose HQ has since moved to Alpharetta."
+ },
+ {
+  "name": "Eos Neuroscience",
+  "year": 2007,
+  "kind": "company_site",
+  "url": "http://www.eosneuroscience.com/",
+  "evidence": "Company boilerplate: founded in early 2007 to apply innovations in light-sensitive proteins to intractable neurological disease; founding team Ed Boyden, Alan Horsager, Ben Matteo. Mouse proof of concept in 2008 is a milestone, not the founding.",
+  "confidence": "medium",
+  "conflict": "The domain would not load during checking, so the statement was read from cached and syndicated copies."
+ },
+ {
+  "name": "ExQor Technologies",
+  "year": 2004,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/exqor/__YZaEsDGlajpRDDpn5j1tBVKmRbuy00AOggjjqrKZaog",
+  "evidence": "Tracxn gives 2004, founder Franco Vitaliano, Boston",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY, and the Better Business Bureau lists Business Started 1/1/2005. No company About page or filing with a founding year was found."
+ },
+ {
+  "name": "Avanix srl",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://avanix.it/index.asp",
+  "evidence": "Company site: una startup fondata nel 2014, designing wireless wearable devices; Scanzorosciate, Bergamo. Corroborated by an IDTechEx company profile.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Cusoft (视友科技)",
+  "year": 2004,
+  "kind": "company_site",
+  "url": "http://www.cusoft.com.cn/company.html",
+  "evidence": "Company profile page, verbatim: established October 2004. A national high-tech enterprise built around brain-computer interface technology, in the Beijing Economic-Technological Development Area.",
+  "confidence": "high"
+ },
+ {
+  "name": "Resproly",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://www.pharnexcloud.com/trz/trz_1a797a196a333a571ff0a31bd54c353a",
+  "evidence": "Zhuhai Resproly Biopharmaceutical given as established 27 March 2018",
+  "confidence": "low",
+  "conflict": "The company own history page states no founding year; its earliest milestone is a 2018 angel round, which is funding not founding. The group parent is now a Shenzhen entity, so the Zhuhai date may belong to one subsidiary rather than the group."
+ },
+ {
+  "name": "Restore",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/restoreskills/__YAtC6KAlUQOyaaBdqMYISMSOXNmugdVniEJNIArV8mw",
+  "evidence": "Tracxn gives 2018, founder Eran Arden, Akron",
+  "confidence": "low",
+  "conflict": "2018 is a BRAND or spin-out date. RESTORE-Skills is the adult-rehab product line of the Israeli company Timocco, founded in Israel in 2010, with a US HQ in Akron from 2015. The company site has no About page and no founding statement."
+ },
+ {
+  "name": "Cloud 9",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/cloud-9/",
+  "evidence": "CB Insights and EasyLeadz give 2015; founders JC Adams and Liz Truong",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. cloud9psych.com is dead as an identity: it redirects to cloud9telehealth.com and again to cloud9health.ai, whose About page states no founding year."
+ },
+ {
+  "name": "Wellnite",
+  "year": 2019,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/wellnite",
+  "evidence": "Crunchbase, CB Insights and a third-party review all give 2019; founders Paulo Gonzalez, Elisa Swan, Dr Amy Halanski",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. wellnite.com/about returns 404, so there is no primary corroboration."
+ },
+ {
+  "name": "GoMentor",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://thehub.io/startups/gomentor",
+  "evidence": "The Hub, the Danish startup registry, company-maintained profile with an explicit Founded 2010 field; PitchBook agrees",
+  "confidence": "medium",
+  "conflict": "No CVR register record retrieved, so incorporation is unverified against the founding claim."
+ },
+ {
+  "name": "Simple Steps Autism",
+  "year": 2007,
+  "kind": "press",
+  "url": "http://www.peatni.com/what-is-simple-steps",
+  "evidence": "PEAT NI, the parent charity: the programme was produced in 2007 by parents and professionals involved with PEAT, funded by BBC Children in Need and the Big Lottery Fund, led by Prof Mickey Keenan of Ulster with Queen University Belfast",
+  "confidence": "medium",
+  "conflict": "This is the PROGRAMME production year. Simple Steps is a charity project, not an incorporated company, so founding is arguably not applicable."
+ },
+ {
+  "name": "Spriteli",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/spriteli",
+  "evidence": "Crunchbase and Wellfound give 2015, Cambridge MA",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY and spriteli.org does not resolve at all (NXDOMAIN), so the company appears defunct and no primary source is retrievable."
+ },
+ {
+  "name": "HealthTechApps",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.privco.com/company/healthtechapps",
+  "evidence": "Aggregator profiles give 2012, Honolulu, founders Kyle Chang and Noe Foster. Hawaii Business Magazine (Nov 2022) names the same founders but says only going on 10 years, which was not converted arithmetically.",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. healthtechapps.com is dead — it redirects to a GoDaddy for-sale parking page — and the company is reported as winding down as of 2024."
+ },
+ {
+  "name": "Blino",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/10395695",
+  "evidence": "UK Companies House 10395695: BLINO LIMITED incorporated 27 September 2016, DISSOLVED 11 May 2021. Genuine neurotech — accessible bio-signal acquisition boards including EEG shields for Raspberry Pi.",
+  "confidence": "medium",
+  "conflict": "Incorporation, not a verified founding; no About page survives. The registered address at dissolution was Penderyn, Aberdare, WALES, not the Bristol we record — the Bristol link is via the Bristol Robotics Laboratory incubator. blino.io is down."
+ },
+ {
+  "name": "NEXT Integrative Minds Life Sciences Ltd.",
+  "year": 2009,
+  "kind": "aggregator",
+  "url": "https://app.dealroom.co/companies/next_integrative_minds_life_sciences",
+  "evidence": "Dealroom, PitchBook and Tracxn give 2009; co-founders David Folk and Nathalie Boutet",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. nextltd.com redirects to a coming-soon placeholder marked copyright 2023 with no About or founding year, which sits oddly against a 2009 date and may indicate a relaunch."
+ },
+ {
+  "name": "CogAid",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.brainstormil.com/companies/cogaid",
+  "evidence": "Brainstorm Israel neurotech directory: founded 2015, Jerusalem; founders Daniel Gross, Meira Josephy, Madelaine Sayko. Startup Nation Central concurs on 2015.",
+  "confidence": "low",
+  "conflict": "Directory sources only. Reported non-active since September 2024 and cogaid.com returns HTTP 500."
  }
 ]
