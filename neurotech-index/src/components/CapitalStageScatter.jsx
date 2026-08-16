@@ -73,14 +73,21 @@ const PAD = { l: 190, r: 34, t: 26, b: 58 }
  *
  * Size was a dead channel here once before, encoding trailing capital that 27 of
  * 45 companies did not have, and it is only back because age is banded rather
- * than continuous: 38 of the 45 carry a band, against 29 that could carry a
- * continuous size. Areas are roughly 1 : 2 : 3.5, which is readable at three
- * levels without the largest dot swamping its neighbours.
+ * than continuous. When the encoding shipped, 38 of the 45 carried a band
+ * against 29 that could have carried a continuous size; a web-search sweep has
+ * since taken it to 40. Areas are roughly 1 : 2 : 3.5, which is readable at
+ * three levels without the largest dot swamping its neighbours.
  *
- * The seven that cannot be placed are drawn at UNPLACED_R with a dotted outline
- * and counted in the legend. They are not defaulted into the middle band: an
- * unplaceable company is one whose filing does not say, and saying so is the
- * same discipline as the floor arrows on partial totals.
+ * Whatever is left unplaced is drawn at UNPLACED_R with a dotted outline and
+ * counted in the legend — do not read a number here as current, since the sweep
+ * moves it; the legend counts what is actually on screen. They are not defaulted
+ * into the middle band: an unplaceable company is one whose sources do not say,
+ * and saying so is the same discipline as the floor arrows on partial totals.
+ *
+ * A band survives evidence a continuous scale could not use. A Form D filing
+ * from an issuer formed more than five years earlier gives no year at all, only
+ * "over five years ago" — which is a LOWER bound on age, and lands unambiguously
+ * in the top band while placing nowhere on a continuous axis.
  */
 const AGE_R = { young: 3.4, mid: 4.7, old: 6.2 }
 const UNPLACED_R = 3.0
