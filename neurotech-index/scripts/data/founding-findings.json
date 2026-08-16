@@ -965,5 +965,75 @@
   "evidence": "Brainstorm Israel neurotech directory: founded 2015, Jerusalem; founders Daniel Gross, Meira Josephy, Madelaine Sayko. Startup Nation Central concurs on 2015.",
   "confidence": "low",
   "conflict": "Directory sources only. Reported non-active since September 2024 and cogaid.com returns HTTP 500."
+ },
+ {
+  "name": "Biosemi",
+  "year": 1998,
+  "kind": "company_site",
+  "url": "https://www.biosemi.com/company.htm",
+  "evidence": "Company About page: the founders worked over a decade at the Medical Physics department, University of Amsterdam, then decided to start BioSemi in 1998",
+  "confidence": "high"
+ },
+ {
+  "name": "MazeEngineers",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/mazeengineers",
+  "evidence": "Crunchbase gives 2012, founder Shuhan He, Cambridge MA",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company own /our-company/ page now 404s and mazeengineers.com redirects to conductscience.com/mazeengineers — it is a product line under the ConductScience brand rather than a standalone company."
+ },
+ {
+  "name": "Bee Medic",
+  "year": 2005,
+  "kind": "company_site",
+  "url": "https://shop.beemedic.com/the-company-bee-medic.aspx",
+  "evidence": "Company site: Since 2005, BEE Medic GmbH has been developing high-end systems for non-invasive neurotherapy and diagnostics",
+  "confidence": "high",
+  "conflict": "The company history page traces a lineage through EEG Spectrum (1988, Sue and Siegfried Othmer), EEG Info Inc (2003) and BEE Systems Switzerland (2004). Those are predecessors and affiliates, not the founding of BEE Medic GmbH."
+ },
+ {
+  "name": "PENTAS",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://pentas-medical.jp/en/history/",
+  "evidence": "Company history page: established July 2015 in Shibuya, Tokyo as Allm Inc medical-equipment subsidiary. PENTAS IS A COMPANY, not a product as the stored URL suggested.",
+  "confidence": "high",
+  "conflict": "In April 2025 it was excluded from Allm consolidated subsidiaries and moved into the GENARK Inc group — a change of ownership, not a founding. pentas.allm.net now redirects to pentas-medical.jp, consistent with that separation."
+ },
+ {
+  "name": "Cortech Solutions",
+  "year": 2001,
+  "kind": "company_site",
+  "url": "https://cortechsolutions.com/about-us/",
+  "evidence": "Company About page, verbatim: Cortech was founded in September of 2001",
+  "confidence": "high"
+ },
+ {
+  "name": "Ornim Medical",
+  "year": 2004,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/ornim/__3uF6UG0XlcNeexcIGEiHixNCHRUIsq0ONFDWHpm_K7A",
+  "evidence": "Tracxn and CB Insights give 2004, founders Michal Balberg and Revital Shechter",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY and the company appears defunct: ornim.com now redirects to a HugeDomains for-sale parking page. The 2011 GE healthymagination and OrbiMed $20M event that dominates search results is a Series B, not a founding."
+ },
+ {
+  "name": "BrainFx",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/brainfx",
+  "evidence": "Crunchbase, Tracxn and PitchBook agree on 2012; founders Tracy Milner and Heather Condello",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. brainfx.com is live but states no founding year and its About URLs 404. A ventureLAB profile notes the founders ran an Ontario occupational-therapy practice from 2008 — a predecessor practice, not BrainFx."
+ },
+ {
+  "name": "C8 Sciences",
+  "year": 2011,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/52706-62",
+  "evidence": "PitchBook, CB Insights and Gust give April 2011, New Haven CT",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company own About and founder pages describe Bruce Wexler Yale research and an NIH grant but give no founding year. One review site claims a first product in 2010, which would predate the company date."
  }
 ]

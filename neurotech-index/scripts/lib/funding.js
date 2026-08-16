@@ -33,7 +33,26 @@ const LEGAL = /\b(inc|incorporated|llc|ltd|limited|corp|corporation|co|company|l
  *  not: "Neuros Medical Inc, a Delaware corporation" and the like. */
 const TAIL = /\b(a|an)\s+[a-z\s]+\b(corporation|company|partnership|series)\b.*$/i
 
-export const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+/**
+ * Zero-width and directional marks are stripped BEFORE anything else.
+ *
+ * One company row is stored as "DeepBrainz\u200b" — with a zero-width space on
+ * the end. It is invisible in every log, every report and every terminal, and it
+ * defeats exact-name matching silently: the row reappeared in the "not yet
+ * searched" queue after being recorded, because the name in the findings file
+ * and the name in the database looked identical and were not.
+ *
+ * The `[^a-z0-9]+` strip below would remove them anyway, but only for callers
+ * that go through `core`. Anything comparing raw names — a Set of names, a JSON
+ * key, a queue filter — sees two different strings. So the invisible characters
+ * are named and removed here, where the intent is obvious, rather than being
+ * swept up as a side effect of punctuation stripping.
+ */
+const INVISIBLE = /[\u200b-\u200f\u202a-\u202e\u2060-\u2064\ufeff]/g
+
+export const stripInvisible = s => String(s || '').replace(INVISIBLE, '')
+
+export const norm = s => stripInvisible(s).toLowerCase().replace(/[^a-z0-9]+/g, '')
 
 /**
  * The comparable core of a company name: drop EDGAR's "(CIK ...)" suffix, drop
