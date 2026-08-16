@@ -742,5 +742,179 @@
   "verdict": "scope question",
   "note": "Year recorded as 2015. Not an independent company but a portfolio venture of Leonhardt Ventures LLC, which spins out single-indication bioelectric companies from a shared patent estate and licenses from InStim. Bioelectric brain stimulation is in scope, but this is a pre-clinical patent-and-press-release operation: its own site says products are not proven safe or effective in controlled studies and are not available for sale.",
   "url": "https://cerebracell.com/"
+ },
+ {
+  "name": "ProtoMe",
+  "verdict": "dead domain",
+  "note": "proto-me.com does not resolve. A 2019 figure appears in search summaries but traces only to LinkedIn, Apollo and Parsers.vc. Entity is ProtoMe Technologies Inc, Vancouver BC, brain-health diagnostics, 2-10 employees. Name-collision risk with Protomer Technologies of Pasadena, acquired by Lilly. Likely defunct; a BC Corporate Registry lookup would settle it.",
+  "url": "https://www.proto-me.com/"
+ },
+ {
+  "name": "BrainGate",
+  "verdict": "not a company",
+  "note": "A multi-institution academic BCI research consortium — Brown, Massachusetts General, Harvard Medical School, Stanford, Baylor, Emory, Rice, UC Davis and the VA Research Service — led clinically by Dr Leigh Hochberg. Three dated events, none a company founding: Cyberkinetics Neurotechnology Systems, a Brown spin-off and now defunct, was formed in 2002; the BrainGate pilot trial began June 2004 with the first implant on 22 June 2004; BrainGate2 began 2008-09. The site footer reads \"Copyright 2000-2026 BrainGate\" and 2000 must not be used. Note braingate.com is a separate commercial entity and the two should not be merged.",
+  "url": "https://www.braingate.org/about-braingate/"
+ },
+ {
+  "name": "Vivid Spectrum Technologies",
+  "verdict": "dead domain",
+  "note": "vivid-spectrum.com does not resolve. No institutional, news, registry or accelerator source mentions the company at all; the only trace is a Crunchbase entry describing web-delivered hands-free games for stroke patients recovering hand and arm movement in Ireland. Name searches are polluted by unrelated entities. Not confident the company still operates, or that the Crunchbase entry describes the intended row.",
+  "url": "http://www.vivid-spectrum.com"
+ },
+ {
+  "name": "CTF",
+  "verdict": "entity chain",
+  "note": "The row is CTF MEG (magnetoencephalography), not a generic acronym. Its own about page traces the SQUID technology to 1970, from work under contract to the Canadian Department of National Defence on airborne submarine detection — a lineage date, not a company founding. The corporate chain is CTF Systems Inc of Port Coquitlam, acquired by VSM MedTech around February 2001, later reconstituted; in 2009 CTF acquired the assets of 4D Neuroimaging. Two entities exist today, CTF MEG International Services Limited Partnership and CTF MEG Neuro Innovations, Inc. CB Insights gives 2007, probably the current legal entity. The site now lists Burnaby, BC, so the Coquitlam location is stale.",
+  "url": "https://www.ctf.com/about-us"
+ },
+ {
+  "name": "Reminisciences",
+  "verdict": "dead domain",
+  "note": "reminisciences.com does not resolve. Aggregators give 2017 for Reminisciences SA of Lausanne and mark it deadpooled. LOCATION: the index says Parys, South Africa; every source says Lausanne, Switzerland. SCOPE: gut-microbiome therapeutics and diagnostics for Alzheimer's (CerebralX, ReminiTest) — a disease overlap, not a technology overlap.",
+  "url": "http://www.reminisciences.com/"
+ },
+ {
+  "name": "Panic Away",
+  "verdict": "not a company",
+  "note": "A self-help information product: a book plus an online course for panic attacks built around a \"21-7 Technique\", sold direct to consumers by the Irish author Barry McDonagh. No technology, device or software. The current brand vehicle appears to be Dare Response — panicaway.com/about/ is titled \"Advisory Board - Dare Response\". A search summary dates first publication to 2001, which could not be verified on the live page and would be a book publication date rather than a founding.",
+  "url": "https://www.panicaway.com/barry-mcdonagh/"
+ },
+ {
+  "name": "SOFIA Labs, LLC",
+  "verdict": "no website",
+  "note": "The index lists an f6s.com aggregator profile as the website, and no real company site exists. Three searches found only aggregator profiles, none carrying a founding year, and Crunchbase marks the company permanently closed. The product was SOFIA's Landscape EXplorer, a cloud SaaS avatar tutor positioning itself against test-prep SaaS and brain trainers such as Lumosity — cognitive-training edtech rather than neurotechnology.",
+  "url": "https://www.f6s.com/sofialabsllc"
+ },
+ {
+  "name": "iSocial",
+  "verdict": "product not company",
+  "note": "A curriculum, not a company: created by University of Missouri researchers associated with the Thompson Center for Autism and Neurodevelopment to teach social competence to youth with autism, later built into an online virtual world. The commercial vehicle is Nascent Stage Development LLC of Columbia, Missouri, whose own site states no founding year. The only firm date is January 2018, when Missouri announced the licence — a licensing event. The index URL isocl.net redirects to isocialskills.com.",
+  "url": "https://thompsoncenter.missouri.edu/2018/01/mu-online-curriculum-helps-children-autism-develop-better-social-skills/"
+ },
+ {
+  "name": "NeuroParticle",
+  "verdict": "dead domain",
+  "note": "neuroparticle.com redirects to HugeDomains: the domain is parked and for sale. A 2017 figure exists but its only source is medicalsdir.com, an unvetted medical-device directory weaker than Crunchbase and corroborated nowhere, so it is not recorded. Entity is Neuroparticle Corporation, North Bethesda MD, claiming \"Neuroparticle therapy\" for brain cancer and neurological disease without invasive surgery. Do not confuse with Cellular Nanomed, a different and better-documented magnetoelectric-nanoparticle company co-founded in 2016.",
+  "url": "https://www.neuroparticle.com/"
+ },
+ {
+  "name": "Engineering in Medicine & Biology",
+  "verdict": "not a company",
+  "note": "The San Francisco Bay Area chapter of the IEEE Engineering in Medicine and Biology Society — a volunteer chapter of a professional society. Do not assign it a company founding year. Two society dates exist and date different things: 1952 for the IRE Professional Group on Medical Electronics, 1963 for EMBS under its current name. One of the first two EMBS chapters, both approved 7 April 1953, was organised by A.J. Morris of the San Francisco IRE Section, but continuity with the modern chapter is unverified. The index URL redirects to a page that returned no content.",
+  "url": "https://www.embs.org/about/history/"
+ },
+ {
+  "name": "Cerebral Vascular Applications",
+  "verdict": "scope question",
+  "note": "A 1999 figure exists on Crunchbase alone and is not recorded. LOCATION: Duluth, Georgia, not Duluth, Minnesota — a portfolio company of The Innovation Factory, a Duluth GA medical device incubator whose own site now fails its TLS chain. SCOPE: minimally invasive left atrial appendage closure to reduce stroke risk in atrial fibrillation, which is a cardiac procedure. No working website and no news since the 2000s. Related patents were filed around 1999, and a patent filing date is not a founding year.",
+  "url": "https://www.crunchbase.com/organization/cerebral-vascular-applications"
+ },
+ {
+  "name": "URGONight",
+  "verdict": "product not company",
+  "note": "A consumer EEG neurofeedback headband and app for sleep training, not a company. It is made by URGOTECH, a startup created inside the URGO Group, the Dijon wound-care family firm; URGOTECH describes itself as created in 2015. The correct index entry is URGOTECH. Two cautions: the French register aggregator lists URGOTECH under SIREN 532599578, a range typically issued around 2011, which if correct would predate the publicised 2015 date and would in any case be incorporation; and both urgonight.com and urgotech.com failed DNS resolution while their content still appears in search indexes, which is consistent with a wind-down but is not proof.",
+  "url": "https://www.urgotech.com/index_en.html"
+ },
+ {
+  "name": "Sleep and Fatigue Research",
+  "verdict": "dissolved",
+  "note": "SLEEP AND FATIGUE RESEARCH LTD, company number 09892712, was incorporated 27 November 2015 and DISSOLVED on 26 November 2024. It should be marked defunct. Despite the .org.uk domain it was an ordinary private limited company trading as SAFR, founded by Jason Eden, a former RAF pilot who sat on the Fatigue Risk Management Working Group for large aircraft. The 2015 date is incorporation, not founding, and no separate founding statement exists. SCOPE: fatigue-risk management for commercial drivers using wearables and a bio-mathematical model.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09892712"
+ },
+ {
+  "name": "Phobious",
+  "verdict": "renamed",
+  "note": "Year recorded as 2013. This row is three renames behind and duplicates two others in the index. Phobious became Psious, rebranded to Amelia Virtual Care in February 2022, and merged with XRHealth of Boston in April 2023. \"Psious\" and \"XRHealth\" are both separate rows here. Phobious and Psious are the same company and one of the two rows should not exist; the duplicate audit now catches them because they share a domain.",
+  "url": "https://espacio.fundaciontelefonica.com/empresa/psious/"
+ },
+ {
+  "name": "Synergetics USA",
+  "verdict": "scope question",
+  "note": "Year recorded as 1991. Bausch + Lomb announced the acquisition in September 2015 and completed it that October, which is why the row's website resolves to bauschretina.com; the company no longer exists independently. SCOPE: primarily an ophthalmic and vitreoretinal surgical instrument maker. Its only neuro adjacency is a neurosurgery instrument line largely inherited from Valley Forge Scientific's bipolar electrosurgical generators.",
+  "url": "https://retinatoday.com/articles/2011-may-june/retina-on-wall-street-synergetics-usa-inc"
+ },
+ {
+  "name": "Mindable Health",
+  "verdict": "wrong location",
+  "note": "Year recorded as 2019, disputed against 2018. Every source places Mindable Health GmbH in Berlin, not Stuttgart as the index records. The product is Mindable: Panik & Agoraphobie, a CE-marked prescription DiGA listed in the BfArM directory since April 2021 and reimbursed by German statutory insurance; that 2021 listing is a regulatory milestone and not a founding.",
+  "url": "https://healthcare-startups.de/mindable-health/"
+ },
+ {
+  "name": "EndoSpan",
+  "verdict": "scope question",
+  "note": "Year recorded as 2009, weakly. SCOPE: endovascular stent grafts for aortic arch aneurysms and dissections. This is cardiovascular surgery with no neural component and does not belong in a neurotechnology index. Artivion, Inc. completed its acquisition in May 2026 for up to $375M following April 2026 FDA PMA approval of the NEXUS Aortic Arch System, and endospan.com now carries an Artivion banner.",
+  "url": "https://www.businesswire.com/news/home/20260518311431/en/Endospan-Announces-Closing-of-Acquisition-by-Artivion-Inc.-Following-FDA-PMA-Approval-of-the-NEXUS-Aortic-Arch-System"
+ },
+ {
+  "name": "Nanology Labs",
+  "verdict": "renamed",
+  "note": "Year recorded as 2018, weakly. The company is now QurCan Therapeutics Inc.; Crunchbase, PitchBook and Dealroom all redirect the Nanology Labs record to it. A University of Toronto spinout from the Leslie Dan Faculty of Pharmacy. SCOPE: polymer-lipid nanoparticle MRI contrast agents and drug delivery, with brain cancer as one target among several — oncology and imaging chemistry rather than neurotechnology.",
+  "url": "https://app.dealroom.co/companies/nanology_labs"
+ },
+ {
+  "name": "Calm",
+  "verdict": "scope question",
+  "note": "Year recorded as 2012 and well documented. SCOPE: a consumer meditation and sleep subscription app. No hardware, no neural interface, no neuromodulation, no biosignal acquisition. Its Calm Health arm, launched 2022, is a mental-health content platform. Including it means the index admits any wellness content app that invokes the brain.",
+  "url": "https://en.wikipedia.org/wiki/Calm_(company)"
+ },
+ {
+  "name": "Brain.fm",
+  "verdict": "scope question",
+  "note": "Year recorded as 2014. The company self-describes its functional music as noninvasive neurostimulation, but there is no device and no neural recording — it is an audio streaming subscription with a neuroscience rationale. Same category as Calm, though Brain.fm at least publishes on the claimed mechanism.",
+  "url": "https://www.brain.fm/about"
+ },
+ {
+  "name": "Advantis",
+  "verdict": "renamed",
+  "note": "Year recorded as 2016. The company was formerly TomoTECH, so the year may date the earlier name or the rebrand and could not be disambiguated. Advantis Medical Imaging, Athens and Eindhoven, makes Brainance MD for cloud brain MRI analysis, CE marked 2018 and FDA cleared 2021. Its own site has no about page: /about-us/ is a 404.",
+  "url": "https://registry.elevategreece.gov.gr/company/advantis-medical-imaging/"
+ },
+ {
+  "name": "Swap",
+  "verdict": "stale url",
+  "note": "Year recorded as 2014. The website in the index, swap-assist.fr, is superseded by swap-gps.com; the Android package is still fr.swap_assist.swap, confirming one entity. The product is a standalone GPS keychain for Alzheimer's patients with panic button, fall detection and safe-zone alerts. SCOPE: assistive eldercare hardware rather than neurotechnology.",
+  "url": "https://swap-gps.com/qui-sommes-nous"
+ },
+ {
+  "name": "ZAPIENS",
+  "verdict": "scope question",
+  "note": "Year recorded as 2014. SCOPE: a conversational corporate knowledge-management and microlearning platform with an AI chatbot, used by Microsoft, IKEA and Vodafone. This is enterprise software, not neurotechnology.",
+  "url": "https://zapiens.ai"
+ },
+ {
+  "name": "Sensae",
+  "verdict": "stale url",
+  "note": "Year recorded as 2020, weakly. The website in the index is wrong: sensae.co now serves an unrelated UK artisanal perfume brand, so the domain has changed hands. The Hub lists the company's site as sensae.com. Beware also a distinct UK company Sensate, a relaxation wearable, which search engines conflate with this one.",
+  "url": "https://thehub.io/startups/sensae"
+ },
+ {
+  "name": "Mensior",
+  "verdict": "dead domain",
+  "note": "Year recorded as 2015, weakly. mensior.com does not resolve and no registry record for Mensior S.r.l. was found, so the company may be defunct. In substance it is genuinely neurotech — an EEG Smart Helmet measuring mental agility for racing drivers, athletes and managers — but Smart Helmet EEG work is also a published Imperial College London line from 2015-2016 and the connection, if any, is unestablished.",
+  "url": "https://www.cbinsights.com/company/mensior"
+ },
+ {
+  "name": "Ginger Tiger",
+  "verdict": "scope question",
+  "note": "Year recorded as 2013, weakly. SCOPE: special-needs educational software — a library of 350+ learning games for people with learning disabilities, autism and sensory impairments — with no EEG, BCI or neural interface. Distributed in North America via a partnership with Ehave. Note a near-miss: the NoCamels article surfacing on Israeli braintech rehab searches is about Intendu, founded 2012, a different company.",
+  "url": "https://gingertiger.net/about-us/"
+ },
+ {
+  "name": "Stroke Medical",
+  "verdict": "wrong entity",
+  "note": "Year recorded as 2016. The row name is a nickname derived from the domain and is not the company's name. strokemedical.com is the corporate site of Shanghai HeartCare Medical Technology Corporation Limited, also rendered Shanghai Xinwei Medical Technology, listed on the Hong Kong exchange as 6609.HK since its 2021 IPO and making neuro-interventional devices for ischaemic and haemorrhagic stroke. The HKEX prospectus of 20 August 2021 would give a filing-grade founding date.",
+  "url": "https://insights.citeline.com/companies/shanghai-heartcare-medical-technology-corporation-limited/"
+ },
+ {
+  "name": "Nextstem",
+  "verdict": "misspelled",
+  "note": "Year recorded as 2020. The name in the index is wrong: the company is Nexstem, one t, matching nexstem.ai. Non-invasive BCI with the Instinct headset and developer stack; raised $3.5M in November 2024 co-led by Info Edge Ventures, Zupee and Smile Group. LOCATION: Inc42 and other outlets place it in Bengaluru while the index says Gurugram; unresolved.",
+  "url": "https://www.nexstem.ai/"
+ },
+ {
+  "name": "SpinTech Imaging",
+  "verdict": "renamed",
+  "note": "Year recorded as 2017. Now trades as SpinTech MRI, headquartered in Bingham Farms, Michigan. Acquired MR Innovations in February 2021 and has a development partnership with Canon Medical Systems USA. Squarely in scope: STAGE is a quantitative MRI acquisition and post-processing platform for brain imaging in stroke, TBI, Parkinson's, MS and dementia.",
+  "url": "https://www.prweb.com/releases/spintech-mri-announces-6-5-million-series-a-financing-to-expand-deployment-of-stage-tm-software-to-speed-diagnosis-and-treatment-of-brain-diseases-850719056.html"
  }
 ]
