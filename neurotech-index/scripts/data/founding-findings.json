@@ -3795,5 +3795,459 @@
   "evidence": "\"Since he cofounded Imagine Eyes in 2003, he has established partnerships with scientific and clinical centers.\"",
   "confidence": "medium",
   "caveat": "The year comes from a FOUNDER BIOGRAPHY on the company's own page — normally a refused source class — but it is the company's own statement about its own founding, internally consistent, with no competing year. SCOPE: the rtx1 adaptive-optics retinal camera imaging photoreceptors and retinal vasculature. The retina is CNS tissue and the technique appears in neurodegeneration research, but the company's market and regulatory positioning are ophthalmology."
+ },
+ {
+  "name": "Medical Guardian",
+  "year": 2005,
+  "kind": "press",
+  "url": "https://www.inquirer.com/business/health/medical-guardian-philadelphia-growth-medical-alert-devices-20260218.html",
+  "evidence": "Philadelphia Inquirer: the company launched in 2005 out of founder Geoff Gross’s Center City apartment.",
+  "confidence": "high",
+  "caveat": "SCOPE: personal emergency response systems — pendant and watch panic buttons with fall detection and 24/7 call-centre monitoring for seniors. No nervous-system technology of any kind. The company’s own about page says only \"20 years\", a relative phrase not used here."
+ },
+ {
+  "name": "Blckb",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/blckb",
+  "evidence": "Blckb Applied Neuroscience Ltd, established February 2013 as a University of Ljubljana spin-off, founded by Luka Zevnik.",
+  "confidence": "medium",
+  "caveat": "blckb.eu does not resolve (NXDOMAIN), so the company’s own about page could not be read; the February 2013 wording survives only in a search-engine cache and aggregator profiles. Aggregators place the registered company in Logatec, not Ljubljana."
+ },
+ {
+  "name": "Eodyne",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://app.dealroom.co/companies/rgs",
+  "evidence": "\"Eodyne Systems was established in 2014\" as a spin-off of the SPECS research group at Universitat Pompeu Fabra.",
+  "confidence": "medium",
+  "caveat": "The spin-off relationship is confirmed by UPF, ICREA and SOMMa, but none of those institutional pages states a year; 2014 is aggregator-sourced only. Eodyne and Eodyne Systems are one company — eodyne.com 302-redirects to eodynesystems.com."
+ },
+ {
+  "name": "Newronika",
+  "year": 2008,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Alberto_Priori",
+  "evidence": "\"In 2008, Alberto Priori founded Newronika SpA, a spin-off company of the University of Milan and Fondazione IRCCS Ca’ Granda.\"",
+  "confidence": "medium",
+  "conflict": "Sources tied to founder Alberto Priori give 2008; FierceBiotech and CB Insights give 2016. 2016 is most likely the recapitalisation when Newronika became a venture-backed operating company, which is not a founding, but that provenance could not be proved.",
+  "caveat": "The company’s own about page states no founding year, only \"two decades of work\", a relative phrase not used here."
+ },
+ {
+  "name": "Neuromod",
+  "year": 2010,
+  "kind": "company_site",
+  "url": "https://neuromod.com/about-neuromod/",
+  "evidence": "\"Founded in 2010, Neuromod Devices is a global medical technology business\" — founded by Dr Ross O’Neill, headquartered in Dublin.",
+  "confidence": "high"
+ },
+ {
+  "name": "Phenox",
+  "year": 2005,
+  "kind": "company_site",
+  "url": "https://phenox.net/international/about-us/",
+  "evidence": "\"Since its founding in 2005, phenox has been dedicated to developing innovative, breakthrough and clinically proven technologies and solutions for the treatment of neurovascular diseases.\"",
+  "confidence": "high",
+  "caveat": "Wallaby Medical acquired phenox on 26 April 2022 and the entity now trades as WallabyPhenox; the 2005 year belongs to phenox GmbH of Bochum, not to Wallaby Medical."
+ },
+ {
+  "name": "Beats Medical",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.irishtimes.com/business/technology/full-year-losses-rise-at-irish-start-up-beats-medical-1.3056584",
+  "evidence": "\"Founded in 2012 by Ms Clancy, who launched the company when she was just 22 years old, Beats Medical has developed an app...\"",
+  "confidence": "high",
+  "caveat": "A 2016 Irish Times interview quotes founder Ciara Clancy saying \"We have been going for nearly three years\"; that relative phrase was not computed from. 2012 is stated explicitly in several independent reports."
+ },
+ {
+  "name": "Vuno",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.koreajoongangdaily.com/business/medical-ai-pioneer-vuno-sets-sights-on-global-frontier/11477013",
+  "evidence": "\"The company achieved many ‘firsts’ since its foundation in 2014...\"",
+  "confidence": "high",
+  "caveat": "SCOPE: a general medical-imaging and clinical AI company (bone age, chest X-ray, fundus, lung CT, ECG). Brain MRI is one product line among many. KOSDAQ:338220, IPO February 2021."
+ },
+ {
+  "name": "Clinical Science Systems",
+  "year": 2004,
+  "kind": "registry",
+  "url": "https://webdesignergids.net/leiden/clinical-science-systems/",
+  "evidence": "KvK-derived record: established 12-02-2004, KvK number 27265075, Vennootschap onder firma, Leiden.",
+  "confidence": "medium",
+  "caveat": "The KvK number and date are registry-derived but reached through a scraped directory that mis-categorises the company as web design; the company’s own site states no founding year."
+ },
+ {
+  "name": "CAIDE Systems",
+  "year": 2016,
+  "kind": "university",
+  "url": "https://www.uml.edu/News/news-articles/2019/sun-mayor-applauds-new-businesses.aspx",
+  "evidence": "\"The company, founded in 2016, is led by Kyewook ‘Jacob’ Lee who took Ph.D. courses in computer science at University of Massachusetts Lowell.\"",
+  "confidence": "high",
+  "caveat": "SCOPE: a general medical deep-learning imaging platform across X-ray, CT, MRI and ultrasound; its first model is brain stroke detection, which is what makes it neuro-adjacent."
+ },
+ {
+  "name": "Medicalcooling",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.nw.de/lokal/kreis_guetersloh/guetersloh/22559917_So-will-dieser-Guetersloher-das-Rettungswesen-revolutionieren.html",
+  "evidence": "Neue Westfälische: Medical Cooling founded 2012 in Gütersloh by Fabian Temme and Ruben Brühl.",
+  "confidence": "low",
+  "caveat": "PROVISIONAL. The article returned HTTP 423 Locked, so the year comes from the search index’s rendering of it rather than a direct read. The company originated as a research project at FAU Erlangen-Nürnberg and its AIRCHILL platform is still described on its own site as a TRL-4 laboratory demonstrator. Not to be confused with EMCOOLS Medical Cooling Systems GmbH of Austria."
+ },
+ {
+  "name": "Netrin",
+  "year": 2019,
+  "kind": "registry",
+  "url": "https://www.indiafilings.com/search/netrin-sports-technologies-private-limited-cin-U74999TG2019PTC135453",
+  "evidence": "Netrin Sports Technologies Private Limited, CIN U74999TG2019PTC135453, incorporated 16 September 2019, Registrar of Companies Hyderabad.",
+  "confidence": "medium",
+  "caveat": "This is an INCORPORATION date, not a stated founding; the underlying physiological-monitoring research at IIT Madras predates it by about seven years. SCOPE: a sports and human-performance company (Conqur), with no neuro product. The CIN encodes Telangana, so the index’s Chennai location is doubtful."
+ },
+ {
+  "name": "Mila",
+  "year": 2018,
+  "kind": "accelerator",
+  "url": "https://impulsion.villa-m.fr/presentation-de-la-startup-mila/",
+  "evidence": "\"L’entreprise Mila a été créée en 2018.\"",
+  "confidence": "medium",
+  "caveat": "From an accelerator profile rather than the company’s own site or a registry. This is the Paris École Polytechnique startup behind Mila-Learn, a CE-marked rhythm-game medical device for dyslexia — NOT Mila Quebec, the Montreal AI institute."
+ },
+ {
+  "name": "AddBrain Inc",
+  "year": 2018,
+  "kind": "registry",
+  "url": "https://www.canadacompanyregistry.com/companies/addbrain-inc/",
+  "evidence": "Non-distributing corporation with 50 or fewer shareholders, 6020 Vine St Suite 322, Vancouver BC, registered 25 May 2018.",
+  "confidence": "medium",
+  "caveat": "An INCORPORATION date, not a stated founding. addbrain.ca 301-redirects to brainheals.org, which carries AddBrain’s content but states no year."
+ },
+ {
+  "name": "Medtronic",
+  "year": 1949,
+  "kind": "company_site",
+  "url": "https://www.medtronic.com/en-us/our-company/history.html",
+  "evidence": "On 29 April 1949 Earl Bakken and his brother-in-law Palmer Hermundslie formed a business partnership named Medtronic in a converted boxcar garage in Minneapolis; the first month’s revenue was eight dollars for repairing a centrifuge.",
+  "confidence": "high",
+  "caveat": "The index records medina-medical.com as this row’s website — Medina Medical was a neurovascular startup Medtronic ACQUIRED in 2015. The correct domain is medtronic.com. The index also holds separate \"Medtronic Vascular\" and \"Medtronicdbs\" rows."
+ },
+ {
+  "name": "AppliedVR",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.startupguide.com/appliedvr",
+  "evidence": "\"Founded in 2015, AppliedVR is developing a digital health platform that utilizes therapeutic virtual reality to treat chronic- and acute-pain patients.\"",
+  "confidence": "high",
+  "caveat": "2015 is the founding, not the 2016 Techstars Cedars-Sinai cohort. Spun out of market-research firm LRW by David Sackman, Matthew Stoudt and Josh Sackman."
+ },
+ {
+  "name": "Alpha Omega",
+  "year": 1993,
+  "kind": "press",
+  "url": "https://iparks.co.il/en/success_stories/alpha-omega/",
+  "evidence": "Founded in 1993 as a small engineering office in Nazareth by Imad Younis, initially a sub-contractor in medical device design, later specialising in brain surgery products.",
+  "confidence": "high",
+  "caveat": "The index records \"Guangzhou, China\"; the company is headquartered in Nazareth Industrial Park, Israel. The China association is most likely back-derived from a Chinese joint venture, which is not a headquarters."
+ },
+ {
+  "name": "Vagustim",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://vagustim.io/pages/about-us",
+  "evidence": "\"Medical Doctor Ali Veysel Özden and Engineer Ali Can Erk joined forces in 2017 to develop the first prototype.\"",
+  "confidence": "medium",
+  "caveat": "The about page never says \"founded in\". 2017 is a prototype milestone, the closest thing to a founding event stated; 2015 is idea-origin, 2018 a contest final and 2019 the first investment, none of which were used. The index records San Francisco; Vagustim is Turkish, at İTÜ AR I Teknokent, Istanbul."
+ },
+ {
+  "name": "Quincy Bioscience",
+  "year": 2004,
+  "kind": "press",
+  "url": "https://isthmus.com/news/news/clear-cut-fraud/",
+  "evidence": "\"Quincy was founded in Madison in 2004 by Mark Underwood, Quincy’s president, and Michael Beaman, its chief executive officer.\"",
+  "confidence": "high",
+  "caveat": "SCOPE: a jellyfish-protein (apoaequorin) dietary supplement, Prevagen — no device, no neural interface. In 2017 the FTC and the New York Attorney General sued over advertising claims, alleging the Madison Memory Study failed to show a statistically significant improvement over placebo on any of nine cognitive tasks."
+ },
+ {
+  "name": "Perflow Medical",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://en.globes.co.il/en/article-chinese-fund-buys-perflow-medical-for-100m-1001397403",
+  "evidence": "\"The company was founded in 2014 in the RAD Biomed Incubator by CEO Danny Farin\" — co-founders Dr Eyal Orion, Gilad Cibulski and Avi Rappaport.",
+  "confidence": "medium",
+  "conflict": "PitchBook, Dealroom and CB Insights report 2010; Globes reports 2014 with named founders and a named incubator. The entity may have existed in the incubator from 2010 and been formally constituted in 2014.",
+  "caveat": "Acquired by a Chinese private equity firm for about $100M, announced January 2022. Both perflow.com and perflowmedical.com present a certificate for vps50022.secured-cloud2.net, so no company-controlled page could be read."
+ },
+ {
+  "name": "Progeny Software",
+  "year": 1996,
+  "kind": "aggregator",
+  "url": "https://mergr.com/company/progeny-software",
+  "evidence": "Mergr lists Progeny Software as established 1996 and acquired by Ambry Genetics Corp on 2015-04-01.",
+  "confidence": "medium",
+  "caveat": "The only corroboration on the company’s own site is a footer copyright range, which is not a source. SCOPE: genetic pedigree drawing and hereditary cancer risk software, nothing nervous-system-specific; now an Ambry subsidiary trading as Progeny Genetics, LLC."
+ },
+ {
+  "name": "Thompson SCI",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://gust.com/companies/thompson_sci",
+  "evidence": "Gust profile: Thompson SCI, Salem, New Hampshire, \"Founded: March 2012\", medical devices, 4 employees.",
+  "confidence": "low",
+  "caveat": "A single self-reported startup profile is the only source carrying a year — no registry, news or company-site corroboration. thompsonsci.com fails its TLS handshake, so the company appears dormant. Salem is in New Hampshire, not Massachusetts or Oregon."
+ },
+ {
+  "name": "Guiding Technologies",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://www.inknowvation.com/sbir/companies/guiding-technologies-corporation",
+  "evidence": "inKnowVation SBIR record for Guiding Technologies Corporation, Philadelphia PA: \"Founded: 2013\"; first SBIR award 2015.",
+  "confidence": "medium",
+  "conflict": "Several sources imply a 2014-2015 origin, the NSF SBIR Phase I having been awarded in January 2015. Neither the company’s own site nor Temple University nor Ben Franklin Technology Partners states a founding year.",
+  "caveat": "SCOPE: GAINS is tablet software for managing Applied Behavior Analysis instruction — behavioural-therapy workflow, no neural recording or stimulation. The product launched 2017; that year must not leak in as the founding."
+ },
+ {
+  "name": "Neuro Tinker",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://hackaday.io/project/3339-neurobytes",
+  "evidence": "Project page written by the founders: \"Joe and Zach formed NeuroTinker, LLC to commercialize the concept on 4/15/2015.\"",
+  "confidence": "medium",
+  "caveat": "The source is the founders’ own Hackaday project page rather than a company site. The PROJECT began mid-2012 with hardware development from February 2014; neither is the company. SCOPE: NeuroBytes are educational electronic neuron-simulator kits for classrooms."
+ },
+ {
+  "name": "Taka Apps",
+  "year": 2017,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/SC584099",
+  "evidence": "TAKA APPS LTD, company number SC584099, incorporated 19 December 2017, 2/2 East Broughton Place, Edinburgh EH1 3RP, SIC 72190.",
+  "confidence": "medium",
+  "caveat": "An INCORPORATION date; no independent statement of when the founders began. The company was DISSOLVED on 26 March 2019, having existed about fifteen months. The name collides with several unrelated consumer apps called Taka."
+ },
+ {
+  "name": "Thervoyant",
+  "year": 2011,
+  "kind": "university",
+  "url": "https://news.wisc.edu/mr-guidance-next-frontier-in-hemorrhagic-stroke/",
+  "evidence": "\"Block and Alexander founded a UW–Madison startup called InseRT MRI in 2011, with the goal of guiding drug placements in the brain with MRI, under a license to a patent held by WARF.\"",
+  "confidence": "high",
+  "caveat": "The legal entity is InseRT MRI, Inc.; \"TherVoyant\" is a later trading name, so 2011 is the founding of the business behind the name rather than of a separate company."
+ },
+ {
+  "name": "Gradient Labs s.r.o.",
+  "year": 2016,
+  "kind": "registry",
+  "url": "https://rejstrik-firem.kurzy.cz/04816358/",
+  "evidence": "Czech commercial register mirror: Gradient Labs s.r.o., IČO 04816358, date of registration 18 February 2016; no name change recorded.",
+  "confidence": "medium",
+  "conflict": "Firmy.cz lists the Brno company under IČO 13094450 while rendering IČO 04816358 in the page body; whether there are two Gradient Labs entities in Brno could not be resolved, and 13094450 would imply a 2022 registration.",
+  "caveat": "This is NOT the London AI customer-support company at gradientlabs.io. The index URL is a product page (SunBall) rather than the company."
+ },
+ {
+  "name": "Brain Navi Biotechnology",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/brain-navi-achieves-us-fda-approval-for-neurosurgical-robot-naotrac-302483510.html",
+  "evidence": "\"Brain Navi Biotechnology, a medical robotics company founded in 2015 in Taiwan...\"",
+  "confidence": "high",
+  "caveat": "The company’s own about page failed over TLS, so the year rests on a company-issued press release rather than the site itself; several independent outlets repeat 2015."
+ },
+ {
+  "name": "Qubiotech",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://www.qubiotech.com/en/about-us/",
+  "evidence": "\"The company was founded in December 2014, from the transfer of an image quantification algorithm by Positron Emission Tomography (PET), developed by the Nuclear Medicine and Molecular Imaging Research Group of the Health Research Institute Foundation from Santiago de Compostela, Spain.\"",
+  "confidence": "high"
+ },
+ {
+  "name": "Javelin Medical",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://app.dealroom.co/companies/javelin_medical",
+  "evidence": "Dealroom, Tracxn and Crunchbase all give founding year 2012, founder Guy Shinar.",
+  "confidence": "medium",
+  "caveat": "Aggregator-only — no primary or news source states it, so back-derivation from an early funding round cannot be ruled out. The index records Estero, USA; Dun & Bradstreet and the company’s own site place it at 27 Ha-Kidma St, Yokneam Illit, Israel. SCOPE: Vine is a permanent CAROTID filter intercepting emboli in atrial fibrillation — a cardiovascular device with a stroke endpoint, not a neural interface."
+ },
+ {
+  "name": "Innoria Kft.",
+  "year": 2017,
+  "kind": "registry",
+  "url": "https://www.nemzeticegtar.hu/innoria-kft-c0109304074.html",
+  "evidence": "Nemzeti Cégtár gives founding year 2017 for Innoria Kft., company number Cg. 01-09-304074.",
+  "confidence": "medium",
+  "caveat": "The registry page itself warns that no current valid data is held, so the year comes from the aggregator summary rather than a live filing. The company is listed as \"v. a.\" — under voluntary liquidation. The 01 prefix is Budapest, not Debrecen as the index records."
+ },
+ {
+  "name": "ARM",
+  "year": 1990,
+  "kind": "company_site",
+  "url": "https://newsroom.arm.com/blog/arm-official-history",
+  "evidence": "\"Arm was officially founded as a company in November 1990 as Advanced RISC Machines Ltd, which was a joint venture between Acorn Computers, Apple Computer (now Apple Inc.), and VLSI Technology (now NXP Semiconductors N.V).\"",
+  "confidence": "high",
+  "caveat": "SCOPE: Arm Holdings plc is the Cambridge semiconductor IP licensing company behind the ARM instruction set. It makes no device, no neural interface and no clinical product. Note the ancestry trap: the ARM architecture dates to Acorn’s ARM1 in 1985, five years before the company existed."
+ },
+ {
+  "name": "NeuroDiagnostic Devices",
+  "year": 2006,
+  "kind": "press",
+  "url": "https://www.biospace.com/article/releases/neuro-diagnostic-devices-neurodx-names-industry-veteran-b-frederick-fritz-b-as-ceo-and-president-/",
+  "evidence": "A release dated 18 December 2006 announces \"Neuro Diagnostic Devices (NeuroDx)... a medical device company developing innovative products to address unmet needs in the neurosurgical market\", naming Frederick Fritz CEO — so the entity existed by end of 2006.",
+  "confidence": "low",
+  "conflict": "Crunchbase and secondary write-ups say founded 2008 by Fred Fritz and Dr Marek Swoboda, but the company was already operating publicly under the NeuroDx name in December 2006. A plausible reconciliation: the original Philadelphia entity dates to about 2005-2006, founded on neurosurgeon Dr Samuel Neff’s invention, and a successor entity, NeuroDx Development LLC, was formed about 2008 on spin-out from the University City Science Center.",
+  "caveat": "The legal entity per SBIR.gov is NeuroDx Development LLC of Yardley, Pennsylvania; the index’s Princeton NJ address was its circa-2011 office."
+ },
+ {
+  "name": "Bionic Sight",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://www.bionic-vision.org/companies/bionic-sight",
+  "evidence": "Listed as \"2013 – present\", headquarters New York City, NY.",
+  "confidence": "medium",
+  "caveat": "No primary source: the company’s own about page names founder Sheila Nirenberg of Weill Cornell but gives no year or address. bionic-vision.org is a curated academic resource rather than a commercial aggregator, but still not primary. The index’s location looks wrong — Gainesville FL is almost certainly the clinical trial site."
+ },
+ {
+  "name": "Quell",
+  "year": 1996,
+  "kind": "press",
+  "url": "https://www.neurotechreports.com/pages/neurometrixprofile.html",
+  "evidence": "\"The company, founded in 1996 by Shai N. Gozani as a spin-off from the Harvard-M.I.T. Division of Health Sciences and Technology, manufactures a new class of non-invasive products for point-of-care testing of neuromuscular disorders.\"",
+  "confidence": "high",
+  "caveat": "Quell is a PRODUCT — a wearable TENS device for chronic pain. The company is NeuroMetrix, Inc. of Waltham MA, founded June 1996, and since 2 May 2025 a wholly-owned subsidiary of electroCore, Inc. The year belongs to NeuroMetrix, not to the product."
+ },
+ {
+  "name": "AURA",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://startupxplore.com/en/startups/aura-robotix",
+  "evidence": "Founded August 2015, 28045 Madrid, Spain; \"Medical robotic solutions that are efficient, straightforward and doctor-friendly.\"",
+  "confidence": "medium",
+  "caveat": "aurarobotix.com returned HTTP 403, so the year could not be checked against the company itself and rests on startup directories. Legal name AURA Innovative Robotics S.L., a Universidad Politécnica de Madrid spin-off; its OSCANN product is videooculography for early diagnosis of neurological disorders, so despite the generic name it is in scope."
+ },
+ {
+  "name": "Entertech (回车科技)",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/hangzhou-enter-electronic-technology-co-ltd",
+  "evidence": "\"Established in 2014, Entertech is a technological innovation company dedicated to acquisition, analysis, and application of brainwaves combined with other physiological signals.\"",
+  "confidence": "medium",
+  "caveat": "The year is not on the company’s own site — entertech.cn/en/about.html states none. The \"Established in 2014\" wording appears verbatim across aggregators, suggesting company-supplied boilerplate: reassuring but still second-hand. Legal name Hangzhou Enter Electronic Technology Co., Ltd."
+ },
+ {
+  "name": "BKIN Technologies",
+  "year": 2004,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/KINARM",
+  "evidence": "\"The KINARM Exoskeleton was commercialized in 2004 when BKIN Technologies was founded by Dr. Scott and Dr. Ian Brown with the assistance of PARTEQ Innovations.\"",
+  "confidence": "high",
+  "caveat": "The underlying KINARM exoskeleton was developed by Stephen Scott at Queen’s University’s Centre for Neuroscience Studies in 1999; that is the invention date, not the company. The company now does business as Kinarm (kinarm.com), so the index name is the older legal one."
+ },
+ {
+  "name": "Ogenblik",
+  "year": 2014,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09181146",
+  "evidence": "OGENBLIK LTD, company no. 09181146, incorporated on 19 August 2014; status dissolved on 20 May 2025.",
+  "confidence": "medium",
+  "caveat": "An INCORPORATION date used as a proxy — no independent founding statement was found. The registered office is Saffron Walden, Essex, not London as the index records. ogenblikltd.com 301-redirects to olitool.com, which returns 404."
+ },
+ {
+  "name": "MED-ALLY",
+  "year": 2011,
+  "kind": "company_site",
+  "url": "https://med-ally.com/about/",
+  "evidence": "\"In 2011, following a recapitalization at their previous employer, Raja Hitti and John Mulvihill decided to pursue new business ventures to address an unmet need in the Bioelectronic Active Implantable Medical Device arena.\"",
+  "confidence": "high",
+  "caveat": "The 2018 South Carolina Governor’s announcement of a new Berkeley County facility is an EXPANSION, not a founding."
+ },
+ {
+  "name": "Natus",
+  "year": 1987,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/878526/000087852621000020/ntus-20201231.htm",
+  "evidence": "Natus 10-K: incorporated in California in May 1987; reincorporated in Delaware in August 2000.",
+  "confidence": "high",
+  "caveat": "The corporate site’s \"for more than 80 years\" line is ACQUIRED-BRAND heritage (Grass, Nicolet, Bio-logic) rather than Natus’s own age, and was not used. Taken private by ArchiMed in 2022 at $33.50 a share, so no longer Nasdaq-listed; headquarters have moved to Middleton, Wisconsin, so the index’s San Carlos is stale."
+ },
+ {
+  "name": "Intendu",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://nocamels.com/2017/11/israeli-braintech-revolutionizing-rehab/",
+  "evidence": "\"an Israel-based healthcare startup co-founded in 2012 by Preminger with a mission to improve cognitive rehabilitation of people with brain dysfunction.\"",
+  "confidence": "medium",
+  "caveat": "intendu.com still serves a full site but carries mismatched \"© Copyright 2020\" and \"© 2021 Intendu\" footers, which were not used as a year signal; current trading status could not be confirmed and the content looks stale."
+ },
+ {
+  "name": "Open Mind Neurotechnologies",
+  "year": 2016,
+  "kind": "company_site",
+  "url": "https://www.omind.me/en",
+  "evidence": "The company’s own site states it was founded in 2016.",
+  "confidence": "medium",
+  "caveat": "Now branded Omind; the earlier or legal name appears as Open Mind Innovation, French SIREN 818971111, a number in the 2016 range. The French registry could not be loaded to confirm. SCOPE: the current positioning is corporate leadership and soft-skills training grounded in neuroscience, not neurotechnology development."
+ },
+ {
+  "name": "Epitrack",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/epitrack",
+  "evidence": "Founded 2013 (given as 20 July 2013) by Onício Leal Neto and Jones Albuquerque, Recife, Brazil.",
+  "confidence": "medium",
+  "caveat": "Aggregator-only; the Brazilian press coverage gives no founding date. NAME COLLISION: this Epitrack does participatory epidemiological surveillance, a Fiocruz spin-off — it is not an epilepsy company. \"EpiTrack\" is separately the name of a German neuropsychological attention test used in epilepsy, which is most likely why the row entered a neurotech index. epitrack.com.br does not resolve."
+ },
+ {
+  "name": "Bioseb",
+  "year": 1993,
+  "kind": "company_site",
+  "url": "https://www.bioseb.com/en/content/14-our-story",
+  "evidence": "\"Since 1993, Bioseb has a long tradition of leadership and innovation in the field of in-vivo research instruments\"; the same history records that in 1996 Bioseb was acquired by Jacques Desevré.",
+  "confidence": "medium",
+  "conflict": "The company’s own history dates the business to 1993, but the current French legal entity, SIREN 528242787 of Vitrolles, was registered in 2010 — a re-registration of an older business. 1993 is the business; 2010 is the registered company.",
+  "caveat": "Neither the history page nor the French registry could be opened directly (403 and empty), so both figures come from search snippets. SCOPE: preclinical in-vivo instruments for rodents — grip strength meters, von Frey pain-threshold devices, tail suspension automation — not human neurotechnology."
+ },
+ {
+  "name": "NeuroLux",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.neurolux.org/company-history/",
+  "evidence": "\"Although NeuroLux was founded in 2015, the core technology represents the outcome of a development effort that began in the spring of 2011...\"",
+  "confidence": "high",
+  "caveat": "The company’s own page deliberately separates the founding from the underlying research effort. The .org domain is a choice, not a nonprofit signal. SCOPE: preclinical rodent instrumentation — wireless optogenetics hardware out of John Rogers’ Northwestern work — rather than human neurotech."
+ },
+ {
+  "name": "Cogito Corporation",
+  "year": 2007,
+  "kind": "university",
+  "url": "https://news.mit.edu/2016/startup-cogito-voice-analytics-call-centers-ptsd-0120",
+  "evidence": "\"Cogito was launched in 2007, when Feast, then a student at the MIT Sloan School of Management, took a class with Pentland.\"",
+  "confidence": "high",
+  "caveat": "SCOPE: real-time acoustic and linguistic voice analytics for contact-centre agent coaching, out of MIT Media Lab \"honest signals\" research — behavioural signal processing, not neurotechnology. Acquired by Verint Systems, closing 11 October 2024 for about $61.4M; cogitocorp.com now 301-redirects to verint.com/cogito."
+ },
+ {
+  "name": "CortexLabs",
+  "year": 2011,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/cortexlabs/__95KAv8pIEwtoQA8u9vkLzo0mu0M-4owqAPpWkFG8Vbk",
+  "evidence": "\"CortexLabs is an unfunded company based in North Melbourne (Australia), founded in 2011.\"",
+  "confidence": "medium",
+  "caveat": "Independently consistent with the company’s own blog, whose entire post history runs July to September 2011 — which is also evidence it has been dormant since. cortexlabs.com.au returns HTTP 500. Search summaries state it was founded BY Atcomm Enterprises as a separate company, which would make it a spin-out of a parent rather than an independent founding; that could not be verified. Not to be confused with Cortical Labs, the unrelated Melbourne DishBrain company."
+ },
+ {
+  "name": "Bpaus",
+  "year": 2019,
+  "kind": "aggregator",
+  "url": "https://finder.startupnationcentral.org/company_page/bpaus",
+  "evidence": "Startup Nation Finder profile: founded February 2019, founders Yuri Tselicov and Evgeny Borovsky.",
+  "confidence": "medium",
+  "caveat": "Startup Nation Central returned 403 to direct fetch, so the year comes from the indexed summary; Crunchbase and PitchBook carry the same February 2019. SCOPE: clinical practice-management and assessment software for autism diagnosis and therapy tracking, sold to clinics — health SaaS, not neurotechnology."
+ },
+ {
+  "name": "CogSci Apps Corp.",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://cogzest.com/about/founder/",
+  "evidence": "\"In 2014, I also spun-off some of CogZest’s intellectual property portfolio to a new startup co-founded by Brian Shi and myself, CogSci Apps Corp.\"",
+  "confidence": "high",
+  "caveat": "A first-person statement by co-founder Luc P. Beaudoin on the parent company’s own site. SCOPE: consumer software — Hook/Hookmark, a macOS productivity tool, and mySleepButton, a \"cognitive shuffle\" audio app. No sensing, stimulation or neural data anywhere in the product line."
  }
 ]
