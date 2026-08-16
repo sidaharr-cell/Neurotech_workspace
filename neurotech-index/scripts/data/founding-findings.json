@@ -227,5 +227,22 @@
   "url": "https://gust.com/companies/avalon-ai",
   "evidence": "Gust startup profile gives 2015; London; ML on brain MRI to predict MCI-to-dementia progression, trained on 70,000 scans via Cambridge, Donders and Imperial partnerships",
   "confidence": "medium"
+ },
+ {
+  "name": "ATENTIVmynd",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/atentivmynd/__Kg-yRiwJrWERWA9wT2lD7irTgNYnrAhwjwCxIA7U9TI",
+  "evidence": "Tracxn gives 2012, founded by Eric Gordon; EEG headband and game that trains attention in children with ADHD; covered by Crains New York (2013), Boston Magazine (2016) and MassDevelopment",
+  "confidence": "medium"
+ },
+ {
+  "name": "Cerebian",
+  "year": 2008,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/cerebian/__DtqT4qfTd2RtyzrUbKbroKBsL_0DdmycN6jG9LakEzk",
+  "evidence": "Tracxn gives 2008, founders Kareem Ayyad and Sima Hoseingholizade; BrainOS neural interface; named a 2018 Ontario Brain Institute ONtrepreneur",
+  "confidence": "low",
+  "conflict": "A 2008 founding sits oddly with the company first appearing in Ontario Brain Institute programmes in 2018. Aggregator-only."
  }
 ]

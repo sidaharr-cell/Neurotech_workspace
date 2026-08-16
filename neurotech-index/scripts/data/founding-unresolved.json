@@ -88,5 +88,47 @@
   "verdict": "duplicate of Onward Medical under a former name",
   "note": "G-Therapeutics SA (Lausanne) was renamed GTX Medical and then ONWARD Medical (Eindhoven) in 2020. Both rows describe implantable spinal cord stimulation for SCI rehabilitation. They are one company, and audit-duplicate-orgs.js CANNOT find this: it matches on normalised names, and a rename shares no letters. Found only because a verifier noted that Onward was founded under the G-Therapeutics name. Left in place; merging two rows is a decision about which /company/:id stops working.",
   "url": "https://eqtgroup.com/thinq/healthcare/meet-onward-medical-giving-hope-to-people-with-spinal-cord-injuries"
+ },
+ {
+  "name": "Bellabee",
+  "verdict": "no year found",
+  "note": "Wearable neurofeedback headband. No source states a founding year; results are dominated by Bellabeat, a different company (women health tracker) with a near-identical name. Our record says Austin; product pages point to bellabee.pro.",
+  "url": "https://www.bellabee.pro/"
+ },
+ {
+  "name": "Membean",
+  "verdict": "scope question",
+  "note": "Vocabulary learning software for schools (durable learning). No product interfacing with, measuring or modulating the nervous system. Fails INCLUSION_RULE on its face; not searched for a year.",
+  "url": "http://membean.com"
+ },
+ {
+  "name": "Skoolbo Pte Ltd",
+  "verdict": "scope question",
+  "note": "Childrens literacy and numeracy learning games. Not neurotechnology under INCLUSION_RULE; not searched for a year.",
+  "url": "https://www.skoolbo.com/"
+ },
+ {
+  "name": "Mindsail",
+  "verdict": "scope question",
+  "note": "Wellness app with on-demand programmes. No nervous-system interface; fails INCLUSION_RULE on its face.",
+  "url": "http://www.themindsail.com"
+ },
+ {
+  "name": "SuperBetter",
+  "verdict": "scope question",
+  "note": "Digital wellbeing gamification. No nervous-system interface; fails INCLUSION_RULE on its face.",
+  "url": "https://www.superbetter.com"
+ },
+ {
+  "name": "Mentalico",
+  "verdict": "scope question",
+  "note": "Online psychotherapy and life-improvement platform — a service marketplace, not a product interfacing with the nervous system. Its stored website also redirected to a domain-parking host in an earlier sweep.",
+  "url": "https://www.mentalico.com/"
+ },
+ {
+  "name": "Sensory Innovation Solutions",
+  "verdict": "cannot search",
+  "note": "Stored website is the literal string https://N/A, so there is no site to check and the name is too generic to search reliably. The bad website value is itself worth fixing.",
+  "url": null
  }
 ]
