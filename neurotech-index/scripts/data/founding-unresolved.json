@@ -178,5 +178,53 @@
   "verdict": "scope question",
   "note": "Measures the nervous system via polysomnography and ambulatory EEG, but operates as a diagnostic service and sleep-lab network rather than a technology developer.",
   "url": "http://www.sleepmedinc.com/"
+ },
+ {
+  "name": "Biotic",
+  "verdict": "NOT A COMPANY",
+  "note": "BIOTIC is the BIOmedical Translational Imaging Centre, a hospital and university research facility embedded in the IWK and QEII Health Sciences Centre and listed by the Canada Foundation for Innovation under Dalhousie University. No founding year appears on any archived page or brochure; the widely repeated 2013 could not be traced to any actual source. Should probably leave the index.",
+  "url": "https://bioticimaging.ca/"
+ },
+ {
+  "name": "MyLeg",
+  "verdict": "NOT A COMPANY - EU research project",
+  "note": "MyLeg is EU Horizon 2020 grant agreement 780871, coordinated by Rijksuniversiteit Groningen, running 1 Jan 2018 to 28 Feb 2023 with Bologna, Twente, Roessingh, Radboud UMC and Ossur. The 2018 date is a PROJECT START and must not be recorded as a founding year. The underlying implantable myoelectric sensor work would otherwise qualify.",
+  "url": "https://cordis.europa.eu/project/id/780871"
+ },
+ {
+  "name": "Mind Layer",
+  "verdict": "cannot verify the company exists",
+  "note": "Every archived capture (Mar 2021 to Jul 2022) is a JavaScript-only React shell whose entire body is a noscript message, and the Archive never captured the JS, so there is no About text to read. No press, register or institutional source for a biomedical-data-analysis Mind Layer could be found. The domain today serves an unrelated Korean parenting blog. Beware namesakes: MindLayer Ltd Hong Kong, mindlayer.io, Mind Layers AI.",
+  "url": "https://mind-layer.com/"
+ },
+ {
+  "name": "NeuroCrowd",
+  "verdict": "no year, and the location is wrong",
+  "note": "The only substantive archived capture (Apr 2014) describes an EEG, eye-tracking and facial-recognition neuromarketing panel but states no founding year. It gives a MEXICO CITY address (WTC Mexico DF), contradicting the Houston location in our index. The site was a parking page by 2018 and the company is almost certainly defunct. Domain created 2013-08-22, which is registration not founding.",
+  "url": "http://www.neurocrowd.com"
+ },
+ {
+  "name": "FK Biotecnologia",
+  "verdict": "scope question",
+  "note": "Autologous cancer immunotherapy and human immunodiagnostics — a drug developer with no nervous-system interface. Year written regardless.",
+  "url": "http://www.fkbiotec.com.br/"
+ },
+ {
+  "name": "Woebot",
+  "verdict": "scope question",
+  "note": "CBT text chatbot with no physiological sensing, only self-reported mood check-ins. It pursued FDA prescription-digital-therapeutic pathways, but that is regulatory status rather than a nervous-system interface.",
+  "url": "https://woebot.io/"
+ },
+ {
+  "name": "Humachina",
+  "verdict": "aggregator-only, and a scope question",
+  "note": "Lucidity Insights and PitchBook both give 2017; the company own site states no year. A 2018 MIT Solve application says the organisation had been operating one to two years, consistent but not a stated year. SCOPE: AI career-coaching and personalised-learning platform, no nervous-system measurement.",
+  "url": "https://www.humachina.ai"
+ },
+ {
+  "name": "Optimal Medical Therapies",
+  "verdict": "scope question",
+  "note": "Home infusion therapy provider and pump supplier, part of VitalAire/Air Liquide. The only neuro-adjacent item is a discontinued RF electrode and generator for pain. Year written regardless.",
+  "url": "https://www.omtmed.com/"
  }
 ]
