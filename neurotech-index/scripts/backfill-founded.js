@@ -282,7 +282,7 @@ async function run() {
     const rows = []
     for (let from = 0; ; from += 500) {
       const { data, error: e } = await sb.from('organizations').select(cols)
-        .eq('type', 'company').order('name').range(from, from + 499)
+        .eq('type', 'company').order('name').order('id').range(from, from + 499)
       if (e) return { error: e }
       rows.push(...data)
       if (data.length < 500) return { rows }

@@ -26,7 +26,12 @@ async function run() {
   for (let from = 0; ; from += 500) {
     const { data, error } = await sb.from('organizations')
       .select('id,name,description,website,rank_score,total_raised_usd,age_year')
-      .eq('type', 'company').order('rank_score', { ascending: false }).range(from, from + 499)
+      .eq('type', 'company')
+      // id breaks ties: rank_score is not unique, and a paginated read ordered
+      // only by it shuffles between pages — 23 rows were read twice and 23 were
+      // never read at all.
+      .order('rank_score', { ascending: false }).order('id')
+      .range(from, from + 499)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     rows.push(...data)
     if (data.length < 500) break
