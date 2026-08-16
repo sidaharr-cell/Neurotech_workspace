@@ -116,11 +116,22 @@ const SINCE_NOT_ABOUT_COMPANY =
  * small device companies use, and the phrase is recorded alongside the year so a
  * person can audit what was believed.
  */
+/**
+ * A month, or a day and a month, sitting between "in" and the year.
+ *
+ * "NEOFECT was founded in June 2010" is a founding sentence and the first
+ * version of these patterns could not read it, because it expected the year to
+ * follow "in" directly. That sentence was sitting in our own stored description
+ * the whole time.
+ */
+const MONTH = '(?:(?:the\\s+)?\\d{1,2}(?:st|nd|rd|th)?\\s+)?(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\\s+(?:of\\s+)?'
+const IN_YEAR = `(?:${MONTH})?((?:19|20)\\d{2})`
+
 const CLAIMS = [
-  { kind: 'founded', re: /\b(?:was\s+)?founded\s+in\s+((?:19|20)\d{2})/i },
+  { kind: 'founded', re: new RegExp(`\\b(?:was\\s+)?founded\\s+in\\s+${IN_YEAR}`, 'i') },
   { kind: 'founded', re: /\bfounded[:\s]+((?:19|20)\d{2})\b/i },
-  { kind: 'established', re: /\bestablished\s+in\s+((?:19|20)\d{2})/i },
-  { kind: 'started', re: /\b(?:we\s+)?(?:started|began)\s+(?:out\s+)?in\s+((?:19|20)\d{2})/i },
+  { kind: 'established', re: new RegExp(`\\bestablished\\s+in\\s+${IN_YEAR}`, 'i') },
+  { kind: 'started', re: new RegExp(`\\b(?:we\\s+)?(?:started|began)\\s+(?:out\\s+)?in\\s+${IN_YEAR}`, 'i') },
   { kind: 'spun_out', re: /\bspun?\s*-?\s*(?:out|off)\s+(?:of|from)[^.]{0,80}?\bin\s+((?:19|20)\d{2})/i },
   { kind: 'since', re: /\bsince\s+((?:19|20)\d{2})\b/i, guard: true },
 ]

@@ -314,3 +314,31 @@ describe('mentionsCompany: a company talking about itself', () => {
     expect(mentionsCompany('Acme since 1998', 'Acme Neuro', 'Dr Smith has practised ')).toBe(false)
   })
 })
+
+describe('a month between "in" and the year', () => {
+  /**
+   * "NEOFECT was founded in June 2010 by Hoyoung Ban and Scott Kim" was sitting
+   * in our own stored description and the extractor could not read it, because
+   * the pattern expected the year to follow "in" directly.
+   */
+  it('reads a founding sentence that names the month', () => {
+    expect(year('NEOFECT was founded in June 2010 by Hoyoung Ban and Scott Kim, two students', NOW)).toBe(2010)
+    expect(year('The company was founded in March 2015 in Boston.')).toBe(2015)
+    expect(year('Established in September 2004 as a spin-off.')).toBe(2004)
+    expect(year('We started in Jan 2019 with three engineers.')).toBe(2019)
+  })
+
+  it('reads a full date', () => {
+    expect(year('Acme was founded in 3rd April 2012 in Leeds.')).toBe(2012)
+    expect(year('Founded in May of 2008.')).toBe(2008)
+  })
+
+  it('still reads the bare form', () => {
+    expect(year('Acme was founded in 2015.')).toBe(2015)
+  })
+
+  /** The month must not become a way in for an unrelated year. */
+  it('does not reach across a sentence to find a year', () => {
+    expect(year('Acme was founded in Boston. The building dates from 1890.')).toBe(null)
+  })
+})
