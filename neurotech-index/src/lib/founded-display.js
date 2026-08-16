@@ -45,6 +45,10 @@ export const SOURCE_CLASS = {
   // companies_house because that label reads "UK register", and three companies
   // were briefly credited to Britain on the strength of Swiss and Indian records.
   registry: { label: 'company register', weak: false },
+  // A regulatory filing — an SEC 10-K, a Reg CF offering statement. Already the
+  // label used for incorporation years further down; a founding year sourced the
+  // same way deserves the same name.
+  filing: { label: 'filing', weak: false },
   company_site: { label: 'company’s own site', weak: false, selfReported: true },
   aggregator: { label: 'unsourced compilation', weak: true },
   record_description: { label: 'NeuroBase record', weak: true, noLink: true },
