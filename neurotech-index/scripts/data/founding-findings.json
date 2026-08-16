@@ -207,17 +207,18 @@
  {
   "name": "Emotion ID",
   "year": 2014,
-  "kind": "aggregator",
-  "url": "https://www.crunchbase.com/organization/emotion-id",
-  "evidence": "Crunchbase gives 2014; Bratislava; founders Milan Martinkovic and Filip Stano; camera-based emotion detection",
-  "confidence": "medium"
+  "kind": "press",
+  "url": "https://orsr.sk/vypis.asp?ID=313223",
+  "evidence": "Slovak Commercial Register, EMOTION ID s.r.o., ICO 47887231, Bratislava: date of formation 06.09.2014. That is INCORPORATION, and identity with the emotion-detection product is inferred from name, city and address rather than the registered activities.",
+  "confidence": "medium",
+  "conflict": "Registered activities are generic (advertising, consulting, data processing), so the match to the product company is inferred."
  },
  {
   "name": "MicroVention Terumo",
   "year": 1997,
   "kind": "press",
   "url": "https://www.terumoneuro.com/newsroom/press-releases/microvention-celebrates-25-years-in-neuroendovascular-technologies-that",
-  "evidence": "Company press release marking 25 years in neuroendovascular technologies; founded 1997 in Southern California, acquired by Terumo 2006, rebranded Terumo Neuro Sept 2024",
+  "evidence": "Company press release boilerplate: Founded in 1997, MicroVention develops and markets medical devices; a company history page adds it was founded in 1997 by a handful of Associates in Southern California. Independently verified. The 2006 Terumo acquisition and the Sept 2024 Terumo Neuro rebrand are separate events.",
   "confidence": "high"
  },
  {
@@ -225,24 +226,15 @@
   "year": 2015,
   "kind": "aggregator",
   "url": "https://gust.com/companies/avalon-ai",
-  "evidence": "Gust startup profile gives 2015; London; ML on brain MRI to predict MCI-to-dementia progression, trained on 70,000 scans via Cambridge, Donders and Imperial partnerships",
-  "confidence": "medium"
+  "evidence": "Aggregator-only. No primary or institutional source states a year, and UK Companies House has no matching entity. Forbes places the founders pitching at Entrepreneur First demo day in March 2016, consistent with an EF cohort starting late 2015.",
+  "confidence": "low"
  },
  {
   "name": "ATENTIVmynd",
   "year": 2012,
   "kind": "aggregator",
   "url": "https://tracxn.com/d/companies/atentivmynd/__Kg-yRiwJrWERWA9wT2lD7irTgNYnrAhwjwCxIA7U9TI",
-  "evidence": "Tracxn gives 2012, founded by Eric Gordon; EEG headband and game that trains attention in children with ADHD; covered by Crains New York (2013), Boston Magazine (2016) and MassDevelopment",
-  "confidence": "medium"
- },
- {
-  "name": "Cerebian",
-  "year": 2008,
-  "kind": "aggregator",
-  "url": "https://tracxn.com/d/companies/cerebian/__DtqT4qfTd2RtyzrUbKbroKBsL_0DdmycN6jG9LakEzk",
-  "evidence": "Tracxn gives 2008, founders Kareem Ayyad and Sima Hoseingholizade; BrainOS neural interface; named a 2018 Ontario Brain Institute ONtrepreneur",
-  "confidence": "low",
-  "conflict": "A 2008 founding sits oddly with the company first appearing in Ontario Brain Institute programmes in 2018. Aggregator-only."
+  "evidence": "Aggregator-only; no primary source states a founding year. The nearest independent anchor is a product launch, not a founding: ADDitude reports the Atentiv System became publicly available in May 2014. The underlying technology originated at Duke-NUS Singapore, and atentiv.com now redirects to metisminds.com, so a later rebrand may have occurred.",
+  "confidence": "low"
  }
 ]
