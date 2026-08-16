@@ -592,7 +592,22 @@ function withFunding(r) {
 
 /** Server-side paginated search over neurotech companies (organizations,
  *  type='company'), including each company's sourced funding figures. */
-export async function searchCompanies({ query = '', facets = {}, page = 0, pageSize = 20 } = {}) {
+/**
+ * Sorts the companies list offers. `age_year` is the generated column from
+ * migration 022 — coalesce(founded_year, incorporated_year,
+ * incorporated_before_year) — so ordering by it does not silently exclude the
+ * companies whose only date is a registration.
+ */
+export const COMPANY_SORTS = [
+  { id: 'relevance', label: 'Relevance' },
+  { id: 'oldest', label: 'Oldest first' },
+  { id: 'newest', label: 'Newest first' },
+]
+
+export async function searchCompanies({
+  query = '', facets = {}, page = 0, pageSize = 20, sort = 'relevance', foundedBefore = null,
+  foundedAfter = null,
+} = {}) {
   if (!supabase) return { rows: [], total: 0 }
   const term = query.trim().replace(/[(),%]/g, ' ')
   const base = () => {
@@ -601,11 +616,21 @@ export async function searchCompanies({ query = '', facets = {}, page = 0, pageS
     // Companies abstain (many are unclassified) — don't apply the scope gate, or
     // it would hide every company the classifier couldn't tag.
     b = applyFacets(b, facets, true)
+    if (foundedBefore) b = b.lte('age_year', foundedBefore)
+    if (foundedAfter) b = b.gte('age_year', foundedAfter)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
-  // rank_score puts funded companies first, then a stable quality order.
-  let { data, count, error } = await base().order('rank_score', { ascending: false }).order('name')
-  if (error && /rank_score/.test(error.message)) {
+  // An age sort puts companies with no date LAST rather than first, which is
+  // what a null would otherwise do on a descending sort. They are unknown, not
+  // new, and sorting them to the top would say the opposite.
+  const ordered = q => (
+    sort === 'oldest' ? q.order('age_year', { ascending: true, nullsFirst: false }).order('name')
+      : sort === 'newest' ? q.order('age_year', { ascending: false, nullsFirst: false }).order('name')
+        // rank_score puts funded companies first, then a stable quality order.
+        : q.order('rank_score', { ascending: false }).order('name'))
+
+  let { data, count, error } = await ordered(base())
+  if (error && /(rank_score|age_year)/.test(error.message)) {
     ({ data, count, error } = await base().order('name'))
   }
   if (error) { console.warn('searchCompanies error:', error.message); return { rows: [], total: 0 } }

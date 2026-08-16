@@ -7,7 +7,7 @@ import FundingChart, { DEFAULT_FUNDING_FILTERS } from '../components/FundingChar
 import CapitalStageScatter from '../components/CapitalStageScatter'
 import FoundingLine from '../components/FoundingLine'
 import { foundingLine } from '../lib/founded-display'
-import { searchLabs, searchCompanies, getOrgCounts, facetCounts } from '../lib/data'
+import { searchLabs, searchCompanies, getOrgCounts, facetCounts, COMPANY_SORTS } from '../lib/data'
 import { useUrlFacets } from '../lib/useUrlFacets'
 import { fmtMonthYear, getFundingBoard } from '../lib/fundingBoard'
 
@@ -86,6 +86,7 @@ export default function Companies() {
   const [loading, setLoading] = useState(false)
   const [board, setBoard] = useState(null)          // funding rows, shared by both charts
   const [fundingFilters, setFundingFilters] = useState(DEFAULT_FUNDING_FILTERS)
+  const [sort, setSort] = useState('relevance')
   const debounce = useRef(null)
 
   // One query feeds the funding chart and the capital-versus-stage scatter.
@@ -113,7 +114,7 @@ export default function Companies() {
     debounce.current = setTimeout(() => { setQuery(input); setPage(0) }, 350)
     return () => clearTimeout(debounce.current)
   }, [input])
-  useEffect(() => { setPage(0) }, [facets, kind])
+  useEffect(() => { setPage(0) }, [facets, kind, sort])
 
   // Both companies and labs are server-side, paginated queries over the
   // organizations table (type='company' | 'lab').
@@ -121,14 +122,16 @@ export default function Companies() {
     setLoading(true)
     setCounts({})
     const search = kind === 'lab' ? searchLabs : searchCompanies
-    const res = await search({ query, facets, page, pageSize: PAGE_SIZE })
+    const res = kind === 'lab'
+      ? await search({ query, facets, page, pageSize: PAGE_SIZE })
+      : await search({ query, facets, page, pageSize: PAGE_SIZE, sort })
     setResult(res)
     setLoading(false)
     // Companies show graph-derived device/trial counts; labs do not.
     if (kind === 'company' && res.rows.length) {
       getOrgCounts(res.rows.map(r => r.id)).then(setCounts)
     }
-  }, [kind, query, facets, page])
+  }, [kind, query, facets, page, sort])
   useEffect(() => { load() }, [load])
 
   const pages = Math.ceil(result.total / PAGE_SIZE)
@@ -151,6 +154,30 @@ export default function Companies() {
           obeyed and a chart that did not. */}
       <FundingChart board={board} filters={fundingFilters} onFiltersChange={setFundingFilters} />
       <CapitalStageScatter board={board} filters={fundingFilters} />
+
+      {/* Sorting by age is only offered for companies: labs have no founding
+          data and the control would be inert on them. */}
+      {kind === 'company' && (
+        <div className="mb-6">
+          <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Sort</div>
+          <div className="flex flex-wrap items-center gap-2">
+            {COMPANY_SORTS.map(s2 => (
+              <button key={s2.id} onClick={() => setSort(s2.id)} aria-pressed={sort === s2.id}
+                className={`text-[13px] font-sans px-3.5 py-1.5 rounded-full border transition-colors ${
+                  sort === s2.id ? 'bg-ink text-paper border-ink'
+                    : 'bg-paper text-ink-soft border-rule hover:border-ink'}`}>
+                {s2.label}
+              </button>
+            ))}
+            {sort !== 'relevance' && (
+              <span className="text-[12px] font-sans text-muted">
+                By founding year where known, otherwise the year the company was registered.
+                Companies with neither sort last.
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="mb-6">
         <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-2.5">Filter by organization type</div>
