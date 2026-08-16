@@ -580,5 +580,167 @@
   "verdict": "rebrand",
   "note": "myndvr.com redirects to myndimmersive.com; the company now trades as Mynd Immersive. SCOPE: VR sensory content for older adults, therapeutic intent but no neural measurement or modulation.",
   "url": "https://myndimmersive.com"
+ },
+ {
+  "name": "ALS Mobile Analyzer",
+  "verdict": "not a company",
+  "note": "A smartphone app, not a company: self-reported ALSFRS-R plus speech and motor tasks, built by the nonprofit Prize4Life (US 501(c)(3), EIN 20-5055664, founded 2007 by Avi Kremer). The URL in the index is worse than a product page: it is a portfolio case study on the site of Mondeo Studio, the Tel Aviv design agency that did the interface. That page carries a 2019 copyright footer, which is not a founding date. Re-scope to Prize4Life or drop.",
+  "url": "https://en.wikipedia.org/wiki/Prize4Life"
+ },
+ {
+  "name": "Nisensor",
+  "verdict": "dead domain",
+  "note": "nisensor.com and nisensor.net both fail DNS resolution. The only live presence is an unclaimed Webflow staging subdomain. No founding year in any source. The name also collides with NISensors.com (iWorx lab instrumentation) and with NiSensor-1, a nickel fluorescent probe from the chemistry literature. Probably defunct.",
+  "url": "http://nisensor.com"
+ },
+ {
+  "name": "Temari Medical",
+  "verdict": "dead domain",
+  "note": "temarimd.com does not resolve. A cerebral aneurysm device company (Enfold, Divera) spun out of the Adventus Ventures incubator; the only dated source is a May 2018 seed financing release, which is a funding date. Tracxn describes it as not active anymore. Likely 2017-2018 on the incubator timeline, but no source states it.",
+  "url": "https://www.prnewswire.com/news-releases/adventus-ventures-announces-initial-financing-for-several-of-its-medical-device-portfolio-companies-300645421.html"
+ },
+ {
+  "name": "Radar Vision",
+  "verdict": "existence unverified",
+  "note": "radarvision.org fails TLS: the certificate is issued for gloryraks.com, so the domain now points at unrelated parked or resold hosting. The two aggregator descriptions contradict each other, one calling it police computer-vision analytics and the other Bluetooth 5 sensors, and neither is neurotechnology. A Cape Town neurotech entity of this name could not be shown to exist. Candidate for removal.",
+  "url": "http://www.radarvision.org"
+ },
+ {
+  "name": "Mobio Interactive",
+  "verdict": "year unresolved",
+  "note": "Sources give 2014 and 2015, with a LinkedIn-derived profile suggesting a founding advisor role from February 2012. No primary source resolves it and the company site states no year. The entity is Mobio Interactive Inc.; MI Digital Therapeutics is a brand and Am Mindfulness the product. A spin-off of the Vision and Image Processing group at University of Waterloo. SCOPE: software-only stress and mental-health app with no hardware. LOCATION: most current sources place it in Singapore, not Toronto.",
+  "url": "https://vip.uwaterloo.ca/mobio-interactive/"
+ },
+ {
+  "name": "Health Safe Today",
+  "verdict": "incorporation only",
+  "note": "Only an incorporation date exists: 27 Dec 2019, CIN U85100DL2019PTC359430. Three further problems. The domain fails DNS resolution. The registered address is D-1/8 Vasant Vihar, New Delhi, not Mumbai as the index records. And SCOPE: it is a cloud personal medical-records platform called Keypr, with no neurotechnology; the only neuro connection is that founder Dr Suhela Kapoor is a neuroscientist. Candidate for removal.",
+  "url": "https://www.neusourcestartup.com/companies/health-safe-today-private-limited"
+ },
+ {
+  "name": "Ocuspecto Oy",
+  "verdict": "incorporation only",
+  "note": "Finnish trade register records registration on 11 May 2012, business ID 2478157-7 — an incorporation date, not a founding. Oy is the corporate form and Ocusweep is a registered trade name of Ocuspecto Oy, not a separate company, which explains the URL mismatch in the index. ocusweep.com returned an empty body on two attempts. In scope: a neuro-visual function testing device used in glaucoma and driver-fitness screening. Only financials found are from 2020, so trading status is worth a check.",
+  "url": "https://vainu.io/company/ocuspecto-oy-taloustiedot-ja-liikevaihto/241998/yritystiedot"
+ },
+ {
+  "name": "Neurofus",
+  "verdict": "product not company",
+  "note": "NeuroFUS is a product line for low-intensity transcranial focused ultrasound neuromodulation (NeuroFUS PRO, CTX and DPX systems). neurofus.com states it is powered by Sonic Concepts, Inc. of Bothell, Washington, which matches the location in the index. Sonic Concepts was founded in 1989 by George Keilman as an ultrasound transducer consultancy; some databases say 1986. The founding year therefore belongs to a company the index does not name. Re-key this row to Sonic Concepts and the 1989 year can be written.",
+  "url": "https://www.fusfoundation.org/posts/company-profile-sonic-concepts/"
+ },
+ {
+  "name": "Shimojani",
+  "verdict": "scope question",
+  "note": "A preclinical drug company, not neurotech: it licensed an invention from Niigata University to reduce hemorrhagic transformation risk in stroke patients treated with tPA, and is in IND-enabling development. No device, interface or hardware. shimojani.com is a bare WordPress install whose only post is a Hello World dated 28 January 2025. Location is unstable across sources, San Francisco in one and Pray, Montana in another. Existed by February 2013, when it announced the Niigata licence; that is a licensing event, not a founding.",
+  "url": "http://www.shimojani.com/"
+ },
+ {
+  "name": "Mindful Scientific",
+  "verdict": "year unresolved",
+  "note": "The widely repeated 2009 is the year the Halifax Consciousness Scanner was prototyped by Ryan C.N. D'Arcy and Don Weaver — a device milestone bleeding into company records, not a founding. Entrevestor (24 Oct 2014) says only that Tam \"became CEO less than three years ago\", a role start, and arithmetic on it is forbidden. The duplicated path segment in the URL is genuinely how the site was published, but the host repeatedly failed to complete a connection, so it is at best flaky. Co-inventor D'Arcy later founded HealthTech Connex, so watch for related-entity confusion.",
+  "url": "http://mindfulscientific.ca/mindfulscientific.ca/index.html"
+ },
+ {
+  "name": "Cyberonics",
+  "verdict": "renamed",
+  "note": "Year recorded as 1987. The company no longer exists under this name: it merged with Sorin S.p.A. on 19 October 2015 in a $2.7B deal forming LivaNova PLC. The Houston address in the index survives as LivaNova North American operational HQ at 100 Cyberonics Blvd. The index should carry LivaNova as current name with Cyberonics as the historical entity.",
+  "url": "https://www.encyclopedia.com/books/politics-and-business-magazines/cyberonics-inc"
+ },
+ {
+  "name": "Tactx Medical",
+  "verdict": "acquired",
+  "note": "Year recorded as 2003. Creganna acquired the company in January 2010, trading as Creganna-Tactx Medical, and that business was later rolled into TE Connectivity; tactxmed.com is stale. SCOPE: a contract designer and manufacturer of catheters and delivery systems across cardiology, urology, GI and optometry, with neurology one market among many.",
+  "url": "https://pitchbook.com/profiles/company/42809-95"
+ },
+ {
+  "name": "Concrn",
+  "verdict": "scope question",
+  "note": "Year recorded as 2014. A nonprofit community crisis-response service dispatching trained compassionate responders to behavioural-health crises, mainly in San Francisco Tenderloin. TechCrunch calls it a non-profit startup and its own framing is a civilian alternative to calling 911. There is no neurotechnology in it.",
+  "url": "https://www.ffwd.org/blog/concrn-mobile-app-dispatches-help-people-crisis"
+ },
+ {
+  "name": "Medlink Neurology",
+  "verdict": "not a company",
+  "note": "Year recorded as 1992. This is a subscription clinical reference publication of roughly 1,200 peer-reviewed neurology condition monographs, published by MedLink Corporation of San Diego. It has an ISSN, 2831-9125, which is the signature of a periodical rather than a device or software company. The index records no location; it is San Diego. Reclassify as a medical publisher or remove.",
+  "url": "https://portal.issn.org/resource/ISSN/2831-9125"
+ },
+ {
+  "name": "XEED",
+  "verdict": "scope question",
+  "note": "Year recorded as 2016. The company began as a Parkinson tremor-monitoring wearable out of Penn Engineering, but xeedlimits.com now markets full-body analytics for at-home fitness — motion capture for yoga, weightlifting and sports. The medical and neuro framing is largely historical.",
+  "url": "https://pennpip.upenn.edu/projects-profiles/xeed"
+ },
+ {
+  "name": "Synappse Assist",
+  "verdict": "scope question",
+  "note": "Year recorded as 2017. A mental-health symptom-tracking mobile app covering symptom monitoring, side effects, medication reminders and exam records. Not neurotechnology in any hardware or neural-interface sense.",
+  "url": "https://www.crunchbase.com/organization/synappse-assist"
+ },
+ {
+  "name": "Babbly",
+  "verdict": "scope question",
+  "note": "Year recorded as 2018, the best-sourced year in its batch. But the product is a machine-learning child speech and language development tracking app for parents: digital health rather than neurotechnology.",
+  "url": "https://betakit.com/babbly-secures-3-2-million-cad-to-scale-speech-development-software-for-children/"
+ },
+ {
+  "name": "foc.us",
+  "verdict": "product not company",
+  "note": "Year recorded as 2012. The site states foc.us is owned and operated by Brain Control Co., so the row is a brand and the legal entity is a company the index never names. Consumer transcranial stimulation devices — tDCS, tACS, tPCS, tRNS — founder Michael Oxley. Site is live.",
+  "url": "https://www.foc.us"
+ },
+ {
+  "name": "Tovertafel (Active Cues)",
+  "verdict": "product not company",
+  "note": "Year recorded as 2015. Tovertafel is the product, an interactive light-projection game for dementia and disability care. The company was Active Cues and has since renamed to Tover; the legal entity per its own site is Tover Health Tech B.V. tovertafel.com now redirects to tover.care. In scope, though it acts through sensory and behavioural engagement rather than directly on the nervous system.",
+  "url": "https://www.tover.care/about-us"
+ },
+ {
+  "name": "AgenT",
+  "verdict": "scope question",
+  "note": "Year recorded as 2018. A blood-based multiomics and machine-learning diagnostic (B-HEALED, B-AHEAD) predicting Alzheimer progression before symptoms. An in-vitro diagnostic with an algorithm: no device, hardware or software acting on the nervous system. Neuro-adjacent by indication only.",
+  "url": "https://www.myfrenchstartup.com/fr/startup-france/257541/agent"
+ },
+ {
+  "name": "Biocross",
+  "verdict": "scope question",
+  "note": "Year recorded as 2005. A CSIC spin-off in the Boecillo technology park developing blood-based biomarker tests to diagnose Alzheimer and discriminate between dementias. Same category as AgenT: in-vitro diagnostics, not neurotechnology.",
+  "url": "https://biocross.es/about/"
+ },
+ {
+  "name": "CubeHX",
+  "verdict": "acquired",
+  "note": "Year recorded as 2018. Leger acquired 51% on 12 March 2024 and the product is now marketed as Cube AI, previously Cube GO; cubehx.com redirects to leger360.com/cube-ai. SCOPE: consumer-neuroscience and neuromarketing analytics — attention, emotion and eye-tracking for customer experience — rather than clinical or BCI neurotech.",
+  "url": "https://leger360.com/cube-ai/"
+ },
+ {
+  "name": "BeHapbee",
+  "verdict": "wrong entity",
+  "note": "Year recorded as 2019. Three corrections. The name is a marketing string; the entity is Hapbee Technologies, Inc., incorporated as Elevation Technologies and renamed May 2020. The location is Vancouver, BC, not Seattle — the Seattle link is that the ulRFE technology was invented by EMulate Therapeutics of Seattle and licensed in. And the company has not wound down: it remained listed on TSXV as HAPB, raised CAD 1.507M in June 2025 and reported growing revenue through Q3 2025.",
+  "url": "https://hapbee.com"
+ },
+ {
+  "name": "Hubly Surgical",
+  "verdict": "wrong location",
+  "note": "Year recorded as 2019. The index records San Francisco; it is a Northwestern University student spinout from The Garage accelerator, based in Chicago and Evanston, Illinois. No support for San Francisco was found. Strong fit for the index otherwise: the Hubly Drill is a cranial access drill with an automatic stop for bedside EVD placement, FDA 510(k) cleared May 2023 and in use at Northwestern Medicine.",
+  "url": "https://hublysurgical.com/"
+ },
+ {
+  "name": "Bio-Signal Technologies",
+  "verdict": "dead page",
+  "note": "Year recorded as 2016, weakly. The about-us page in the index URL is a 404. The live root site carries no founding year, no history and no address, only a US phone number and a WhatsApp contact, and its copy reads as translated boilerplate. Probably a US sales arm for a Chinese neurophysiology-equipment manufacturer rather than an originating developer.",
+  "url": "https://www.bio-signal.com/about-us.html"
+ },
+ {
+  "name": "Bionen Medical Devices",
+  "verdict": "stale url",
+  "note": "Year recorded as 1989. The URL in the index (www.bionen.it/en.html) is stale: the TLS certificate does not cover the www host and the site has moved to bionen.it/en/. A real operating company in Florence making EEG and EMG needle and surface electrodes, run by the founder daughters Monia and Barbara Nencioni.",
+  "url": "https://bionen.it/en/company/"
+ },
+ {
+  "name": "CerebraCell",
+  "verdict": "scope question",
+  "note": "Year recorded as 2015. Not an independent company but a portfolio venture of Leonhardt Ventures LLC, which spins out single-indication bioelectric companies from a shared patent estate and licenses from InStim. Bioelectric brain stimulation is in scope, but this is a pre-clinical patent-and-press-release operation: its own site says products are not proven safe or effective in controlled studies and are not available for sale.",
+  "url": "https://cerebracell.com/"
  }
 ]
