@@ -1666,5 +1666,377 @@
   "verdict": "acquired",
   "note": "Year recorded as 2009, aggregator-only. ACQUIRED by MPOWERHealth in January 2025; its own site now renders the logo as \"an mpowerhealth company\". The parent holding entity is Medsurant Holdings, LLC, operating seven subsidiary practices including American Intraoperative Monitoring across twenty states. SCOPE: it supplies technologists and supervising neurologists who perform intraoperative neurophysiological monitoring, onsite or by remote supervision, and develops no hardware or software of its own — a clinical services and staffing business.",
   "url": "https://medsuranthealth.com/about-medsurant/scope-of-service.html"
+ },
+ {
+  "name": "VascularFX",
+  "verdict": "dead-domain",
+  "note": "ww5.micrusendovascular.com returns NXDOMAIN — the ww5. prefix is a parking-service signature and the underlying domain is gone entirely. VascularFX was real but has not existed independently for 21 years: Micrus Endovascular acquired it in July 2005 for about $4M and its IP became the ENZO steerable microcatheter; Micrus was itself acquired by Johnson & Johnson and Codman in 2010. Any year attached to that domain would belong to Micrus. SCOPE: catheters and guidewires for accessing cerebral vasculature — neurovascular hardware rather than a neural interface.",
+  "url": "https://www.biospace.com/micrus-endovascular-corporation-receives-fda-clearance-for-the-enzo-steerable-microcatheter"
+ },
+ {
+  "name": "Strokelab",
+  "verdict": "existence-unverified",
+  "note": "strokelab.ch returns NXDOMAIN and no evidence was found that a Swiss company called Strokelab exists or ever existed. Searching the name returns only unrelated things: the Stroke Research Center Bern, an academic centre founded 2020 at the University of Bern from the Departments of Neurology, Neurosurgery and Neuroradiology; a Japanese rehabilitation clinic chain branded STROKE LAB; a genomics repository; and a golf putter technology. The Bern location is consistent with the university centre, so this row may be an academic research centre miscatalogued as a company.",
+  "url": "https://www.stroke.unibe.ch/"
+ },
+ {
+  "name": "Neuro-Medware",
+  "verdict": "dead-domain",
+  "note": "neuromedware.com returns NXDOMAIN. The only source carrying a year is F6S, which served a bot-verification wall on direct fetch, so its 2020 figure comes from a search engine's cached rendering rather than a page anyone read. The full name appears to be BT Neuro-MedWare. Context that does check out: the venture is connected to Dr Richi Gill, a Calgary bariatric surgeon paralysed in a 2018 accident who received epidural spinal stimulation implants, which makes it plausibly in scope — but there is no company website, no registry entry and no news naming a founding year.",
+  "url": "https://www.f6s.com/company/btneuro-medware"
+ },
+ {
+  "name": "DEEP",
+  "verdict": "not-a-company",
+  "note": "This row is a mashup of two unrelated things. exploredeep.com is DEEP VR, a breathing-controlled meditative VR experience — a project with no legal entity, no incorporation, no headquarters and no founding year, begun by Owen Harris in Ireland and developed with Dutch designer Niki Smit after they met in the summer of 2014, with efficacy research run since 2016 with the GEMH Lab at Radboud. The \"Shefayim, Israel\" location in the index belongs to a completely different company also called DEEP, an AI content-automation firm near Tel Aviv. Do not merge them.",
+  "url": "https://www.exploredeep.com/the-makers"
+ },
+ {
+  "name": "Supportiv",
+  "verdict": "year-disputed",
+  "note": "Aggregators say 2012 but all press and product evidence points to 2017-2018: the service was in stealth from January 2018 and launched publicly that June. A six-year gap between a claimed founding and stealth-mode operation is implausible and could not be reconciled. supportiv.com/about-us is a 404 and the Columbia Business School portfolio page returned 403. Real and operating, founded by Helena Plater-Zyberk and Pouria Mojabi. SCOPE: anonymous live-moderated peer-support chat with NLP topic routing — no neural measurement.",
+  "url": "https://www.supportiv.com/"
+ },
+ {
+  "name": "Precise Cardiology Limited",
+  "verdict": "scope",
+  "note": "By its own wording the entity was \"registered in Hong Kong on 7 November 2017 with the objective of creating a specific and separate corporate entity to hold and develop the PRECISE Cloud ECG product\" — an incorporation date for a product-holding vehicle, with Planexta Inc. of California holding 95% of initial share capital and being the real originator. No year is recorded. precisecloud.online returns NXDOMAIN. SCOPE: cloud-based ECG interpretation. The only thread to the nervous system is heart-rate-variability analysis as an autonomic proxy.",
+  "url": "https://www.crunchbase.com/organization/precise-cardiology-limited"
+ },
+ {
+  "name": "Void",
+  "verdict": "not-a-company",
+  "note": "void.com.hk is live and serves \"Void 人類圖\", a HUMAN DESIGN training school — an astrology-adjacent personality system — selling three tiers of certification courses across Taiwan and Hong Kong. It has no nervous-system connection whatsoever and is a textbook name-collision entry. Its site claims establishment in 2015, which is self-reported marketing copy from that school and must not be carried into a neurotech index. Searching \"Void Hong Kong\" also returns a Central nightclub and a meditation app, so the row may have been intended for something else entirely.",
+  "url": "https://void.com.hk/"
+ },
+ {
+  "name": "Brain Fingerprinting Laboratories",
+  "verdict": "no-year",
+  "note": "No source states a founding year. The only hard anchor is SEC EDGAR CIK 1175489, a Form REGDEX paper filing for FY2002, which establishes only that the company existed and was raising capital by 2002. Popular articles imply about 1991 by saying Farwell had run it \"12 years\" as of 2003 — arithmetic from a relative phrase, refused. 1991 is the Farwell and Donchin publication and 1995 the patent; both date the TECHNIQUE, not the company, and are routinely conflated. Genuinely EEG and P300 based. Do not confuse with Brainwave Science, a separate 2012 Farwell venture that ended in mutual fraud allegations.",
+  "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001175489"
+ },
+ {
+  "name": "Anxiety Reliever",
+  "verdict": "not-a-company",
+  "note": "anxietyrelieverapp.com returns NXDOMAIN. This is a consumer mobile app rather than a company: an iOS listing whose ID range implies a 2015-era App Store registration and a Google Play listing, associated with an individual designer rather than an incorporated entity. The strongest date signal is a personal portfolio page titled \"Anxiety Reliever App (2016-2019)\" — a project date range, not a founding. SCOPE: a self-help relaxation app with no measurement or stimulation.",
+  "url": "https://www.madelinefedorova.com/anxiety-reliever-app"
+ },
+ {
+  "name": "NeuroRoots",
+  "verdict": "not-a-company",
+  "note": "An academic research project and a device name from a paper, not a company. NeuroRoots is a bio-inspired axon-mimicking flexible multi-electrode brain-machine interface — roughly 7-10 micrometres wide and 1.5 thick, delivered on a retractable tungsten microwire — developed by Marc D. Ferro and Nicholas A. Melosh in Materials Science at Stanford. The index's \"website\" is the bioRxiv preprint itself, posted 4 November 2018; the work was later published in AIP Advances in 2024. No company website, no incorporation, no spin-out. The Stanford location is the correct lab affiliation.",
+  "url": "https://www.biorxiv.org/content/10.1101/460949v1"
+ },
+ {
+  "name": "Neuronics",
+  "verdict": "scope",
+  "note": "A ROBOTICS company: Neuronics AG made the Katana lightweight human-safe collaborative robot arm, reportedly founded 2001 as a spin-off of the Artificial Intelligence Lab at the University of Zurich by Dr Hansruedi Fruh. The \"neuro\" refers to neural-network AI, not the nervous system, so no year is recorded here. neuronics.ch redirects to a Sedo parking and sales lander, the Katana was discontinued and press stops around 2009. The same name-not-business failure mode as Medibrane and DataNovo.",
+  "url": "https://linuxbsdos.com/2008/11/27/katana-the-linux-robot/"
+ },
+ {
+  "name": "Neurobit Technologies",
+  "verdict": "wrong-entity",
+  "note": "TWO unrelated companies share this name and the index row matches the one this brief did not describe. Neurobit Technologies Co., Ltd. of Taiwan makes smart glasses recording nystagmus waveforms. Neurobit Technologies Pte Ltd of Singapore is the arm of Neurobit Health, HQ New York, doing AI auto-scoring of polysomnography — sleep, not eye movements. The row (neurobit.io, Jalan Besar, Singapore) matches the SLEEP company. Neither states a founding year on its site. The row's URL is also a resold chain: neurobit.io redirects to ee88.channel, which redirects to aerodata.in.",
+  "url": "https://www.neurobit.com/publications/"
+ },
+ {
+  "name": "Neurogenic",
+  "verdict": "no-year",
+  "note": "Neurogenic Ltd. of Israel is real and in scope: a clinical-stage ELISA immunoassay for platelet-associated antibodies to diagnose early-onset schizophrenia, with science tracing to Prof. Meir Shinitzky at the Weizmann Institute and a 2019 antibody deal with SYnAbs. But the only temporal hooks are unusable — the site says \"Over the past 25 years, Neurogenic has been collaborating with colleagues from the Weizmann Institute\", a relative phrase that was refused, and a director bio says Yossi Avnat has served \"since its inception\" with no date. Start-Up Nation Central returned 403; the Israeli Registrar of Companies would settle it.",
+  "url": "https://www.neurogenic.co.il/"
+ },
+ {
+  "name": "Medtronicdbs",
+  "verdict": "not-a-company",
+  "note": "Not an entity. medtronicdbs.co.in fails DNS entirely — not parked, not 404, it does not resolve — and the hostname appears in no search result, press item or filing anywhere. A .co.in domain bearing Medtronic's trademark plus a product-line abbreviation is at best a regional marketing microsite for Medtronic plc's deep brain stimulation line; Medtronic's actual Indian DBS content lives at medtronic.com/in-en. The listed \"Dublin, Ireland\" is Medtronic plc's registered HQ and flatly contradicts a .co.in domain, which suggests the row was generated by pattern-matching the Medtronic name. This is the THIRD Medtronic row in the index, after \"Medtronic\" and \"Medtronic Vascular\".",
+  "url": "https://www.medtronic.com/in-en/index.html"
+ },
+ {
+  "name": "iCouch",
+  "verdict": "scope",
+  "note": "Vendor directories assert \"founded in 2010\" but none could be opened, and icouch.me itself fails TLS negotiation on both / and /about, so the company's own words were never read. The only date surfaced is a product one: iCouch released the first version of its video platform in 2010. No year is recorded. SCOPE: HIPAA-compliant practice-management software for therapists — scheduling, video, client notes, invoicing and file storage. A SaaS booking and billing product for talk-therapy practices.",
+  "url": "https://icouch.me"
+ },
+ {
+  "name": "PixelAtion Labs",
+  "verdict": "no-year",
+  "note": "pixelationlabs.com has an expired TLS certificate and could not be fetched. The only company-register hit is PIXELATION LABS PTE. LTD. of Singapore, incorporated 13 May 2022, which is not obviously the Tarzana, California outfit the index means and whose date must not be transferred. The Tarzana entity appears to be a small iOS studio making autism and ABA behaviour-support apps — the \"This for That\" series of visual schedules, token boards and timers. SCOPE: special-education software with no EEG or neural measurement.",
+  "url": "http://pixelationlabs.com/"
+ },
+ {
+  "name": "MyBrainTest",
+  "verdict": "not-a-company",
+  "note": "An information and review website, not a technology developer. mybraintest.org self-describes as \"an online brain health and wellness resource\" providing \"an independent source of information on brain health screening tests\", publishing free screening tools and comparison reports on OTHER companies' cognitive screening products; one third-party profile characterises it as a market-research and advisory service for the neurodiagnostic industry. Despite the .org there is no evidence of nonprofit registration, no named individual or company, and WHOIS is privacy-redacted. The oldest dated post path is 2015 and a scanner reports the domain as roughly 15 years old; neither is a founding year.",
+  "url": "https://www.mybraintest.org/about/"
+ },
+ {
+  "name": "Picto Connection",
+  "verdict": "year-disputed",
+  "note": "Gust says September 2014; the only reputable news source, Valencia Plaza of 3 March 2015, describes the software as presented \"less than fifteen days\" earlier and the company as newly constituted by creator Meritxell Molina, then 22 — pointing at 2014-2015 with neither confirmable against a register. The BORME record returned 403. LOCATION: Valencian in origin, listed under Barcelona because it relocated there for the Incubio incubator. SCOPE: an AAC pictogram app for autism and stroke-related aphasia; its \"neurological test\" is an onboarding questionnaire. pictoconnection.com fails with an SSL protocol error.",
+  "url": "https://valenciaplaza.com/valenciaplaza/empresas1/picto-connection-una-aplicacion-valenciana-que-permite-comunicarse-a-autistas-y-afectados-por-ictus"
+ },
+ {
+  "name": "Goodrich International",
+  "verdict": "scope",
+  "note": "A SHOE company. Goodrich International is genuinely the parent of High Beam Shoes of Dallas, run by Joe Goodrich Sr. and Jr., selling shoes with built-in LED headlights for runners, dog-walkers and children's night safety. There is no nervous-system connection whatsoever. The only neuro link is the founder's mother's ALS diagnosis in late 2013, mentioned in marketing copy as the motivation for starting the business, which is almost certainly why an automated scrape pulled it in. The \"2013\" in that copy refers to the product idea and no Texas registry record was found, so no year is recorded.",
+  "url": "https://www.highbeamshoes.com/about-high-beam-shoes"
+ },
+ {
+  "name": "Mantaray AR",
+  "verdict": "dead-domain",
+  "note": "mantarayar.com returns NXDOMAIN — the domain has lapsed entirely and the only surviving presence is an abandoned WordPress blog. Mantaray AR LLC did exist: an Arizona software company making no-code augmented-reality authoring for classrooms plus \"Paugme\", an app to teach empathy to people with autism, announced 12 June 2014. LOCATION: that 2014 announcement gives Tempe, not the Winkelman the index and Crunchbase carry. SCOPE: classroom AR authoring with one autism-adjacent app; no sensing or neural measurement.",
+  "url": "https://mantarayar.wordpress.com/news-media/"
+ },
+ {
+  "name": "Puzzle Piece",
+  "verdict": "no-year",
+  "note": "No founding year on the company site or in any news source. The nearest datable events are a $100k seed dated 5 May 2015 and TechCrunch coverage of the $19 tablet in the same era, neither of which is a founding. The original business was a $19 custom Android tablet preloaded with autism-education apps on a subscription model, co-founded by Andrea Macken, BCBA, in Murrieta. The site has been hollowed out: getpuzzlepiece.com now pushes an Amazon Fire HD Kids bundle as an affiliate page. Aggregator data is contaminated by several unrelated organisations sharing the name.",
+  "url": "https://getpuzzlepiece.com/"
+ },
+ {
+  "name": "Brainsview",
+  "verdict": "no-year",
+  "note": "No sourced founding year after three searches. Real and in scope: BrainsView Inc. of Ontario makes hardware and software for real-time brain monitoring of brain injury, and the Ontario Brain Institute lists it as a portfolio company described as \"Neuropathology Monitor\" — which confirms existence but gives no date. brainsview.com is HTTP-only and fails its TLS handshake so it cannot be fetched. LOCATION: Crunchbase places it in Mississauga rather than the Toronto the index records. A 2016 NeuroTech Ontario Showcase appearance is a floor, not a founding.",
+  "url": "https://braininstitute.ca/portfolio-companies"
+ },
+ {
+  "name": "Play2Focus",
+  "verdict": "existence-unverified",
+  "note": "Could not be established to exist. The index stores the literal string \"https://N/A\" so there is no site to check, and two searches returned no company matching the row. The only \"Play2Focus\" on the open web is a GTD task-management app with no nervous-system connection and no Hong Kong link. Everything else returned is a different entity — Playfocus the game studio, PLAYfocus the Hong Kong childcare service, or Play Attention the US attention-training system, which is a plausible source of confusion. Hong Kong neurofeedback providers that do exist are clinics.",
+  "url": "https://neurobase-live.vercel.app"
+ },
+ {
+  "name": "MotusXR",
+  "verdict": "dead-domain",
+  "note": "motusxr.com returns HTTP 404 and Tracxn marks the company deadpooled. Aggregators give 2018 with founders Ian Dawson and Louisa Spring, but F6S served a bot-check and Tracxn is paywalled, so that is search-snippet hearsay and no year is recorded. The business was a motion-disorders telehealth research platform using lightweight motion capture for remote clinical research — in scope, though motion capture rather than a brain interface. Note one aggregator renders the location as \"Louisa (United States)\", which is the co-founder's first name misparsed as a city; do not propagate it.",
+  "url": "https://tracxn.com/d/companies/motusxr/"
+ },
+ {
+  "name": "Eleos Health",
+  "verdict": "scope",
+  "note": "Year recorded as 2020, disputed against 2019. SCOPE: AI documentation and voice and NLP analysis of therapy sessions for behavioural health providers. It touches no neural signal. Roughly $126M raised across a Series C, HQ split Boston and Tel Aviv.",
+  "url": "https://eleos.health/"
+ },
+ {
+  "name": "SpellBound",
+  "verdict": "product-not-company",
+  "note": "Year recorded as 2016, with 2015 defensible. The legal entity is ALTality, Inc.; SpellBound is the trading and product brand. Founder and CEO Christina York, Ann Arbor. SCOPE: augmented-reality distraction and procedure-simulation games for paediatric patients, including an AR MRI simulator — behavioural pain-distraction software with no neural component.",
+  "url": "https://annarborobserver.com/augmented-reality-to-the-rescue/"
+ },
+ {
+  "name": "Bioimmunate",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2014, aggregator-only. bioimmunate.com now redirects to expireddomains.com — the domain has lapsed and is listed as expired, a strong signal the company is dead or dormant, with no news after the mid-2010s. SCOPE: engineered particles removing autoreactive immune cells from blood before they reach the CNS; the only nervous-system link is the multiple sclerosis indication.",
+  "url": "https://finder.startupnationcentral.org/company_page/bio-immunate"
+ },
+ {
+  "name": "Prospect Bio",
+  "verdict": "scope",
+  "note": "Year recorded as 2013, aggregator-only, with PitchBook recording operations ceased as of 1 January 2020. SCOPE: living-cell biosensors detecting industrial small molecules for flavour and fragrance, agriculture and nutrition. No nervous-system connection of any kind. prospect.bio is parked for sale.",
+  "url": "https://www.crunchbase.com/organization/prospect-bio"
+ },
+ {
+  "name": "Karmagenes",
+  "verdict": "scope",
+  "note": "Year recorded as 2015 from the Swiss register. SCOPE: consumer genomics — a saliva DNA test scoring loci claimed to relate to personality and behaviour traits, sold direct to consumers and latterly bundled with psychometrics. Behavioural-genetics marketing is not a nervous-system technology, and the scientific basis for DNA-based personality scoring is contested.",
+  "url": "https://www.pappers.ch/fr/company/karmagenes-sa-CHE318733894"
+ },
+ {
+  "name": "DYNSEO",
+  "verdict": "scope",
+  "note": "Year recorded as 2013 from the French register. SCOPE: a publisher of cognitive-stimulation game apps for seniors, dementia patients and speech therapists, sold to care homes. No sensing, no neural interface, no signal processing. Its closest claim is MedappCare certification of one app and a 15-person adoption study.",
+  "url": "https://www.dynseo.com/en"
+ },
+ {
+  "name": "HealthRhythms",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2014. LOCATION: consistently described as New York-based with a Cornell Tech lineage, not the Boston the index records. healthrhythms.com/about is a 404 so the year comes from trade press. In scope in a way most of its batch is not: passive smartphone sensing producing mental-health digital biomarkers.",
+  "url": "https://www.healthrhythms.com/"
+ },
+ {
+  "name": "Braincare",
+  "verdict": "duplicate",
+  "note": "Year recorded as 2014. CONFIRMED DUPLICATE of \"Braincare Health Tecnology\": the same USP Sao Carlos spin-off founded by Sergio Mascarenhas, Gustavo Frigieri and Rodrigo Andrade, doing non-invasive intracranial pressure and cranial-compliance monitoring via a headband sensor. It traded as Braincare and rebranded to brain4care. Merge, keeping brain4care as the current name.",
+  "url": "https://revistapesquisa.fapesp.br/en/keeping-the-skull-intact/"
+ },
+ {
+  "name": "Lift Labs",
+  "verdict": "acquired",
+  "note": "Year recorded as 2010, weakly. ACQUIRED by Google in September 2014 and folded into Google X life sciences, which became Verily, where Liftware still sits; Lift Labs no longer exists independently and liftlabsdesign.com is stale. Liftware is the product — a self-stabilising spoon for essential tremor and Parkinson's — and Lift Labs the company.",
+  "url": "https://fortune.com/2014/09/10/google-buys-lift-labs-the-maker-of-a-self-stabilizing-spoon"
+ },
+ {
+  "name": "Oncovision",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2003. LOCATION: oncovision.com is General Equipment for Medical Imaging S.A., known as GEM Imaging, headquartered in VALENCIA, SPAIN with a Boston office; the index says Mexico City, which is at best a sales presence. SCOPE: an oncology nuclear-imaging manufacturer whose single nervous-system product, CareMiBRAIN, is the entire neurotech justification.",
+  "url": "https://oncovision.com/about-us/"
+ },
+ {
+  "name": "Autism Training Solutions",
+  "verdict": "acquired",
+  "note": "Year recorded as 2010, from the co-founder's biography. ACQUIRED by Relias Learning, completed 12 June 2014; it no longer exists independently and its content folded into Relias's ABA library. SCOPE: e-learning and workforce training content about applied behaviour analysis — no device, no measurement.",
+  "url": "https://www.relias.com/press-room/relias-learning-announces-acquisition-of-autism-training-solutions"
+ },
+ {
+  "name": "Purple Gaze",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2019, aggregator-only with no primary or registry backing. LOCATION: the company's own site gives Winthontlaan 200, Utrecht — not the Amsterdam the index records. FOXIE is a portable high-speed eye tracker with Python experiment software sold to vision-science researchers: legitimately neuro-adjacent oculomotor measurement, but not a brain interface.",
+  "url": "https://purplegaze.io/"
+ },
+ {
+  "name": "MoreMemo",
+  "verdict": "scope",
+  "note": "Year recorded as 2020 from the Danish CVR register. SCOPE: a remote-controlled tablet for elderly and cognitively impaired users, where relatives manage video calls, photos, messages and alerts from their own phones. Assistive eldercare consumer software; neurotech only in a dementia-adjacent sense.",
+  "url": "https://www.morememo.dk/"
+ },
+ {
+  "name": "Muse",
+  "verdict": "product-not-company",
+  "note": "Year recorded as 2007. Muse is the EEG meditation headband; the company is InteraXon Inc. of Toronto, which now trades publicly under the Muse brand — Businesswire releases are headed \"Interaxon Inc. (Muse)\". The row should name InteraXon. Product development began 2003 and the headband launched 2014; neither is the founding.",
+  "url": "https://en.wikipedia.org/wiki/Muse_(headband)"
+ },
+ {
+  "name": "Neuraltide",
+  "verdict": "dissolved",
+  "note": "Year recorded as 2017, an incorporation date. French registry-data sites report a simplified judicial liquidation pronounced 5 September 2025 with cessation of payments 30 June 2025, and founder Karine Berthet replaced as president in November 2023. This was not verified directly against an official register — treat as strong but unconfirmed. The website is still up.",
+  "url": "https://www.societe.com/societe/neuraltide-832878482.html"
+ },
+ {
+  "name": "MicroPort (Shanghai)",
+  "verdict": "wrong-entity",
+  "note": "Year recorded as 1998, for MicroPort Scientific Corporation (853.HK) — a large general medical device conglomerate that began in interventional cardiology and IPO'd in Hong Kong in September 2010. The neurovascular business is MicroPort NeuroTech (2172.HK), a separately listed entity with its own much later founding. If the index wants the neuro business, this row points at the wrong entity.",
+  "url": "https://microport.com/about-us/history"
+ },
+ {
+  "name": "Avaz",
+  "verdict": "duplicate",
+  "note": "Year recorded as 2007. CONFIRMED DUPLICATE of the \"Invention Labs\" row: Avaz is the AAC app brand and Invention Labs Engineering Products Private Limited of Chennai, IIT Madras incubated, is the originator. Two complications: the about page now brands the entity \"Avaz Inc.\", so the brand was elevated to company name at some point; and Avaz is now part of the PRC-Saltillo family. The 2007 date belongs to the Indian originator.",
+  "url": "https://avazapp.com/about-us/"
+ },
+ {
+  "name": "Strohl Medical",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2009, aggregator-only and probably all deriving from one self-reported profile. strohlmedical.com returns no content and the trail stops around 2012 after a $245k debt round; founder Heather Keith has moved on to Anivia Medical. In scope: NeuroEPG, an evoked-potential device for rapid stroke triage in the ED. A Massachusetts Secretary of the Commonwealth search would settle both the founding and the dissolution.",
+  "url": "https://www.crunchbase.com/organization/strohl-medical"
+ },
+ {
+  "name": "Intratech Medical",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2007, aggregator-only. intratechmedical.com returns no content and development looks complete, so the company may be dormant or wound down. LOCATION: sources say it moved from Netanya to the Shefayim Commercial Center. In scope: NAVIMAX, a spiral balloon over-the-wire catheter for clot retrieval in acute ischaemic stroke, CE marked May 2014.",
+  "url": "https://tracxn.com/d/companies/intratech-medical/__-MB3-yPqlVAG9ePpBmsdzNZtivsdjn-F94ctIigcoyg"
+ },
+ {
+  "name": "Neural-FLEX",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2018. The English name corresponds to 易念科技（深圳）有限公司, founder Feng Chao, confirmed by an exact address match between the registry record and the company site. neu-flex.com returned HTTP 521 on every attempt, so the site is at minimum flaky. In scope: the SOULINK non-invasive EEG headband, EEG and EMG wearables and depression-warning models.",
+  "url": "https://www.vbdata.cn/companyDetail/e4c2918d5722f2a26ad1cda1108800c8"
+ },
+ {
+  "name": "Oncomfort",
+  "verdict": "acquired",
+  "note": "Year recorded as 2017. ACQUIRED by HypnoVR of Strasbourg in October 2023 — and HypnoVR is itself a row in this index, so the two rows describe one company from that date. LOCATION: Wavre, not Brussels, per its own boilerplate. oncomfort.com fails DNS. SCOPE: VR \"Digital Sedation\" for procedural pain and anxiety via clinical hypnosis — a behavioural VR therapeutic rather than a neural interface.",
+  "url": "https://www.prnewswire.co.uk/news-releases/belgian-scale-up-oncomfort-raises-eur10-million-in-series-a-funding-co-led-by-debiopharm-and-credit-mutuel-innovation-to-further-develop-its-digital-sedation-tm-through-virtual-reality-836647757.html"
+ },
+ {
+  "name": "Nuro Corp",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2017, labelled incorporation by the company itself. The live site is nuro.world, not the indexed nuro.ca. In scope: a non-surgical BCI for communication and computer control in severe neurological impairment — ALS, stroke, disorders of consciousness — with the product Gridly. Not to be confused with Nuro, Inc., the Mountain View autonomous-delivery company.",
+  "url": "https://www.nuro.world/about"
+ },
+ {
+  "name": "Mr. Doc",
+  "verdict": "scope",
+  "note": "Year recorded as 2018, an Italian registration date. SCOPE: AI diagnostics from noisy consumer-device signals across arrhythmias, hypertension, asthma, COPD and Parkinson's, plus retinal OCT inflammation detection. The nervous-system connection is thin and incidental. Two similarly named Rome entities exist and only one was matched to the CORDIS coordinator record; the LinkedIn slug suggests a rebrand to Cardiia, unverified.",
+  "url": "https://www.startuplus.it/startup/mr-doc-s-r-l/"
+ },
+ {
+  "name": "Psicologia Viva",
+  "verdict": "scope",
+  "note": "Year recorded as 2015, with the CNPJ suggesting a 2017 incorporation. SCOPE: an online psychotherapy marketplace connecting patients to human psychologists by video. No device, no signal acquisition, no nervous-system technology — a keyword-driven inclusion. MERGED with Conexa Saude in March 2021, so no longer independent.",
+  "url": "https://fcjventurebuilder.com/psicologia-viva-anuncia-fusao-com-conexa-saude/"
+ },
+ {
+  "name": "Bionic Vision Technologies",
+  "verdict": "dead-domain",
+  "note": "Year recorded as 2016, for the commercial spinout rather than the 2010-2016 Bionic Vision Australia research consortium that preceded it. bionicvis.com now redirects to polonorterestaurant.com — the domain has lapsed and been resold to a restaurant. In scope: a suprachoroidal retinal prosthesis, with US$18M raised in April 2017. Current operating status unverified; an ASIC lookup would confirm.",
+  "url": "https://bionic-vision.org/"
+ },
+ {
+  "name": "Cambridge Humanae",
+  "verdict": "dissolved",
+  "note": "Year recorded as 2015, an incorporation date. DISSOLVED 3 March 2020 per Companies House. The registered address, 71-75 Shelton Street, Covent Garden, is a mass virtual-office and formation-agent address, so the London location says little about where it operated. SCOPE: AI psychometrics assessing stress resilience in police, soldiers and pilots, with no nervous-system measurement.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09909565"
+ },
+ {
+  "name": "Brainboost Neurofeedack",
+  "verdict": "scope",
+  "note": "Year recorded as 2016, from a German startup directory rather than the company. The index name is misspelled and the domain now redirects to brainboost.de, which states no year. Two linked entities: a Munich neurofeedback medical practice, which is a clinic and out of scope, and brainboost, which sells EEG hardware and BrainAssistant software and franchises a turnkey concept. A clinic-and-franchise hybrid.",
+  "url": "https://healthcare-startups.de/location/brainboost-neurofeedback"
+ },
+ {
+  "name": "Movement Disorders Diagnostic Technologies (MDDT)",
+  "verdict": "duplicate",
+  "note": "Year recorded as 2013, aggregator-only. CONFIRMED DUPLICATE of the \"MDDT inc\" row at the same mddtinc.ca domain, same city. A genuine spin-out of Dr Mandar Jog's Movement Disorders Centre at Western University, London Ontario; products TremorTek and Hinge, wearable kinematic sensors guiding botulinum toxin injection in Parkinson's and essential tremor. mddtinc.ca now redirects off-host to LinkedIn, which was not scraped.",
+  "url": "https://tracxn.com/d/companies/movement-disorders-and-diagnostic-technologies/__OPyPTyVIz-nyYSJyI4gySi_3nKl31THF9Oa57s-wYIM"
+ },
+ {
+  "name": "B. Braun",
+  "verdict": "wrong-entity",
+  "note": "Year recorded as 1839, which would make it the oldest company in the index. But that year belongs to the GROUP, B. Braun Melsungen AG of Germany, while the index records Bethlehem, USA — B. Braun Medical Inc., a distinct and much later American subsidiary. One of the two fields must be wrong. SCOPE: a general medical and pharmaceutical multinational with 5,000+ products; neuro exposure is the Aesculap division's neurosurgery instruments alone. Including it materially distorts any size or revenue statistic computed from the index.",
+  "url": "https://www.bbraun.com/en/about-us/company/facts-and-figures/history.html"
+ },
+ {
+  "name": "Heraeus",
+  "verdict": "wrong-entity",
+  "note": "Year recorded as 1851, the founding of Heraeus Holding GmbH — a 175-year-old precious-metals and technology conglomerate spanning platinum, quartz glass, sensors, dental and photovoltaics, and one of Germany's largest family-owned companies. The index URL points at a product page for implantable electrodes belonging to Heraeus Medical Components, a single business unit assembled much later from acquisitions. 1851 is technically correct and analytically useless: the unit is a component supplier to neurostimulation OEMs.",
+  "url": "https://www.heraeus.com/en/about-heraeus/history/"
+ },
+ {
+  "name": "Effectivate",
+  "verdict": "scope",
+  "note": "Year recorded as 2018 from the company's own page. The index URL effectivate.org redirects to the Hebrew site; the English site is effectivate.com. SCOPE: software brain-training and cognitive-exercise gameplay for adults 55+, with no EEG, sensing or neural measurement of any kind — a wellness app with neuroscientist advisors.",
+  "url": "https://effectivate.com/about/"
+ },
+ {
+  "name": "HOZ Medical",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2017, a Chinese registration date rather than an independently stated founding; the underlying robot technology lineage is older. hozmedical.com refused connection on both HTTP and HTTPS, possibly geo-blocked. Strongly in scope: frameless stereotactic neurosurgery robots for craniocerebral procedures, deployed in more than 100 hospitals. Chinese name 华志微创.",
+  "url": "https://innohere.com/ir/120803/frame.html"
+ },
+ {
+  "name": "Secure Nest",
+  "verdict": "scope",
+  "note": "Year recorded as 2015, being when the co-founders began working together rather than a formation date. SCOPE: an online schema therapy platform — secure diary storage, forms, progress charts, individual, group and self-help modes. Mental-health SaaS with no sensing or measurement. Note the root domain returned what appeared to be an Android-development blog with a dev-agency footer while the app path serves live content, so the site may be mid-migration.",
+  "url": "https://www.securenest.org/"
+ },
+ {
+  "name": "Saintrino Technologies Inc",
+  "verdict": "wrong-entity",
+  "note": "Year recorded as 2010, aggregator-only and second-hand. The site brands itself \"St-RINO Technologies\" and aggregators also list \"Saintrino Technologies LABS\", so the row name is one of three variants. LOCATION: the site says Montreal while the index and aggregators say Longueuil. In scope: a BCI and neuro-ergonomics consultancy doing EEG and eye-tracking biofeedback for neuromarketing, usability testing and cognitive monitoring.",
+  "url": "https://www.saintrino.org"
+ },
+ {
+  "name": "Integrated Listening Systems",
+  "verdict": "acquired",
+  "note": "Year recorded as 2007. ACQUIRED by Unyte Health; the index URL now redirects into the parent's site under the name \"Unyte Integrated Listening\" and the standalone about page is gone. Founded and headquartered in the Denver area, so the index's Aurora is fine, but the parent is Toronto-based. A therapy programme rather than a measuring or stimulating device.",
+  "url": "https://integratedlistening.com.au/about/"
+ },
+ {
+  "name": "Moodru",
+  "verdict": "existence-unverified",
+  "note": "Year recorded as 2018 from a single Crunchbase profile with a day-level date that often reflects an incorporation filing. moodru.com returns 403, and every trace of the company routes back to that one profile — no news, no funding announcement, no institutional mention. If the description is accurate the product is VR exposure therapy and DBT support. Beware Moodfit, a separate Palo Alto mood-tracking company founded 2015 that pollutes searches.",
+  "url": "https://www.crunchbase.com/organization/moodru"
+ },
+ {
+  "name": "Impact Applications Inc.",
+  "verdict": "acquired",
+  "note": "Year recorded as 2002, the re-incorporation of the predecessor Neurohealth under the ImPACT name; 1994 is when Mark Lovell established Neurohealth and must not be dropped. ACQUIRED January 2020 by Riverside Insights, an Alpine Investors portfolio company. The technology originated in UPMC Sports Medicine research in the 1990s — research and academic-appointment dates, not company dates. Origins Pittsburgh; the index's San Diego matches the later HQ.",
+  "url": "https://concussioncareresources.com/our-story/"
+ },
+ {
+  "name": "Cogwear",
+  "verdict": "stale-url",
+  "note": "Year recorded as 2018. The index URL is wrong: it records cogweartechnologies.com but the live site is cogweartech.com, confirmed by the Penn Center for Innovation. A University of Pennsylvania spinout co-founded by Michael Platt making dry-electrode wearable EEG headbands with NSF and NIH support, including an NSF-funded \"anxiety thermometer\". Expanding to a new manufacturing facility in St. Paul, so the Philadelphia location may drift.",
+  "url": "https://cogweartech.com"
  }
 ]
