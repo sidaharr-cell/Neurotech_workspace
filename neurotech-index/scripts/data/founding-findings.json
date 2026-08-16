@@ -227,7 +227,8 @@
   "kind": "aggregator",
   "url": "https://gust.com/companies/avalon-ai",
   "evidence": "Aggregator-only. No primary or institutional source states a year, and UK Companies House has no matching entity. Forbes places the founders pitching at Entrepreneur First demo day in March 2016, consistent with an EF cohort starting late 2015.",
-  "confidence": "low"
+  "confidence": "low",
+  "caveat": "Aggregator only. No primary or institutional source states a year, and UK Companies House has no matching entity. The Forbes sighting at an Entrepreneur First demo day in March 2016 is consistent with a late-2015 cohort start but does not confirm it."
  },
  {
   "name": "ATENTIVmynd",
@@ -235,7 +236,8 @@
   "kind": "aggregator",
   "url": "https://tracxn.com/d/companies/atentivmynd/__Kg-yRiwJrWERWA9wT2lD7irTgNYnrAhwjwCxIA7U9TI",
   "evidence": "Aggregator-only; no primary source states a founding year. The nearest independent anchor is a product launch, not a founding: ADDitude reports the Atentiv System became publicly available in May 2014. The underlying technology originated at Duke-NUS Singapore, and atentiv.com now redirects to metisminds.com, so a later rebrand may have occurred.",
-  "confidence": "low"
+  "confidence": "low",
+  "caveat": "Aggregator only; no primary source states a founding year. The nearest independent anchor is the Atentiv System becoming publicly available in May 2014, which is a product launch. atentiv.com now redirects to metisminds.com, so a later rebrand may have occurred."
  },
  {
   "name": "Go Go Games Studios",
@@ -1141,5 +1143,238 @@
   "evidence": "The legal entity behind BioMind is Hanalytics Pte Ltd, UEN 201706114W, incorporated in Singapore 5 March 2017; the UEN prefix encodes the registration year. Founders Raymond Moh and Zhenzhou Wu.",
   "confidence": "medium",
   "conflict": "This is an INCORPORATION date standing in for a founding date. OUR ROW IS NAMED AFTER THE PRODUCT — the company is Hanalytics. The BioMind neuroimaging product launched publicly in 2018 with Beijing Tiantan Hospital."
+ },
+ {
+  "name": "Applied Brain Research",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://federalcorporation.ca/corporation/8299072",
+  "evidence": "Secondary sources most often give 2013 as the founding year for this University of Waterloo spin-out from the Centre for Theoretical Neuroscience, makers of Nengo.",
+  "confidence": "low",
+  "conflict": "Three-way. The Canadian federal register records incorporation on 18 Sep 2012 (corporation 8299072). Secondary sources say founded 2013. At least one gives 2014 as the launch year. appliedbrainresearch.com/about is a 404, so the company itself does not arbitrate."
+ },
+ {
+  "name": "Facerehab",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://therecursive.com/slovak-women-in-tech-female-founders/",
+  "evidence": "The Recursive: \"In 2019, Veronika founded a digital rehabilitation therapy app for face palsy (paralysis) patients, FaceRehab.\"",
+  "confidence": "low",
+  "conflict": "The Recursive says 2019; a LinkedIn-derived mirror says 2020. Either founded 2019 and incorporated 2020, or the journalist erred. Not resolved."
+ },
+ {
+  "name": "Tactx Medical",
+  "year": 2003,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/42809-95",
+  "evidence": "PitchBook lists Tactx Medical, also known as PRODUXX, Inc., as founded in 2003 in Campbell, California.",
+  "confidence": "low",
+  "caveat": "Aggregator only. The primary source, the Creganna acquisition release of January 2010, states no founding year. The aggregator ties the name to PRODUXX, Inc., so 2003 may date Produxx rather than Tactx. The company has not existed independently since 2010."
+ },
+ {
+  "name": "Cyberonics",
+  "year": 1987,
+  "kind": "press",
+  "url": "https://www.encyclopedia.com/books/politics-and-business-magazines/cyberonics-inc",
+  "evidence": "International Directory of Company Histories: \"In December 1987 he and Zabara incorporated Cyberonics.\" Key Dates gives \"1987: Cyberonics is founded.\" Founders Jacob Zabara, who originated vagus nerve stimulation, and Reese S. Terry.",
+  "confidence": "high",
+  "caveat": "Founding and incorporation coincide in December 1987. The company merged with Sorin S.p.A. on 19 Oct 2015 to form LivaNova and no longer exists under this name."
+ },
+ {
+  "name": "Concrn",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.ffwd.org/blog/concrn-mobile-app-dispatches-help-people-crisis",
+  "evidence": "Fast Forward, the nonprofit-tech accelerator, writing about its own cohort: \"The founding team launched Concrn in 2014, a mobile 911 alternative for neighbors in crisis.\" Co-founders Jacob Savage and Doug Marks.",
+  "confidence": "medium",
+  "caveat": "The source says \"launched\", which is close to but not identical with founding. Coverage thins after 2018 and current operating status is unconfirmed."
+ },
+ {
+  "name": "SensoMedical",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://sensomedical.com/about/",
+  "evidence": "Company about page: \"SENSOMEDICAL was established by Maroun Farah in 2014.\" PitchBook independently agrees on both the year and the founder.",
+  "confidence": "high"
+ },
+ {
+  "name": "ElMindA",
+  "year": 2006,
+  "kind": "press",
+  "url": "https://www.businesswire.com/news/home/20151116005469/en/ElMindA-Raises-28-Million-in-Series-C-Financing-to-Accelerate-its-BNA%E2%84%A2-Technology-Adoption",
+  "evidence": "Company-authored boilerplate: founded in 2006 by Professor Amir Geva to objectively assess brain health. Consistent across ISRAEL21c and the Jewish Virtual Library, all tracing the company to Ben-Gurion University research.",
+  "confidence": "medium",
+  "caveat": "The release announces a $28M Series C in November 2015; that is a funding event, not the founding. Substantial coverage stops around 2018 and current status is unconfirmed."
+ },
+ {
+  "name": "Synappse Assist",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/synappse-assist",
+  "evidence": "Crunchbase gives March 2017, founder Alexandre Valverde, Sao Paulo.",
+  "confidence": "low",
+  "caveat": "Aggregator only. No company about page and no Brazilian CNPJ registry record was found to corroborate the year."
+ },
+ {
+  "name": "foc.us",
+  "year": 2012,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/foc-us",
+  "evidence": "Aggregators give 2012 for this London developer of consumer tDCS headsets; founder Michael Oxley.",
+  "confidence": "low",
+  "caveat": "Aggregator only; no company page states a year. The site says foc.us is owned and operated by Brain Control Co., so the legal entity may be a company this index never names. The 2013 date in press coverage is the gamer headset launch, not a founding."
+ },
+ {
+  "name": "Medlink Neurology",
+  "year": 1992,
+  "kind": "company_site",
+  "url": "https://www.medlink.com/about",
+  "evidence": "Boilerplate reproduced across sources: \"MedLink Corporation, founded in 1992, is the publisher of MedLink Neurology.\"",
+  "confidence": "medium",
+  "caveat": "medlink.com returned 403 to direct fetches, so the year comes from search-indexed copies of the about page plus consistent third-party repetition rather than a page read directly."
+ },
+ {
+  "name": "XEED",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/xeed",
+  "evidence": "Crunchbase gives 2016, Philadelphia, co-founders Sade Oba and Alfredo Muniz. Corroborated circumstantially: both were Penn Engineering seniors (EAS 2016) who won the inaugural 2016 President Innovation Prize, and TechCrunch covered them in July 2016 as a Penn students startup.",
+  "confidence": "medium",
+  "caveat": "The Penn prize page does not itself state a founding year, so the exact figure rests on the aggregator."
+ },
+ {
+  "name": "FraSen",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/101498-95",
+  "evidence": "PitchBook lists FraSen, Inc. of Seoul as founded 2010; a smart sleep mask with brainwave sensors and bone-conduction audio.",
+  "confidence": "low",
+  "caveat": "Aggregator only, and frasen.com is now a HugeDomains parking page. With roughly four employees and no recent news the company appears defunct. Treat 2010 as unconfirmed."
+ },
+ {
+  "name": "SensPD LTD",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/senspd-ltd",
+  "evidence": "Crunchbase gives 2017, founder Raffi Rembrand, Bosmat Tivon, Israel. Screens newborns for autism by repurposing standard oto-acoustic-emission hearing-screening hardware.",
+  "confidence": "medium",
+  "caveat": "Founder Raffi Rembrand is described as an independent researcher since 2000; that is a biography date and is not the company founding. Startup Nation Central and the CORDIS grant record corroborate the company exists but neither was readable for a founding year."
+ },
+ {
+  "name": "Babbly",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://betakit.com/babbly-secures-3-2-million-cad-to-scale-speech-development-software-for-children/",
+  "evidence": "BetaKit: \"Founded in 2018 by Maryam Nabavi (CEO) and Carla Margalef Bentabol (CTO).\"",
+  "confidence": "high",
+  "caveat": "The article reports a $3.2M CAD seed round closed March 2022 and an app launch in 2020; neither is the founding."
+ },
+ {
+  "name": "Tovertafel (Active Cues)",
+  "year": 2015,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Tovertafel",
+  "evidence": "\"the first Tovertafel officially entered the care market in 2015, the same year that Anderiesen-Le Riche founded the company that would commercialize this system.\" The company was Active Cues, out of her TU Delft PhD research.",
+  "confidence": "medium",
+  "conflict": "Crunchbase says 2014. The company own about page says only \"Our first Tovertafel was launched in 2015\", which is a product launch and not a founding. 2014 against 2015 is unresolved."
+ },
+ {
+  "name": "AgenT",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://gust.com/companies/agent",
+  "evidence": "Gust: \"cofounded in March 2018 by Jerome Braudeau along with Baptiste Billoir.\" myfrenchstartup gives creation 2018 with SIREN 838187318, a block consistent with 2018 French registration.",
+  "confidence": "medium",
+  "conflict": "One source states the founders launched AgenT in 2016. The 2018 figure may be incorporation rather than founding, with 2016 the year the project began. agent-biotech.com/about-us.html is a 404 so the company does not arbitrate."
+ },
+ {
+  "name": "CerebraCell",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://leonhardtventures.com/cerebracell/",
+  "evidence": "Parent site: \"CerebraCell formed in 2015 and is focused on brain regeneration utilizing bioelectric stimulation and a re-fillable micro infusion pump.\"",
+  "confidence": "medium",
+  "caveat": "Not an independent company. It is a portfolio venture of Leonhardt Ventures LLC, which spins out single-indication bioelectric companies from a shared patent estate. cerebracell.com states no founding year of its own, and the site disclaims that its products are unproven and not available for sale."
+ },
+ {
+  "name": "Sonovum",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.medienservice.sachsen.de/medien/news/183204",
+  "evidence": "Saxon state media service: \"2011 gegruendet, arbeitet das Unternehmen mit 16 Mitarbeitern an der Entwicklung und Erprobung einer neuartigen Technologie zur schnelleren und trennschaerferen Diagnose von Schlaganfaellen.\"",
+  "confidence": "high",
+  "caveat": "Founded as Sonovum AG, now trading as Sonovum GmbH, Leipzig HRB 37040. The current site states a product launch of Q4 2026, so the company remains pre-commercial on its current intracranial-pressure product despite a 2017 CE mark on the earlier acoustocerebrography device."
+ },
+ {
+  "name": "Biocross",
+  "year": 2005,
+  "kind": "aggregator",
+  "url": "https://golden.com/wiki/Biocross%2C_S.L.-63NNE39",
+  "evidence": "Described as established in 2005 as a spin-off of the CSIC, with a stated foundation date of 26 January 2005.",
+  "confidence": "low",
+  "caveat": "The precision of 26 January 2005 suggests this is the Spanish mercantile registry incorporation date rather than a founding. biocross.es/about contains no founding year and the AseBio directory entry is behind a login."
+ },
+ {
+  "name": "Hubly Surgical",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/hubly-surgical-receives-510k-clearance-from-fda-to-market-innovative-cranial-access-drill-for-neurosurgical-safety-in-the-icu-301819559.html",
+  "evidence": "Company boilerplate: \"Founded in 2019, Hubly Surgical is a medical device company with a mission to improve patient outcomes and quality of care for surgical procedures... starting with bedside cranial surgery.\"",
+  "confidence": "high",
+  "caveat": "A Northwestern University student spinout from The Garage accelerator, based in Chicago and Evanston, Illinois. The index records San Francisco, for which no support was found."
+ },
+ {
+  "name": "Bionen Medical Devices",
+  "year": 1989,
+  "kind": "company_site",
+  "url": "https://bionen.it/en/company/",
+  "evidence": "Company history page: \"The first company made its first debut in 1984 ... In 1989 BIONEN was born, specialized in design, production and marketing of medical devices for neurophysiopathology.\"",
+  "confidence": "medium",
+  "conflict": "Third-party profiles including a MEDICA exhibitor listing say \"Founded in 1984\". The company own page distinguishes a 1984 predecessor venture by founder Carlo Nencioni from BIONEN itself, created 1989. Both are defensible depending on whether the predecessor counts."
+ },
+ {
+  "name": "BeHapbee",
+  "year": 2019,
+  "kind": "company_site",
+  "url": "https://cdn.prod.website-files.com/6116a05d9df52e3d94e9b08c/6669e93f94fc7f0dd6aefa6b_Hapbee%20Financial%20Statements%20YE%202023.pdf",
+  "evidence": "Audited consolidated financial statements: incorporated 3 January 2019 under the Business Corporations Act (British Columbia), formerly named Elevation Technologies, Inc., renamed Hapbee Technologies, Inc. in May 2020.",
+  "confidence": "medium",
+  "conflict": "Aggregators variously give 2019, 2020 and 2004. Only 2019 has a filing behind it, but that filing records incorporation under a different name, and no independent statement of when the Hapbee venture itself began was found."
+ },
+ {
+  "name": "Bio-Signal Technologies",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/bio-signal-technologies-llc",
+  "evidence": "Crunchbase, ZoomInfo and Dealroom give October 2016 for Bio-Signal Technologies, LLC.",
+  "confidence": "low",
+  "caveat": "The about page is a 404 and the live site states no founding year, no history and no address. Its copy reads as translated boilerplate referring to domestic universities and tertiary hospitals, which suggests a US sales arm for a Chinese neurophysiology-equipment manufacturer rather than an originating developer. No primary source found."
+ },
+ {
+  "name": "Imagilys",
+  "year": 2005,
+  "kind": "company_site",
+  "url": "https://www.imagilys.com/imagilys-celebrates-its-15th-anniversary",
+  "evidence": "Company anniversary page: \"On July 18, 2005, we founded Imagilys.\" Founder and CEO Dr. Laurent Hermoye; BrainMagix neuroimaging software for neurosurgical planning.",
+  "confidence": "high",
+  "caveat": "Some aggregators say 2004; the company own explicit date wins. Do not derive a year from the anniversary number: the page slug says 15th while its heading says 17th, because it has been re-edited over time."
+ },
+ {
+  "name": "CubeHX",
+  "year": 2018,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/cubehx/__7vDY6JW15V2zwm3t824Mn0nu8RIOmvjUvc4MWmiYX0Y",
+  "evidence": "Tracxn lists CubeHX as founded 2018 in Montreal by Sylvain Senecal and Neil Fleischer.",
+  "confidence": "low",
+  "caveat": "Tracxn alone. The company no longer exists independently: cubehx.com redirects to leger360.com/cube-ai, Leger took a minority stake in 2022 and announced acquisition of 51% on 12 March 2024. The Leger release names the developers but gives no founding year."
+ },
+ {
+  "name": "Healing Hand Tech",
+  "year": 2020,
+  "kind": "press",
+  "url": "https://www.prlog.org/12983805-introducing-healinghand-tech-medtech-startup.html",
+  "evidence": "Company-issued release dated 12 September 2023: \"Established in 2020 and currently in its early stages, the company is diligently crafting a functional system prototype.\"",
+  "confidence": "medium",
+  "conflict": "Tracxn says 2018; Crunchbase records 12 June 2020. The company own 2023 release says 2020, agreeing with Crunchbase against Tracxn. 2020 may also be the incorporation date rather than the start of the venture; the release does not distinguish."
  }
 ]
