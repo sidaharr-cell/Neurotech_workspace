@@ -64,5 +64,17 @@
   "verdict": "scope question",
   "note": "Camera-based facial emotion detection, not EEG or any nervous-system interface, despite the description in our index implying otherwise. Year written; scope worth checking against INCLUSION_RULE.",
   "url": "https://www.crunchbase.com/organization/emotion-id"
+ },
+ {
+  "name": "Brainwave Science",
+  "verdict": "sources disagree, unresolved",
+  "note": "2005 in some sources, 2012 in others, with nothing to adjudicate. Southborough MA; iCognative brain-fingerprinting for interrogation and deception detection. Also a scope question: marketed for counterterrorism, border security and deception detection rather than as a clinical neurotechnology.",
+  "url": "https://brainwavescience.com/"
+ },
+ {
+  "name": "Perfuse",
+  "verdict": "no year found",
+  "note": "Perfuse Inc, Los Angeles, AI for stroke care. Crunchbase lists the company but gives no founding year. Two similarly named companies exist and are NOT this one: Perfuse Therapeutics (San Francisco, 2018, ocular) and Perfusio (Greenville NC, 2016, burn imaging).",
+  "url": "https://www.crunchbase.com/organization/perfuse"
  }
 ]
