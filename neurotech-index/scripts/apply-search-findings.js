@@ -37,13 +37,10 @@
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'node:fs'
 import { core, stripInvisible } from './lib/funding.js'
+import { findingError } from './lib/findings.js'
 
 const COMMIT = process.argv.includes('--commit')
 const FILE = 'scripts/data/founding-findings.json'
-const VALID_KINDS = new Set([
-  'company_site', 'wikidata', 'wikipedia', 'record_description',
-  'companies_house', 'press', 'aggregator',
-])
 
 async function run() {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
@@ -79,24 +76,19 @@ async function run() {
 
   for (const f of findings) {
     const rows = byCore.get(core(stripInvisible(f.name))) || []
-    if (rows.length !== 1) {
-      skipped.push(`${f.name}: matches ${rows.length} rows in the database`)
-      continue
-    }
-    if (!VALID_KINDS.has(f.kind)) { skipped.push(`${f.name}: unknown source kind "${f.kind}"`); continue }
-    if (f.kind !== 'record_description' && !f.url) { skipped.push(`${f.name}: no source URL`); continue }
-    if (!(f.year >= 1900 && f.year <= new Date().getFullYear())) {
-      skipped.push(`${f.name}: implausible year ${f.year}`); continue
-    }
-    if (f.confidence === 'low' && !f.conflict) {
-      skipped.push(`${f.name}: low confidence with no conflict recorded`); continue
-    }
+    const err = findingError(f, rows.length, new Date().getFullYear())
+    if (err) { skipped.push(`${f.name}: ${err}`); continue }
     const o = rows[0]
+    // A caveat goes in the evidence, not in founded_conflict. The UI renders a
+    // conflict as a dagger meaning "sources disagree"; thin evidence is not a
+    // disagreement, and filing it as one would invent a dispute that nobody had.
+    const evidence = [f.evidence, f.caveat && `Caveat: ${f.caveat}`]
+      .filter(Boolean).join(' ')
     const cols = {
       founded_year: f.year,
       founded_source_kind: f.kind,
       founded_source_url: f.url || null,
-      founded_evidence: String(f.evidence || '').slice(0, 500),
+      founded_evidence: evidence.slice(0, 500),
       founded_retrieved_at: now,
       founded_conflict: f.conflict || null,
     }
