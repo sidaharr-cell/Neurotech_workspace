@@ -1,10 +1,10 @@
 # Founding and incorporation data: where this stands
 
-**Written 15 Aug 2026, end of session. Branch `revamp`, not merged, not pushed.**
+**Written 15 Aug 2026. Branch `revamp`, not merged, not pushed.**
 
 Read this first if you are picking the work up. The short version: the schema,
 the pipelines, the guards and the UI are finished and verified. The web-search
-sweep is 16 companies into 1,084 and cannot be finished without a person driving
+sweep is 26 companies into 1,084 and cannot be finished without a person driving
 it, for the reason in "What cannot be automated" below.
 
 ## What a reader sees now
@@ -52,14 +52,14 @@ Everything else here IS scriptable and has been run to completion.
 | `backfill-companies-house-bulk.js` | UK register bulk download, no key | run; 35 written |
 | `backfill-companies-house.js` | UK register API | **never run**; needs a key the project declined |
 | `backfill-founded.js` | Wikidata, company sites | run over all 1,084 |
-| `apply-search-findings.js` | `scratch/search-findings.json` | run; rerun after each batch of searches |
+| `apply-search-findings.js` | `scripts/data/founding-findings.json` | run; rerun after each batch of searches |
 | `audit-company-existence.js` | company websites | run over 703; verified 8 |
 | `audit-scope.js` | stored text | run; reports only |
 
 ## How to resume the search
 
 1. Pick the next companies: highest `rank_score` with `age_year is null`.
-2. Search. Record each result into `scratch/search-findings.json` with `name`,
+2. Search. Record each result into `scripts/data/founding-findings.json` with `name`,
    `year`, `kind`, `url`, `evidence`, `confidence`, and `conflict` where sources
    disagree.
 3. `node --env-file=.env scripts/apply-search-findings.js` to preview, then

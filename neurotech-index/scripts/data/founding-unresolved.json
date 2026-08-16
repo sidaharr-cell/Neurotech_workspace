@@ -1,0 +1,32 @@
+[
+ {
+  "name": "Subsense",
+  "verdict": "no founding year found",
+  "note": "Emerged from stealth Feb 2025 with $17M seed (BusinessWire); a stealth company predates its unveiling, so the launch year is not a founding year. Palo Alto, co-founders Tetiana Aleksandrova and Artem Sokolov.",
+  "url": "https://www.businesswire.com/news/home/20250218878648/en/Subsense-Emerges-from-Stealth-with-$17M-in-Seed-Funding-for-a-Non-Surgical-Brain-Computer-Interface"
+ },
+ {
+  "name": "BrainCom",
+  "verdict": "possible mis-inclusion",
+  "note": "The company at braincom.fr in Bagneux appears to be a strategic-communications agency, not a neurotech company. The neurotech BrainCom is an EU research PROJECT at braincom-project.com. Worth a scope review against INCLUSION_RULE.",
+  "url": "https://www.braincom-project.com/about/"
+ },
+ {
+  "name": "ApexNeuro",
+  "verdict": "possible mis-inclusion",
+  "note": "A neurorehabilitation CLINIC in Manchester (6 employees, Trustpilot-reviewed patient services), not a company whose product interfaces with or modulates the nervous system. No founding year found. Scope review against INCLUSION_RULE.",
+  "url": "https://www.apexneuro.co.uk/"
+ },
+ {
+  "name": "Accure Therapeutics",
+  "verdict": "scope question",
+  "note": "Develops CNS DRUGS (multiple sclerosis, Parkinson) from the Iproteos/Bionure merger. INCLUSION_RULE explicitly excludes companies developing drugs for neurological indications. Founding year written regardless; scope is a separate decision.",
+  "url": "https://accure.health/about-us/"
+ },
+ {
+  "name": "ableX",
+  "verdict": "no founding year found",
+  "note": "ableX healthcare Limited, Auckland, develops stroke-recovery products. Search returned the company but no founding year from any source; results were dominated by unrelated NZ rehab providers.",
+  "url": "https://fitness-gaming.com/profiles/company/ablex-healthcare-limited.html"
+ }
+]

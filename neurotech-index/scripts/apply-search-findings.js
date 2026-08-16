@@ -4,9 +4,14 @@
  *   node --env-file=.env scripts/apply-search-findings.js            # dry run
  *   node --env-file=.env scripts/apply-search-findings.js --commit
  *
- * Reads scratch/search-findings.json, which is written incrementally as
- * searches are done, so a long run cannot lose what it has established. Needs
- * migrations 019, 020 and 021.
+ * Reads scripts/data/founding-findings.json, which is written incrementally as
+ * searches are done. It lives in scripts/data and is COMMITTED, alongside
+ * class-images.json and card-images.json, because it is the same kind of thing:
+ * judgement a pipeline cannot make, gathered by hand, and expensive to redo. It
+ * spent its first day in scratch/, which is gitignored, where twenty-one
+ * researched years were one `rm -rf` from being lost.
+ *
+ * Needs migrations 019, 020 and 021.
  *
  * Each finding carries: name, year, kind, url, evidence, confidence, and
  * optionally `conflict` (another credible year) and `incorporatedYear` (where
@@ -34,7 +39,7 @@ import { readFileSync } from 'node:fs'
 import { core } from './lib/funding.js'
 
 const COMMIT = process.argv.includes('--commit')
-const FILE = 'scratch/search-findings.json'
+const FILE = 'scripts/data/founding-findings.json'
 const VALID_KINDS = new Set([
   'company_site', 'wikidata', 'wikipedia', 'record_description',
   'companies_house', 'press', 'aggregator',
