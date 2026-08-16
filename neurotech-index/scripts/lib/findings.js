@@ -12,6 +12,12 @@
 export const VALID_KINDS = new Set([
   'company_site', 'wikidata', 'wikipedia', 'record_description',
   'companies_house', 'press', 'aggregator',
+  // An institution announcing its own spin-off, which is a document from the
+  // parent rather than a report about it. IDIBELL on ADmit Therapeutics, the
+  // Upper Austrian incubator tech2b on Rewellio, Maastricht Health Campus on
+  // Brain Innovation. These were being refused as "unknown source kind" and
+  // downgraded to press, which understated them.
+  'university', 'accelerator',
 ])
 
 /**

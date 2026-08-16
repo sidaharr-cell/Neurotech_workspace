@@ -120,3 +120,30 @@ describe('sourceHost', () => {
     expect(sourceHost(null)).toBe(null)
   })
 })
+
+describe('institutional sources', () => {
+  it('labels a parent institution and an accelerator, and neither is weak', () => {
+    // IDIBELL announcing its own spin-off is a document from the parent, not a
+    // journalist's summary of one. These were previously refused outright by the
+    // applier and had to be downgraded to press.
+    const uni = foundingLine({
+      founded_year: 2017, founded_source_kind: 'university',
+      founded_source_url: 'https://idibell.cat/en/2023/10/x',
+    })
+    expect(uni.sourceLabel).toBe('parent institution')
+    expect(uni.weak).toBe(false)
+    expect(uni.sourceHost).toBe('idibell.cat')
+
+    const acc = foundingLine({
+      founded_year: 2017, founded_source_kind: 'accelerator',
+      founded_source_url: 'https://www.tech2b.at/en/startup/rewellio-gmbh/',
+    })
+    expect(acc.sourceLabel).toBe('accelerator or incubator')
+    expect(acc.weak).toBe(false)
+  })
+
+  it('still treats an unrecognised kind as weak rather than trusting it', () => {
+    const l = foundingLine({ founded_year: 2017, founded_source_kind: 'astrology' })
+    expect(l.weak).toBe(true)
+  })
+})

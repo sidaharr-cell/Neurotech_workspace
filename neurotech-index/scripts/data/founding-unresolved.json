@@ -940,5 +940,161 @@
   "verdict": "renamed",
   "note": "Year recorded as 2017. Now trades as SpinTech MRI, headquartered in Bingham Farms, Michigan. Acquired MR Innovations in February 2021 and has a development partnership with Canon Medical Systems USA. Squarely in scope: STAGE is a quantitative MRI acquisition and post-processing platform for brain imaging in stroke, TBI, Parkinson's, MS and dementia.",
   "url": "https://www.prweb.com/releases/spintech-mri-announces-6-5-million-series-a-financing-to-expand-deployment-of-stage-tm-software-to-speed-diagnosis-and-treatment-of-brain-diseases-850719056.html"
+ },
+ {
+  "name": "EyeWire",
+  "verdict": "not-a-company",
+  "note": "A citizen-science game for reconstructing retinal neurons, run out of Sebastian Seung's lab at MIT and then Princeton, with Amy Robinson Sterling as executive director and NIH grant UH2 CA203710 behind it. It launched 10 December 2012, which is a product launch and not a founding. No distinct commercial entity was found. Note that \"Eyewire\" was also an unrelated stock-photography brand acquired by Getty Images.",
+  "url": "https://blog.eyewire.org/about/"
+ },
+ {
+  "name": "Pressao Medical",
+  "verdict": "no-year",
+  "note": "Aggregators give 2018, but the only verifiable fact behind it is an Adventus Ventures seed round dated 9 May 2018, which is a funding date. California records show the company was filed there on 20 August 2021 and formed in Delaware, but a California filing for a Delaware corporation is a foreign qualification, not a founding; the Delaware date is unknown. It was already announcing a CEO hire and Series A in January 2019, so it existed by 2018 at the latest. Genuinely in scope: BP-ADJUST is a wrist-worn neuromodulation device targeting peripheral nerves for uncontrolled hypertension.",
+  "url": "https://www.prnewswire.com/news-releases/pressao-medical-hires-new-ceo-and-initiates-series-a-funding-300771552.html"
+ },
+ {
+  "name": "WizeCare",
+  "verdict": "year-disputed",
+  "note": "The company's own about page has no founding statement; its only year is a copyright line, which was refused. Aggregators split between 2012 and 2015 with no primary source for either, and the tie could not be broken: the Calcalist article that might have settled it is on a host that no longer resolves. The likely cause of the split is that the company was formerly VideoTherapy, so one year belongs to VideoTherapy and the other to the WizeCare relaunch. Which is which is unknown.",
+  "url": "https://www.wizecare.com/about"
+ },
+ {
+  "name": "Mosaikx",
+  "verdict": "wrong-location",
+  "note": "The index says Dubai; the company's own press release puts it in Los Angeles, founders Sina Torabi and Mahbod Azadian. Nothing supports Dubai beyond an F6S listicle. The domain has also changed hands or pivoted: mosaikx.com now serves a Los Angeles marketing and automation agency with no neurotech content. The neurotech entry presumably derives from Hipo, a wearable caregiver device for Alzheimer's patients pitched in 2018. Aggregators say 2014; a 2018 release says only that the company won a Hong Kong IoT contest in 2016, shortly after starting — a contest date, not a founding.",
+  "url": "https://www.crunchbase.com/organization/mosaikx"
+ },
+ {
+  "name": "Excep Apps",
+  "verdict": "no-year",
+  "note": "No source, primary or aggregator, states a founding year. The company did exist: there is a Crunchbase profile, a MobiHealthNews tag, and a reported seed from Iron Yard Ventures, the accelerator arm of The Iron Yard. LOCATION: the index records none, but sources place it in Spartanburg, South Carolina. Iron Yard Ventures wound down around 2017, so the company may be defunct. SCOPE: mobile apps for people with special needs, starting with children with autism — assistive software, not neurotechnology.",
+  "url": "https://www.crunchbase.com/organization/excep-apps"
+ },
+ {
+  "name": "EyeMove",
+  "verdict": "no-website",
+  "note": "The index records an f6s.com profile in place of a website, and eyemove.online does not resolve. The company is not purely an F6S phantom — there are eyemove.ru social presences and a CEO named Mikhail Yanchikov — but the only year available, 2016 from Tracxn, has no primary corroboration. A Russian EGRUL registry lookup would settle it.",
+  "url": "https://tracxn.com/d/companies/eyemove/__-6tmsjLir-Ui23eabLnAQNNw6PHxImL9oRFlgg70U84"
+ },
+ {
+  "name": "Vita Beans Neural Solutions",
+  "verdict": "scope",
+  "note": "Incorporated 23 December 2008 per the Indian MCA registry, CIN U72900KA2008PTC048680, which embeds KA2008 — an incorporation date, not a founding, so no year is recorded here. SCOPE: the business at vitabeans.com is education technology — learning and assessment, virtual classrooms, student information management, game-based learning. \"Neural Solutions\" comes from an origin story about building a brain-like AI agent, not from neurotechnology. An edtech company misfiled on the strength of its name.",
+  "url": "https://www.zaubacorp.com/VITA-BEANS-NEURAL-SOLUTIONS-PRIVATE-LIMITED-U72900KA2008PTC048680"
+ },
+ {
+  "name": "SAM App",
+  "verdict": "not-a-company",
+  "note": "A university app, not a company: Self-help for Anxiety Management, developed by an interdisciplinary team at UWE Bristol with peer-reviewed publications behind it, launched in the app stores in July 2013 — a product launch. UWE now licenses it to Mind Garden Technology CIC, a Bristol community interest company that operates it on the university's behalf; that entity's incorporation year was not established and it is a licensee rather than the originator. The app now also lives at mindgarden-tech.co.uk.",
+  "url": "https://info.uwe.ac.uk/news/uwenews/news.aspx?id=3226"
+ },
+ {
+  "name": "Mental Waves® for happiness",
+  "verdict": "not-a-company",
+  "note": "A personal brand, as the registered-trademark symbol in the row name hints: the trading name of Alex Michel, a Montpellier composer of therapeutic music who describes himself as founder of Mental Waves. No SIRET, no legal entity registration and no incorporation record were found; the string \"Mind Response\" in the site's copyright line may be the actual entity but nothing corroborates it. The site offers only two date signals, both excluded by the rules: a copyright range of 2011-2026 and the phrase \"depuis plus de 15 ans\". SCOPE: immersive sound experiences and binaural audio — the brainwave vocabulary is thematic, with no measurement, device or interface.",
+  "url": "https://www.mental-waves.com/qui-est-alex-michel/"
+ },
+ {
+  "name": "Fondly",
+  "verdict": "existence-unverified",
+  "note": "The index stores no website and no location, and no company of this name could be found anywhere in the neurotech, mental-health, EEG or dementia space. What exists under the name is a scatter of unrelated consumer apps: a Fondly dementia family app at fondly.co whose Facebook page was last active around 2015, a Fondly Memory Journal on the App Store, a couples game by a different developer, and a cards app. Almost certainly different products sharing a common word. No basis to pick one, and a candidate for deletion unless a source exists for what the row was meant to be.",
+  "url": "https://fondly.co"
+ },
+ {
+  "name": "Litha Group",
+  "verdict": "dissolved",
+  "note": "LITHA GROUP LTD, company number 14246262, incorporated 20 July 2022 and DISSOLVED 10 September 2024. The incorporation date is the only date on record and must not be read as a founding. litha.org does not resolve. It was renamed from HUMAN LTD within nine days of incorporation. SCOPE: its SIC code is generic software development and the only description found is conversational AI for human-computer interaction, which is not neurotechnology. Identification is reasonably but not fully certain: the Warwickshire registered office near Bidford-on-Avon matches the index, though Companies House now shows Leicester.",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/14246262"
+ },
+ {
+  "name": "CONSTRUKTS, Inc.",
+  "verdict": "year-disputed",
+  "note": "Aggregators say 2008; the company site carries a copyright range of 2014-2025, which was refused as evidence. Three primary sources — the homepage, the about and team page, and the founder's own site — state no founding year, and the NSF grant release omits it. LOCATION: the index says Chicago; the NSF release datelines Wilmington NC and aggregators list Raleigh, with no Chicago connection found. SCOPE: a digital-twin STEM learning platform of IoT smart blocks with AI model analysis and AR — edtech with no neural sensing. Founder Pamela L. Jennings PhD.",
+  "url": "https://www.crunchbase.com/organization/construkts-inc"
+ },
+ {
+  "name": "Explorer Research",
+  "verdict": "acquired",
+  "note": "Year recorded as 2002. Savanta, part of Next 15 Group plc, acquired the company in December 2023; it still trades under the Explorer Research brand. SCOPE: consumer neuromarketing and shopper research using eye tracking and implicit response, rather than clinical neurotechnology.",
+  "url": "https://www.next15.com/media/news/savanta-acquires-explorer-research/"
+ },
+ {
+  "name": "Lifelines Neurodiagnostic Systems",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2001. The index says Troy, Illinois, which is a legacy or secondary site; the HQ is Louisville, Kentucky, with London and Dublin offices. Corporate history matters here: it acquired Lifelines Ltd of the UK in 2017 and Incereb of Ireland in 2018, and in 2019 a joint venture merged four companies into Lifelines Neuro Company under SIDIS Global. Both Incereb and Eegapps Medical are separate rows in this index, so three rows describe one group.",
+  "url": "https://lifelinesneuro.com/eeg-company/"
+ },
+ {
+  "name": "ADmit Therapeutics",
+  "verdict": "scope",
+  "note": "Year recorded as 2017, well sourced to the parent institute. But this is an in-vitro diagnostics company: MAP-AD is an epigenetic blood test with an algorithm stratifying mild cognitive impairment patients by risk of progression. Neither a device nor software acting on the nervous system, and not a drug developer either despite the name.",
+  "url": "https://idibell.cat/en/2023/10/the-idibells-spin-off-admit-therapeutics-closes-a-e5-4-million-funding-round/"
+ },
+ {
+  "name": "Marigold Health",
+  "verdict": "renamed",
+  "note": "Year recorded as 2016, weakly. The company has renamed twice: Beacon, a Johns Hopkins student project in the 2016-17 Social Innovation Lab cohort, then Sunrise Health, then Marigold Health. CB Insights still files it under the sunrise-health slug. SCOPE: text-based peer support for behavioural health and substance use disorder with NLP triage — mental-health software with no neural signal.",
+  "url": "https://www.crunchbase.com/organization/marigold-health"
+ },
+ {
+  "name": "aidoc",
+  "verdict": "scope",
+  "note": "Year recorded as 2016 from the company's own about page. SCOPE: a general clinical-AI and radiology triage platform spanning radiology, cardiology, neurovascular and vascular, with 18+ FDA-cleared algorithms; by its own account it covers 75% of a facility's patient population. It belongs in a neurotechnology index only through its intracranial-haemorrhage and large-vessel-occlusion products. It is also very large — 1,600+ medical centres, over $500M raised, pre-IPO — so it may distort a startup-oriented index.",
+  "url": "https://www.aidoc.com/about/"
+ },
+ {
+  "name": "BrainVoyager",
+  "verdict": "product-not-company",
+  "note": "Year recorded as 2000. BrainVoyager is a software package; the company is Brain Innovation B.V. of Maastricht, founded by Rainer Goebel, who is also Professor of Cognitive Neuroscience at Maastricht University. The row should be renamed to Brain Innovation B.V. with BrainVoyager as its product. Product line: BrainVoyager, Turbo-BrainVoyager for real-time fMRI neurofeedback, and PowerMAGView for TMS neuronavigation.",
+  "url": "https://www.brightlands.com/en/maastricht-health-campus/companies-institutes/companies/company/brain-innovation"
+ },
+ {
+  "name": "Mundo Pato",
+  "verdict": "scope",
+  "note": "Year recorded as 2010, on aggregators alone. mundopato.com resolves to UnitusTI, Unitus Therapy Intelligence, operated by Mundo Pato Inc of Portland — so the row is named after the holding company while the product carries a different brand. SCOPE: a HIPAA and GDPR compliant SaaS for data collection and curriculum in ABA therapy, autism and special-needs education. Practice-management software, not neurotechnology.",
+  "url": "https://www.crunchbase.com/organization/mundo-pato"
+ },
+ {
+  "name": "DeepMind",
+  "verdict": "scope",
+  "note": "Year recorded as 2010, disputed against 2011. SCOPE: a general artificial-intelligence research lab — game-playing agents, AlphaFold, language models. It draws inspiration from neuroscience, which is almost certainly why it was swept into this index, but neuroscience-inspired AI is not neurotechnology and it builds nothing that interfaces with the nervous system. Acquired by Google in 2014, merged with Google Brain in 2023, now Google DeepMind under Alphabet. The recorded URL is stale; the site is deepmind.google.",
+  "url": "https://deepmind.google"
+ },
+ {
+  "name": "Moodpanda",
+  "verdict": "scope",
+  "note": "Year recorded as 2011, as a launch. SCOPE: a self-reported mood diary and happiness tracker with a peer-support community, where users type a 0-10 score. No sensing, no signal acquisition, no neural component. Founders Ross Larter and Jake Greenwood. The live site still serves classic ASP.NET .aspx pages and the blog is a Tumblr, so it may be dormant.",
+  "url": "https://moodpanda.com"
+ },
+ {
+  "name": "Neurallys",
+  "verdict": "wrong-location",
+  "note": "Year recorded as 2016. The index says Paris, which reflects only its incubation at the Institut du Cerveau; it was founded within the Caen faculty of medicine and moved its HQ and R&D to Colombelles in Normandy in 2017. neurallys.com refused connection on fetch and may be dead. Genuinely in scope: an implantable intracranial-pressure sensor for hydrocephalus shunt patients.",
+  "url": "https://www.tendanceouest.com/actualite-383965-colombelles-neurallys-developpe-un-dispositif-pour-surveiller-la-pression-du-crane"
+ },
+ {
+  "name": "Owl Insights",
+  "verdict": "acquired",
+  "note": "Year recorded as 2011, disputed against 2013. Acquired by NeuroFlow in June 2024 and no longer independent; owlinsights.com refused connection and appears dead post-acquisition. The legal entity is Mental Health Data Services, Inc., dba Owl Insights, later branded Owl Health. LOCATION: originally Kirkland WA, later Portland Oregon; the index says Seattle. SCOPE: measurement-based behavioural-health SaaS, not neurotechnology.",
+  "url": "https://www.inknowvation.com/sbir/companies/owl-insights"
+ },
+ {
+  "name": "EyeControl",
+  "verdict": "wrong-entity",
+  "note": "Year recorded as 2016. The registered entity appears to be Eyefree Assisting Communication Ltd, listed that way in an EU Commission Futurium entry; the row name is the product brand. A screenless wearable eye-tracking communication device for ALS and locked-in patients, later extended as EyeControl-Pro for ICU delirium. Harvard Business School case 820078 would be a good corroborating source for the year.",
+  "url": "https://www.prnewswire.com/il/news-releases/eyecontrol-expands-rd-program-with-eyecontrol-pro-for-delirium-301566624.html"
+ },
+ {
+  "name": "Mightier",
+  "verdict": "product-not-company",
+  "note": "Year recorded as 2014, disputed against 2016. Mightier is the product: a biofeedback video-game system teaching emotional regulation to children, using a heart-rate wearable to gate gameplay. The company is Neuromotion Inc, dba Neuromotion Labs, Boston, founders Craig Lund and Jason Kahn — a genuine Boston Children's Hospital and Harvard Medical School spinout whose underlying research programme began around 2009. The product was released in 2017 and renamed Mightier in 2018; neither is a founding date.",
+  "url": "https://www.inknowvation.com/sbir/companies/neuromotion-inc"
+ },
+ {
+  "name": "Invention Labs",
+  "verdict": "renamed",
+  "note": "Year recorded as 2007. The row is named after the parent but the live brand is Avaz Inc: inventionlabs.in is legacy and its about page returns a 500, while the operating site is avazapp.com. Legal name Invention Labs Engineering Products Private Limited, an IIT Madras incubated company; founder Ajit Narayanan. Avaz is an AAC app for children with speech disability and autism.",
+  "url": "https://avazapp.com/about-us/"
  }
 ]
