@@ -340,5 +340,35 @@
   "verdict": "scope question",
   "note": "Microfluidic exosome isolation instrumentation for lab and diagnostic sample prep. No nervous-system interface. Reportedly acquired by InnovaPrep in Oct 2023.",
   "url": "https://clarabio.tech"
+ },
+ {
+  "name": "Zed Medical",
+  "verdict": "no year, and OUR PRODUCT DESCRIPTION IS WRONG",
+  "note": "Our row says cerebral aneurysm embolic device. zedmedical.com describes a dual-mode CORONARY catheter combining FFR pressure and IVUS ultrasound for cardiac intervention — there is no cerebral aneurysm product on the site. The year is also unsettled: aggregators say 2016, the California register shows a filing date of 6 Feb 2023, and a ZED Medical led by Tom Moore was seed-funded in 2018 for intra-body imaging catheters.",
+  "url": "https://zedmedical.com/about-us/"
+ },
+ {
+  "name": "NBI Development",
+  "verdict": "no year; existed by 2006",
+  "note": "A 4 Dec 2006 release announces a $5.5M SEED round — a funding event, not a founding. It says the company was founded by Mayo Clinic, Bay City Capital and the Venturi Group but gives no year. CEO Konstantinos Alataris went on to lead Nevro, generally dated to 2006 out of the same effort, which is suggestive but not confirmation.",
+  "url": "https://www.biospace.com/implantable-device-co-nbi-development-inc-gets-5-5m-seed-funding"
+ },
+ {
+  "name": "The Virtual Brain",
+  "verdict": "NOT A COMPANY - open-source academic project",
+  "note": "An open-source neuroinformatics and simulation project run by an academic consortium founded by Viktor Jirsa (Aix-Marseille), Randy McIntosh (Baycrest Toronto) and Petra Ritter (Charite Berlin), funded largely by the James S. McDonnell Foundation and now hosted on the EU EBRAINS platform. No founding year is stated; the flagship papers appeared in 2013. Toronto is ONE OF THREE consortium sites, not a company HQ.",
+  "url": "https://www.brainsimulation.org/bsw/zwei/research-focus-tvb"
+ },
+ {
+  "name": "Limbix",
+  "verdict": "scope question",
+  "note": "SparkRx is self-guided CBT software with no sensing or modulation of the nervous system. Acquired by Big Health July 2023; domain dead.",
+  "url": "https://www.limbix.com"
+ },
+ {
+  "name": "Impulse Monitoring",
+  "verdict": "scope question",
+  "note": "Outsourced intraoperative neuromonitoring SERVICE, staffing neurophysiologists for surgery, rather than a product company. Absorbed into NuVasive Clinical Services in 2011; domain dead.",
+  "url": "https://www.impulsemonitoring.com"
  }
 ]
