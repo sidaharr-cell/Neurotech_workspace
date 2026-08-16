@@ -28,5 +28,11 @@
   "verdict": "no founding year found",
   "note": "ableX healthcare Limited, Auckland, develops stroke-recovery products. Search returned the company but no founding year from any source; results were dominated by unrelated NZ rehab providers.",
   "url": "https://fitness-gaming.com/profiles/company/ablex-healthcare-limited.html"
+ },
+ {
+  "name": "Aspen Neuroscience",
+  "verdict": "scope question",
+  "note": "Autologous iPSC-derived dopamine neuron replacement THERAPY for Parkinson (ANPD001) — a cell therapy drug, not a device or software interfacing with the nervous system. INCLUSION_RULE excludes drug developers. Year written; scope is a separate decision.",
+  "url": "https://aspenneuroscience.com/technology-overview/"
  }
 ]
