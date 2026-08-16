@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   pageText, extractFoundingYear, extractSchemaFounding, preferFounding, aboutUrl, ABOUT_PATHS,
-  sameSite, mentionsCompany, websiteKey, brandKey,
+  sameSite, mentionsCompany, websiteKey, brandKey, longerFormOf,
 } from './founding.js'
 
 const NOW = 2026
@@ -421,5 +421,65 @@ describe('brandKey', () => {
     expect(brandKey('https://www.crunchbase.com/organization/y')).toBe(null)
     expect(brandKey('https://N/A')).toBe(null)
     expect(brandKey(null)).toBe(null)
+  })
+})
+
+describe('longerFormOf', () => {
+  const at = (name, location) => ({ name, location })
+
+  it('matches a name that another extends, in the same place', () => {
+    // Braincare of Sao Carlos is in the index twice, at brain4.care and at
+    // braincare.com.br. Names differ, domains differ, brands differ.
+    expect(longerFormOf(
+      at('Braincare', 'São Carlos, Brazil'),
+      at('Braincare Health Tecnology', 'São Carlos, Brazil'))).toBe(true)
+  })
+
+  it('is symmetric', () => {
+    const a = at('Eodyne', 'Barcelona, Spain'), b = at('Eodyne Systems', 'Barcelona, Spain')
+    expect(longerFormOf(a, b)).toBe(longerFormOf(b, a))
+  })
+
+  it('refuses a name prefix in a different place', () => {
+    // The half that stops it merging a parent and a subsidiary that are really
+    // separate: Boston Scientific is in Marlborough, its neuromodulation arm in
+    // Valencia.
+    expect(longerFormOf(
+      at('Boston Scientific', 'Marlborough, USA'),
+      at('Boston Scientific Neuromodulation Corporation', 'Valencia, USA'))).toBe(false)
+  })
+
+  it('refuses a shared location alone', () => {
+    expect(longerFormOf(
+      at('Neuralink', 'Fremont, USA'), at('Openwater', 'Fremont, USA'))).toBe(false)
+  })
+
+  it('requires the prefix to end at a word boundary', () => {
+    expect(longerFormOf(
+      at('Neuralink', 'Fremont, USA'), at('Neuralinked Devices', 'Fremont, USA'))).toBe(false)
+  })
+
+  it('refuses a short prefix that would match half the index', () => {
+    expect(longerFormOf(
+      at('Brain', 'Boston, USA'), at('Brain Scientific', 'Boston, USA'))).toBe(false)
+    expect(longerFormOf(
+      at('Neuro', 'Paris, France'), at('Neuro Device Group', 'Paris, France'))).toBe(false)
+  })
+
+  it('refuses identical names, which the name signal already has', () => {
+    expect(longerFormOf(
+      at('Eodyne', 'Barcelona, Spain'), at('Eodyne', 'Barcelona, Spain'))).toBe(false)
+  })
+
+  it('refuses when either location is missing', () => {
+    expect(longerFormOf(
+      at('Braincare', null), at('Braincare Health Tecnology', 'São Carlos, Brazil'))).toBe(false)
+    expect(longerFormOf(at('Braincare', ''), at('Braincare Health Tecnology', ''))).toBe(false)
+  })
+
+  it('compares locations through punctuation and case', () => {
+    expect(longerFormOf(
+      at('Braincare', 'SAO CARLOS,  BRAZIL'),
+      at('Braincare Health Tecnology', 'Sao Carlos, Brazil'))).toBe(true)
   })
 })
