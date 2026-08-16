@@ -17,14 +17,32 @@
  * for one company means the two names differ by punctuation, a suffix or an
  * accent — enough to hash apart, not enough to be different companies.
  *
- * WHAT THIS CANNOT FIND: a company that RENAMED. G-Therapeutics SA of Lausanne
- * became GTX Medical and then ONWARD Medical of Eindhoven, and both rows are in
- * the index describing the same spinal-cord stimulation product. The two names
- * share no letters, so no normalisation reaches it. That one surfaced only
- * because a verifier reading Onward's history mentioned the former name.
- * Catching renames needs an alias list — the same shape as
- * scripts/data/company-aliases.json, which the funding pipeline already keeps
- * for exactly this reason — not a cleverer string comparison.
+ * TWO SIGNALS, because one of them was missing the interesting half.
+ *
+ * `core` name equality finds a company entered twice under punctuation variants.
+ * It found exactly one pair: "Precision Neuroscience" against
+ * "PrecisionNeuroscience".
+ *
+ * A shared WEBSITE finds a company that RENAMED, which no string comparison
+ * reaches. Phobious became Psious became Amelia Virtual Care; the first two
+ * names normalise differently and both rows point at the same site. This signal
+ * found four more pairs on its first run, including Cerebrotech Medical Systems
+ * against Cerebro Medical Systems, both in Pleasanton.
+ *
+ * The domain signal needs `websiteKey` rather than a bare hostname, and that is
+ * the whole difficulty. Five rows in this index record `linkedin.com` as their
+ * website, three record the literal string "n/a", and two each record
+ * `crunchbase.com` and `f6s.com`. Those rows have no website at all, and
+ * matching on the aggregator's host would merge unrelated companies in Moscow,
+ * Berlin, Montreal, Cape Town and Chennai into a single "duplicate". So
+ * `websiteKey` returns null for aggregators, parking pages and placeholders, and
+ * a null never groups.
+ *
+ * STILL NOT FOUND: a rename where the site moved too. G-Therapeutics SA of
+ * Lausanne became GTX Medical and then ONWARD Medical of Eindhoven; the rows
+ * share neither name nor domain, and that pair surfaced only because a person
+ * read Onward's history. Catching those needs an alias list — the same shape as
+ * scripts/data/company-aliases.json, which the funding pipeline already keeps.
  *
  * This NEVER DELETES, and that is deliberate rather than timid. Every row may be
  * pointed at by relationships, funding_rounds, devices matched on manufacturer,
@@ -38,6 +56,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { core } from './lib/funding.js'
+import { websiteKey } from './lib/founding.js'
 
 const MERGE = process.argv.includes('--merge')
 
@@ -66,17 +85,40 @@ async function run() {
     if (data.length < 500) break
   }
 
-  const byCore = new Map()
-  for (const r of rows) {
-    const k = core(r.name)
-    if (!k) continue
-    if (!byCore.has(k)) byCore.set(k, [])
-    byCore.get(k).push(r)
+  // Group on each signal separately so the report can say WHICH one found a
+  // pair, then merge groups that overlap: a pair caught by both should be
+  // reported once, not twice.
+  const groupBy = (keyOf) => {
+    const m = new Map()
+    for (const r of rows) {
+      const k = keyOf(r)
+      if (!k) continue
+      if (!m.has(k)) m.set(k, [])
+      m.get(k).push(r)
+    }
+    return [...m.values()].filter(g => g.length > 1)
   }
-  const dupes = [...byCore.values()].filter(g => g.length > 1)
+  const byName = groupBy(r => core(r.name))
+  const byDomain = groupBy(r => websiteKey(r.website))
+
+  const signals = new Map()   // id of a member -> Set of signal names
+  const merged = []
+  for (const [signal, groups] of [['name', byName], ['website', byDomain]]) {
+    for (const g of groups) {
+      const existing = merged.find(m => m.some(r => g.some(x => x.id === r.id)))
+      const target = existing || (merged.push([]), merged[merged.length - 1])
+      for (const r of g) if (!target.some(x => x.id === r.id)) target.push(r)
+      for (const r of g) {
+        if (!signals.has(r.id)) signals.set(r.id, new Set())
+        signals.get(r.id).add(signal)
+      }
+    }
+  }
+  const dupes = merged
   const allCols = GROUPS.flat()
 
-  console.log(`${rows.length} companies; ${dupes.length} names appear more than once\n`)
+  console.log(`${rows.length} companies; ${dupes.length} appear more than once`)
+  console.log(`  ${byName.length} found by name, ${byDomain.length} by shared website\n`)
 
   const report = []
   const patches = []
@@ -95,17 +137,26 @@ async function run() {
       for (const c of cols) patch[c] = donor[c]
       rescued.push(cols[0])
     }
+    const found = [...new Set(group.flatMap(r => [...(signals.get(r.id) || [])]))].sort()
     report.push({
       name: keeper.name,
+      foundBy: found,
       keep: { id: keeper.id, name: keeper.name, fields: filled(keeper, allCols) },
       duplicates: rest.map(d => ({ id: d.id, name: d.name, fields: filled(d, allCols) })),
       rescued,
     })
     if (Object.keys(patch).length) patches.push({ id: keeper.id, name: keeper.name, patch, rescued })
-    console.log(`${keeper.name}`)
+    console.log(`${keeper.name}   (by ${found.join(' and ')})`)
     console.log(`  keep      ${keeper.id}  (${filled(keeper, allCols)} fields)`)
     for (const d of rest) console.log(`  duplicate ${d.id}  (${filled(d, allCols)} fields)  "${d.name}"`)
     if (rescued.length) console.log(`  rescue    ${rescued.join(', ')}`)
+    // Say so when the keeper was not actually chosen on evidence. Both rows
+    // carrying the same number of fields means the tie fell to rank_score, which
+    // is not a statement about which name is right: it picked "MDDT inc" over
+    // "Movement Disorders Diagnostic Technologies (MDDT)".
+    if (rest.some(d => filled(d, allCols) === filled(keeper, allCols))) {
+      console.log(`  ! tie on field count; the keeper here is arbitrary, check the names`)
+    }
   }
 
   try { mkdirSync('scratch', { recursive: true }) } catch { /* exists */ }
