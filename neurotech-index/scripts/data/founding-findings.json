@@ -3750,5 +3750,50 @@
   "evidence": "French register, SIREN 420 025 454: date de création 01/08/1998, registered at the Manosque commercial court 07/09/1998, status active.",
   "confidence": "medium",
   "caveat": "A registry creation date, which for a French SAS is effectively the founding, though an earlier legal form would not show. SAS, capital 576,900 euro, 20-49 employees, address matching the index exactly. technoconcept.fr failed on every attempt, so the EEG and evoked-potential business could not be confirmed from the company itself; the register classifies it under engineering and technical studies."
+ },
+ {
+  "name": "Saccade Diagnostics",
+  "year": 2014,
+  "kind": "registry",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/SC475291",
+  "evidence": "Companies House: SACCADE DIAGNOSTICS LIMITED, SC475291, incorporated 14 April 2014; registered as LISTER SQUARE (NO 219) LIMITED until 5 June 2014, then renamed.",
+  "confidence": "low",
+  "conflict": "The registry date is a SHELF-COMPANY incorporation — the vehicle was Lister Square No 219 and only became Saccade on 5 June 2014 — so it says nothing about the venture. The University of Aberdeen reports the spinout winning first prizes in Converge Challenge and Best Open Innovation Business in 2013, before the vehicle existed. 2014 is the company, 2013 the venture."
+ },
+ {
+  "name": "Altoida",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.startupticker.ch/en/news/fda-breakthrough-designation-for-altoida-s-medtech-neurology-device",
+  "evidence": "\"Established in 2016 in Luzern, Altoida is a pioneer in brain health and digital biomarker science.\" Founders Ioannis Tarnanas, Richard Fischer and Maximilian Buegler.",
+  "confidence": "medium",
+  "caveat": "Swiss in origin — Altoida AG of Lucerne — with a US entity, Altoida Inc., fronting the business later; the company page gives a Washington DC address, so the index matches current HQ but not the founding jurisdiction. In scope: an AR and tablet-based digital neuro-biomarker platform for Alzheimer's with FDA Breakthrough Device designation. The Swiss commercial register returned 403."
+ },
+ {
+  "name": "Special Minds",
+  "year": 2004,
+  "kind": "company_site",
+  "url": "https://specialmindsit.dk/om-os/",
+  "evidence": "\"Special Minds IT er etableret i 2004 - dengang under navnet BOAS Specialister - som nonprofit virksomhed. Vi er registreret socialøkonomisk virksomhed (RSV).\"",
+  "confidence": "medium",
+  "caveat": "RENAMED from BOAS Specialister. NOT A COMPANY in the ordinary sense: a registered social-economy enterprise and part of Den Sociale Udviklingsfond, a non-profit charitable foundation. LOCATION: DANISH, with departments in Aarhus, Aalborg, Silkeborg and Kolding — the index's Istanbul, Turkey is wrong. SCOPE: employing, training and placing autistic people in IT work such as accessibility testing. A sibling of the Specialisterne model but a distinct organisation."
+ },
+ {
+  "name": "Deneb Medical",
+  "year": 2014,
+  "kind": "registry",
+  "url": "https://www.northdata.com/Deneb+Medical+SL,+Donostia/NIF+B75107649",
+  "evidence": "Deneb Medical SL, NIF B75107649, Registro Mercantil registration 31 March 2014; directors Juan Arregui Altuna and Aritz Lazcoz del Campo.",
+  "confidence": "medium",
+  "caveat": "A registration date with no separate founding statement found, though Dealroom and PitchBook independently say \"launched March 2014\". Active on recent 2025-26 filings, no name changes. SCOPE: the Izar surgical robotics platform serving neurosurgery, CMF, head and neck, urology and general surgery — surgical robotics where neurosurgery is one application among several."
+ },
+ {
+  "name": "Imagine Eyes",
+  "year": 2003,
+  "kind": "company_site",
+  "url": "https://www.imagine-eyes.com/company/",
+  "evidence": "\"Since he cofounded Imagine Eyes in 2003, he has established partnerships with scientific and clinical centers.\"",
+  "confidence": "medium",
+  "caveat": "The year comes from a FOUNDER BIOGRAPHY on the company's own page — normally a refused source class — but it is the company's own statement about its own founding, internally consistent, with no competing year. SCOPE: the rtx1 adaptive-optics retinal camera imaging photoreceptors and retinal vasculature. The retina is CNS tissue and the technique appears in neurodegeneration research, but the company's market and regulatory positioning are ophthalmology."
  }
 ]
