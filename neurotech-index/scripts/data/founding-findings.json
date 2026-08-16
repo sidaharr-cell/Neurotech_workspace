@@ -1591,5 +1591,220 @@
   "evidence": "Inc42: \"In 2020, while the duo was still in college, they set up Nexstem.\" Founders Siddhant Dangi and Deepansh Goyal, BITS Pilani alumni; non-invasive BCI headset and developer stack.",
   "confidence": "medium",
   "conflict": "Location only, not the year: Inc42 and other outlets place the company in Bengaluru while the index says Gurugram. The name is also misspelled in the index; the company is Nexstem, matching nexstem.ai."
+ },
+ {
+  "name": "Explorer Research",
+  "year": 2002,
+  "kind": "press",
+  "url": "https://www.next15.com/media/news/savanta-acquires-explorer-research/",
+  "evidence": "Acquisition announcement of December 2023, echoed by Research Live and the Insights Association: Explorer Research was \"established in 2002\", with offices in Toronto and Chicago.",
+  "confidence": "medium",
+  "caveat": "The company site has no about page and states no founding year, so this rests on acquisition coverage. Acquired by Savanta, part of Next 15 Group plc, in December 2023, and still trading under its own brand."
+ },
+ {
+  "name": "Lifelines Neurodiagnostic Systems",
+  "year": 2001,
+  "kind": "company_site",
+  "url": "https://lifelinesneuro.com/founders-griffin/",
+  "evidence": "Company founders page: \"Lifelines Neurodiagnostic Systems, Inc. was founded July 1, 2001.\"",
+  "confidence": "high",
+  "conflict": "Aggregators variously give 2000 and 1999. 2000 is when Simon Griffin left MEDICA in Dusseldorf and decided to start the business, which is pre-founding; 1999 belongs to Lifelines Ltd of the UK, a separate earlier company founded by Dave Hulin and Stephen Walters. The US entity in this row is 2001."
+ },
+ {
+  "name": "Ola Mundo Inc.",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.prweb.com/releases/new_messaging_app_from_ola_mundo_helps_non_verbal_kids_to_remotely_communicate_with_family_and_friends/prweb11718811.htm",
+  "evidence": "\"Ola Mundo (Hello World in Portuguese) was created in January 2012 as a by-parents-for-parents project.\" Founders Ofir Harel and Alex Pavtoulov.",
+  "confidence": "low",
+  "caveat": "A company-issued release rather than independent reporting, and January 2012 dates the parent project, which may predate incorporation. Crunchbase marks the company permanently closed. SCOPE: assistive communication software, not a device acting on the nervous system."
+ },
+ {
+  "name": "Imeka",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.newswire.ca/news-releases/government-of-canada-supports-imeka-in-marketing-its-new-brain-imaging-tool-andi-836447803.html",
+  "evidence": "Canada Economic Development for Quebec Regions, July 2023: \"Founded in 2011 by two Universite de Sherbrooke professors and researchers, Imeka specializes in imaging white matter of the brain.\" Co-founders Maxime Descoteaux and Pierre-Marc Jodoin.",
+  "confidence": "high",
+  "caveat": "A Government of Canada release distributed via Newswire; the canada.ca original returned 403. Imeka's own about page gives no founding year, only a founder-biography line that was not used."
+ },
+ {
+  "name": "ADmit Therapeutics",
+  "year": 2017,
+  "kind": "university",
+  "url": "https://idibell.cat/en/2023/10/the-idibells-spin-off-admit-therapeutics-closes-a-e5-4-million-funding-round/",
+  "evidence": "IDIBELL newsroom: ADmit Therapeutics was \"founded at the end of 2017 as a spin-off from the Bellvitge Biomedical Research Institute (IDIBELL).\" Other coverage narrows this to December 2017.",
+  "confidence": "high",
+  "caveat": "SCOPE: despite the name it is neither a device company nor a drug developer. MAP-AD is an epigenetic blood test with an algorithm that stratifies mild cognitive impairment patients by probability of progressing to Alzheimer's dementia. CAP lab accreditation November 2024."
+ },
+ {
+  "name": "Rewellio",
+  "year": 2017,
+  "kind": "accelerator",
+  "url": "https://www.tech2b.at/en/startup/rewellio-gmbh/",
+  "evidence": "tech2b, the Upper Austrian public startup incubator, lists Rewellio GmbH as founded 2017, founders Georg Teufl and Bernhardt Kern, Bad Ischl. Corroborated by NR Times, which reports Teufl founded it after working as a stroke therapist.",
+  "confidence": "high"
+ },
+ {
+  "name": "Neurallys",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.tendanceouest.com/actualite-383965-colombelles-neurallys-developpe-un-dispositif-pour-surveiller-la-pression-du-crane",
+  "evidence": "Tendance Ouest: \"l'entreprise n'est fondee qu'en 2016 au sein de la faculte de medecine de Caen.\" Co-founders Philippe Auvray, Lionel Rousseau and Prof. Philippe Cornu.",
+  "confidence": "high",
+  "caveat": "An implantable intracranial-pressure sensor for hydrocephalus shunt patients. neurallys.com refused connection and may be dead. LOCATION: founded in Caen and moved HQ and R&D to Colombelles in Normandy in 2017; the index records Paris, which reflects only its incubation at the Institut du Cerveau."
+ },
+ {
+  "name": "Marigold Health",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/marigold-health",
+  "evidence": "Aggregator profiles give 2016, founders Shrenik Jain and Ravi Shah. CB Insights still files the company under the slug sunrise-health.",
+  "confidence": "low",
+  "conflict": "Some listings say 2017. The company renamed twice — it began as a Johns Hopkins student project called Beacon in the 2016-17 Social Innovation Lab cohort, became Sunrise Health, covered by TechCrunch in May 2017, and is now Marigold Health. 2016 is the Beacon origin and 2017 the Sunrise Health launch, which is exactly why the two circulate."
+ },
+ {
+  "name": "Invention Labs",
+  "year": 2007,
+  "kind": "company_site",
+  "url": "https://avazapp.com/about-us/",
+  "evidence": "\"In 2007, this group of IIT Madras alumni formally incorporated Invention Labs Engineering Products Private Limited, an IIT Madras incubated company.\" Founder Ajit Narayanan.",
+  "confidence": "high",
+  "caveat": "The wording is \"formally incorporated\", so this is strictly an incorporation date. The live brand is Avaz Inc; inventionlabs.in is legacy and its about page returns a 500. The Avaz AAC app launched February 2010, which is a product launch and a likely trap in aggregator data."
+ },
+ {
+  "name": "aidoc",
+  "year": 2016,
+  "kind": "company_site",
+  "url": "https://www.aidoc.com/about/",
+  "evidence": "Company about page: \"Established in 2016, Aidoc's solutions first focused on aiding radiologists in reducing turnaround time and increasing quality and efficiency by flagging acute anomalies in real time.\" Founders Elad Walach, Michael Braginsky and Guy Reiner.",
+  "confidence": "high",
+  "caveat": "SCOPE: a general clinical-AI and radiology triage platform with 18+ FDA-cleared algorithms across many body systems, covering by its own account 75% of a facility's patient population. It qualifies for a neurotechnology index only through its neurovascular products, a minority of the portfolio."
+ },
+ {
+  "name": "CortiCare",
+  "year": 2009,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/corticare",
+  "evidence": "Crunchbase, Tracxn, Dealroom and CB Insights all give 2009, founder Brad Westcott, Carlsbad.",
+  "confidence": "low",
+  "conflict": "The company's own Mission and History page presents a timeline beginning in 2012 and never states a founding year or names a founder, so its own history is silent on 2009. The HCAP Partners 2019 release says only that an acquisition target, Physician Ancillary Services LLC, was founded 2008."
+ },
+ {
+  "name": "BrainVoyager",
+  "year": 2000,
+  "kind": "university",
+  "url": "https://www.brightlands.com/en/maastricht-health-campus/companies-institutes/companies/company/brain-innovation",
+  "evidence": "Maastricht Health Campus profile: \"Founded in 2000 by Rainer Goebel when he joined Maastricht University as Professor of Cognitive Neuroscience.\"",
+  "confidence": "medium",
+  "caveat": "The row is a product name. BrainVoyager is software; the company is Brain Innovation B.V. of Maastricht. Goebel began developing BrainVoyager at the Max Planck Institute in Frankfurt in the mid-1990s, so the software predates the company by several years and that earlier date must not leak in as a founding year."
+ },
+ {
+  "name": "Mundo Pato",
+  "year": 2010,
+  "kind": "aggregator",
+  "url": "https://www.crunchbase.com/organization/mundo-pato",
+  "evidence": "Crunchbase, ZoomInfo, CB Insights and RocketReach all give 2010, founder Cesar Pachon, Portland Oregon.",
+  "confidence": "low",
+  "caveat": "The company about page states no founding year, so 2010 rests entirely on aggregators. mundopato.com serves UnitusTI, the customer-facing brand; the row is named after the holding company. SCOPE: a data-collection and curriculum SaaS for ABA therapy and special-needs education, not neurotechnology."
+ },
+ {
+  "name": "SensArs",
+  "year": 2014,
+  "kind": "companies_house",
+  "url": "https://www.moneyhouse.ch/en/company/sensars-neuroprosthetics-sarl-4990137611",
+  "evidence": "Swiss commercial register: SensArs Neuroprosthetics Sarl entered in the trade register 12 June 2014, statutes established 5 June 2014, UID CHE-130.906.673, Lausanne. Corroborated by Venturelab calling it an EPFL spin-off recognised in 2014.",
+  "confidence": "high",
+  "caveat": "The legal name is Sensars Neuroprosthetics Sarl; the row is a shortened nickname. Founders Francesco Petrini and Stanisa Raspopovic. Registry entry and spin-off recognition both land on 2014, so incorporation and founding coincide. The company site states no founding date."
+ },
+ {
+  "name": "DeepMind",
+  "year": 2010,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Google_DeepMind",
+  "evidence": "DeepMind Technologies was incorporated 23 September 2010 and officially launched 15 November 2010, in London.",
+  "confidence": "medium",
+  "conflict": "Sources split between 2010 and 2011. Wikipedia and Britannica give 2010; several biographical profiles of Demis Hassabis say he founded it with Shane Legg and Mustafa Suleyman in 2011. 2010 has the stronger documentary basis, a specific incorporation date; 2011 may reflect when the founding team was fully assembled."
+ },
+ {
+  "name": "Neurovine",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://obj.ca/ashleigh-kennedy-co-founder-and-ceo-neurovine/",
+  "evidence": "Ottawa Business Journal: \"In 2019, she and her husband founded Neurovine\" — Dr Ashleigh Kennedy, a Stanford-trained neuroscientist, and Dr Matthew Kennedy. Corroborated by a Women of Wearables founder profile.",
+  "confidence": "medium",
+  "caveat": "Both sources are journalistic profiles rather than a company history page. EEG wearable plus software guiding cognitive exertion limits in concussion recovery; neurovine.ai is live."
+ },
+ {
+  "name": "HypnoVR",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.tracesecritesnews.fr/actualite/le-coin-des-start-up-hypno-vr-fait-de-l-hypnose-medicale-avec-des-casques-de-realite-virtuelle-et-galien-sante-archive-les-donnees-de-sante-des-patients-134312",
+  "evidence": "Drs Denis Graff and Chloe Chauvin presented the project at the Hacking Health Camp in Strasbourg in March 2016; joined by Nicolas Schaettel, the three founded HypnoVR in November 2016. Corroborated by France Bleu.",
+  "confidence": "high",
+  "caveat": "VR-delivered medical hypnosis as an adjunct to anaesthesia, deployed in 150+ facilities across France, Belgium and Switzerland. A neuro-adjacent digital therapeutic with no measurement of neural signals, so it sits at the boundary of the index."
+ },
+ {
+  "name": "Moodpanda",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://techli.com/moodpanda-helps-keep-you-happy/3364/",
+  "evidence": "Techli: \"Launched in 2011 from Bristol, England.\" Founders Ross Larter and Jake Greenwood, both software developers who built the platform themselves.",
+  "confidence": "medium",
+  "caveat": "The source says launched, not founded, though for a two-person self-built app the gap is likely negligible. SCOPE: a self-reported mood diary where users type a 0-10 score — no sensing of any kind. The site still serves classic ASP.NET .aspx pages, so it may be dormant."
+ },
+ {
+  "name": "Owl Insights",
+  "year": 2011,
+  "kind": "aggregator",
+  "url": "https://www.inknowvation.com/sbir/companies/owl-insights",
+  "evidence": "An SBIR-award-derived company record gives 2011 as year established; legal name Mental Health Data Services Inc, dba Owl Insights, Kirkland WA.",
+  "confidence": "low",
+  "conflict": "Crunchbase and Gust-family sources give 2013 against inknowvation's 2011. Neither is primary and the disagreement is unresolved."
+ },
+ {
+  "name": "Reflect Innovation",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://prweb.com/releases/reflect_innovation_raises_3_million_in_seed_funding/prweb17740663.htm",
+  "evidence": "\"Reflect was conceived in 2018 by Noga Sapir\", with the about boilerplate stating \"Based in Tel Aviv, Israel, Reflect Innovation was founded in 2018.\"",
+  "confidence": "high",
+  "caveat": "The Reflect Orb is a handheld biofeedback device reading electrodermal and physiological signals through the fingers. The $3M seed from Joy Ventures in March 2021 is a funding event, not the founding."
+ },
+ {
+  "name": "EyeControl",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/il/news-releases/eyecontrol-expands-rd-program-with-eyecontrol-pro-for-delirium-301566624.html",
+  "evidence": "Company boilerplate: \"The company was founded in 2016 by individuals who share unique personal connections to ALS and Locked-in patients.\"",
+  "confidence": "medium",
+  "conflict": "A Jerusalem Post article on the screen-free ALS device appears to date from 2015, which would predate the stated 2016 founding. That is more likely a pre-incorporation prototype or crowdfunding phase than a real disagreement, but it was not opened to confirm."
+ },
+ {
+  "name": "Avantari",
+  "year": 2014,
+  "kind": "companies_house",
+  "url": "https://www.thecompanycheck.com/company/avantari-technologies-private-limited/U85100TG2014PTC092939",
+  "evidence": "Avantari Technologies Private Limited, CIN U85100TG2014PTC092939, incorporated 13 February 2014, Jubilee Hills, Hyderabad; director Bhairav Shankar appointed the same day. Corroborated independently by Inc42.",
+  "confidence": "high",
+  "conflict": "One aggregator summary claims the venture was founded in 2012 at Oxford University and registered in India in 2014. No primary support for the Oxford claim was found."
+ },
+ {
+  "name": "TerraBlue XT",
+  "year": 2016,
+  "kind": "companies_house",
+  "url": "https://www.zaubacorp.com/company/TERRA-BLUE-EXPLORATION-TECHNOLOGIES-PRIVATE-LIMITED/U74900KA2016PTC086802",
+  "evidence": "Terra Blue Exploration Technologies Private Limited, CIN U74900KA2016PTC086802, incorporated 9 March 2016, ROC Bangalore. The 2016 embedded in the CIN independently confirms the registration year, and independent reporting also says the company was set up in 2016.",
+  "confidence": "high",
+  "caveat": "teblux.com is genuinely theirs, a contraction of the name. Founder Dr Rajlakshmi Borthakur; the product TJay is a smart glove using biosensors and AI to predict seizures. The company site's \"somewhere in the middle of 2015, a mother embarked on a journey\" describes a personal prototype effort and is not a founding date."
+ },
+ {
+  "name": "Mightier",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://www.inknowvation.com/sbir/companies/neuromotion-inc",
+  "evidence": "SBIR-derived record: \"Year Founded: 2014.\" Legal name Neuromotion Inc, Boston MA, with Neuromotion Labs and Mightier listed as dba names. Founders Craig Lund and Jason Kahn.",
+  "confidence": "low",
+  "conflict": "Aggregators split 2014 against 2016, the latter more likely the Mightier brand launch than incorporation. A third year, 2009, is when the underlying Boston Children's Hospital research programme began and is not a founding. The Boston Children's innovation page that would settle it now 404s."
  }
 ]

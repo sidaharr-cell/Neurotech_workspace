@@ -36,6 +36,11 @@ export const SOURCE_CLASS = {
   wikidata: { label: 'Wikidata', weak: false },
   wikipedia: { label: 'Wikipedia', weak: false },
   companies_house: { label: 'UK register', weak: false },
+  // An institution announcing its own spin-off. Stronger than press: IDIBELL
+  // saying ADmit Therapeutics was founded at the end of 2017 as its spin-off is
+  // the parent's own record, not a journalist's summary of one.
+  university: { label: 'parent institution', weak: false },
+  accelerator: { label: 'accelerator or incubator', weak: false },
   company_site: { label: 'company’s own site', weak: false, selfReported: true },
   aggregator: { label: 'unsourced compilation', weak: true },
   record_description: { label: 'NeuroBase record', weak: true, noLink: true },
