@@ -56,7 +56,8 @@ async function run() {
   const orgs = []
   for (let from = 0; ; from += 500) {
     const { data, error } = await sb.from('organizations')
-      .select('id,name,founded_year,incorporated_year,incorporated_before_year')
+      .select('id,name,founded_year,founded_source_kind,founded_source_url,founded_evidence,'
+        + 'founded_conflict,incorporated_year,incorporated_before_year')
       .eq('type', 'company').order('name').order('id').range(from, from + 499)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     orgs.push(...data)
@@ -73,6 +74,7 @@ async function run() {
   const now = new Date().toISOString()
   const writes = []
   const skipped = []
+  const unchanged = []
 
   for (const f of findings) {
     const rows = byCore.get(core(stripInvisible(f.name))) || []
@@ -100,12 +102,27 @@ async function run() {
       cols.incorporated_source_url = f.url
       cols.incorporated_retrieved_at = now
     }
+    // Skip a write that would change nothing. The file is cumulative — every
+    // round re-applies every finding ever recorded — so by the 226th finding
+    // that was 200-odd round-trips rewriting rows to the values they already
+    // held, and the run had gone from seconds to over two minutes.
+    //
+    // founded_retrieved_at is deliberately NOT compared. It is "when we last
+    // looked", and if nothing else changed we did not look again; bumping it
+    // would make every row report a fresh retrieval that never happened.
+    const same = o.founded_year === cols.founded_year
+      && o.founded_source_kind === cols.founded_source_kind
+      && (o.founded_source_url || null) === cols.founded_source_url
+      && (o.founded_evidence || null) === (cols.founded_evidence || null)
+      && (o.founded_conflict || null) === cols.founded_conflict
+      && !cols.incorporated_year
+    if (same) { unchanged.push(f.name); continue }
     writes.push({ id: o.id, name: o.name, overwrites: !!o.founded_year, cols })
   }
 
   const byKind = {}
   for (const w of writes) byKind[w.cols.founded_source_kind] = (byKind[w.cols.founded_source_kind] || 0) + 1
-  console.log(`${findings.length} findings; ${writes.length} write, ${skipped.length} skipped`)
+  console.log(`${findings.length} findings; ${writes.length} write, ${unchanged.length} already current, ${skipped.length} skipped`)
   console.log(`by source: ${JSON.stringify(byKind)}`)
   console.log(`already had a founding year (will be replaced): ${writes.filter(w => w.overwrites).length}`)
   console.log(`with a recorded conflict: ${writes.filter(w => w.cols.founded_conflict).length}`)
