@@ -1035,5 +1035,41 @@
   "evidence": "PitchBook, CB Insights and Gust give April 2011, New Haven CT",
   "confidence": "low",
   "conflict": "AGGREGATOR-ONLY. The company own About and founder pages describe Bruce Wexler Yale research and an NIH grant but give no founding year. One review site claims a first product in 2010, which would predate the company date."
+ },
+ {
+  "name": "Brainbit Inc.",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://www.cbinsights.com/company/brainbit",
+  "evidence": "CB Insights, Tracxn and LeadIQ all give 2015; LeadIQ adds founder Boris Goldstein",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. The company About page states no founding year and its only date signal is a copyright reading 2016-2026, which sits uneasily with 2015. LOCATION also conflicts: our index says New York, the company site says headquarters in California with an office in Poland and manufacturing in China."
+ },
+ {
+  "name": "Clearhead",
+  "year": 2018,
+  "kind": "company_site",
+  "url": "https://www.myclearhead.com/about-us",
+  "evidence": "Company About page: Clearhead was born in 2018 when medical doctor Angela Lim joined forces with software engineer Michael Connolly. Corroborated by University of Auckland CIE newsroom.",
+  "confidence": "high",
+  "conflict": "clearhead.org.nz now redirects to myclearhead.com."
+ },
+ {
+  "name": "Elevatr",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://gust.com/companies/elevatr",
+  "evidence": "Gust self-submitted profile: founded January 2017, New York, co-founders Israel Zyskind and Aaron Rozzi",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY, and elevatr.com NO LONGER BELONGS TO THIS COMPANY — it now serves a German-language hospitality media and events platform. The Brooklyn app appears defunct and the domain repurposed."
+ },
+ {
+  "name": "Garlew",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://web.archive.org/web/2019/http://garlew.com/",
+  "evidence": "Company archived homepage, verbatim: Founded in 2014, and rooted in hundreds of years of psychological and sociological study. Co-founders Gerard Lebar Jr and Eric Lewandowski, Dallas TX.",
+  "confidence": "medium",
+  "conflict": "Read from the Wayback Machine because garlew.com no longer resolves. The company appears defunct."
  }
 ]
