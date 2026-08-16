@@ -2810,7 +2810,8 @@
  {
   "name": "SociAutism",
   "verdict": "dead-domain",
-  "note": "www.sociautism.com does not resolve at DNS level — not parked, simply gone. The only substantive coverage is one Piauí regional news item of 19 October 2018 (now 403) describing SociAutism as an online application created in Teresina by Thiago Carvalho, then being validated by five psychologists with about 30 children: a pre-commercial pilot, not an operating company. No CNPJ, no corporate registration, no funding, nothing after 2018. Scope is also weak — social-skills-training management software for ASD therapy. Recommend dropping rather than dating."
+  "note": "www.sociautism.com does not resolve at DNS level — not parked, simply gone. The only substantive coverage is one Piauí regional news item of 19 October 2018 (now 403) describing SociAutism as an online application created in Teresina by Thiago Carvalho, then being validated by five psychologists with about 30 children: a pre-commercial pilot, not an operating company. No CNPJ, no corporate registration, no funding, nothing after 2018. Scope is also weak — social-skills-training management software for ASD therapy. Recommend dropping rather than dating.",
+  "url": "https://www.sociautism.com/"
  },
  {
   "name": "Medicalcooling",
@@ -2862,7 +2863,8 @@
  {
   "name": "Youbetter Medical Apparatus",
   "verdict": "scope",
-  "note": "Suzhou Youbetter Medical Apparatus Co., Ltd. makes ORTHOPEDIC IMPLANTS — bone screws, spinal fixation systems, intramedullary nails, metal bone plates, external fixators and surgical power tools — from a 60,000 square metre factory in Zhangjiagang City. The only plausible route into a neurotech index is the word \"spine\" in \"spine system\", which is orthopedic hardware, not neural. No founding year found: the nearest hard date is 2005 product-registration certificates, and the only other signal was \"manufacturer of orthopedics for 20 more years\", a relative phrase not computed from. The index also cites a medincn.com B2B directory listing rather than the company; real sites are youbettermed.com and chinayoubetter.com."
+  "note": "Suzhou Youbetter Medical Apparatus Co., Ltd. makes ORTHOPEDIC IMPLANTS — bone screws, spinal fixation systems, intramedullary nails, metal bone plates, external fixators and surgical power tools — from a 60,000 square metre factory in Zhangjiagang City. The only plausible route into a neurotech index is the word \"spine\" in \"spine system\", which is orthopedic hardware, not neural. No founding year found: the nearest hard date is 2005 product-registration certificates, and the only other signal was \"manufacturer of orthopedics for 20 more years\", a relative phrase not computed from. The index also cites a medincn.com B2B directory listing rather than the company; real sites are youbettermed.com and chinayoubetter.com.",
+  "url": "http://www.medincn.com/company_leads.php?prod=Product&uid=youbetter"
  },
  {
   "name": "Quincy Bioscience",
@@ -2903,7 +2905,8 @@
  {
   "name": "Clear Your Mind",
   "verdict": "scope",
-  "note": "A Ugandan mental-health social enterprise and awareness initiative, \"Clear Yo Mind\", founded by clinical psychologist Elizabeth Kasujja to reduce stigma around depression and connect people to professionals, with a mobile app in development — not a neurotechnology company. No sourced founding year found. TRAP: the year 2016 appears in profiles as the year Kasujja PERSONALLY EXPERIENCED depression, not a founding, and must not be back-derived from. The \"Mulago\" address is the Kampala hospital district, consistent with her clinical work at Butabika and Mulago, not a corporate HQ. clearyomind.com returned HTTP 503."
+  "note": "A Ugandan mental-health social enterprise and awareness initiative, \"Clear Yo Mind\", founded by clinical psychologist Elizabeth Kasujja to reduce stigma around depression and connect people to professionals, with a mobile app in development — not a neurotechnology company. No sourced founding year found. TRAP: the year 2016 appears in profiles as the year Kasujja PERSONALLY EXPERIENCED depression, not a founding, and must not be back-derived from. The \"Mulago\" address is the Kampala hospital district, consistent with her clinical work at Butabika and Mulago, not a corporate HQ. clearyomind.com returned HTTP 503.",
+  "url": "https://clearyomind.com/"
  },
  {
   "name": "Neuro Tinker",
@@ -3034,7 +3037,8 @@
  {
   "name": "mashrou3na for Information technology and consultant",
   "verdict": "scope",
-  "note": "The row name is a raw directory string, as its shape suggests, and the index has no location for it because there never was one. www.mashrou3na.com does not resolve — no DNS record at all. Crunchbase carries a profile under this exact string and marks it PERMANENTLY CLOSED, exposing no founding year. The nearest real entity is \"Mashro’ona Company IT & Consulting\", a roughly 11-person GENERIC IT CONSULTANCY in Amman, Jordan, listing Accenture, Capgemini and Cognizant as competitors. Nothing to do with neurotechnology. Almost certainly should be deleted."
+  "note": "The row name is a raw directory string, as its shape suggests, and the index has no location for it because there never was one. www.mashrou3na.com does not resolve — no DNS record at all. Crunchbase carries a profile under this exact string and marks it PERMANENTLY CLOSED, exposing no founding year. The nearest real entity is \"Mashro’ona Company IT & Consulting\", a roughly 11-person GENERIC IT CONSULTANCY in Amman, Jordan, listing Accenture, Capgemini and Cognizant as competitors. Nothing to do with neurotechnology. Almost certainly should be deleted.",
+  "url": "https://www.mashrou3na.com/"
  },
  {
   "name": "Epitrack",
@@ -3095,5 +3099,142 @@
   "verdict": "scope",
   "url": "https://cogzest.com/about/founder/",
   "note": "Consumer software: Hook/Hookmark, a macOS link-based productivity tool, and mySleepButton, a \"cognitive shuffle\" audio app for falling asleep. Cognitive-science-informed app design is not neurotechnology — there is no sensing, no stimulation and no neural data anywhere in the product line. Company is active, in metro Vancouver, co-founded by Luc P. Beaudoin (PhD cognitive science) and Brian Shi. Year 2014 recorded from Beaudoin’s first-person statement on the parent company’s site."
+ },
+ {
+  "name": "Gondola Medical Technologies",
+  "verdict": "stale-url",
+  "url": "https://www.biopole.ch/gondola-medtech-completes-funding-round-eyes-to-enter-the-us-market/",
+  "note": "The company is alive and in scope — Gondola Medical Technologies SA makes the GONDOLA AMPS automated mechanical peripheral stimulation device for gait and balance in Parkinson’s, founders Francesco Cecchini and Stefano Tassin — but the index URL gondola-parkinson.com fails its TLS handshake (WRONG_VERSION_NUMBER) on both www and the bare host. The live site is gondola-medical.com. Location is also stale: Biopôle lists it at Epalinges near Lausanne, not Lugano, though Lugano is defensible historically since it was founded in Ticino. Year 2011 recorded."
+ },
+ {
+  "name": "Neuravi",
+  "verdict": "acquired",
+  "url": "https://westerndevelopment.ie/investment-funds/success-stories/neuravi/",
+  "note": "ACQUIRED by Johnson & Johnson (Codman Neuro) in April 2017 and folded into the Cerenovus business unit, which this index holds as a separate row. neuravi.com no longer functions as an independent company site. Year 2009 recorded and is Neuravi’s own — founded in Galway by Eamon Brady, David Vale and John O’Shaughnessy, ex-MedNova. Genuinely in scope: EmboTrap stroke thrombectomy. The two rows should be reconciled, with 2009 belonging to Neuravi and J&J’s 24 July 2017 brand launch belonging to Cerenovus."
+ },
+ {
+  "name": "Neuromorph Inc.",
+  "verdict": "existence-unverified",
+  "note": "Existence essentially unproven. The index URL neuromorph-inc.business.site returns HTTP 404 — a free Google Business profile page, now gone, and never a real website. The only trace is a Crunchbase stub (403 to fetch) whose snippet describes \"quantum machine learning and neural rehabilitation for PTSD survivors... DWAVE 2000... EEG source localization\". No press, no registry, no founder name, no funding, and no independent corroboration of the Toronto location. A candidate for deletion rather than merely an unresolved year."
+ },
+ {
+  "name": "Textpert",
+  "verdict": "scope",
+  "url": "https://www.builtinla.com/articles/texpert-launches-la",
+  "note": "Not neurotechnology. It launched in 2015 as a consumer app for crowdsourcing advice on your text messages — upload a screenshot and \"Textperts\" tell you what to reply — and has since pivoted to AiME, an AI therapist and conversational mental-health product. No neural signal acquisition, no stimulation, no brain interface. Year 2015 recorded from contemporaneous local tech press. Recommend removal on scope grounds regardless of the year."
+ },
+ {
+  "name": "Arrowsmith",
+  "verdict": "not-a-company",
+  "url": "https://en.wikipedia.org/wiki/Arrowsmith_School",
+  "note": "A SCHOOL and a licensed cognitive-training programme, not a neurotech company. The operating entity is Arrowsmith Program Inc., privately owned by Barbara Arrowsmith-Young, which runs Arrowsmith School in Toronto and licenses the programme to over 90 schools; its neuroplasticity claims are pedagogical rather than instrumented, with no device and no neural measurement. Year 1980 recorded as the school’s opening, with 1978 — when Arrowsmith-Young devised the exercises for herself — recorded as a conflict. The index URL arrowsmithschool.org 301-redirects to arrowsmith.ca."
+ },
+ {
+  "name": "Mechion",
+  "verdict": "dissolved",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/11210851",
+  "note": "DISSOLVED on 26 October 2021 — MECHION LTD, company no. 11210851, incorporated 16 February 2018 at Union House, Coventry, SIC 58290. mechion.com should be checked as likely dead or resold. Scope is weak too: the product \"Iris\" was a wall-mounted AI camera for autonomous observation of dementia patients at home, which is remote patient monitoring and ambient AI, not neurotechnology. Year recorded as 2018 with an unsourced 2017 founding claim recorded as a conflict."
+ },
+ {
+  "name": "Brain Fingers",
+  "verdict": "product-not-company",
+  "url": "https://www.inknowvation.com/sbir/companies/brain-actuated-technologies-inc",
+  "note": "\"Brainfingers\" is the PRODUCT — a forehead-sensor hands-free computer access device using EMG, EOG and EEG. The company is Brain Actuated Technologies, Inc. of Yellow Springs, Ohio, president Andrew Junker. NO YEAR WRITTEN: the only figure available is 1994 from an SBIR directory, and the SAME profile lists the company’s first SBIR award as 1994, so the founding year is very likely back-derived from it; the other year in circulation, 1996, is the Cyberlink product introduction. The index also misspells the town as \"Yello Springs\", and both brainfingers.com and www.brainfingers.com return DNS NXDOMAIN. SBIR records show the company inactive with its last award in 2008."
+ },
+ {
+  "name": "EBT Medical",
+  "verdict": "wrong-description",
+  "url": "https://ebtmedical.com/",
+  "note": "The stored description says vagus nerve stimulation. EBT Medical stimulates the SAPHENOUS nerve, non-invasively, for OVERACTIVE BLADDER and pelvic floor disorders. Its own site states: \"Spun out of the University of Toronto, EBT Medical is a venture-backed, clinical-stage company\", so the Toronto location holds up, though the site no longer states a headquarters and a US relocation is possible. Legitimately neuromodulation and in scope — the nerve and the indication both need fixing. Year 2014 recorded."
+ },
+ {
+  "name": "Bioxtreme",
+  "verdict": "stale-url",
+  "url": "https://tracxn.com/d/companies/bioxtreme/__MYzaxC_Jwv2JSCoxpMHn6ipR68JhJG2eJ-9fEdviN0s",
+  "note": "The index URL bio-xtreme.com 301-redirects to bioxtremerobotics.com. The company is real and actively trading: Bioxtreme Ltd. issued a release on 17 June 2026 launching Dextreme 2.0, an FDA- and CE-registered robotic rehabilitation platform using patented Error Augmentation technology for stroke motor recovery, so it is in scope. NO YEAR WRITTEN: the only figure is 2010 from Tracxn, with Startup Nation Central and Crunchbase both returning 403 and the company’s own site stating no year — not enough for an aggregator-only date. Location is also disputed, Rehovot (Tracxn) against Petah Tikva (the index). Minor red flag: the new site’s footer carries the placeholder phone number \"+1 (555) 123-4567\" and no physical address."
+ },
+ {
+  "name": "PatternVision",
+  "verdict": "scope",
+  "url": "https://patternvision.com/",
+  "note": "A one-man software vendor selling THEME and ThemeEdu, T-pattern detection software for BEHAVIOURAL time-series analysis. No EEG, no neural interface, no signal acquisition — effectively an academic software vehicle marketing the work of Magnus S. Magnusson, emeritus research professor at the University of Iceland and its sole author, copyright owner and majority owner. Year 2000 recorded from his own competing-interests disclosure in peer-reviewed papers; no company-registry record was found to confirm it."
+ },
+ {
+  "name": "Looxid Labs",
+  "verdict": "product-not-company",
+  "url": "https://www.koreaherald.com/view.php?ud=20180527000229",
+  "note": "The index URL looxidlabs.com/looxidvr/ is a PRODUCT page for LooxidVR — a mobile VR headset with six EEG sensors and two eye-tracking cameras — and the product has been DISCONTINUED. The company pivoted to \"Lucy\", an eye-tracking and EEG communication aid for paralysed patients, shown at the Facebook Accelerator Seoul demo day in 2020, and still appears to exist though small and quiet. Genuinely in scope as EEG hardware; the row is simply pointing at a dead product. Year 2015 recorded. Several Korean sources place it in Daejeon rather than Seoul."
+ },
+ {
+  "name": "Neuroglee Therapeutics",
+  "verdict": "renamed",
+  "url": "https://www.neuroglee.com/about-us",
+  "note": "Now trades as NEUROGLEE HEALTH; the about page footer names \"Neuroglee Therapeutics, Inc. and Neuroglee Care, PLLC (collectively 'Neuroglee Care')\", which are US entities. Headquarters moved from Singapore to Boston (33 Arch St, Floor 17) in Q4 2021 with a Singapore office retained, so the index’s \"Singapore, Singapore\" is stale. Still operating — a Mayo Clinic dementia-care collaboration was expanded in January 2025. Year 2020 recorded, with the back-derivation risk noted since the founding and the first round fall in the same year. Scope: digital therapeutics software for Alzheimer’s, cognitive rather than neural-interface."
+ },
+ {
+  "name": "Iliad Neurosciences",
+  "verdict": "scope",
+  "url": "https://www.crunchbase.com/organization/iliad-neurosciences",
+  "note": "A clinical diagnostic laboratory ASSAY, not neurotechnology: its product was FRAT, a blood test for folate receptor autoantibodies in autism, under an exclusive licence from the Research Foundation for SUNY. No device, no signal acquisition, no interface. The entity did exist — PR Newswire releases in 2014 and 2016, based at 5110 Campus Dr, Plymouth Meeting PA — but there is no sign of activity since about 2017. NO YEAR WRITTEN: only aggregators assert 2013, with no primary corroboration. And the domain is GONE: iliadneuro.com now 301-redirects to bento123c.com, an Indonesian online-slots gambling site wearing a Samsung-retailer skin."
+ },
+ {
+  "name": "Neuracle (博睿康)",
+  "verdict": "wrong-location",
+  "url": "https://www.vbdata.cn/companyDetail/4efd246f003b4387838875dd01e85a6a",
+  "note": "The legal entity 博睿康科技（常州）股份有限公司 is registered in CHANGZHOU, Jiangsu, with Beijing being one site, so the index’s Beijing is at best incomplete. Genuinely in scope and substantial: research-grade EEG amplifiers, medical-grade EEG for epilepsy, tumour and cerebrovascular monitoring, and a minimally-invasive implanted BCI, with a core team out of Tsinghua’s neural engineering lab. Raised a several-hundred-million-RMB Series C in December 2022 and filed IPO tutoring registration with the Shanghai CSRC bureau in February 2026. Year 2011 recorded but secondary-source only — neuracle.cn is a JavaScript shell returning no text and Baidu Baike blocks automated requests."
+ },
+ {
+  "name": "Dreamboard",
+  "verdict": "scope",
+  "url": "https://www.crunchbase.com/organization/dreamboard",
+  "note": "A self-report dream-JOURNALLING app: you type in your dreams and it charts your moods. No sensors, no EEG, no physiological signal of any kind — not neurotechnology by any reading. NO YEAR WRITTEN: Crunchbase gives 1 March 2012, a placeholder-shaped date, corroborated only loosely by a 2012 Techli review of the newly launched app. The domain does not serve: both dreamboard.com and www.dreamboard.com fail with ECONNREFUSED at 54.227.214.165, an AWS elastic IP with nothing listening — not parked, not resold, simply dead. The apps have not been meaningfully updated since about 2014, yet aggregators still list the company active with about $6M revenue and 2 employees, which is not credible."
+ },
+ {
+  "name": "Owlet",
+  "verdict": "scope",
+  "url": "https://www.sec.gov/Archives/edgar/data/1816708/000162828022007346/owlt-20211231.htm",
+  "note": "Out of scope bluntly. The Smart Sock is a PULSE-OXIMETRY sock measuring infant heart rate and blood-oxygen saturation; photoplethysmography at the foot is cardiorespiratory monitoring, and there is no neural measurement, stimulation or interface anywhere in the product line. NYSE: OWLT, still listed and operating from Lehi UT, so the location is right and the categorisation is not. Year recorded as 2013 with 2012 (the idea) and February 2014 (Delaware incorporation) recorded as conflicts; 2015 is the Smart Sock launch and July 2021 the Sandbridge SPAC merger, neither of which is a founding."
+ },
+ {
+  "name": "neotiv",
+  "verdict": "wrong-location",
+  "url": "https://www.htgf.de/en/pre-series-a-neotiv/",
+  "note": "neotiv GmbH is headquartered at Sandtorstraße 23, 39106 MAGDEBURG, per its investor High-Tech Gründerfonds, with Berlin only a secondary office — the index’s Berlin is wrong as a primary HQ. A spin-off of Otto von Guericke University Magdeburg in close cooperation with the DZNE, confirmed real and active: a €10M extended Pre-Series A, neotivCare is a CE-marked medical product, and DZNE-partnered smartphone memory-test results were published in 2024. Year 2017 recorded from secondary sources only. Scope: app-based digital cognitive assessment, so cognitive-health software rather than instrumentation."
+ },
+ {
+  "name": "People Bio",
+  "verdict": "scope",
+  "url": "https://www.biospectator.com/news/view/6297",
+  "note": "IN-VITRO DIAGNOSTICS, not neurotechnology: a blood ELISA (Multimer Detection System, MDS-OAβ) for Alzheimer’s, where the only neuro connection is the disease indicated rather than the technology. Indexed on \"Alzheimer’s\". Year 2002 recorded, consistent everywhere though sources split between February and 9 September; the 2020 KOSDAQ listing (ticker 304840) is a listing date, not a founding. peoplebio.net fails TLS with an expired certificate, and Korean financial press in February 2026 reported delisting risk and capital-raising pressure, so treat its trading status as uncertain."
+ },
+ {
+  "name": "Feel",
+  "verdict": "product-not-company",
+  "url": "https://www.feeltherapeutics.com/",
+  "note": "Feel is the PRODUCT — a wristband. The company is Sentio Solutions, Inc., founded by George Eleftheriou and Haris Tsirmpas, since rebranded FEEL THERAPEUTICS and ACQUIRED BY IQVIA; the current site brands itself \"Feel Therapeutics, an IQVIA Business\", so the row is a product name attached to what is now a division. The indexed domain myfeel.co is dead as an independent site, 301-redirecting to feeltherapeutics.com. The consumer emotion-tracking wristband is gone and the business is now clinical-trial monitoring and digital biomarkers. Year 2015 recorded and belongs to Sentio."
+ },
+ {
+  "name": "Königsee Implantate",
+  "verdict": "scope",
+  "url": "https://www.koenigsee-implantate.de/en/company/",
+  "note": "An ORTHOPEDIC AND TRAUMA hardware manufacturer — osteosynthesis plates, screws, variable-angle locking systems, bioabsorbable implants and spinal fixation. Almost certainly indexed on the word \"spine\"; spinal fixation hardware is bone carpentry, not neurotech. Year 1993 recorded from the company’s own history (founded that October by Erich Orschler). The index’s Allendorf location is CORRECT — founded in the town of Königsee, Thuringia, and later moved to Am Sand 4, Allendorf, so the name is now purely historical. Ownership is family succession only: Frank Orschler became Managing Director in 2004 and sole shareholder in 2010, with no evidence of an outside acquisition, though the German commercial register was not audited."
+ },
+ {
+  "name": "Barrett Medical",
+  "verdict": "product-not-company",
+  "url": "https://en.wikipedia.org/wiki/Barrett_Technology",
+  "note": "A DIVISION, not a company. Barrett Technology, LLC — founded in Cambridge MA in 1988 by Bill Townsend, now in Newton MA — runs two divisions, Barrett Drive Systems and Barrett Medical, and medical.barrett.com is the divisional site under the corporate domain. There is no separate incorporation and no independent legal entity. NO YEAR WRITTEN: 1988 is the PARENT’s founding and no date was found for when the medical division itself was established, so publishing 1988 against this row would assert something unsourced. The division’s product is Burt, an FDA-registered Class II rehabilitation robot for stroke, TBI and spinal-cord-injury recovery, so the scope is defensible even though the entity is not. Fold into Barrett Technology or flag as a division."
+ },
+ {
+  "name": "Mindnest Health",
+  "verdict": "dissolved",
+  "url": "https://www.ctcompanydir.com/companies/mindnest-health-inc-2/",
+  "note": "DISSOLVED: Notice of Intent filed 26 June 2023, Certificate of Dissolution/Revocation filed 26 September 2023, status Revoked. A Yale spin-out by David Grodberg, M.D., Medical Director at the Yale Child Study Center, registered at HealthHaven Hub, 195 Church St, New Haven CT, which raised a $300K seed in April 2020 from Connecticut Innovations and the NeuroNetworks Fund. Year recorded as the February 2019 incorporation with an unexplained aggregator claim of 2016 recorded as a conflict. Scope is arguable too: digital parent-training programmes for families of children with autism is behavioural-health content, not neurotechnology."
+ },
+ {
+  "name": "Myomotive",
+  "verdict": "existence-unverified",
+  "url": "https://www.zoominfo.com/c/myomotive/411343062",
+  "note": "Could not establish that this company exists. The index holds no website for it, and searching produced only a ZoomInfo profile — an aggregator, not proof of existence — plus MyoMotive Body Therapy, a massage practice on Blossom Hill Rd in SAN JOSE, which is a different business in a different city. No press, no filings, no funding record, no product. TWO LEADS WORTH FOLLOWING. The search surfaced neurofounders.co/resources/start-up-map, which may be the upstream source this index was scraped from — worth checking whether this row entered the data from there unverified. And the nearest real company is Myomo, Inc. (the MyoPro myoelectric upper-limb orthosis, Boston), so \"Myomotive\" may be a corruption of \"Myomo\" — flagged as a lead, not a conclusion."
  }
 ]

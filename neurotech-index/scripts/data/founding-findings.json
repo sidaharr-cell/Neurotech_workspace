@@ -4249,5 +4249,181 @@
   "evidence": "\"In 2014, I also spun-off some of CogZest’s intellectual property portfolio to a new startup co-founded by Brian Shi and myself, CogSci Apps Corp.\"",
   "confidence": "high",
   "caveat": "A first-person statement by co-founder Luc P. Beaudoin on the parent company’s own site. SCOPE: consumer software — Hook/Hookmark, a macOS productivity tool, and mySleepButton, a \"cognitive shuffle\" audio app. No sensing, stimulation or neural data anywhere in the product line."
+ },
+ {
+  "name": "Gondola Medical Technologies",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.biopole.ch/gondola-medtech-completes-funding-round-eyes-to-enter-the-us-market/",
+  "evidence": "\"The company was founded in Ticino in 2011, where it has its operational HQ and customer support, and has recently opened an office in Lausanne, at Biopôle, where the R&D team is located.\"",
+  "confidence": "high",
+  "caveat": "The index URL gondola-parkinson.com fails its TLS handshake (WRONG_VERSION_NUMBER) on both www and the bare host; the live site is gondola-medical.com. Biopôle now lists the company at Epalinges near Lausanne, so the index’s Lugano is historically defensible but stale."
+ },
+ {
+  "name": "Neuravi",
+  "year": 2009,
+  "kind": "press",
+  "url": "https://westerndevelopment.ie/investment-funds/success-stories/neuravi/",
+  "evidence": "Western Development Commission profile: Neuravi was founded in 2009 by Eamon Brady, David Vale and John O’Shaughnessy; \"In the middle of 2009 Eamon and his colleagues began a gruelling round of pitching for private investors.\"",
+  "confidence": "high",
+  "caveat": "This is Neuravi’s OWN founding as an independent Galway company, not the 24 July 2017 date on which Johnson & Johnson stood up the Cerenovus business unit around its portfolio. Neuravi was acquired by J&J (Codman Neuro) in April 2017 and neuravi.com no longer functions as an independent company site."
+ },
+ {
+  "name": "Textpert",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.builtinla.com/articles/texpert-launches-la",
+  "evidence": "Built In LA, 25 August 2015: Textpert was founded in 2015 by Ray Christian, Kate Edwards and Nick Goehner, with the app launching July 2015.",
+  "confidence": "medium",
+  "caveat": "Contemporaneous local tech press published in the same year as the founding, so not back-derived. SCOPE: launched as a consumer app for crowdsourcing advice on your text messages, since pivoted to AiME, an AI therapist — conversational AI and digital mental health, with no neural signal acquisition, stimulation or interface."
+ },
+ {
+  "name": "Arrowsmith",
+  "year": 1980,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/Arrowsmith_School",
+  "evidence": "\"Barbara Arrowsmith Young and her then-husband, Joshua Cohen, founded the original Toronto school in 1980 to teach learning disabled children using the program and exercises that Arrowsmith Young had begun devising for herself in 1978.\"",
+  "confidence": "medium",
+  "conflict": "1978 versus 1980. 1978 is when Barbara Arrowsmith-Young devised the cognitive exercises for HERSELF — a personal biographical date — while 1980 is when the school entity was founded. Arrowsmith’s own marketing says only \"more than 40 years\", a relative phrase not computed from.",
+  "caveat": "This is a SCHOOL and a licensed cognitive-training programme, not a neurotech company, so 1980 is a school’s opening year rather than a company founding. The operating entity is Arrowsmith Program Inc. arrowsmithschool.org 301-redirects to arrowsmith.ca."
+ },
+ {
+  "name": "Mechion",
+  "year": 2018,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/11210851",
+  "evidence": "MECHION LTD, company no. 11210851, incorporated 16 February 2018; status dissolved, dissolution date 26 October 2021; registered office Union House, 111 New Union Street, Coventry CV1 2NT; SIC 58290.",
+  "confidence": "medium",
+  "conflict": "Aggregator and accelerator sources give a founding of 2017 (founders Maria Ramos Montero and Alexander Giokas, via Startupbootcamp London) against a Companies House incorporation of 16 February 2018. Since incorporation is not a founding, 2017 may well be right, but it could not be sourced to anything primary.",
+  "caveat": "The company was DISSOLVED on 26 October 2021. SCOPE: its product \"Iris\" was a wall-mounted AI camera for autonomous observation of dementia patients at home — remote patient monitoring, not neurotechnology."
+ },
+ {
+  "name": "EBT Medical",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://svhealthinvestors.com/news/ebt-secures-usd-10m-series-a",
+  "evidence": "\"EBT Medical was founded in 2014 with a mission to develop novel neuromodulation technologies that restore control, dignity and independence to those silently suffering from pelvic floor disorders.\"",
+  "confidence": "medium",
+  "caveat": "The year is stated in a Series A announcement, but the Series A is years later than 2014, which argues against back-derivation. The index’s stored description is WRONG: EBT Medical stimulates the SAPHENOUS nerve non-invasively for overactive bladder and pelvic floor disorders, not the vagus nerve. A University of Toronto spin-out, so the Toronto location holds."
+ },
+ {
+  "name": "PatternVision",
+  "year": 2000,
+  "kind": "press",
+  "url": "https://www.graphyonline.com/archives/IJCPP/2017/IJCPP-128/",
+  "evidence": "Competing Interests statement by Magnus S. Magnusson: \"since 2000 the founder and majority owner of PatternVision Ltd\".",
+  "confidence": "medium",
+  "caveat": "The year rests on the founder’s own repeated disclosure in peer-reviewed papers; no company-registry record was found to confirm it independently. SCOPE: a one-man software vendor selling THEME/ThemeEdu, T-pattern detection software for BEHAVIOURAL time-series. No EEG, no neural interface — effectively an academic software vehicle."
+ },
+ {
+  "name": "Looxid Labs",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.koreaherald.com/view.php?ud=20180527000229",
+  "evidence": "Korea Herald describes Looxid Labs as established in 2015 by Brian Yongwook Chae; corroborated independently by JobKorea’s company record.",
+  "confidence": "medium",
+  "caveat": "looxidlabs.com returns HTTP 403 to automated fetches, so current site content could not be confirmed. Several Korean sources place the company in Daejeon rather than the Seoul the index records. The index URL is the discontinued LooxidVR product page; the company has since pivoted to \"Lucy\", an eye-tracking and EEG communication aid for paralysed patients."
+ },
+ {
+  "name": "Neuroglee Therapeutics",
+  "year": 2020,
+  "kind": "press",
+  "url": "https://techcrunch.com/2020/12/02/neuroglee-gets-2-3-million-to-develop-digital-therapeutics-for-neurodegenerative-diseases",
+  "evidence": "Company launched publicly in December 2020 with a $2.3M pre-seed led by Eisai; founder Aniket Singh Rajput left his NTU PhD in 2020 to start it.",
+  "confidence": "medium",
+  "caveat": "BACK-DERIVATION RISK: the founding year and the first funding round are both 2020. What distinguishes them is the founder’s own narrative — quit the PhD in 2020, founded the company — rather than the round date alone. Now trades as Neuroglee Health, with headquarters moved from Singapore to Boston in Q4 2021, so the index’s Singapore is stale."
+ },
+ {
+  "name": "Bitbrain",
+  "year": 2010,
+  "kind": "company_site",
+  "url": "https://www.bitbrain.com/about-bitbrain",
+  "evidence": "\"Bitbrain was founded in 2010 as a spin-off company from a research team from the University of Zaragoza who were pioneers in approaching brain-computer interface applications outside the laboratory.\"",
+  "confidence": "high",
+  "caveat": "The underlying research dates to 1998; the company is 2010, and 1998 must not be used. Legal entity Bit & Brain Technologies, S.L."
+ },
+ {
+  "name": "Neuracle (博睿康)",
+  "year": 2011,
+  "kind": "aggregator",
+  "url": "https://www.vbdata.cn/companyDetail/4efd246f003b4387838875dd01e85a6a",
+  "evidence": "博睿康科技（常州）股份有限公司 成立于2011年11月 — founded November 2011.",
+  "confidence": "medium",
+  "caveat": "Consistent across VBData, Bioon, Baidu Baike and Tianjin University’s careers portal, but all secondary: neuracle.cn is a JavaScript shell returning no text to a fetcher and Baidu Baike blocks automated requests, so no primary quote was obtained. LOCATION: the legal entity is registered in Changzhou, Jiangsu, with Beijing as one site, so the index’s Beijing is at best incomplete."
+ },
+ {
+  "name": "Owlet",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://www.techstars.com/blog/program-news/kurt-workman-cofounder-and-ceo-at-owlet-ipo",
+  "evidence": "Kurt Workman co-founded Owlet in 2013; Utah Business and BYU report that the four BYU Crocker Innovation Fellows classmates had all quit jobs or left school by May 2013 to build it.",
+  "confidence": "medium",
+  "conflict": "Three candidate years. Aggregators say 2012, which is when Workman had the IDEA during his wife’s fertility workup, not a company. SEC filings show Owlet Baby Care Inc. incorporated in Delaware on 24 February 2014, which is incorporation. Press and the founder’s own account converge on 2013.",
+  "caveat": "Do not use 2015 (Smart Sock launch) or July 2021 (the Sandbridge SPAC merger, after which SBG renamed itself Owlet, Inc.). SCOPE: the Smart Sock is a pulse-oximetry sock measuring infant heart rate and blood-oxygen saturation — cardiorespiratory monitoring with no neural measurement anywhere."
+ },
+ {
+  "name": "neotiv",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://www.bionity.com/en/companies/1034859/neotiv-gmbh.html",
+  "evidence": "neotiv GmbH founded 2017, headquartered Magdeburg; a spin-off of Otto von Guericke University Magdeburg in close cooperation with the DZNE.",
+  "confidence": "medium",
+  "caveat": "No founding-year sentence could be extracted from neotiv’s own site (the About page renders client-side) or its 2024 AAIC press PDF, so 2017 rests on secondary sources consistent with the investor High-Tech Gründerfonds. LOCATION: headquarters are Sandtorstraße 23, Magdeburg, with Berlin only a secondary office, so the index’s Berlin is wrong as a primary HQ."
+ },
+ {
+  "name": "People Bio",
+  "year": 2002,
+  "kind": "press",
+  "url": "https://www.biospectator.com/news/view/6297",
+  "evidence": "PeopleBio Inc. described as established in February 2002 by CEO Sungmin Kang, headquartered in Seongnam; Korean registry-derived listings give the precise date 2002-09-09.",
+  "confidence": "high",
+  "conflict": "The MONTH differs across sources — February versus 9 September 2002 — though the year 2002 is consistent everywhere.",
+  "caveat": "The 2020 KOSDAQ listing (ticker 304840) is a listing date, not a founding. SCOPE: in-vitro diagnostics — a blood ELISA (Multimer Detection System, MDS-OAβ) for Alzheimer’s; the only neuro connection is the disease indicated, not the technology. peoplebio.net currently fails TLS with an expired certificate."
+ },
+ {
+  "name": "Medexo Robotics",
+  "year": 2015,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/224615-71",
+  "evidence": "\"MedEXO Robotics was founded in 2015 and is headquartered in Hong Kong.\" Tracxn and Crunchbase agree on 2015.",
+  "confidence": "medium",
+  "caveat": "Aggregator-only. The Hong Kong Government’s SIE Fund independently corroborates the venture and records it graduating to start-up phase, but states no founding year. Legal name MedEXO Robotics (Hong Kong) Company Limited, founder Denis Huen; products are the ExoSteady hand-tremor-suppression exoskeleton and a gait-freezing aid for Parkinson’s. Other sources place it in Kowloon rather than the New Territories the index records."
+ },
+ {
+  "name": "Feel",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/sentio-solutions-raises-4-5m-and-launches-feel-to-expand-access-to-mental-health-care-and-provide-on-time-interventions-to-500-million-people-living-with-mental-health-issues-around-the-world-300936519.html",
+  "evidence": "Company-issued release of 10 October 2019: \"Feel was founded in 2015 by Eleftheriou and CTO Haris Tsirmpas...\"",
+  "confidence": "high",
+  "caveat": "Feel is the PRODUCT — a wristband. The company is Sentio Solutions, Inc., since rebranded Feel Therapeutics and acquired by IQVIA, so the year belongs to Sentio. TRAP AVOIDED: the Envolve Global portfolio page shows 2016 next to Sentio, but that is a competition finalist year, not a founding."
+ },
+ {
+  "name": "Königsee Implantate",
+  "year": 1993,
+  "kind": "company_site",
+  "url": "https://www.koenigsee-implantate.de/en/company/",
+  "evidence": "\"in October 1993 he founded a completely new company 'Königsee Implantate und Instrumente zur Osteosynthese GmbH'\" — founder Erich Orschler.",
+  "confidence": "high",
+  "caveat": "SCOPE: an orthopedic and trauma hardware manufacturer — osteosynthesis plates, screws, variable-angle locking systems, bioabsorbable implants, spinal fixation. Almost certainly indexed on the word \"spine\". The index’s Allendorf is CORRECT: the company was founded in the town of Königsee, Thuringia, and later moved to Am Sand 4, Allendorf, so the name is now purely historical."
+ },
+ {
+  "name": "BrainLeap",
+  "year": 2017,
+  "kind": "aggregator",
+  "url": "https://www.missiondrivenfinance.com/portfolio/brainleap-technologies/",
+  "evidence": "Investor portfolio page, field \"Year Founded: 2017\".",
+  "confidence": "medium",
+  "caveat": "A single non-primary source; no primary or press statement of 2017 was found, so treat as provisional. Confirmed UC San Diego spinout from the lab of Dr Jeanne Townsend and Dr Leanne Chukoskie, with an NSF SBIR Phase I award (#1819842) and a UCSD precursor trial (NCT02403817). brainleaptech.com presents a mismatched Cloudways wildcard certificate, so the site is effectively unreachable without a warning — a hosting misconfiguration rather than evidence of abandonment."
+ },
+ {
+  "name": "Mindnest Health",
+  "year": 2019,
+  "kind": "registry",
+  "url": "https://www.ctcompanydir.com/companies/mindnest-health-inc-2/",
+  "evidence": "Connecticut business record for MINDNEST HEALTH, INC.: incorporation date 19 February 2019; Certificate of Dissolution/Revocation filed 26 September 2023; status Revoked.",
+  "confidence": "low",
+  "conflict": "Tracxn and CB Insights state a founding of 2016 against a Connecticut incorporation of February 2019, and no source explains the 2016. Notably 2016 is NOT the first-funding date (the seed was April 2020), so it is not the usual back-derivation — it may reflect when Dr Grodberg’s work began at Yale, or it may simply be wrong.",
+  "caveat": "The company was DISSOLVED in September 2023. A Yale spin-out by David Grodberg, M.D. of the Yale Child Study Center; the recorded year is an incorporation date."
  }
 ]
