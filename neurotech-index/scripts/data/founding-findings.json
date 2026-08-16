@@ -236,5 +236,133 @@
   "url": "https://tracxn.com/d/companies/atentivmynd/__Kg-yRiwJrWERWA9wT2lD7irTgNYnrAhwjwCxIA7U9TI",
   "evidence": "Aggregator-only; no primary source states a founding year. The nearest independent anchor is a product launch, not a founding: ADDitude reports the Atentiv System became publicly available in May 2014. The underlying technology originated at Duke-NUS Singapore, and atentiv.com now redirects to metisminds.com, so a later rebrand may have occurred.",
   "confidence": "low"
+ },
+ {
+  "name": "Go Go Games Studios",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://ed.stanford.edu/ldt/students/ma-projects/go-go-games-trio-matching-adventures-kids-autism",
+  "evidence": "Stanford GSE learning-design masters project page: founded 2012 by Heidi Williamson, Alexis Hiniker and Joy Wong Daniels, who turned their joint masters project into the company",
+  "confidence": "medium"
+ },
+ {
+  "name": "iBand+",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.slideshare.net/SMBBV/180125-presentation-samir-raut-from-arenar-smb-meeting",
+  "evidence": "Founder Samir Raut presentation, About us: Founded in December 2016. Likely the Arenar B.V. incorporation, since the iBand+ Kickstarter ran under the Arenar name in Sept 2016",
+  "confidence": "medium",
+  "conflict": "Tracxn gives 2014, aggregator-only and uncited."
+ },
+ {
+  "name": "NeuroVasx",
+  "year": 1998,
+  "kind": "company_site",
+  "url": "https://neurovasxinc.com/investors/",
+  "evidence": "Company investor page: originally founded and incorporated in Minnesota in 1998 for catheter-based stroke devices; ceased operations 2011 and reincorporated in Delaware 2014 after an asset purchase",
+  "confidence": "high",
+  "conflict": "The company own About page says 2005, which its investor timeline shows is when consulting engineer Steve Ferry was engaged. Crunchbase says 1997."
+ },
+ {
+  "name": "Preventicus",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.htgf.de/en/venture-capital-firms-high-tech-grunderfonds-and-born2grow-invest-in-preventicus-gmbh/",
+  "evidence": "High-Tech Gruenderfonds investment release, company boilerplate: headquartered in Jena and founded in May 2014, founder Dr Thomas Huebner",
+  "confidence": "high"
+ },
+ {
+  "name": "Neuregenix",
+  "year": 2005,
+  "kind": "press",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/05332791",
+  "evidence": "Companies House: NEUREGENIX LIMITED incorporated 14 Jan 2005 as GORDONS80 LIMITED, renamed 11 Apr 2005 — a shelf company taken over. Incorporation and rename, not a stated founding. Dissolved 7 Jan 2025.",
+  "confidence": "low",
+  "conflict": "Birmingham Research Park tenant page (now offline) is quoted for founded 2007 by Prof Martin Berry and Dr Zubair Ahmed as a University of Birmingham spin-out; Crunchbase repeats 2007."
+ },
+ {
+  "name": "Oscillo Biosciences",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://www.oscillobiosciences.com/our-story",
+  "evidence": "Company Our Story page: founded 2017 by Dr Edward Large and Dr Ji Chul Kim to translate neural-entrainment research into clinical treatment",
+  "confidence": "medium",
+  "conflict": "inKnowVation SBIR record gives 2016; SBIR.gov lists awards back to 2007 which appear mis-merged from another of Large ventures."
+ },
+ {
+  "name": "Nuralogix",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.nuralogix.ai/company/",
+  "evidence": "Company team page: Dr Kang Lee is one of three co-founders and served as Chief Science Officer from the company founding in 2015 until 1 Sept 2021",
+  "confidence": "high"
+ },
+ {
+  "name": "Accure Health",
+  "year": 2016,
+  "kind": "aggregator",
+  "url": "https://www.inknowvation.com/sbir/companies/accure-health-inc",
+  "evidence": "inKnowVation SBIR record compiled from federal award data: Year Founded 2016, Pagliuca Harvard Life Lab. Company own About page, LabCentral Q&A and The Engine profile state no year, and EDGAR has no Form D — effectively aggregator-only.",
+  "confidence": "medium"
+ },
+ {
+  "name": "Sleepmed",
+  "year": 1999,
+  "kind": "company_site",
+  "url": "https://www.sleepmedsite.com/page/sc/about_sleepmed_sc",
+  "evidence": "Company history page: SleepMed was formed in December 1999 through the merger of Sleep Disorder Centers of America and DigiTrace Care Services. Formation by merger, so 1999 is when the entity came into existence.",
+  "confidence": "high",
+  "conflict": "The same page dates predecessor SDCA to 1994 and DCSI to 1991, so the underlying business is older than the entity."
+ },
+ {
+  "name": "Blueberry",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://neurotechjp.com/blog/chibuk-blueberry/",
+  "evidence": "NeurotechJP interview with CEO John David Chibuk: Blueberry is a pre-seed startup founded in 2019 in Toronto, led by Chibuk and CTO Dr Steve Mann. Canadian registry shows Blueberry X Technologies Inc registered 13 Jan 2019.",
+  "confidence": "high"
+ },
+ {
+  "name": "Singfit",
+  "year": 2014,
+  "kind": "company_site",
+  "url": "https://www.singfit.com/post/musical-health-technologies-and-their-singfit-platform-granted-a2-collective-pilot-award-funded-by",
+  "evidence": "Company press boilerplate: Musical Health Technologies was founded in 2014 by Rachel Francine and Andy Tubman, a certified music therapist. AARP AgeTech profile agrees.",
+  "confidence": "medium",
+  "conflict": "Philadelphia Inquirer (2017) quotes CEO Rachel Francine saying she started the company in 2011 with Tubman. The gap may separate the SingFit product from the MHT entity, but no source says so."
+ },
+ {
+  "name": "Brainjo",
+  "year": 2021,
+  "kind": "press",
+  "url": "https://www.northdata.com/brainjo%20GmbH,%20Regensburg/HRB%2018882",
+  "evidence": "Handelsregister Regensburg HRB 18882: first entered as brainjo UG (haftungsbeschraenkt) on 27/28 Oct 2021, converted to GmbH 29 Apr 2022. OTH Regensburg reported the founding team active and winning the FLUEGGE stipend in March 2021.",
+  "confidence": "medium",
+  "conflict": "The company own 2026 seed-round boilerplate says founded 2022, which is the UG-to-GmbH legal-form change of the same entity, not a founding."
+ },
+ {
+  "name": "Pixyl",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/brainomix-announces-new-partnership-with-pixyl-to-expand-its-offering-with-multiple-sclerosis-solution-301686968.html",
+  "evidence": "Pixyl boilerplate: a spin-out of the French labs Inria and Inserm, founded in 2015 by Senan Doyle, Prof Florence Forbes and Prof Michel Dojat. French register shows PIXYL SAS immatriculated 10 Mar 2015; Inria own feature agrees.",
+  "confidence": "high"
+ },
+ {
+  "name": "Nectome",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.statnews.com/2019/01/30/nectome-brain-preservation-redemption/",
+  "evidence": "STAT: Nectome, which McIntyre and his former MIT roommate Michael McCanna founded in 2015. The Y Combinator Winter 2018 batch is accelerator admission, not founding.",
+  "confidence": "high"
+ },
+ {
+  "name": "Brainkey",
+  "year": 2018,
+  "kind": "company_site",
+  "url": "https://www.ycombinator.com/companies/brainkey",
+  "evidence": "Y Combinator company directory, company-supplied: Founded 2018, with the Winter 2019 batch listed separately so 2018 is not the batch date",
+  "confidence": "medium",
+  "conflict": "Longevity.Technology says BrainKey got off the ground in 2019 when YC backed them, while noting it began as a Stanford postdoc project in 2018. The 2019 marker is accelerator backing."
  }
 ]
