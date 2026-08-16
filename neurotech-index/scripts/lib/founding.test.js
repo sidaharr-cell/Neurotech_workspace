@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   pageText, extractFoundingYear, extractSchemaFounding, preferFounding, aboutUrl, ABOUT_PATHS,
-  sameSite, mentionsCompany, websiteKey,
+  sameSite, mentionsCompany, websiteKey, brandKey,
 } from './founding.js'
 
 const NOW = 2026
@@ -388,5 +388,38 @@ describe('websiteKey', () => {
   it('keeps a real company host that merely resembles a blocked one', () => {
     expect(websiteKey('https://goldenhelix.com')).toBe('goldenhelix.com')
     expect(websiteKey('https://angelmed.com')).toBe('angelmed.com')
+  })
+})
+
+describe('brandKey', () => {
+  it('matches one brand across two top-level domains', () => {
+    // Incereb of Tallaght is in the index twice: as "Incereb" at incereb.com and
+    // as "Eegapps Medical" at incereb.ie. Neither the names nor the exact hosts
+    // match.
+    expect(brandKey('http://www.incereb.com/')).toBe('incereb')
+    expect(brandKey('http://www.incereb.ie')).toBe('incereb')
+  })
+
+  it('reads through a subdomain and a multi-part suffix', () => {
+    expect(brandKey('https://site.acmeneuro.co.uk')).toBe('acmeneuro')
+    expect(brandKey('https://www.acmeneuro.com.au')).toBe('acmeneuro')
+  })
+
+  it('refuses a label short enough to collide by accident', () => {
+    expect(brandKey('https://sana.com')).toBe(null)
+    expect(brandKey('https://ctf.com')).toBe(null)
+  })
+
+  it('refuses a label half of neurotechnology uses', () => {
+    // Two unrelated companies at neuro.com and neuro.io are not one company.
+    for (const h of ['neuro', 'brain', 'neural', 'health', 'medical', 'cortex', 'therapy'])
+      expect(brandKey(`https://${h}.com`), h).toBe(null)
+  })
+
+  it('inherits every refusal websiteKey makes', () => {
+    expect(brandKey('https://www.linkedin.com/company/x')).toBe(null)
+    expect(brandKey('https://www.crunchbase.com/organization/y')).toBe(null)
+    expect(brandKey('https://N/A')).toBe(null)
+    expect(brandKey(null)).toBe(null)
   })
 })

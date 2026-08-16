@@ -17,7 +17,7 @@
  * for one company means the two names differ by punctuation, a suffix or an
  * accent — enough to hash apart, not enough to be different companies.
  *
- * TWO SIGNALS, because one of them was missing the interesting half.
+ * THREE SIGNALS, because the first was missing the interesting half.
  *
  * `core` name equality finds a company entered twice under punctuation variants.
  * It found exactly one pair: "Precision Neuroscience" against
@@ -38,6 +38,14 @@
  * `websiteKey` returns null for aggregators, parking pages and placeholders, and
  * a null never groups.
  *
+ * A shared BRAND — the same distinctive label under two top-level domains —
+ * catches what exact host equality still misses. Incereb of Tallaght is here
+ * twice, as "Incereb" at incereb.com and as "Eegapps Medical" at incereb.ie.
+ * `brandKey` is deliberately timid about this: at least five characters, and
+ * never a word half of neurotechnology uses, because neuro.com and neuro.io are
+ * not evidence of anything. A loose version of this signal invents duplicates,
+ * which is worse than missing them.
+ *
  * STILL NOT FOUND: a rename where the site moved too. G-Therapeutics SA of
  * Lausanne became GTX Medical and then ONWARD Medical of Eindhoven; the rows
  * share neither name nor domain, and that pair surfaced only because a person
@@ -56,7 +64,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { core } from './lib/funding.js'
-import { websiteKey } from './lib/founding.js'
+import { websiteKey, brandKey } from './lib/founding.js'
 
 const MERGE = process.argv.includes('--merge')
 
@@ -100,10 +108,12 @@ async function run() {
   }
   const byName = groupBy(r => core(r.name))
   const byDomain = groupBy(r => websiteKey(r.website))
+  // Weaker: the same brand under two TLDs, which exact host equality misses.
+  const byBrand = groupBy(r => brandKey(r.website))
 
   const signals = new Map()   // id of a member -> Set of signal names
   const merged = []
-  for (const [signal, groups] of [['name', byName], ['website', byDomain]]) {
+  for (const [signal, groups] of [['name', byName], ['website', byDomain], ['brand', byBrand]]) {
     for (const g of groups) {
       const existing = merged.find(m => m.some(r => g.some(x => x.id === r.id)))
       const target = existing || (merged.push([]), merged[merged.length - 1])
@@ -118,7 +128,7 @@ async function run() {
   const allCols = GROUPS.flat()
 
   console.log(`${rows.length} companies; ${dupes.length} appear more than once`)
-  console.log(`  ${byName.length} found by name, ${byDomain.length} by shared website\n`)
+  console.log(`  ${byName.length} by name, ${byDomain.length} by shared website, ${byBrand.length} by brand across TLDs\n`)
 
   const report = []
   const patches = []

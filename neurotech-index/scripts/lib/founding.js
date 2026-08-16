@@ -185,6 +185,40 @@ export function websiteKey(website) {
   return h
 }
 
+/** Labels that identify no company in particular, so two rows sharing one are
+ *  not thereby the same company. */
+const GENERIC_LABEL = new Set([
+  'neuro', 'neurotech', 'brain', 'brainlab', 'medical', 'health', 'healthcare',
+  'medtech', 'biotech', 'mind', 'cortex', 'neural', 'sense', 'sensor', 'therapy',
+  'therapeutics', 'labs', 'tech', 'digital', 'care', 'group', 'systems',
+])
+
+/**
+ * The distinctive label of a host, or null when it identifies nobody.
+ *
+ * A WEAKER duplicate signal than `websiteKey`, for one case it cannot see: the
+ * same brand under two top-level domains. Incereb of Tallaght is in this index
+ * twice, as "Incereb" at incereb.com and as "Eegapps Medical" at incereb.ie.
+ * Exact host equality misses it, and so does every comparison of the two names.
+ *
+ * Deliberately conservative, because a loose version of this INVENTS duplicates,
+ * which is worse than missing them. The label must be at least five characters
+ * and must not be a word half of neurotechnology uses: neuro.com and neuro.io
+ * are not evidence of anything.
+ */
+export function brandKey(website) {
+  const h = websiteKey(website)
+  if (!h) return null
+  const parts = h.split('.')
+  if (parts.length < 2) return null
+  // The label left of the public suffix. Two labels of suffix for the co.uk and
+  // com.au shape, one otherwise.
+  const suffixLen = parts.length > 2 && /^(co|com|org|net|ac|gov)$/.test(parts[parts.length - 2]) ? 2 : 1
+  const label = parts[parts.length - 1 - suffixLen]
+  if (!label || label.length < 5 || GENERIC_LABEL.has(label)) return null
+  return label
+}
+
 /**
  * Did a fetch end up somewhere its year can be believed?
  *
