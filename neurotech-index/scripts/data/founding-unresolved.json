@@ -136,5 +136,47 @@
   "verdict": "withdrawn after verification",
   "note": "I wrote 2008 from Tracxn while noting it sat oddly against the company first appearing in Ontario Brain Institute programmes in 2018. A verifier established why: the company own site has placeholder Lorem Ipsum where its story should be, the OBI release states no year, CB Insights lists none, and founder Kareem Ayyad was a school class of 2012 and 27 years old in spring 2021 — a 2008 founding would have him starting the company at about fourteen. Year cleared.",
   "url": "https://cerebian.com/"
+ },
+ {
+  "name": "Atlas",
+  "verdict": "WRONG COMPANY IN THE INDEX",
+  "note": "Our row points at atlasmh.com, which an agent found is a teen wellness journaling and podcast app, now a generic mental-health content hub, marked permanently closed. No founding year is established for it. CRITICAL: a DIFFERENT San Francisco company called Atlas (atlaswearable.com) makes a behind-the-ear EEG wearable and IS neurotech. If the index means that one, this row has the wrong website, the wrong description and the wrong company.",
+  "url": "https://www.atlaswearable.com/"
+ },
+ {
+  "name": "Singular Hearing",
+  "verdict": "no founding year established",
+  "note": "BC Corporate Registry shows SINGULAR HEARING INC registered 1 Aug 2022, but the venture was publicly named in Dec 2019 press ahead of CES 2020 as a subsidiary of Singular Software, so the registration post-dates it. No primary source states a founding year. SCOPE: smartphone audio DSP and speech separation, no neural interface.",
+  "url": "https://orgbook.gov.bc.ca/entity/BC1373289"
+ },
+ {
+  "name": "Go Go Games Studios",
+  "verdict": "scope question",
+  "note": "iPad matching games translating behavioural autism therapy. No sensing or stimulation of the nervous system. Year written regardless.",
+  "url": "http://www.go-go-games.com"
+ },
+ {
+  "name": "Preventicus",
+  "verdict": "scope question",
+  "note": "Smartphone and smartwatch PPG pulse-wave analysis for atrial fibrillation. Cardiovascular, not nervous system. Year written regardless.",
+  "url": "http://preventicus.com/"
+ },
+ {
+  "name": "Neuregenix",
+  "verdict": "scope question",
+  "note": "Preclinical contract research organisation running CNS and PNS injury models and axon-regeneration assays for drug discovery. A research service, not a device. Dissolved Jan 2025.",
+  "url": "http://www.neuregenix.com/"
+ },
+ {
+  "name": "Accure Health",
+  "verdict": "scope question",
+  "note": "Liquid-biopsy and exosome nanosensing diagnostics for cancer and immune response. No nervous-system measurement or modulation.",
+  "url": "https://www.accurehealth.com/"
+ },
+ {
+  "name": "Sleepmed",
+  "verdict": "scope question",
+  "note": "Measures the nervous system via polysomnography and ambulatory EEG, but operates as a diagnostic service and sleep-lab network rather than a technology developer.",
+  "url": "http://www.sleepmedinc.com/"
  }
 ]
