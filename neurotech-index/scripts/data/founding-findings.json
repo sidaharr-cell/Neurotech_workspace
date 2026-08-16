@@ -761,5 +761,58 @@
   "evidence": "French government company register, SIREN 500363270, Tourcoing: company created 2007. Inactive since 26/09/2023 after a closure judgment for insufficient assets.",
   "confidence": "medium",
   "conflict": "Registration date, not an explicit founding statement."
+ },
+ {
+  "name": "Dreem",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.prnewswire.com/news-releases/beacon-biosignals-acquires-dreem-launches-at-home-sleep-monitoring-services-for-clinical-trials-301873574.html",
+  "evidence": "Founded in Paris in 2014 by Hugo Mercier and Quentin Soulet de Brugiere under the ORIGINAL NAME RYTHM; Dreem was the product name and the company later rebranded to it. Forbes covered Rythm in 2016.",
+  "confidence": "high",
+  "conflict": "Acquired: Beacon Biosignals took Dreem R&D on 11 Jul 2023 and the headband now ships as Dreem 3S under Beacon (510k K223539). The consumer business was wound down. Beacon Biosignals is itself a separate row in this index."
+ },
+ {
+  "name": "Limbix",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://www.inc.com/zoe-henry/7-startups-aimed-at-mental-health-2018.html",
+  "evidence": "Press and investor write-ups date the founding to 2016 (Ben Lewis, ex-Google), first public launch at the APA Convention",
+  "confidence": "medium",
+  "conflict": "No company-site or filing confirmation: limbix.com no longer resolves over TLS after the acquisition. Some sources describe 2016 as the launch year rather than incorporation. Acquired by Big Health 14 Jul 2023."
+ },
+ {
+  "name": "Sense Neuro Diagnostics, LLC",
+  "year": 2014,
+  "kind": "press",
+  "url": "https://www.uc.edu/news/articles/2025/09/uc-1819-backed-startup-sense-neuro-fueled-by-17-million.html",
+  "evidence": "University of Cincinnati news: founded 2014 by four UC physicians and researchers, Opeolu Adeoye, George Shaw, Joseph Clark and Matthew Flaherty, as a UC spinout",
+  "confidence": "high"
+ },
+ {
+  "name": "Impulse Monitoring",
+  "year": 2002,
+  "kind": "aggregator",
+  "url": "https://pitchbook.com/profiles/company/53359-39",
+  "evidence": "Trade press and PitchBook both give 2002 for the Columbia, Maryland intraoperative neuromonitoring provider",
+  "confidence": "low",
+  "conflict": "No primary source: the NuVasive SEC exhibit returns 403 and impulsemonitoring.com is dead. The business was absorbed into NuVasive Clinical Services after an $80M acquisition closing 29 Sept 2011."
+ },
+ {
+  "name": "Healium",
+  "year": 2016,
+  "kind": "company_site",
+  "url": "https://tryhealium.com/about",
+  "evidence": "Company About and timeline page: Healium founded 2016 by Sarah Hill with Dr Jeff Tarrant, after Hill 2015 introduction to neurofeedback",
+  "confidence": "medium",
+  "conflict": "The legal entity is StoryUP Inc dba Healium, and StoryUP as an immersive-media studio predates the Healium product, so the parent may be older than 2016."
+ },
+ {
+  "name": "Hiji Band",
+  "year": 2013,
+  "kind": "aggregator",
+  "url": "https://gregslist.com/phoenix/company/hiji-band-by-movement-interactive/",
+  "evidence": "Phoenix startup directory lists Movement Interactive Inc founded 2013, founder and CEO Dr Eric Luster",
+  "confidence": "low",
+  "conflict": "AGGREGATOR-ONLY. No company-site or filing confirmation, and no founding year in its press coverage."
  }
 ]
