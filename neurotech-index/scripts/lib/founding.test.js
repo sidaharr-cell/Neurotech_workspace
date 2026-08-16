@@ -291,3 +291,26 @@ describe('extractFoundingYear with a company name', () => {
     expect(extractFoundingYear(text, NOW, 'Sana Health')?.year).toBe(2016)
   })
 })
+
+describe('mentionsCompany: a company talking about itself', () => {
+  /**
+   * Real values the first version of this guard would have thrown away. Each is
+   * on the company's own verified domain, where "the company" is unambiguous.
+   */
+  it('accepts a company referring to itself without its name', () => {
+    expect(mentionsCompany('About the Company Founded in 2015 in Tampere, Finland', 'Neuro Event Labs')).toBe(true)
+    expect(mentionsCompany('The company was founded in 2014 in the Republic of Buryatia', 'DRD Biotech')).toBe(true)
+    expect(mentionsCompany('2016 - Founded Founded in 2016, our Co-Founders identified the need', 'PathAI')).toBe(true)
+  })
+
+  /** Real false positives. A testimonial and a biography, both on About pages. */
+  it('still rejects a person as the subject', () => {
+    expect(mentionsCompany('player since 2018 If you, or someone you know', 'Litesprite', 'Logan Niles, player ')).toBe(false)
+    expect(mentionsCompany('pain-free since 1993', 'Sana Health', 'and he has been pain-free ')).toBe(false)
+  })
+
+  it('rejects a person even when the company is also named nearby', () => {
+    // "Dr Smith founded Acme and has practised since 1998" dates the practice.
+    expect(mentionsCompany('Acme since 1998', 'Acme Neuro', 'Dr Smith has practised ')).toBe(false)
+  })
+})

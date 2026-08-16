@@ -198,12 +198,44 @@ export const acronym = name => String(name || '')
  * since 1993", NeuSpera from a surgeon's fellowship record. A founding sentence
  * that never names the company is not evidence about the company.
  */
-export function mentionsCompany(window, name) {
+/**
+ * Ways a company refers to itself without using its name.
+ *
+ * On its own About page "the company was founded in 2014" is the company
+ * talking about itself, and demanding the literal name there throws away
+ * correct values: Neuro Event Labs writes "About the Company Founded in 2015 in
+ * Tampere, Finland" and never names itself in the sentence.
+ */
+const COMPANY_SELF =
+  /\b(the company|our company|the firm|the business|about the company|about us|we (?:were|are|started|began|have been)|our (?:co-?founders?|founders?|story|history|journey))\b/i
+
+/**
+ * A person, not a company, is the subject just before the year.
+ *
+ * About pages carry founder biographies and customer testimonials, and both
+ * produce sentences that look exactly like company history. Litesprite was
+ * dated 2018 from "Logan Niles, player since 2018"; Sana Health 1993 from "he
+ * has been pain-free since 1993".
+ */
+const PERSON_BEFORE =
+  /\b(he|she|his|her|him|i|my|player|patient|customer|client|member|subscriber|user|fellow|professor|prof|dr)\b[^.]{0,40}$/i
+
+/**
+ * Is this stretch of text talking about the company, or about somebody?
+ *
+ * Accepts the company's name, its initials, or a phrase by which a company
+ * refers to itself. Rejects outright when the words immediately before the year
+ * make a person the subject, whichever of those also matched.
+ */
+export function mentionsCompany(window, name, before = '') {
+  if (PERSON_BEFORE.test(String(before || ''))) return false
   if (!name) return true
-  const w = String(window || '').toLowerCase()
+  const raw = String(window || '')
+  const w = raw.toLowerCase()
   if (nameTokens(name).some(t => w.includes(t))) return true
   const a = acronym(name)
-  return a.length >= 2 && new RegExp(`\\b${a}\\b`).test(String(window || ''))
+  if (a.length >= 2 && new RegExp(`\\b${a}\\b`).test(raw)) return true
+  return COMPANY_SELF.test(raw)
 }
 
 /**
@@ -227,7 +259,7 @@ export function extractFoundingYear(text, currentYear, companyName = null) {
     if (guard && SINCE_NOT_ABOUT_COMPANY.test(prose.slice(Math.max(0, at - 60), at))) continue
     // Does it name the company at all? An About page is full of people.
     const window_ = prose.slice(Math.max(0, at - 150), at + m[0].length + 150)
-    if (!mentionsCompany(window_, companyName)) continue
+    if (!mentionsCompany(window_, companyName, prose.slice(Math.max(0, at - 60), at))) continue
     const year = Number(m[1])
     // A founding year before 1900 is a university or a hospital, not a
     // neurotech company, and after this year it is a typo or a roadmap.
