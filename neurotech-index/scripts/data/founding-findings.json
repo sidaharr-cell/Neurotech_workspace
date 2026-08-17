@@ -5014,5 +5014,14 @@
   "evidence": "Company timeline, 2015: \"Company founded as BrainWaveBank in Belfast.\" A separate 2020 entry reads \"Cumulus Neuroscience formed with funding from Dementia Discovery Fund and Life Arc Ventures.\"",
   "confidence": "high",
   "caveat": "THE ENTITY WAS BRAINWAVEBANK, founded January 2015 in Belfast by Ronan Cunningham, Brian Murphy, Siggi Saevarsson and Urs Streidl; 2020 is a REBRAND and must not be used. The company’s own history page names the year and the original name and distinguishes the two. CB Insights still files it under the brainwavebank slug, a useful cross-check."
+ },
+ {
+  "name": "OpenBCI",
+  "year": 2013,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/OpenBCI",
+  "evidence": "Wikipedia: created by Joel Murphy and Conor Russomanno after a successful Kickstarter campaign in late 2013. The campaign ran under the OpenBCI name from 11 December 2013 to 22 January 2014, raising $215,438 from 947 backers, so the venture was operating publicly as OpenBCI in 2013. Consistent with the Form D bound already on file, which places incorporation no later than 2016.",
+  "confidence": "medium",
+  "caveat": "Wikipedia says the company was created AFTER a campaign that closed in January 2014, so a 2014 formation date is possible; the project launched under the OpenBCI name in December 2013 and Tracxn and Crunchbase both give 2013. No company page states a year."
  }
 ]
