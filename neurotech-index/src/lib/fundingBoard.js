@@ -22,8 +22,7 @@ import { supabase } from './supabase'
 export const CAPITAL_SCOPE = 'private_only'
 export const DEFAULT_SORT = 'total_raised'
 
-/** Rendered verbatim in the chart caption. Every record's inclusion_basis is
- *  defended against this text. */
+/** Every record's inclusion_basis is defended against this text. */
 export const INCLUSION_RULE =
   'Companies whose primary product interfaces with, measures, or modulates the ' +
   'nervous system. This includes implanted and external neuromodulation devices, ' +
@@ -73,6 +72,23 @@ export const MODALITY_LABELS = {
   other: 'Other',
 }
 
+/**
+ * What a stored modality shows as on the funding figures.
+ *
+ * `digital_therapeutic` is a real value and stays one: it is in the CHECK
+ * constraint on `organizations.modality` in migration 008, and seven companies
+ * carry it in scripts/data/inclusion-basis.json. It is folded into `other` for
+ * DISPLAY only, because seven companies did not earn a fifth chip on a filter
+ * row that has to fit one line beside a chart, and `other` is defined as in
+ * scope but not in one of the named groups — which is what they are.
+ *
+ * The fold happens once, where the board is built, so every reader of a board
+ * row sees the same answer and no surface has to remember to apply it. Nothing
+ * is written back, and undoing it is deleting one entry.
+ */
+export const MODALITY_FOLD = { digital_therapeutic: 'other' }
+export const foldModality = m => (m ? MODALITY_FOLD[m] || m : null)
+
 /** One plain sentence per modality, carried on the filter controls, because a
  *  two-word label cannot say where its boundary falls. */
 export const MODALITY_DESCRIPTIONS = {
@@ -82,7 +98,9 @@ export const MODALITY_DESCRIPTIONS = {
   digital_therapeutic: 'Prescription treatments delivered through software or sensory stimulus, '
     + 'cleared for a neurological or psychiatric indication. Not implanted, and not always software.',
   computational_neuro: 'Modelling and analysis of neural data.',
-  other: 'In scope by the inclusion rule, but not in one of the named groups.',
+  other: 'In scope by the inclusion rule but not in one of the named groups. '
+    + 'Includes prescription therapies: treatments delivered through software or '
+    + 'sensory stimulus, cleared for a neurological or psychiatric indication.',
 }
 
 /** Ordered. Mirrors stage_rank() in supabase/migrations/008-funding.sql and
@@ -463,7 +481,7 @@ export function toRow(o, trailing = 0) {
     latestSourceUrl: o.latest_raise_source_url || null,
     unavailableReason: reason,
     status: o.status || null,
-    modality: o.modality || null,
+    modality: foldModality(o.modality),
     inclusionBasis: o.inclusion_basis || null,
     furthestStage: o.furthest_stage || null,
     stageEvidenceType: o.stage_evidence_type || null,
