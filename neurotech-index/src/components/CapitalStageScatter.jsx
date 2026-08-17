@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
   scatterPoints, filterFunding, STAGE_BANDS, STAGE_LABELS, MODALITY_LABELS, MODALITY_COLOR,
-  DEFAULT_STATUS_FILTER, AGE_BANDS, ageBand, fmtUsd, fmtMonthYear,
+  DEFAULT_STATUS_FILTER, AGE_BANDS, ageBand, ageBasis, fmtUsd, fmtMonthYear,
 } from '../lib/fundingBoard'
 import { median, logDomain, logScale, decadeTicks, beeswarm, swarmSpread } from '../lib/swarm'
 
@@ -230,6 +230,14 @@ export default function CapitalStageScatter({ board, filters = null }) {
     return acc
   }, {})
   const anyAge = AGE_BANDS.some(b => byAge[b.id])
+  // Which FACT is behind each point's size, as opposed to which band it lands
+  // in. A reader comparing two circles is owed the difference between a sourced
+  // founding year and an incorporation year standing in for one.
+  const ageBasisCounts = points.reduce((acc, p) => {
+    const kind = ageBasis(p)?.kind || 'none'
+    acc[kind] = (acc[kind] || 0) + 1
+    return acc
+  }, { founded: 0, incorporated: 0, incorporated_bound: 0, none: 0 })
   const narrowed = all.length - points.length
   const go = r => navigate(r.href)
 
@@ -503,12 +511,23 @@ export default function CapitalStageScatter({ board, filters = null }) {
           no spread to read a trend from. Measured 29 July 2026 over the unfiltered set.
         </p>
         <p>
-          Point size is the company&apos;s age, from the year of incorporation it declared on its own
-          Form D filing. That is not the same fact as when it was founded: a company can trade for
-          years before incorporating, and redomiciling into the US resets the declared year while the
-          company is unchanged. An issuer formed more than five years before filing declares no year
-          at all, only that it was earlier, which places it in the oldest band when the bound allows
-          and nowhere when it does not.
+          Point size is the company&apos;s age, taken from a researched founding year where one
+          exists and from the year of incorporation declared on the company&apos;s own Form D filing
+          otherwise. Those are different facts and the founding one is what &quot;how old is this
+          company&quot; asks: a company can trade for years before incorporating, and redomiciling
+          into the US resets the declared year while the company is unchanged. An issuer formed more
+          than five years before filing declares no year at all, only that it was earlier, which
+          places it in the oldest band when the bound allows and nowhere when it does not.
+        </p>
+        <p>
+          Read the sizes knowing which fact is behind them. Of the {points.length} companies plotted,
+          {' '}{ageBasisCounts.founded} carry a researched founding year and
+          {' '}{ageBasisCounts.incorporated + ageBasisCounts.incorporated_bound} still fall back to
+          incorporation, so most points are sized on the proxy rather than the thing itself. That is
+          not a random shortfall: the founding sweep selected companies by having no age at all, and
+          a Form D filing supplies an incorporation year, so the companies on this figure are
+          precisely the ones it never looked at. Every point&apos;s own basis is named in its tooltip
+          and in the table below.
         </p>
         <p>
           Stage comes from a ClinicalTrials.gov record or an FDA decision. Companies whose stage
