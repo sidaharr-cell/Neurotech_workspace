@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
-  ArrowLeft, ExternalLink, Building2, MapPin, Calendar, Banknote,
+  ArrowLeft, ExternalLink, Building2, MapPin, Banknote,
   Cpu, FlaskConical, FileText, Newspaper, Briefcase,
   ShieldCheck, AlertTriangle, Users,
 } from 'lucide-react'
@@ -10,10 +10,12 @@ import { Loader, EmptyState, Kicker } from '../components/ui'
 import { cardBadges } from '../lib/facets'
 import { fmtMonthYear, unavailableLabel } from '../lib/fundingBoard'
 import { StarButton } from '../components/Watch'
+import FoundingLine from '../components/FoundingLine'
+import { foundingLine } from '../lib/founded-display'
+import { siteUrl, siteLabel } from '../lib/website'
 
 const fmtMoney = m => (m >= 1000 ? `$${(m / 1000).toFixed(1)}B` : `$${m}M`)
 const yearOf = d => (d ? String(d).slice(0, 4) : '')
-const host = url => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return url } }
 const fmtDate = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
 const monthYear = ts => { if (!ts) return null; try { return new Date(ts).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) } catch { return null } }
 
@@ -282,10 +284,16 @@ export default function CompanyPage() {
       <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-[1.1] font-semibold text-ink tracking-[-0.015em]">{company.name}</h1>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted font-sans">
         {company.location && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{company.location}</span>}
-        {company.founded && <><span aria-hidden>·</span><span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />Founded {company.founded}</span></>}
+        {/* The legacy `founded` column is deliberately not rendered. It carries
+            no source, and five of the twelve values that can be checked against
+            a filing disagree with it. FoundingLine shows a year only when one
+            is sourced. */}
+        {foundingLine(company) && <><span aria-hidden>·</span>
+          <FoundingLine row={company} compact />
+        </>}
         {company.funding > 0 && <><span aria-hidden>·</span><span className="inline-flex items-center gap-1 text-accent font-medium"><Banknote className="w-3.5 h-3.5" />{fmtMoney(company.funding)} raised</span></>}
-        {company.website && <><span aria-hidden>·</span>
-          <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">{host(company.website)}<ExternalLink className="w-3 h-3" /></a>
+        {siteUrl(company.website) && <><span aria-hidden>·</span>
+          <a href={siteUrl(company.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">{siteLabel(company.website)}<ExternalLink className="w-3 h-3" /></a>
         </>}
         <span aria-hidden>·</span>
         <a href={ctgovUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-ink hover:text-accent transition-colors">ClinicalTrials.gov<ExternalLink className="w-3 h-3" /></a>
@@ -304,6 +312,15 @@ export default function CompanyPage() {
       )}
 
       {company.description && <p className="mt-6 text-[1.12rem] leading-[1.7] text-ink font-body">{company.description}</p>}
+
+      {/* The founding year in full, with its source and the class of that
+          source. The masthead carries the same claim compactly; this is where a
+          reader can weigh it and follow it. */}
+      {foundingLine(company) && (
+        <div className="mt-5 pt-4 border-t border-rule-soft">
+          <FoundingLine row={company} />
+        </div>
+      )}
 
 
       {/* Devices — made_by edge */}
@@ -548,8 +565,8 @@ export default function CompanyPage() {
         <BizSub title="Talent">
           <p className="text-[14px] text-muted font-body mb-3">Open roles are listed on the company's own careers page. NeuroBase does not scrape individual postings or use LinkedIn or any source that prohibits it; it links you to the source instead.</p>
           <div className="flex flex-wrap gap-3">
-            {company.website && (
-              <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
+            {siteUrl(company.website) && (
+              <a href={siteUrl(company.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[13px] font-sans px-3.5 py-1.5 rounded-full border border-rule text-ink-soft hover:border-ink transition-colors">
                 Company site <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}

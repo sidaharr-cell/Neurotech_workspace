@@ -128,6 +128,66 @@ export const STAGE_BANDS = [
   { id: 'regulatory', label: 'FDA authorisation', stages: ['de_novo_granted', 'cleared_510k', 'approved_pma'] },
 ]
 
+/**
+ * Company age, in three bands.
+ *
+ * Banded rather than continuous, and that is what makes it usable at all. Form D
+ * asks for a year of incorporation but an issuer formed more than five years
+ * before filing answers "over five years ago" and gives none, so a quarter of
+ * the set has only an upper bound on the year — which is a LOWER bound on the
+ * age. A continuous scale cannot draw "at least 22 years old". A band can,
+ * whenever the minimum age already lands in the top band.
+ *
+ * Measured 15 Aug 2026 on the 45 companies the scatter plots: 29 declare a year
+ * and 9 of the 16 bounds place, so 38 of 45 carry a band against 29 that would
+ * carry a continuous size. The genuinely unplaceable ones are `null`, and the
+ * figure marks them rather than defaulting them into the middle.
+ *
+ * The age itself comes from a FOUNDING year where one is known and falls back to
+ * incorporation otherwise — see ageBand. The two are different facts and the
+ * founding one is what "how old is this company" asks; incorporation can trail
+ * it by years or reset entirely. See docs/founded-backfill-scope.md.
+ */
+export const AGE_BANDS = [
+  { id: 'young', label: 'Under 7 years', maxAge: 6 },
+  { id: 'mid', label: '7 to 12 years', maxAge: 12 },
+  { id: 'old', label: 'Over 12 years', maxAge: Infinity },
+]
+
+const bandForAge = age => AGE_BANDS.find(b => age <= b.maxAge)?.id ?? 'old'
+
+/**
+ * Which band a company falls in, or null when the evidence cannot say.
+ *
+ * A bound places a company only when its MINIMUM age already falls in the top
+ * band: "at least 22 years" is unambiguously "over 12", while "at least 8" is
+ * consistent with two different bands and resolves to null rather than guessing
+ * the nearer one.
+ */
+export function ageBand(row, currentYear) {
+  if (!row) return null
+  // A founding year first: it is what "how old is this company" actually asks,
+  // and incorporation can trail it by years or reset entirely on a
+  // redomiciliation. Axonics incorporated in 2012 and began operating in 2013;
+  // Saluda's filing reads 2023 for a company that long predates it.
+  if (row.foundedYear) return bandForAge(currentYear - row.foundedYear)
+  if (row.incorporatedYear) return bandForAge(currentYear - row.incorporatedYear)
+  if (row.incorporatedBefore) {
+    const minAge = currentYear - row.incorporatedBefore
+    return bandForAge(minAge) === 'old' ? 'old' : null
+  }
+  return null
+}
+
+/** Where a company's age came from, for a reader who wants to weigh it. */
+export function ageBasis(row) {
+  if (!row) return null
+  if (row.foundedYear) return { year: row.foundedYear, kind: 'founded', sourceKind: row.foundedSourceKind, url: row.foundedSourceUrl, conflict: row.foundedConflict }
+  if (row.incorporatedYear) return { year: row.incorporatedYear, kind: 'incorporated', url: row.incorporatedSourceUrl }
+  if (row.incorporatedBefore) return { before: row.incorporatedBefore, kind: 'incorporated_bound', url: row.incorporatedSourceUrl }
+  return null
+}
+
 /** Rows the scatter can honestly plot: a sourced total and a stage that came
  *  from a real record. A stage with no evidence is not a position on any axis. */
 export function scatterPoints(rows = []) {
@@ -339,6 +399,16 @@ const COLUMNS = [
  *  column the moment it has, with no redeploy. */
 const COLUMNS_009 = `${COLUMNS},was_publicly_traded`
 
+/** Added by migration 018. Layered on 009 the same way and for the same reason:
+ *  the chart keeps working on a database where neither has been applied. */
+const COLUMNS_018 =
+  `${COLUMNS_009},incorporated_year,incorporated_before_year,incorporated_source_url`
+
+/** Migrations 019 and 021: a sourced FOUNDING year, which is a different fact
+ *  from incorporation and the better one for company age. */
+const COLUMNS_019 = `${COLUMNS_018},founded_year,founded_source_kind,founded_source_url,`
+  + 'founded_evidence,founded_conflict'
+
 async function selectFundedOrgs() {
   const query = cols => supabase.from('organizations').select(cols)
     .eq('type', 'company')
@@ -346,8 +416,22 @@ async function selectFundedOrgs() {
     .not('inclusion_basis', 'is', null)
     .order('total_raised_usd', { ascending: false })
     .limit(500)
-  const res = await query(COLUMNS_009)
-  if (res.error && /was_publicly_traded/.test(res.error.message)) return query(COLUMNS)
+  const res = await query(COLUMNS_019)
+  if (!res.error) return res
+  if (/founded_(year|conflict|evidence|source)/.test(res.error.message)) {
+    const r18 = await query(COLUMNS_018)
+    if (!r18.error) return r18
+    res.error = r18.error
+  }
+  // Fall back one migration at a time, so a database with 009 but not 018 keeps
+  // its partial-total marks instead of losing them alongside the ages.
+  if (/incorporated_/.test(res.error.message)) {
+    const r9 = await query(COLUMNS_009)
+    if (!r9.error) return r9
+    if (/was_publicly_traded/.test(r9.error.message)) return query(COLUMNS)
+    return r9
+  }
+  if (/was_publicly_traded/.test(res.error.message)) return query(COLUMNS)
   return res
 }
 
@@ -385,6 +469,18 @@ export function toRow(o, trailing = 0) {
     stageEvidenceType: o.stage_evidence_type || null,
     stageEvidenceId: o.stage_evidence_id || null,
     stageEvidenceUrl: stageEvidenceUrl(o.stage_evidence_type, o.stage_evidence_id),
+    // Migration 018. Exactly one of these is ever set; `incorporatedBefore` is
+    // an upper bound on the year, so a LOWER bound on the company's age.
+    incorporatedYear: o.incorporated_year ?? null,
+    incorporatedBefore: o.incorporated_before_year ?? null,
+    incorporatedSourceUrl: o.incorporated_source_url ?? null,
+    // Migrations 019/021. A founding year is the better answer for age and is
+    // preferred over incorporation wherever it exists; see ageBand.
+    foundedYear: o.founded_year ?? null,
+    foundedSourceKind: o.founded_source_kind ?? null,
+    foundedSourceUrl: o.founded_source_url ?? null,
+    foundedEvidence: o.founded_evidence ?? null,
+    foundedConflict: o.founded_conflict ?? null,
     lastVerifiedAt: o.last_verified_at || null,
   }
 }

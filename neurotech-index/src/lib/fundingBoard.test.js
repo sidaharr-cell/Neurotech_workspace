@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   rankFunding, trailingTotals, trailingCutoff, toRow, stageEvidenceUrl, sortTitle,
-  DEFAULT_STATUS_FILTER, STAGE_ORDER, unavailableLabel,
+  DEFAULT_STATUS_FILTER, STAGE_ORDER, unavailableLabel, ageBand, ageBasis, AGE_BANDS,
 } from './fundingBoard'
 
 const row = (over = {}) => ({
@@ -175,5 +175,101 @@ describe('STAGE_ORDER', () => {
     expect(STAGE_ORDER[0]).toBe('preclinical')
     expect(STAGE_ORDER.at(-1)).toBe('withdrawn')
     expect(STAGE_ORDER).toHaveLength(10)
+  })
+})
+
+// ── Company age, from an incorporation year or a bound on one ───────────────
+
+describe('ageBand', () => {
+  const NOW = 2026
+  const exact = y => ({ incorporatedYear: y, incorporatedBefore: null })
+  const bound = y => ({ incorporatedYear: null, incorporatedBefore: y })
+
+  it('bands a company that declared a year', () => {
+    expect(ageBand(exact(2023), NOW)).toBe('young')   // 3
+    expect(ageBand(exact(2016), NOW)).toBe('mid')     // 10
+    expect(ageBand(exact(2006), NOW)).toBe('old')     // 20
+  })
+
+  it('puts the band edges where the labels say they are', () => {
+    expect(ageBand(exact(2020), NOW)).toBe('young')   // 6, under 7
+    expect(ageBand(exact(2019), NOW)).toBe('mid')     // 7
+    expect(ageBand(exact(2014), NOW)).toBe('mid')     // 12
+    expect(ageBand(exact(2013), NOW)).toBe('old')     // 13, over 12
+  })
+
+  /**
+   * The whole reason for banding. "Incorporated no later than 2004" means at
+   * least 22 years old, which is one band and no other, so it places — a
+   * continuous size could not have drawn it at all.
+   */
+  it('places a bound whose minimum age is already in the top band', () => {
+    expect(ageBand(bound(2004), NOW)).toBe('old')     // at least 22
+    expect(ageBand(bound(2009), NOW)).toBe('old')     // at least 17
+  })
+
+  it('refuses a bound that spans more than one band', () => {
+    expect(ageBand(bound(2020), NOW)).toBe(null)      // at least 6: any band
+    expect(ageBand(bound(2016), NOW)).toBe(null)      // at least 10: mid or old
+    expect(ageBand(bound(2014), NOW)).toBe(null)      // at least 12: mid or old
+  })
+
+  it('has nothing to say without evidence', () => {
+    expect(ageBand({ incorporatedYear: null, incorporatedBefore: null }, NOW)).toBe(null)
+    expect(ageBand(null, NOW)).toBe(null)
+  })
+
+  it('only ever returns a band that exists', () => {
+    const ids = new Set(AGE_BANDS.map(b => b.id))
+    for (const y of [1995, 2005, 2015, 2025, 2026]) expect(ids.has(ageBand(exact(y), NOW))).toBe(true)
+  })
+})
+
+describe('ageBand prefers a founding year over incorporation', () => {
+  const NOW = 2026
+
+  /**
+   * Axonics incorporated in Delaware in March 2012 as American Restorative
+   * Medicine and commenced operations in late 2013, per its own SEC Form 424B5.
+   * Age should follow the founding, not the shell.
+   */
+  it('uses the founding year when both are known', () => {
+    const r = { foundedYear: 2013, incorporatedYear: 2012, incorporatedBefore: null }
+    expect(ageBand(r, NOW)).toBe(ageBand({ foundedYear: 2013 }, NOW))
+  })
+
+  /**
+   * Saluda Medical reads 2013 in our legacy column and 2023 on its filing,
+   * because it redomiciled. Following the filing would call a company more than
+   * a decade old brand new.
+   */
+  it('is not misled by a redomiciliation resetting the incorporation year', () => {
+    const founded = { foundedYear: 2013, incorporatedYear: 2023, incorporatedBefore: null }
+    expect(ageBand(founded, NOW)).toBe('old')
+    const filingOnly = { foundedYear: null, incorporatedYear: 2023, incorporatedBefore: null }
+    expect(ageBand(filingOnly, NOW)).toBe('young')
+  })
+
+  it('still falls back to incorporation, then to a bound', () => {
+    expect(ageBand({ foundedYear: null, incorporatedYear: 2016, incorporatedBefore: null }, NOW)).toBe('mid')
+    expect(ageBand({ foundedYear: null, incorporatedYear: null, incorporatedBefore: 2004 }, NOW)).toBe('old')
+  })
+})
+
+describe('ageBasis', () => {
+  it('names the founding year and its source class', () => {
+    const b = ageBasis({ foundedYear: 2019, foundedSourceKind: 'press', foundedSourceUrl: 'https://icn2.cat/x' })
+    expect(b).toMatchObject({ year: 2019, kind: 'founded', sourceKind: 'press' })
+  })
+
+  it('falls back to incorporation, and to a bound, naming which it used', () => {
+    expect(ageBasis({ incorporatedYear: 2012 })?.kind).toBe('incorporated')
+    expect(ageBasis({ incorporatedBefore: 2004 })?.kind).toBe('incorporated_bound')
+    expect(ageBasis({})).toBe(null)
+  })
+
+  it('carries a conflict through so the page can disclose it', () => {
+    expect(ageBasis({ foundedYear: 2014, foundedConflict: 'Another source gives 2015' })?.conflict)
+      .toMatch(/2015/)
   })
 })

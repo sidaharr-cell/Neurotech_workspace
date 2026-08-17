@@ -59,6 +59,16 @@ for (const type of targets) {
       stats.seen++
       if (!FORCE && row.classifier_version === CLASSIFIER_VERSION) continue
       const p = classify(row, type)
+      // A person's exclusion outranks the classifier's opinion. `in_scope` is a
+      // derived column and this script owns it, but 222 company rows were ruled
+      // out of the index by hand (apply-scope-removals.js, and the duplicate
+      // resolution beside it) for reasons no regex can see: ARM is a
+      // semiconductor licensor, Owlet sells a pulse-oximetry sock, Arrowsmith is
+      // a school. Nothing reverts today, because the version gate skips rows
+      // already at CLASSIFIER_VERSION — but the next version bump, or any
+      // --force run, would quietly put all of them back and no check would
+      // notice. The decision lives in inclusion_decision, which is human-owned.
+      if (row.inclusion_decision === 'exclude') p.in_scope = false
       if (p.in_scope) stats.inScope++
       if (p.in_scope && !p.facet_function.length) stats.blank++
       p.facet_function.forEach(v => { fnTally[v] = (fnTally[v] || 0) + 1 })
