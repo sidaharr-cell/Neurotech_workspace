@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { X, ExternalLink, MapPin, GitBranch } from 'lucide-react'
 import { Kicker, DeviceClassLabels, typeWord } from './ui'
 import { cardBadges } from '../lib/facets'
+import { siteUrl } from '../lib/website'
+import { foundingLine, foundingText } from '../lib/founded-display'
 
 // ── List row for a reference entity (device / company / researcher) ──────────
 export function EntityRow({ entity, onClick }) {
@@ -59,6 +61,7 @@ function ClassRow({ entity }) {
 }
 
 function ExtLink({ href, children }) {
+  href = siteUrl(href)
   if (!href) return null
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[15px] font-sans font-medium text-accent hover:text-accent-dark transition-colors mt-1">
@@ -93,7 +96,11 @@ function OrgDetail({ o }) {
     <>
       <Field label="Type" value={o.type} />
       <Field label="Location" value={o.location} />
-      <Field label="Founded" value={o.founded} />
+      {/* Not o.founded. The legacy column carries no source, and five of the
+          twelve values checkable against a filing disagree with it. The rule
+          across the site is that a year renders with the class of its source or
+          not at all; foundingLine returns null when nothing is sourced. */}
+      <Field label="Founded" value={foundingText(foundingLine(o))} />
       {o.description && <div className="mb-4"><p className="text-[11px] font-sans font-semibold uppercase tracking-[0.1em] text-muted mb-1">About</p><p className="text-[15px] text-ink-soft font-body leading-relaxed">{o.description}</p></div>}
       {o.founders?.length > 0 && <Field label="Key founders" value={o.founders.join(', ')} />}
       <ClassRow entity={o} />

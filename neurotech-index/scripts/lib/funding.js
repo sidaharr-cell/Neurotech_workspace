@@ -33,7 +33,26 @@ const LEGAL = /\b(inc|incorporated|llc|ltd|limited|corp|corporation|co|company|l
  *  not: "Neuros Medical Inc, a Delaware corporation" and the like. */
 const TAIL = /\b(a|an)\s+[a-z\s]+\b(corporation|company|partnership|series)\b.*$/i
 
-export const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+/**
+ * Zero-width and directional marks are stripped BEFORE anything else.
+ *
+ * One company row is stored as "DeepBrainz\u200b" — with a zero-width space on
+ * the end. It is invisible in every log, every report and every terminal, and it
+ * defeats exact-name matching silently: the row reappeared in the "not yet
+ * searched" queue after being recorded, because the name in the findings file
+ * and the name in the database looked identical and were not.
+ *
+ * The `[^a-z0-9]+` strip below would remove them anyway, but only for callers
+ * that go through `core`. Anything comparing raw names — a Set of names, a JSON
+ * key, a queue filter — sees two different strings. So the invisible characters
+ * are named and removed here, where the intent is obvious, rather than being
+ * swept up as a side effect of punctuation stripping.
+ */
+const INVISIBLE = /[\u200b-\u200f\u202a-\u202e\u2060-\u2064\ufeff]/g
+
+export const stripInvisible = s => String(s || '').replace(INVISIBLE, '')
+
+export const norm = s => stripInvisible(s).toLowerCase().replace(/[^a-z0-9]+/g, '')
 
 /**
  * The comparable core of a company name: drop EDGAR's "(CIK ...)" suffix, drop
@@ -314,6 +333,82 @@ export function parseFilingXml(xml) {
     totalAmountSold: pick('totalAmountSold'),
     totalOfferingAmount: pick('totalOfferingAmount'),
   })
+}
+
+/**
+ * What a Form D says about when its issuer was incorporated.
+ *
+ * Item 2 of the form. An issuer formed within five years of filing states the
+ * year; an older one states only that it was "over five years ago" and gives no
+ * year at all. Both are findings and this returns both, because the bound is
+ * what places the oldest companies — the ones that never state a year — and
+ * throwing it away would lose them entirely.
+ *
+ *   { kind: 'exact',  year }              declared outright
+ *   { kind: 'bound',  before }            incorporated no later than `before`
+ *   { kind: 'planned' }                   not yet formed at filing time
+ *   { kind: 'unknown' }                   no usable yearOfInc block
+ *
+ * `filingYear` is the year the form was filed, which is what turns "over five
+ * years ago" into a date. Without it a bound cannot be computed and the answer
+ * degrades to unknown rather than guessing.
+ *
+ * The block is matched FIRST and the year read from inside it. Reading
+ * `<value>` off the whole document instead matches an unrelated earlier tag and
+ * silently reports two thirds of a real sample as having no year — measured
+ * 15 Aug 2026, see docs/founded-backfill-scope.md.
+ */
+export function parseIncorporation(xml, filingYear = null) {
+  const block = String(xml).match(/<yearOfInc>([\s\S]*?)<\/yearOfInc>/)
+  if (!block) return { kind: 'unknown' }
+  const inner = block[1]
+
+  const exact = inner.match(/<value>\s*((?:19|20)\d{2})\s*<\/value>/)
+  if (exact) return { kind: 'exact', year: Number(exact[1]) }
+
+  if (/<yetToBeFormed>\s*true\s*<\/yetToBeFormed>/.test(inner)) return { kind: 'planned' }
+
+  if (/<overFiveYears>\s*true\s*<\/overFiveYears>/.test(inner)) {
+    // Range-checked, not just integer-checked: Number(null) is 0, which is an
+    // integer, and would have turned a missing filing year into "incorporated
+    // no later than -5".
+    const y = Number(filingYear)
+    return Number.isInteger(y) && y >= 1900 && y <= 2200
+      ? { kind: 'bound', before: y - 5 }
+      : { kind: 'unknown' }
+  }
+  return { kind: 'unknown' }
+}
+
+/**
+ * Which of two readings to keep for one company.
+ *
+ * An exact year always beats a bound, whichever filing it came from.
+ *
+ * Between two bounds the EARLIER one wins. Both are true of the same company —
+ * a 2009 filing saying "over five years ago" gives no later than 2004, a 2016
+ * one gives no later than 2011 — but "no later than 2004" IMPLIES "no later
+ * than 2011", so it is the stronger claim and it is the one that puts a real
+ * floor under the company's age: at least 22 years rather than at least 15.
+ *
+ * This was the wrong way round when first written, and it cost real coverage:
+ * keeping the later bound understated the age of every company that filed more
+ * than once, and dropped binned age-band coverage of the scatter from 38 of 45
+ * to 35 of 45. The claim was never false, only weaker than the evidence — which
+ * is exactly the kind of error nothing downstream can detect.
+ *
+ * Between two exact years the earlier wins, since a company that reincorporates
+ * declares the new entity's year on later filings and the first declaration is
+ * the closest to its actual formation.
+ */
+export function preferIncorporation(a, b) {
+  if (!a) return b || null
+  if (!b) return a
+  if (a.kind === 'exact' && b.kind === 'exact') return a.year <= b.year ? a : b
+  if (a.kind === 'exact') return a
+  if (b.kind === 'exact') return b
+  if (a.kind === 'bound' && b.kind === 'bound') return a.before <= b.before ? a : b
+  return a.kind === 'bound' ? a : b
 }
 
 // ── URLs ────────────────────────────────────────────────────────────────────
