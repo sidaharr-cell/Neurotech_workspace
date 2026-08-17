@@ -3236,5 +3236,245 @@
   "verdict": "existence-unverified",
   "url": "https://www.zoominfo.com/c/myomotive/411343062",
   "note": "Could not establish that this company exists. The index holds no website for it, and searching produced only a ZoomInfo profile — an aggregator, not proof of existence — plus MyoMotive Body Therapy, a massage practice on Blossom Hill Rd in SAN JOSE, which is a different business in a different city. No press, no filings, no funding record, no product. TWO LEADS WORTH FOLLOWING. The search surfaced neurofounders.co/resources/start-up-map, which may be the upstream source this index was scraped from — worth checking whether this row entered the data from there unverified. And the nearest real company is Myomo, Inc. (the MyoPro myoelectric upper-limb orthosis, Boston), so \"Myomotive\" may be a corruption of \"Myomo\" — flagged as a lead, not a conclusion."
+ },
+ {
+  "name": "Nalu Medical",
+  "verdict": "acquired",
+  "url": "https://news.bostonscientific.com/2025-10-17-Boston-Scientific-Announces-Agreement-to-Acquire-Nalu-Medical,-Inc",
+  "note": "ACQUIRED BY BOSTON SCIENTIFIC — agreement announced 17 October 2025, about $533M for the remaining equity; Boston Scientific had been a strategic investor since 2017. NO YEAR WRITTEN: the only figure available is 2014 from Tracxn and peers, IDENTICAL to the incorporation already on file and citing nothing. The company’s own About page states no year, and the acquisition release gives none. Writing it would relabel an incorporation date as a founding without evidence."
+ },
+ {
+  "name": "Motif Neurotech",
+  "verdict": "no-year",
+  "url": "https://tracxn.com/d/companies/motif-neurotech/__9pof1he7U0jNulS-xb66XB8gUGYEoutY_LaHldxtgII",
+  "note": "NO YEAR WRITTEN. Tracxn gives 2022, identical to the incorporation on file and uncited. Rice News covers the company twice without stating a founding year; its 2026 piece says the FDA IDE came \"four years after its founding\", which is consistent with 2022 but is a relative phrase and was not converted. A Rice University spinout by Jacob Robinson and Kaiyuan Yang with Baylor physicians Sameer Sheth and Sunil Sheth. It predates the Rice Biotech Launch Pad, so that framing is retrospective."
+ },
+ {
+  "name": "ShiraTronics",
+  "verdict": "no-year",
+  "url": "https://shiratronics.com/about/",
+  "note": "NO YEAR WRITTEN. Aggregators say 2019, which does NOT match the 2018 incorporation on file, so it is not laundered from it — but 2019 coincides exactly with the October 2019 Series A, the classic back-derivation signature. The company’s own About page names co-founders Lynn Elliott and Mudit K. Jain with no date, and neither the Series A nor Series B releases carry a founding year. Real and trading: implanted neurostimulation for chronic migraine, Minneapolis, first spinout of the accelerator NuXcel."
+ },
+ {
+  "name": "WhisperSom Corporation",
+  "verdict": "no-year",
+  "url": "https://members.mdtechcouncil.com/mtcdirectory/details/whispersom-corporation-3238679",
+  "note": "NO YEAR WRITTEN. The Maryland Tech Council entry giving 2014 is a SELF-SUBMITTED member profile, and Crunchbase, Tracxn and PitchBook all repeat 2014 uncited — the incorporation year echoed back. Name ambiguity too: the council lists both \"WhisperSom Corporation\" and \"WhisperSom Medical Technologies, Incorporated\", possibly two related entities. whispersom.com resolves but returns almost no readable content, and there is no news coverage, funding announcement or FDA clearance to confirm operating status."
+ },
+ {
+  "name": "Sana Health",
+  "verdict": "no-year",
+  "url": "https://golden.com/wiki/Sana-VWR9434",
+  "note": "NO YEAR WRITTEN. Every 2016 found (Golden, PitchBook, Tracxn) is uncited and identical to the incorporation on file; the company’s own site, its 2017 TechCrunch coverage and a Wharton profile all describe the founder’s 1992 injury and \"28 years developing the technology\" without ever stating a founding year. A LIVE LEAD: Sana’s Crunchbase record sits at the slug /organization/sleepstarter, and a separate \"Sleepstarter\" profile exists, which suggests an earlier entity renamed in place and a true founding before 2016."
+ },
+ {
+  "name": "Cerora",
+  "verdict": "no-year",
+  "url": "https://tracxn.com/d/companies/cerora/__QjNVXMC-IQXe_kU8ulcjIZgYjBk6gfnbi7v9beNIX7c",
+  "note": "NO YEAR WRITTEN. Tracxn gives 2011, identical to the incorporation on file and citing nothing; the only other 2011 statement is a founder’s own biography page, a refused source class. Neither Ben Franklin Technology Partners nor the company’s own AccessWire boilerplate gives a year. Tracxn also attributes the founding to David Devilbiss while the company and all press name Adam J. Simon. Real and live: Cerora Borealis, EEG and biosensor concussion assessment, at Ben Franklin TechVentures on Lehigh University’s campus."
+ },
+ {
+  "name": "NQ Medical",
+  "verdict": "dead-domain",
+  "url": "https://democratizinghealthcare.ai/nq-medical-inc/",
+  "note": "nq-medical.com does not resolve (DNS NXDOMAIN) on either the root or /about, and Tracxn flags the company as no longer active; total funding was about $1.45M in a single round. NO YEAR WRITTEN: every source gives a bare 2016 with no citation, identical to the incorporation on file. Smartphone and keyboard-interaction digital biomarkers for neurodegenerative disease, MIT-linked, co-founders Richie A. Bavasso and Mark Pascarella."
+ },
+ {
+  "name": "NeuroVision Imaging",
+  "verdict": "no-year",
+  "url": "https://www.crunchbase.com/organization/neurovision-imaging",
+  "note": "NO YEAR WRITTEN. Crunchbase, Tracxn and CB Insights all give 2010 with no citation, matching the incorporation on file. The company is healthy and still trading from Sacramento, having acquired Durin Life Sciences in May 2026 and broadened from retinal amyloid imaging into a telehealth and blood-biomarker platform. CAUTION: founder Steven Verdooner separately founded Ophthalmic Imaging Systems in 1984 — that date must not attach to this row."
+ },
+ {
+  "name": "RightEye",
+  "verdict": "no-year",
+  "url": "https://www.tobii.com/resource-center/reports-and-papers/expanding-healthcare-with-eye-tracking",
+  "note": "NO YEAR WRITTEN. Every aggregator returns 2012, the incorporation year on file, uncited. The one independent datum, Tobii’s case study, says the co-founders \"met on the tennis court\" in 2012 — which bounds the company as not existing earlier but is not a founding statement. righteye.com/about/ returns 403 to automated fetching, and that page is where the answer would be. Note RightEye received an FDA warning letter in December 2022 (MARCS-CMS 643192)."
+ },
+ {
+  "name": "Novoic",
+  "verdict": "no-year",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/12032342",
+  "note": "NO YEAR WRITTEN. NOVOIC LTD (12032342) was incorporated 4 June 2019 with no previous names, and every aggregator giving 2019 cites nothing — the registry date laundered through directories. Novoic’s own about page states no year. 2019 is plausible as a genuine founding, but nothing independent supports it. SCOPE: speech and language digital biomarkers for Alzheimer’s screening — in scope only on a broad reading, since nothing records or stimulates the nervous system."
+ },
+ {
+  "name": "Musemantik",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/SC370015",
+  "note": "A MUSIC-TECHNOLOGY company, not neurotechnology: MusicFlow, an adaptive and generative music engine, productised as a wellbeing app blending music therapy and mindfulness. No neural recording, stimulation or measurement. Its own site now foregrounds \"The Catholic App\" and \"intelligent mobile apps and decentralized innovations\", so it appears to have drifted off the wellbeing product entirely. NO YEAR WRITTEN: MUSEMANTIK LIMITED (SC370015) was incorporated 11 December 2009 with no previous names, and every aggregator 2009 is that date echoed back."
+ },
+ {
+  "name": "Cortirio",
+  "verdict": "wrong-location",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/10780236",
+  "note": "THE INDEX LOCATION IS WRONG: the registered office is NETPark Plexus, Thomas Wright Way, Sedgefield, County Durham, not London. CORTIRIO LIMITED (10780236) was incorporated 19 May 2017 with no previous names. NO YEAR WRITTEN: every source giving 2017 (StartUs Insights, CB Insights, AngelList) is an uncited aggregator repeating that date, and the company’s own site has no About or history page, only a footer copyright. Real and active: a portable fNIRS scanner for traumatic brain injury and stroke at the point of care. A link to Ilias Tachtsidis’s fNIRS group at UCL is likely but unconfirmed."
+ },
+ {
+  "name": "Merge Labs",
+  "verdict": "wrong-entity",
+  "url": "https://www.techcrunch.com/2026/01/15/openai-invests-in-sam-altmans-brain-computer-interface-startup-merge-labs/",
+  "note": "THE INCORPORATION DATE ON FILE CANNOT BELONG TO THIS COMPANY. Merge Labs was formed in 2025 and left stealth on 15 January 2026 with a roughly $250M seed led by OpenAI, so the \"incorporated 2016\" is a different entity of the same name and should be purged. NO YEAR WRITTEN: 2025 rests on secondary reporting only and no primary statement of a founding date was found. Co-founded by Sam Altman, Alex Blania, Sandro Herbig, Tyson Aflalo, Sumner Norman and Mikhail Shapiro; molecular and ultrasound readout rather than implanted electrodes; reported HQ Miami, against the bare \"USA\" in the index."
+ },
+ {
+  "name": "BrainCheck",
+  "verdict": "year-disputed",
+  "url": "https://www.prnewswire.com/news-releases/compelling-research-supporting-braincheck-presented-at-aaic-2024-as-company-unveils-new-brand-identity-302208127.html",
+  "note": "Tracxn gives 2014, identical to the incorporation on file and therefore suspect; several secondary write-ups give 2015, one specifically January 2015 for the Katz and Eagleman co-founding, but that sentence could not be substantiated — the Houston Public Media article 403s and the Texas Standard version contains no founding date. NO RENAME OCCURRED, contrary to the brief: the July 2024 change was a purely visual rebrand with the name retained. No Rice University connection appears in any source, only Baylor via Eagleman. Real, active and growing."
+ },
+ {
+  "name": "PhotoPharmics",
+  "verdict": "no-year",
+  "url": "https://photopharmics.com/",
+  "note": "NO YEAR WRITTEN. Gust, PitchBook, Crunchbase and ZoomInfo all give 2011, identical to the incorporation on file and citing nothing. The company’s own about page states no founding year, only \"30+ years of research\" and a predecessor line about solutions \"acquired by Philips-Respironics in 2007\". That predecessor is APOLLO LIGHT SYSTEMS of Orem, Utah, where co-founder Kent Savage was President and CEO — a distinct company, not PhotoPharmics under a prior name. Real and active: Celeste phototherapy for Parkinson’s, FDA Breakthrough Device 2020, Phase 3 topline May 2026."
+ },
+ {
+  "name": "CoMind",
+  "verdict": "no-year",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/11729526",
+  "note": "NO YEAR WRITTEN. COMIND TECHNOLOGIES LIMITED (11729526) was incorporated 17 December 2018 with no previous names. Search results assert a 2017 founding by James Dacombe, but all three articles carrying that claim (eu-startups, massdevice, tech.eu) returned 403, so no source stating it was actually read. The 2017-versus-2018 gap is plausible as pre-incorporation trading but is unsubstantiated. Real and very much alive: non-invasive brain monitoring, about $102.5M raised in October 2025. Founder is James Dacombe, not the name the brief suggested."
+ },
+ {
+  "name": "NeuroPrex",
+  "verdict": "wrong-location",
+  "url": "https://www.neuroprexinc.com/",
+  "note": "THE INDEX LOCATION IS FLATLY WRONG: per the company’s own page, \"NeuroPrex Inc. is a Delaware corporation with engineering laboratories and administrative offices in California’s San Francisco Bay Area\" — Santa Clara, not London, corroborated by Dun & Bradstreet. NO YEAR WRITTEN: aggregators give 2012, identical to the incorporation on file and uncited, while the site footer reads \"Since 2013\", a footer copyright line and a refused source class. Founders Janice Huang and Hans Pan; product is the NPX wearable transcranial magnetic stimulation device for depression and PTSD. It appears on SBIR.gov, where a federal award record may carry a firm establishment date."
+ },
+ {
+  "name": "OpenBCI",
+  "verdict": "no-year",
+  "url": "https://openbci.com/",
+  "note": "NO YEAR WRITTEN, and this is the clearest refusal of the batch. Both candidate years are KICKSTARTER DATES: the campaign ran 11 December 2013 to 22 January 2014, raising $215,438 from 947 backers, so 2013 is the campaign launch and 2014 either its close or first shipments. Neither is evidence of company formation. Joel Murphy was recruited onto a government grant to build an open-source EEG platform BEFORE the campaign, so the project predates its own Kickstarter. Resolving this needs the New York or Delaware entity registration for OpenBCI, Inc. Real, active, Brooklyn, unambiguously in scope."
+ },
+ {
+  "name": "Cerephex",
+  "verdict": "no-year",
+  "url": "https://patents.google.com/patent/US7715910",
+  "note": "NO YEAR WRITTEN, but the 2012 on file is definitively NOT the founding. The USPTO assignment chain on US7715910B2 proves a long predecessor lineage: filed 21 July 2006 with priority 4 February 2002, assigned from Synergistic Neurotherapy Adjustment Process, Inc. to GREAT LAKES BIO SCIENCES, LLC on 22 August 2007, then to Cerephex Corporation on 18 March 2010, then back to founder Jeff Hargrove personally on 31 March 2017 — a wind-down signature. A March 2010 news item separately describes \"The Cerephex Corporation (formerly Great Lakes BioSciences)\". No source states a founding year for any entity in the chain. cerephex.com is dead and the company is defunct; RINCE/NeuroPoint never reached FDA clearance."
+ },
+ {
+  "name": "NeuSpera Medical",
+  "verdict": "year-disputed",
+  "url": "https://www.crunchbase.com/organization/neuspera-medica",
+  "note": "Aggregators split between 2013, matching the incorporation on file, and 2014, and nothing is independent of a filing — the company’s own About page names founder Alexander J. Yeh but gives no year. A RENAME likely explains the split: the entity was formerly VIVONDA MEDICAL. A plausible reading is that Vivonda incorporated in 2013 and \"NeuSpera\" dates from 2014, but no source states it. Very much alive: battery-free wirelessly powered implants from Yeh’s Stanford mid-field powering work, FDA approval for the first integrated sacral neuromodulation system in June 2025, about $135M raised."
+ },
+ {
+  "name": "Jan Medical",
+  "verdict": "acquired",
+  "url": "https://www.businesswire.com/news/home/20160125005635/en/Jan-Medical-Secures-7.5-Million-in-Series-C-Funding-From-Brainlab-Inc.",
+  "note": "NO LONGER INDEPENDENT — janmedical.com now 301-redirects to brainlab.com. Brainlab led a $7.5M Series C in January 2016 and subsequently absorbed the company. NO YEAR WRITTEN: three candidates and no way to choose. Founder Paul Lovoi \"started working on the company in 2003, took a break and then came back to it full time in 2008\", with the incorporation on file at about 2006 sitting between them — exactly the pattern where \"founded\" is genuinely ambiguous. The company was named for Lovoi’s wife Jan, who died of a subarachnoid haemorrhagic stroke. Product was the Nautilus BrainPulse."
+ },
+ {
+  "name": "NeuroOne",
+  "verdict": "wrong-entity",
+  "url": "https://neuroone.in/",
+  "note": "THIS ROW FUSES TWO UNRELATED ENTITIES. neuroone.in is NEURO ONE HOSPITAL, a NABH-accredited neurology and neurosurgery hospital in Tiruchirappalli operated by Trivikrama Medical Services Pvt Ltd — a care provider with no device or product, and out of scope. But the \"incorporated 2016\" came from an SEC Form D or equivalent, which an Indian hospital would not file, so that date almost certainly belongs to NeuroOne Medical Technologies Corporation of Eden Prairie, Minnesota (Nasdaq: NMTC, thin-film cortical electrodes). The row should be split or dropped, not dated. The hospital’s own site carries a second-anniversary item dated September 2018, consistent with a 2016 opening."
+ },
+ {
+  "name": "Biowave",
+  "verdict": "year-disputed",
+  "url": "https://biowave.com/about/our-story/",
+  "note": "NO YEAR WRITTEN: 1997 against 2000, both aggregator-only and neither cited. The company’s own history page says only \"For decades BioWave has delivered innovative pain relief technology\" — exactly the phrasing that must not become a year. FDA 510(k) K061166 proves it was operating by 2006, which rules nothing out between the candidates. Founder Bradford Siff’s origin story carries no dates. THE LOCATION IS WRONG: headquarters is 19 Newtown Turnpike, Westport CT, not Norwalk. A Connecticut state-registry lookup would settle the year."
+ },
+ {
+  "name": "NeuroCreate",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/search/companies?q=neurocreate",
+  "note": "A CREATIVITY AND PRODUCTIVITY SaaS that reads signals off third-party consumer EEG electrodes — no hardware of its own, no clinical claim. At the far edge of neurotechnology and arguably createch. NEUROCREATE LTD (11110867) was incorporated 13 December 2017; every founding-year mention traces to that date, and the one narrative source uses incorporation language (\"Incorporated in 2017, the team was far ahead of the market curve\"), not a founding statement. Founder Dr Shama Rahman; product FlowCreate Innovator."
+ },
+ {
+  "name": "I-Brain",
+  "verdict": "scope",
+  "url": "https://ibrainrobotics.com",
+  "note": "NOT A NEUROTECHNOLOGY COMPANY. ibrainrobotics.com is live and sells the HARRTS FUEsion-X 3.0, a ROBOTIC HAIR TRANSPLANT machine; its LinkedIn slug is \"harrts\" and some sources place operations in Orlando. The index’s \"incorporated 2021\" matches no UK entity found: a full Companies House sweep of ibrain and i-brain returned 13 entities, and the only Surrey one, I-BRAIN ROBOTICS LIMITED (10730027) of Great Bookham, was DISSOLVED on 25 September 2018. IBRAIN LTD (13129970) is a London EC1V address and cannot be assumed to be the same business. Beware also an unrelated iBrain EEG headband and an iBrain assistive-technology charity."
+ },
+ {
+  "name": "Otoharmonics Corporation",
+  "verdict": "no-year",
+  "url": "https://www.otoharmonics.com/",
+  "note": "NO YEAR WRITTEN. Search engines surface \"founded in 2010\" but it traces only to aggregators, and the company’s own PR Newswire boilerplate contains no founding year at all: \"Otoharmonics Corporation is a privately held company with headquarters in Portland, Oregon USA.\" 2010 would predate the 2012 incorporation on file, which is plausible since the underlying pilot study was published in 2010 and the technology was first identified at Cedars-Sinai. DOMAIN STATUS IS SUSPICIOUS: otoharmonics.com resolves with articles dated through September 2025 and a 2026 footer, but the /faq path search engines still index now 404s, consistent with a rebuild or resale that kept the name. Product is the Levo System for tinnitus, cleared July 2014."
+ },
+ {
+  "name": "ni2o",
+  "verdict": "no-year",
+  "url": "https://ni2o.com/",
+  "note": "NO YEAR WRITTEN. The repeated \"founded 2017\" appears only on aggregators and is identical to the incorporation on file; ni2o.com states no year and its news archive begins 4 February 2022. LOCATION CONFLICT: MTEC’s member page describes ni2o as \"a spinout of Oxford University\" based in Oxford, UK, while the index and a Yahoo Local listing place it in Providence, Rhode Island — likely a US entity over a UK origin, but unverified. The company is more than a website: MTEC carries a life-sciences member page and the site is substantive. Founder Dr Newton Howard; implantable device for recording plus electrical and optical stimulation."
+ },
+ {
+  "name": "Freespira",
+  "verdict": "renamed",
+  "url": "https://freespira.com/",
+  "note": "A RENAME: the entity was Palo Alto Health Sciences, Inc. and now trades as Freespira, Inc. — the FDA PTSD clearance release is still filed under the old name, and the index URL pahealthsciences.com is the former identity. NO YEAR WRITTEN: three irreconcilable candidates. Aggregators say 2008 (\"Beth founded Palo Alto Health Sciences in 2008\"), the incorporation on file says 2013, and GeekWire (December 2020) says Siegelman \"launched a company in 2014\" — which is after the incorporation and so is probably loose phrasing about commercialisation. The /about-us/, /our-story/ and /company/ pages all 404. The California Secretary of State record for \"Palo Alto Health Sciences, Inc.\" would settle it. HQ genuinely moved to Kirkland WA, so the index location is right."
+ },
+ {
+  "name": "CereScan",
+  "verdict": "scope",
+  "url": "https://www.cerescan.com",
+  "note": "NOT A DEVICE COMPANY. CereScan was a functional brain-imaging (SPECT and PET-CT) CLINIC in Littleton, Colorado, selling scans and medico-legal support services. The corporate entity is CereHealth Corp, which shut the clinic model, pivoted to SaaS and now trades as iLLUME Ai; CB Insights has already redirected its cerescan record to iLLUMEAi. NO YEAR WRITTEN: every aggregator says 2008, matching the incorporation on file, and the company’s own releases carry no founding year — while CereHealth’s September 2022 release refers to \"twelve years of operating CereScan\", implying about 2009 and contradicting them. CEO John Kelley is reported as JOINING in April 2009, not founding."
+ },
+ {
+  "name": "Tenoke",
+  "verdict": "dead-domain",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09916691",
+  "note": "THE DOMAIN WAS RESOLD AND THE NAME NOT KEPT: tenoke.com now serves a Chinese-language site, 景三科技 (Jing San Technology), unrelated to the healthcare company. TENOKE LIMITED (09916691) was incorporated 15 December 2015, active, SIC 86900, no previous names — and the LOCATION IS WRONG: 112 Perne Road, Cambridge, Cambridgeshire, i.e. Cambridge UK, not Cambridge USA. NO YEAR WRITTEN: every 2015 traces to the registry via Crunchbase and CB Insights. Scope is also questionable — stroke prevention via multimodality cardiovascular imaging is cardiovascular rather than neurotechnology."
+ },
+ {
+  "name": "Neurons Lab",
+  "verdict": "scope",
+  "url": "https://neurons-lab.com/about/",
+  "note": "NOT A NEUROTECHNOLOGY COMPANY and a clean removal. Its own About page says it specialises EXCLUSIVELY IN FINANCIAL SERVICES — banks, insurers, wealth management — selling custom AI agents and AI training, and describes itself as an Anthropic, AWS and Google Cloud partner with 50+ engineers. Zero neuro content; the name is the only thing neurological about it. Co-founders Alex Honchar and Igor Sydorenko; London and Singapore. The year 2019 appears on that same page (\"he co-founded Neurons Lab in 2019\") but is moot given the scope failure."
+ },
+ {
+  "name": "UDAMO",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09453201",
+  "note": "A ONE-PERSON COMPANY building a smartphone CBT prototype, not neurotechnology. The only substantive independent trace is an NHS Health Research Authority summary for \"Project udamo: a new smartphone-based automation of Cognitive Therapy\", funded about £99,900 by SBRI/NHS England, with Jack Prior as director and sole shareholder. UDAMO LIMITED (09453201) was incorporated 23 February 2015, no previous names, and the LOCATION IS WRONG: 42 Southfields, East Molesey, Surrey — a residential address, not London. udamo.com resolves but is effectively contentless. Same SIC code and same shape as Tenoke."
+ },
+ {
+  "name": "Accentus Medical",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/04146523",
+  "note": "NOT NEUROTECHNOLOGY: antimicrobial silver-ion surface coatings (Agluna, Acusure Ag) for titanium orthopaedic and trauma implants, SIC 72190. No nervous-system product. NO YEAR WRITTEN, and the 2001 on file is a SHELF INCORPORATION for a different business: the Companies House chain for 04146523 runs SEVCO 1239 PLC (24 Jan 2001) to ACCENTUS PLC (21 Mar 2001) to ACCENTUS MEDICAL PLC (27 May 2010) to ACCENTUS MEDICAL LIMITED (12 Nov 2012). \"Sevco 1239\" is a textbook off-the-shelf name. The entity took the name Accentus Medical only in 2010 and completed a management buyout on 23 September 2013; candidate real answers are 2010 or 2013 and no source states either as a founding. Heritage claims trace to UKAEA work at Harwell in the 1970s."
+ },
+ {
+  "name": "NeuroRecovery Technologies",
+  "verdict": "acquired",
+  "url": "https://pitchbook.com/profiles/company/127582-30",
+  "note": "NO LONGER INDEPENDENT: merged with GTX Medical of Eindhoven on 22 October 2019, and the merged entity is now ONWARD MEDICAL. This index separately holds rows tracing to G-Therapeutics and GTX, so THREE ROWS NOW CONVERGE ON ONWARD, none of them sharing a name or domain. NO YEAR WRITTEN: a three-way mess — aggregators say 2011, the filing says 2013, and a Reeve Foundation account says a new entity \"formed NeuroRecovery Technologies (NRT) in November of 2016\", which is a recapitalisation vehicle, disproved as a founding by Neurotech Reports writing about NRT in April 2014. Spun out of Reggie Edgerton’s UCLA spinal stimulation work; Edgerton later launched SpineX."
+ },
+ {
+  "name": "ImThera Medical Inc",
+  "verdict": "acquired",
+  "url": "https://tracxn.com/d/companies/imtheramedical/__IVwOF7gcPmiBuWBooh-PrgxN7dpzVi9vpfTxDi-BCKo",
+  "note": "ACQUIRED BY LIVANOVA — announced December 2017, closed 2018 for up to about $225M; LivaNova had been an investor since 2011. It is now a LivaNova product line and imtheramedical.com should be treated as legacy. NO YEAR WRITTEN: aggregators say 2008, one year LATER than the 2007 incorporation on file, so it is not an echo — but no primary source states any year, and the Spencer Trask exit release confirms it \"co-founded ImThera with Marcello Lima\" without a date. Product aura6000, implanted hypoglossal nerve stimulation for obstructive sleep apnea — genuinely in scope as cranial-nerve neurostimulation."
+ },
+ {
+  "name": "MoRow Ltd.",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/07578583",
+  "note": "A MECHANICAL gait-rehabilitation and mobility device helping stroke survivors stand, balance, walk and sit without several staff supporting them — mechanically assisted walking, not a neural interface or neuromodulation. SIC 74100, specialised design activities, which reinforces that it is a device-design shop. MOROW LIMITED (07578583) was incorporated 25 March 2011, active, no previous names. NO YEAR WRITTEN: every 2011 traces to that registry date. THE LOCATION IS WRONG: Walverden House, Cliffe Street, Nelson, Lancashire — the Liverpool association comes from LCR 4.0, a Liverpool City Region support programme whose case-study page now 404s. The index holds no website and none was found."
+ },
+ {
+  "name": "Neurovalens",
+  "verdict": "duplicate",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/NI617853",
+  "note": "THE SAME COMPANY AS \"ModiusHealth\", which this index holds as a separate row. Both resolve to NEUROVALENS LIMITED, company number NI617853, incorporated 12 April 2013 — the same number an earlier verification of the ModiusHealth row returned. Modius is the PRODUCT LINE, not a separate entity: Modius (weight loss, Indiegogo August 2017), Modius Sleep (FDA 510(k) October 2023) and Modius Stress. Merge them and keep Neurovalens as the canonical row. NO YEAR WRITTEN because the two rows must be reconciled first, and the year is itself disputed: Companies House gives 2013 while named-founder press accounts say Jason McKeown co-founded it with Paul McGeoch in 2015, plausibly because the entity was incorporated in 2013 while McKeown was still working in Ramachandran’s UCSD lab. neurovalens.com/about-us/ returns 403 to automated fetches, so a person may need to read it."
+ },
+ {
+  "name": "Blue Note Therapeutics",
+  "verdict": "dissolved",
+  "url": "https://www.statnews.com/",
+  "note": "THE COMPANY IS DEAD. CEO Geoff Eich dissolved it in April 2024 after the FDA issued a final denial in January 2024 for Attune, its prescription digital therapeutic for cancer-related anxiety and depression, whose trial data failed to show benefit; it had already run out of money and laid off all staff in spring 2023. bluenotetherapeutics.com no longer resolves (DNS NXDOMAIN), so the index URL is dead. NO YEAR WRITTEN: the only figure is 2018 from Tracxn, Crunchbase and CB Insights, identical to the incorporation on file and citing nothing, and the Digital Therapeutics Alliance member page and STAT obituary both give none. San Francisco; investors included Memorial Sloan Kettering and JAZZ Venture Partners; about $31.4M raised. Scope was borderline anyway — a prescription digital therapeutic for psychological distress rather than sensing or stimulation."
+ },
+ {
+  "name": "Dr Julian Medical Group",
+  "verdict": "scope",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/09856896",
+  "note": "AN ONLINE TELETHERAPY PROVIDER, not neurotechnology: video therapy and mental-health services delivered into NHS Talking Therapies as a block-contract provider, AQP or subcontractor. No neural measurement or modulation. Founded by Dr Julian Nesbitt, a GP and former A&E doctor, NHS Clinical Entrepreneur Programme and NHS Innovation Accelerator alumnus. THE INDEX LOCATION \"London, USA\" IS INCOHERENT — this is a UK company with its registered office in East Malling, Kent. NO YEAR WRITTEN: DR JULIAN MEDICAL GROUP LTD (09856896) was incorporated 4 November 2015 with no previous names, against an unverified secondary claim of 2016 that could not be confirmed — the DigitalHealth.London profile, when fetched directly, contains no founding year, and an NHS piece refers only to \"the past eight years\", a relative phrase not converted."
+ },
+ {
+  "name": "Cervel Neurotech",
+  "verdict": "acquired",
+  "url": "https://biotech-careers.org/company/cervel-neurotech",
+  "note": "DEFUNCT AND ACQUIRED — bought by Rio Grande Neurosciences on 20 October 2015, and cervel.com is dead, failing TLS certificate verification. THE ENTITY WAS ORIGINALLY NAMED NEOSTIM, INC. and was later renamed Cervel Neurotech, so even the circulating 2008 belongs to a differently-named company. NO YEAR WRITTEN: 2008 appears only on aggregators, is identical to the incorporation on file AND to the first financing year, so back-derivation is likely twice over. Multi-coil steerable TMS for treatment-resistant depression, technology licensed from Stanford; founders M. Bret Schneider, David J. Mishelevich and Michael J. Partsch. NO CONNECTION TO NEURALIEVE was found — that was a separate Sunnyvale TMS-for-migraine company that became eNeura, and the lead is unsupported."
  }
 ]

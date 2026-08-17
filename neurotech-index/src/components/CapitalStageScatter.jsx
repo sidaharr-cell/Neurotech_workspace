@@ -523,11 +523,10 @@ export default function CapitalStageScatter({ board, filters = null }) {
           Read the sizes knowing which fact is behind them. Of the {points.length} companies plotted,
           {' '}{ageBasisCounts.founded} carry a researched founding year and
           {' '}{ageBasisCounts.incorporated + ageBasisCounts.incorporated_bound} still fall back to
-          incorporation, so most points are sized on the proxy rather than the thing itself. That is
-          not a random shortfall: the founding sweep selected companies by having no age at all, and
-          a Form D filing supplies an incorporation year, so the companies on this figure are
-          precisely the ones it never looked at. Every point&apos;s own basis is named in its tooltip
-          and in the table below.
+          incorporation. Every point&apos;s own basis is named in its tooltip and in the table below,
+          because the two are not interchangeable: among the companies here the gap has run to
+          eleven years, and in three cases the incorporation date on file turned out to belong to a
+          different company altogether.
         </p>
         <p>
           Stage comes from a ClinicalTrials.gov record or an FDA decision. Companies whose stage
