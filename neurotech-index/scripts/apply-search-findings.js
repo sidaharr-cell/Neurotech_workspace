@@ -57,7 +57,7 @@ async function run() {
   for (let from = 0; ; from += 500) {
     const { data, error } = await sb.from('organizations')
       .select('id,name,founded_year,founded_source_kind,founded_source_url,founded_evidence,'
-        + 'founded_conflict,incorporated_year,incorporated_before_year')
+        + 'founded_conflict,incorporated_year,incorporated_before_year,inclusion_decision')
       .eq('type', 'company').order('name').order('id').range(from, from + 499)
     if (error) { console.error('read failed:', error.message); process.exit(1) }
     orgs.push(...data)
@@ -65,6 +65,14 @@ async function run() {
   }
   const byCore = new Map()
   for (const o of orgs) {
+    // A row ruled out of the index is not a candidate for a name match. Without
+    // this, "Precision Neuroscience" matched both itself and the duplicate row
+    // "PrecisionNeuroscience" and its finding was refused for eleven rounds as
+    // "matches 2 rows in the database" — correctly, since guessing between two
+    // rows is exactly what this rule exists to prevent. Resolving the duplicate
+    // is what makes the match unambiguous; the exclusion is how that resolution
+    // is recorded, so it has to be read here too.
+    if (o.inclusion_decision === 'exclude') continue
     const k = core(o.name)
     if (!k) continue
     if (!byCore.has(k)) byCore.set(k, [])
