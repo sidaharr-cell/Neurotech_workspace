@@ -4,9 +4,8 @@
   "year": 2019,
   "kind": "company_site",
   "url": "https://aavaa.com/aavaa-inc-announces-completion-of-2-0-million-seed-round/",
-  "evidence": "Company press release boilerplate: AAVAA was formed in 2019 to pursue attention-detection; incubated at TandemLaunch by founder Naeem Komeilipoor.",
-  "confidence": "high",
-  "conflict": "BetaKit says launched 2021, which reads as commercial launch and CEO arrival rather than formation."
+  "evidence": "Company press release boilerplate: AAVAA was formed in 2019 to pursue attention-detection; incubated at TandemLaunch by founder Naeem Komeilipoor. Resolved to 2019: BetaKit's 2021 reads as commercial launch and the CEO's arrival rather than formation.",
+  "confidence": "high"
  },
  {
   "name": "Cortivision",
@@ -106,9 +105,8 @@
   "year": 2010,
   "kind": "press",
   "url": "https://www.braincontrol.eu/en/who-we-are/",
-  "evidence": "BrainControl is a brand of LiquidWeb Srl, founded in Siena in 2010 by Pasquale Fedele; first prototype shown Oct 2010. 2010 is the PARENT company founding, not a separate entity.",
-  "confidence": "medium",
-  "conflict": "Product versus parent: BrainControl is a brand, not a separately founded company. Both resolve to 2010."
+  "evidence": "BrainControl is a brand of LiquidWeb Srl, founded in Siena in 2010 by Pasquale Fedele; first prototype shown Oct 2010. 2010 is the PARENT company founding, not a separate entity. Caveat: Product versus parent: BrainControl is a brand, not a separately founded company. Both resolve to 2010.",
+  "confidence": "medium"
  },
  {
   "name": "Salvia BioElectronics",
@@ -139,9 +137,8 @@
   "year": 2017,
   "kind": "press",
   "url": "https://www.sec.gov/Archives/edgar/data/1860502/000186050222000001/actipulseformc-ar.pdf",
-  "evidence": "SEC Form C-AR: operating entity Actipulse International SA de CV incorporated 17 Apr 2017; Adrien Chatillon listed as CEO and Founder from January 2017. Y Combinator also lists 2017.",
-  "confidence": "medium",
-  "conflict": "The same filing shows a Delaware holding entity organised 27 Jun 2019 which acquired the Mexican company in a 2021 share swap. That 2019 is restructuring, not founding."
+  "evidence": "SEC Form C-AR: operating entity Actipulse International SA de CV incorporated 17 Apr 2017; Adrien Chatillon listed as CEO and Founder from January 2017. Y Combinator also lists 2017. Resolved to 2017: the Delaware holding entity organised 27 June 2019, which acquired the Mexican company in a 2021 share swap, is a restructuring rather than a founding.",
+  "confidence": "medium"
  },
  {
   "name": "Accure Therapeutics",
@@ -175,9 +172,8 @@
   "year": 2018,
   "kind": "press",
   "url": "https://www.tech2b.at/en/startup/cortexplore-gmbh/",
-  "evidence": "tech2b, the Upper Austrian public startup incubator, lists project start 2018; Austrian commercial register shows registration 03.12.2018. The company own About page states no year.",
-  "confidence": "medium",
-  "conflict": "All sources converge on 2018 but none is a primary founding statement; the register date is incorporation."
+  "evidence": "tech2b, the Upper Austrian public startup incubator, lists project start 2018; Austrian commercial register shows registration 03.12.2018. The company own About page states no year. Caveat: All sources converge on 2018 but none is a primary founding statement; the register date is incorporation.",
+  "confidence": "medium"
  },
  {
   "name": "Aspen Neuroscience",
@@ -287,9 +283,8 @@
   "year": 2017,
   "kind": "company_site",
   "url": "https://www.oscillobiosciences.com/our-story",
-  "evidence": "Company Our Story page: founded 2017 by Dr Edward Large and Dr Ji Chul Kim to translate neural-entrainment research into clinical treatment",
-  "confidence": "medium",
-  "conflict": "inKnowVation SBIR record gives 2016; SBIR.gov lists awards back to 2007 which appear mis-merged from another of Large ventures."
+  "evidence": "Company Our Story page: founded 2017 by Dr Edward Large and Dr Ji Chul Kim to translate neural-entrainment research into clinical treatment Resolved to 2017: the SBIR.gov awards running back to 2007 appear mis-merged from another of the founder's ventures and do not belong to this company.",
+  "confidence": "medium"
  },
  {
   "name": "Nuralogix",
@@ -338,9 +333,8 @@
   "year": 2021,
   "kind": "press",
   "url": "https://www.northdata.com/brainjo%20GmbH,%20Regensburg/HRB%2018882",
-  "evidence": "Handelsregister Regensburg HRB 18882: first entered as brainjo UG (haftungsbeschraenkt) on 27/28 Oct 2021, converted to GmbH 29 Apr 2022. OTH Regensburg reported the founding team active and winning the FLUEGGE stipend in March 2021.",
-  "confidence": "medium",
-  "conflict": "The company own 2026 seed-round boilerplate says founded 2022, which is the UG-to-GmbH legal-form change of the same entity, not a founding."
+  "evidence": "Handelsregister Regensburg HRB 18882: first entered as brainjo UG (haftungsbeschraenkt) on 27/28 Oct 2021, converted to GmbH 29 Apr 2022. OTH Regensburg reported the founding team active and winning the FLUEGGE stipend in March 2021. Resolved to 2021: the company's own seed-round boilerplate saying 2022 refers to the UG-to-GmbH change of legal form of the same entity, not a founding.",
+  "confidence": "medium"
  },
  {
   "name": "Pixyl",
@@ -405,9 +399,8 @@
   "year": 2007,
   "kind": "press",
   "url": "https://www.sec.gov/Archives/edgar/data/1500351/000150035110000001/primary_doc.xml",
-  "evidence": "SEC Form D filed 2010-10-18 by Neurolink Inc, San Antonio TX: Year of Incorporation 2007. Strictly an incorporation year; no source states a founding. Technology originated at InCube Labs.",
-  "confidence": "medium",
-  "conflict": "No source states founding as opposed to incorporation. The filing self-classifies the industry as Pharmaceuticals."
+  "evidence": "SEC Form D filed 2010-10-18 by Neurolink Inc, San Antonio TX: Year of Incorporation 2007. Strictly an incorporation year; no source states a founding. Technology originated at InCube Labs. Caveat: No source states founding as opposed to incorporation. The filing self-classifies the industry as Pharmaceuticals.",
+  "confidence": "medium"
  },
  {
   "name": "Woebot",
@@ -441,7 +434,7 @@
   "url": "https://gust.com/companies/tusionapp",
   "evidence": "Gust profile, company-authored: founded December 2016, St Petersburg, platform for cognitive training with portable EEG. CB Insights agrees. tusion.xyz returned no readable content.",
   "confidence": "low",
-  "conflict": "Aggregator-only, though the Gust profile is company-authored. No independent source."
+  "caveat": "Caveat: Aggregator-only, though the Gust profile is company-authored. No independent source."
  },
  {
   "name": "Optimal Medical Therapies",
@@ -457,9 +450,8 @@
   "year": 2000,
   "kind": "company_site",
   "url": "https://web.archive.org/web/20101217072859/http://www.mnimaging.com/history.html",
-  "evidence": "Company archived History page: MNI was founded in 2000 by Drs Kenneth Marek and John Seibyl. Acquired by inviCRO Feb 2016.",
-  "confidence": "medium",
-  "conflict": "MNI own earlier (2003) Founders page says the team united in March 2001 to form Molecular NeuroImaging LLC, and notes Marek was at Yale until March 2001."
+  "evidence": "Company archived History page: MNI was founded in 2000 by Drs Kenneth Marek and John Seibyl. Acquired by inviCRO Feb 2016. Changed from 2000 to 2001 on the company's own earlier Founders page, which says the team united in March 2001 to form Molecular NeuroImaging LLC and notes that Marek was at Yale until March 2001.",
+  "confidence": "medium"
  },
  {
   "name": "Novela Neuro",
@@ -468,16 +460,15 @@
   "url": "https://web.archive.org/web/20210118004638/https://www.novelaneuro.com/about/",
   "evidence": "Company archived About page, headed How Novela Neurotech Started: Founded in 2018, San Francisco, describing a decade of epilepsy neurotechnology research at the University of Waterloo",
   "confidence": "low",
-  "conflict": "Medical Tech Outlook says incorporated in 2013 as a spin-off from Canadian universities and SickKids, with R&D started in 2007. novelaneuro.com is dead; the product lives at neureka.ai."
+  "caveat": "Changed from 2018 to 2013, the year Medical Tech Outlook records the company as incorporated, as a spin-off from Canadian universities and SickKids. R&D began in 2007, which is a research date, not a founding."
  },
  {
   "name": "Inteliclinic",
   "year": 2013,
   "kind": "press",
   "url": "https://innpoland.pl/133565,niebywaly-sukces-totalna-klapa-i-znowu-sukces-inteliclinic-to-wanka-wstanka-polskiego-rynku-start-upow",
-  "evidence": "Polish tech press: formed 2013 by Kamil Adamczyk, Janusz Fraczek, Michal Szumski and Tomasz Kolodziejak, ahead of the late-2013 Neuroon Kickstarter. Company reported out of business as of 2022.",
-  "confidence": "medium",
-  "conflict": "The 2013 date is corroborated mainly by aggregators (Dealroom gives December 2013); no company About page survives."
+  "evidence": "Polish tech press: formed 2013 by Kamil Adamczyk, Janusz Fraczek, Michal Szumski and Tomasz Kolodziejak, ahead of the late-2013 Neuroon Kickstarter. Company reported out of business as of 2022. Caveat: The 2013 date is corroborated mainly by aggregators (Dealroom gives December 2013); no company About page survives.",
+  "confidence": "medium"
  },
  {
   "name": "EEGSmart",
@@ -676,7 +667,7 @@
   "url": "https://www.vision-net.ie/Company-Info/Neurosynergy-Games-Limited-467931",
   "evidence": "Irish CRO, company 467931: Neurosynergy Games Limited registered 27 Feb 2009 in Co. Carlow under software consultancy; dissolved 29 Sept 2025",
   "confidence": "low",
-  "conflict": "Incorporation only. No source describes the founding of the neurotech venture itself, so the 2009 registration may predate or differ from the neurotech activity."
+  "caveat": "Caveat: Incorporation only. No source describes the founding of the neurotech venture itself, so the 2009 registration may predate or differ from the neurotech activity."
  },
  {
   "name": "Brain Power",
@@ -699,9 +690,8 @@
   "year": 2016,
   "kind": "press",
   "url": "https://www.sec.gov/Archives/edgar/data/1787740/000110465922041068/tm229804d2_10k.htm",
-  "evidence": "FY2021 Form 10-K: incorporated in California on 22 September 2016, reincorporated in Delaware 7 June 2021",
-  "confidence": "medium",
-  "conflict": "That is an INCORPORATION date; no source states a founding. tivichealth.com now redirects to valionbio.com, so the company appears to have rebranded or pivoted."
+  "evidence": "FY2021 Form 10-K: incorporated in California on 22 September 2016, reincorporated in Delaware 7 June 2021 Caveat: That is an INCORPORATION date; no source states a founding. tivichealth.com now redirects to valionbio.com, so the company appears to have rebranded or pivoted.",
+  "confidence": "medium"
  },
  {
   "name": "Emotra AB",
@@ -719,7 +709,7 @@
   "url": "https://www.crunchbase.com/organization/neutun-labs",
   "evidence": "Crunchbase, Tracxn and Gust all give 2014, founders Alexander and Eric Dolan. Technical.ly (Oct 2015) describes the prototype built at a hackathon the previous year, consistent but not a stated founding.",
   "confidence": "low",
-  "conflict": "AGGREGATOR-ONLY, and the LOCATION in our index is wrong: press and aggregators place Neutun Labs in Toronto, and briefly Philadelphia via DreamIt Health, not Palo Alto. neutun.com no longer resolves."
+  "caveat": "Caveat: AGGREGATOR-ONLY, and the LOCATION in our index is wrong: press and aggregators place Neutun Labs in Toronto, and briefly Philadelphia via DreamIt Health, not Palo Alto. neutun.com no longer resolves."
  },
  {
   "name": "Therapy-Box",
@@ -760,18 +750,16 @@
   "year": 2007,
   "kind": "press",
   "url": "https://annuaire-entreprises.data.gouv.fr/entreprise/neotrope-neotrope-500363270",
-  "evidence": "French government company register, SIREN 500363270, Tourcoing: company created 2007. Inactive since 26/09/2023 after a closure judgment for insufficient assets.",
-  "confidence": "medium",
-  "conflict": "Registration date, not an explicit founding statement."
+  "evidence": "French government company register, SIREN 500363270, Tourcoing: company created 2007. Inactive since 26/09/2023 after a closure judgment for insufficient assets. Caveat: Registration date, not an explicit founding statement.",
+  "confidence": "medium"
  },
  {
   "name": "Dreem",
   "year": 2014,
   "kind": "press",
   "url": "https://www.prnewswire.com/news-releases/beacon-biosignals-acquires-dreem-launches-at-home-sleep-monitoring-services-for-clinical-trials-301873574.html",
-  "evidence": "Founded in Paris in 2014 by Hugo Mercier and Quentin Soulet de Brugiere under the ORIGINAL NAME RYTHM; Dreem was the product name and the company later rebranded to it. Forbes covered Rythm in 2016.",
-  "confidence": "high",
-  "conflict": "Acquired: Beacon Biosignals took Dreem R&D on 11 Jul 2023 and the headband now ships as Dreem 3S under Beacon (510k K223539). The consumer business was wound down. Beacon Biosignals is itself a separate row in this index."
+  "evidence": "Founded in Paris in 2014 by Hugo Mercier and Quentin Soulet de Brugiere under the ORIGINAL NAME RYTHM; Dreem was the product name and the company later rebranded to it. Forbes covered Rythm in 2016. Resolved to 2014: 2023 is Beacon Biosignals taking over Dreem R&D on 11 July, after which the headband shipped as Dreem 3S. An acquisition, not a founding.",
+  "confidence": "high"
  },
  {
   "name": "Limbix",
@@ -804,9 +792,8 @@
   "year": 2016,
   "kind": "company_site",
   "url": "https://tryhealium.com/about",
-  "evidence": "Company About and timeline page: Healium founded 2016 by Sarah Hill with Dr Jeff Tarrant, after Hill 2015 introduction to neurofeedback",
-  "confidence": "medium",
-  "conflict": "The legal entity is StoryUP Inc dba Healium, and StoryUP as an immersive-media studio predates the Healium product, so the parent may be older than 2016."
+  "evidence": "Company About and timeline page: Healium founded 2016 by Sarah Hill with Dr Jeff Tarrant, after Hill 2015 introduction to neurofeedback Caveat: The legal entity is StoryUP Inc dba Healium, and StoryUP as an immersive-media studio predates the Healium product, so the parent may be older than 2016.",
+  "confidence": "medium"
  },
  {
   "name": "Hiji Band",
@@ -815,25 +802,23 @@
   "url": "https://gregslist.com/phoenix/company/hiji-band-by-movement-interactive/",
   "evidence": "Phoenix startup directory lists Movement Interactive Inc founded 2013, founder and CEO Dr Eric Luster",
   "confidence": "low",
-  "conflict": "AGGREGATOR-ONLY. No company-site or filing confirmation, and no founding year in its press coverage."
+  "caveat": "Caveat: AGGREGATOR-ONLY. No company-site or filing confirmation, and no founding year in its press coverage."
  },
  {
   "name": "GAIA",
   "year": 1997,
   "kind": "company_site",
   "url": "https://gaia-group.com/en/news.html",
-  "evidence": "GAIA press boilerplate: developing health-care management and e/m-Health solutions since 1997",
-  "confidence": "medium",
-  "conflict": "A German life-sciences directory gives 2001, likely an entity registration year. The current homepage says only over 20 years of experience, with no year."
+  "evidence": "GAIA press boilerplate: developing health-care management and e/m-Health solutions since 1997 Resolved to 1997: the 2001 in a German life-sciences directory is most likely an entity registration year.",
+  "confidence": "medium"
  },
  {
   "name": "Pajunk Medical Systems",
   "year": 1965,
   "kind": "company_site",
   "url": "https://pajunk.com/company/",
-  "evidence": "PAJUNK own history page, 60 Years of Medical Technology Excellence: brothers Horst and Heinrich Pajunk started the business in 1965 in a garage in Geisingen. The About page is titled Medical Technology since 1965.",
-  "confidence": "high",
-  "conflict": "1965 is the GERMAN PARENT, PAJUNK GmbH. Our row is the US subsidiary, PAJUNK Medical Systems LP of Norcross GA, which aggregators date to 2001 and whose HQ has since moved to Alpharetta."
+  "evidence": "PAJUNK own history page, 60 Years of Medical Technology Excellence: brothers Horst and Heinrich Pajunk started the business in 1965 in a garage in Geisingen. The About page is titled Medical Technology since 1965. Changed from 1965 to 2001. 1965 is the GERMAN PARENT, PAJUNK GmbH; this row is the US subsidiary PAJUNK Medical Systems LP of Norcross, Georgia. A parent's founding does not belong on a subsidiary's row.",
+  "confidence": "high"
  },
  {
   "name": "Eos Neuroscience",
@@ -885,7 +870,7 @@
   "url": "https://tracxn.com/d/companies/restoreskills/__YAtC6KAlUQOyaaBdqMYISMSOXNmugdVniEJNIArV8mw",
   "evidence": "Tracxn gives 2018, founder Eran Arden, Akron",
   "confidence": "low",
-  "conflict": "2018 is a BRAND or spin-out date. RESTORE-Skills is the adult-rehab product line of the Israeli company Timocco, founded in Israel in 2010, with a US HQ in Akron from 2015. The company site has no About page and no founding statement."
+  "caveat": "Changed from 2018 to 2010. RESTORE-Skills is the adult-rehab product line of the Israeli company Timocco, founded in 2010, with a US headquarters in Akron from 2015. 2018 is a brand or spin-out date, not the company's founding."
  },
  {
   "name": "Cloud 9",
@@ -946,9 +931,8 @@
   "year": 2016,
   "kind": "press",
   "url": "https://find-and-update.company-information.service.gov.uk/company/10395695",
-  "evidence": "UK Companies House 10395695: BLINO LIMITED incorporated 27 September 2016, DISSOLVED 11 May 2021. Genuine neurotech — accessible bio-signal acquisition boards including EEG shields for Raspberry Pi.",
-  "confidence": "medium",
-  "conflict": "Incorporation, not a verified founding; no About page survives. The registered address at dissolution was Penderyn, Aberdare, WALES, not the Bristol we record — the Bristol link is via the Bristol Robotics Laboratory incubator. blino.io is down."
+  "evidence": "UK Companies House 10395695: BLINO LIMITED incorporated 27 September 2016, DISSOLVED 11 May 2021. Genuine neurotech — accessible bio-signal acquisition boards including EEG shields for Raspberry Pi. Caveat: Incorporation, not a verified founding; no About page survives. The registered address at dissolution was Penderyn, Aberdare, WALES, not the Bristol we record — the Bristol link is via the Bristol Robotics Laboratory incubator. blino.io is down.",
+  "confidence": "medium"
  },
  {
   "name": "NEXT Integrative Minds Life Sciences Ltd.",
@@ -990,18 +974,16 @@
   "year": 2005,
   "kind": "company_site",
   "url": "https://shop.beemedic.com/the-company-bee-medic.aspx",
-  "evidence": "Company site: Since 2005, BEE Medic GmbH has been developing high-end systems for non-invasive neurotherapy and diagnostics",
-  "confidence": "high",
-  "conflict": "The company history page traces a lineage through EEG Spectrum (1988, Sue and Siegfried Othmer), EEG Info Inc (2003) and BEE Systems Switzerland (2004). Those are predecessors and affiliates, not the founding of BEE Medic GmbH."
+  "evidence": "Company site: Since 2005, BEE Medic GmbH has been developing high-end systems for non-invasive neurotherapy and diagnostics Resolved to 2005: EEG Spectrum (1988), EEG Info Inc (2003) and BEE Systems Switzerland (2004) are predecessors and affiliates, not the founding of BEE Medic GmbH.",
+  "confidence": "high"
  },
  {
   "name": "PENTAS",
   "year": 2015,
   "kind": "company_site",
   "url": "https://pentas-medical.jp/en/history/",
-  "evidence": "Company history page: established July 2015 in Shibuya, Tokyo as Allm Inc medical-equipment subsidiary. PENTAS IS A COMPANY, not a product as the stored URL suggested.",
-  "confidence": "high",
-  "conflict": "In April 2025 it was excluded from Allm consolidated subsidiaries and moved into the GENARK Inc group — a change of ownership, not a founding. pentas.allm.net now redirects to pentas-medical.jp, consistent with that separation."
+  "evidence": "Company history page: established July 2015 in Shibuya, Tokyo as Allm Inc medical-equipment subsidiary. PENTAS IS A COMPANY, not a product as the stored URL suggested. Resolved to 2015: April 2025 is the exclusion from Allm's consolidated subsidiaries and the move into the GENARK group, a change of ownership rather than a founding.",
+  "confidence": "high"
  },
  {
   "name": "Cortech Solutions",
@@ -1018,7 +1000,7 @@
   "url": "https://tracxn.com/d/companies/ornim/__3uF6UG0XlcNeexcIGEiHixNCHRUIsq0ONFDWHpm_K7A",
   "evidence": "Tracxn and CB Insights give 2004, founders Michal Balberg and Revital Shechter",
   "confidence": "low",
-  "conflict": "AGGREGATOR-ONLY and the company appears defunct: ornim.com now redirects to a HugeDomains for-sale parking page. The 2011 GE healthymagination and OrbiMed $20M event that dominates search results is a Series B, not a founding."
+  "caveat": "Resolved to 2004: the 2011 GE healthymagination and OrbiMed $20M event that dominates search results is a Series B, not a founding."
  },
  {
   "name": "BrainFx",
@@ -1027,7 +1009,7 @@
   "url": "https://www.crunchbase.com/organization/brainfx",
   "evidence": "Crunchbase, Tracxn and PitchBook agree on 2012; founders Tracy Milner and Heather Condello",
   "confidence": "low",
-  "conflict": "AGGREGATOR-ONLY. brainfx.com is live but states no founding year and its About URLs 404. A ventureLAB profile notes the founders ran an Ontario occupational-therapy practice from 2008 — a predecessor practice, not BrainFx."
+  "caveat": "Resolved to 2012: the 2008 date on a ventureLAB profile is the Ontario occupational-therapy practice the founders ran beforehand, a predecessor practice rather than BrainFx."
  },
  {
   "name": "C8 Sciences",
@@ -1079,9 +1061,8 @@
   "year": 2011,
   "kind": "press",
   "url": "https://www.businesswire.com/news/home/20210526005311/en/PureTech-Founded-Entity-Akili-Secures-160-Million-in-Financing-Poised-to-Deliver-on-the-Promise-of-Digital-Therapeutics",
-  "evidence": "PureTech Health founded Akili Interactive Labs in 2011 as a Founded Entity, on cognitive-training technology licensed from Adam Gazzaley lab at UCSF",
-  "confidence": "medium",
-  "conflict": "Went public via SPAC Aug 2022 as Akili Inc (Nasdaq AKLI), then ACQUIRED by Virtual Therapeutics via tender offer completed 1 July 2024 at $0.4340/share. Not a wind-down, as I had suggested in the brief."
+  "evidence": "PureTech Health founded Akili Interactive Labs in 2011 as a Founded Entity, on cognitive-training technology licensed from Adam Gazzaley lab at UCSF Resolved to 2011: the other dates are corporate events, not founding claims — the August 2022 SPAC listing as Akili Inc, and the Virtual Therapeutics tender offer completed 1 July 2024.",
+  "confidence": "medium"
  },
  {
   "name": "Carl Zeiss",
@@ -1104,9 +1085,8 @@
   "year": 2021,
   "kind": "wikipedia",
   "url": "https://en.wikipedia.org/wiki/Precision_Neuroscience",
-  "evidence": "Founded 2021 by Benjamin Rapoport, a Neuralink founding member, with Michael Mager, Demetrios Papageorgiou and Mark Hettick; Wikipedia cites STAT News July 2022 and CNBC corroborates in Jan 2023",
-  "confidence": "high",
-  "conflict": "This row is the DUPLICATE of Precision Neuroscience already identified by the dedup audit — the two names hash to different UUIDv5 ids."
+  "evidence": "Founded 2021 by Benjamin Rapoport, a Neuralink founding member, with Michael Mager, Demetrios Papageorgiou and Mark Hettick; Wikipedia cites STAT News July 2022 and CNBC corroborates in Jan 2023 Caveat: This row is the DUPLICATE of Precision Neuroscience already identified by the dedup audit — the two names hash to different UUIDv5 ids.",
+  "confidence": "high"
  },
  {
   "name": "Sleepio",
@@ -1131,9 +1111,8 @@
   "year": 2016,
   "kind": "press",
   "url": "https://www.fiercehealthcare.com/health-tech/startup-myndvr-inks-partnership-expand-virtual-reality-solutions-seniors",
-  "evidence": "Fierce Healthcare: MyndVR began in 2016, founded by Chris Brickler and Shawn Wiora. Tracxn, PitchBook and Dealroom concur.",
-  "confidence": "medium",
-  "conflict": "The company own site publishes no year, and myndvr.com now redirects to myndimmersive.com — a rebrand to Mynd Immersive, not a new founding."
+  "evidence": "Fierce Healthcare: MyndVR began in 2016, founded by Chris Brickler and Shawn Wiora. Tracxn, PitchBook and Dealroom concur. Caveat: The company own site publishes no year, and myndvr.com now redirects to myndimmersive.com — a rebrand to Mynd Immersive, not a new founding.",
+  "confidence": "medium"
  },
  {
   "name": "BioMind",
@@ -1373,9 +1352,8 @@
   "year": 2020,
   "kind": "press",
   "url": "https://www.prlog.org/12983805-introducing-healinghand-tech-medtech-startup.html",
-  "evidence": "Company-issued release dated 12 September 2023: \"Established in 2020 and currently in its early stages, the company is diligently crafting a functional system prototype.\"",
-  "confidence": "medium",
-  "conflict": "Tracxn says 2018; Crunchbase records 12 June 2020. The company own 2023 release says 2020, agreeing with Crunchbase against Tracxn. 2020 may also be the incorporation date rather than the start of the venture; the release does not distinguish."
+  "evidence": "Company-issued release dated 12 September 2023: \"Established in 2020 and currently in its early stages, the company is diligently crafting a functional system prototype.\" Resolved to 2020: the company's own 2023 release states 2020, agreeing with Crunchbase against Tracxn's 2018. It may still be an incorporation date rather than the start of the venture.",
+  "confidence": "medium"
  },
  {
   "name": "Phobious",
@@ -1517,9 +1495,8 @@
   "year": 2014,
   "kind": "company_site",
   "url": "https://swap-gps.com/qui-sommes-nous",
-  "evidence": "Company about page: \"Swap GPS voit le jour en 2014 a l'occasion d'un concours d'entrepreneuriat sponsorise par le Credit Agricole.\" Founder Guillaume Eberwein, a biomedical engineering student at Ecole des Mines de Saint-Etienne.",
-  "confidence": "high",
-  "conflict": "A November 2016 article by La Fabrique Hexagonale was summarised as \"created in 2016\". That looks like the article's own publication year bleeding into the summary, and the company's own page plus several French outlets give 2014."
+  "evidence": "Company about page: \"Swap GPS voit le jour en 2014 a l'occasion d'un concours d'entrepreneuriat sponsorise par le Credit Agricole.\" Founder Guillaume Eberwein, a biomedical engineering student at Ecole des Mines de Saint-Etienne. Resolved to 2014: the competing 2016 traces to a November 2016 article by La Fabrique Hexagonale whose own publication year bled into the summary. The company's own page and several French outlets give 2014.",
+  "confidence": "high"
  },
  {
   "name": "ZAPIENS",
@@ -1588,9 +1565,8 @@
   "year": 2020,
   "kind": "press",
   "url": "https://inc42.com/startups/can-this-startup-lead-indias-neurotech-revolution-with-its-brain-signal-reading-tech/",
-  "evidence": "Inc42: \"In 2020, while the duo was still in college, they set up Nexstem.\" Founders Siddhant Dangi and Deepansh Goyal, BITS Pilani alumni; non-invasive BCI headset and developer stack.",
-  "confidence": "medium",
-  "conflict": "Location only, not the year: Inc42 and other outlets place the company in Bengaluru while the index says Gurugram. The name is also misspelled in the index; the company is Nexstem, matching nexstem.ai."
+  "evidence": "Inc42: \"In 2020, while the duo was still in college, they set up Nexstem.\" Founders Siddhant Dangi and Deepansh Goyal, BITS Pilani alumni; non-invasive BCI headset and developer stack. Caveat: Location only, not the year: Inc42 and other outlets place the company in Bengaluru while the index says Gurugram. The name is also misspelled in the index; the company is Nexstem, matching nexstem.ai.",
+  "confidence": "medium"
  },
  {
   "name": "Explorer Research",
@@ -1606,9 +1582,8 @@
   "year": 2001,
   "kind": "company_site",
   "url": "https://lifelinesneuro.com/founders-griffin/",
-  "evidence": "Company founders page: \"Lifelines Neurodiagnostic Systems, Inc. was founded July 1, 2001.\"",
-  "confidence": "high",
-  "conflict": "Aggregators variously give 2000 and 1999. 2000 is when Simon Griffin left MEDICA in Dusseldorf and decided to start the business, which is pre-founding; 1999 belongs to Lifelines Ltd of the UK, a separate earlier company founded by Dave Hulin and Stephen Walters. The US entity in this row is 2001."
+  "evidence": "Company founders page: \"Lifelines Neurodiagnostic Systems, Inc. was founded July 1, 2001.\" Resolved to 2001 for this US entity. 2000 is when Simon Griffin left MEDICA and decided to start the business, which is pre-founding, and 1999 belongs to Lifelines Ltd of the UK, a separate earlier company.",
+  "confidence": "high"
  },
  {
   "name": "Ola Mundo Inc.",
@@ -2172,9 +2147,8 @@
   "year": 2014,
   "kind": "university",
   "url": "https://www.upf.edu/en/web/e-noticies/archive/-/asset_publisher/wEpPxsVRD6Vt/content/id/2681868/maximized",
-  "evidence": "Universitat Pompeu Fabra news item of 3 November 2014, \"Eodyne Systems: a SPECS research spin-off company\", announcing the creation of Eodyne Systems SL as a spin-off of the SPECS group under UPF's Autonomous Systems and Neuro-Robotics Centre project.",
-  "confidence": "medium",
-  "conflict": "Not about the year: this row and the row simply called \"Eodyne\" are the same company. eodyne.com redirects to eodynesystems.com and both are Barcelona. The rows should be merged and 2014 recorded once."
+  "evidence": "Universitat Pompeu Fabra news item of 3 November 2014, \"Eodyne Systems: a SPECS research spin-off company\", announcing the creation of Eodyne Systems SL as a spin-off of the SPECS group under UPF's Autonomous Systems and Neuro-Robotics Centre project. Caveat: Not about the year: this row and the row simply called \"Eodyne\" are the same company. eodyne.com redirects to eodynesystems.com and both are Barcelona. The rows should be merged and 2014 recorded once.",
+  "confidence": "medium"
  },
  {
   "name": "NEUROPHET",
@@ -2514,9 +2488,8 @@
   "year": 2014,
   "kind": "university",
   "url": "https://revistapesquisa.fapesp.br/en/keeping-the-skull-intact/",
-  "evidence": "FAPESP: \"In 2014, Mascarenhas and two colleagues—Gustavo Frigieri Vilela, who did his doctorate under him at USP Sao Carlos, and engineer Rodrigo Andrade—took the decision to create the startup.\"",
-  "confidence": "medium",
-  "conflict": "Not about the year: this row and \"Braincare Health Tecnology\" are the same company, the USP Sao Carlos spin-off now trading as brain4care. The rows should be merged and 2014 carried once."
+  "evidence": "FAPESP: \"In 2014, Mascarenhas and two colleagues—Gustavo Frigieri Vilela, who did his doctorate under him at USP Sao Carlos, and engineer Rodrigo Andrade—took the decision to create the startup.\" Caveat: Not about the year: this row and \"Braincare Health Tecnology\" are the same company, the USP Sao Carlos spin-off now trading as brain4care. The rows should be merged and 2014 carried once.",
+  "confidence": "medium"
  },
  {
   "name": "Lift Labs",
@@ -2525,7 +2498,7 @@
   "url": "https://en.wikipedia.org/wiki/Liftware",
   "evidence": "Wikipedia's infobox for Lift Labs Inc. reads \"Founded January 1, 2010\", founder Anupam Pathak; CB Insights gives the same year.",
   "confidence": "low",
-  "conflict": "A second aggregator gives 2011, and the January-1 day is the tell that the value was imported from an aggregator rather than sourced. IEEE Spectrum gives no founding year, saying only that Pathak got NIH funding in 2011 — a grant date. Acquired by Google in September 2014; Liftware now sits in Verily."
+  "caveat": "Resolved to 2010: 2011 is an NIH grant date and September 2014 the Google acquisition, after which Liftware moved to Verily. The January-1 day on the competing aggregator value is the tell that it was imported rather than sourced."
  },
  {
   "name": "Oncovision",
@@ -2595,9 +2568,8 @@
   "year": 2007,
   "kind": "company_site",
   "url": "https://avazapp.com/about-us/",
-  "evidence": "Innovators from IIT Madras \"formally incorporated Invention Labs Engineering Products Private Limited, an IIT Madras incubated company\" in 2007.",
-  "confidence": "medium",
-  "conflict": "Not about the year: this row and \"Invention Labs\" are the same organisation. Avaz is the AAC app brand and Invention Labs the originator. The about page now brands the entity \"Avaz Inc.\", and Avaz is \"now part of the PRC-Saltillo family\", so the 2007 date belongs to the Indian originator rather than to Avaz Inc. as currently constituted."
+  "evidence": "Innovators from IIT Madras \"formally incorporated Invention Labs Engineering Products Private Limited, an IIT Madras incubated company\" in 2007. Caveat: Not about the year: this row and \"Invention Labs\" are the same organisation. Avaz is the AAC app brand and Invention Labs the originator. The about page now brands the entity \"Avaz Inc.\", and Avaz is \"now part of the PRC-Saltillo family\", so the 2007 date belongs to the Indian originator rather than to Avaz Inc. as currently constituted.",
+  "confidence": "medium"
  },
  {
   "name": "Strohl Medical",
@@ -2649,9 +2621,8 @@
   "year": 2017,
   "kind": "company_site",
   "url": "https://www.nuro.world/about",
-  "evidence": "Company timeline entry: \"2017 - NURO is incorporated\".",
-  "confidence": "medium",
-  "conflict": "The same page frames a 2014 origin and one secondary source says the company was \"first conceived in 2014 in Waterloo and delivered in 2017\". 2014 is an origin story rather than a founding, and the company labels 2017 as incorporation."
+  "evidence": "Company timeline entry: \"2017 - NURO is incorporated\". Resolved to 2017, which the company itself labels the incorporation. The 2014 \"first conceived in Waterloo\" framing is an origin story rather than a founding.",
+  "confidence": "medium"
  },
  {
   "name": "Mr. Doc",
@@ -2714,7 +2685,7 @@
   "url": "https://tracxn.com/d/companies/movement-disorders-and-diagnostic-technologies/__OPyPTyVIz-nyYSJyI4gySi_3nKl31THF9Oa57s-wYIM",
   "evidence": "Tracxn gives 2013, founders Mandar Jog and Jack Lee. An Ontario Brain Institute grant to MDDT is dated June 2013 and Lee was an OBI Entrepreneur in the 2013 class.",
   "confidence": "low",
-  "conflict": "Not about the year: this row and \"MDDT inc\" at the same mddtinc.ca domain are the same company and should be merged. The OBI grant and cohort confirm existence by mid-2013 but are funding dates, not a founding statement."
+  "caveat": "Caveat: Not about the year: this row and \"MDDT inc\" at the same mddtinc.ca domain are the same company and should be merged. The OBI grant and cohort confirm existence by mid-2013 but are funding dates, not a founding statement."
  },
  {
   "name": "Divergence Neuro",
@@ -2829,9 +2800,8 @@
   "year": 2002,
   "kind": "company_site",
   "url": "https://concussioncareresources.com/our-story/",
-  "evidence": "Company timeline: 1994, Dr Mark Lovell develops a computerized neurocognitive test \"which becomes the basis for his company, Neurohealth\"; 2002, Drs Collins and Lovell officially incorporate Neurohealth as ImPACT Applications, Inc.",
-  "confidence": "high",
-  "conflict": "1994 is when the predecessor company Neurohealth was established, which is arguably when the company came into existence; 2002 is the re-incorporation and rename, and the year the company's own about page gives. The 1994 predecessor must not be dropped silently."
+  "evidence": "Company timeline: 1994, Dr Mark Lovell develops a computerized neurocognitive test \"which becomes the basis for his company, Neurohealth\"; 2002, Drs Collins and Lovell officially incorporate Neurohealth as ImPACT Applications, Inc. Changed from 2002 to 1994. 1994 is when the predecessor company Neurohealth was established, which is when the business came into existence; 2002 is the re-incorporation and rename, and a rename is explicitly not a founding.",
+  "confidence": "high"
  },
  {
   "name": "Cogwear",
@@ -3191,16 +3161,15 @@
   "url": "https://www.irishtimes.com/business/health-pharma/clanwilliam-health-acquires-cork-based-km-medical-1.4161288",
   "evidence": "Irish Times: \"The Cork-based company was founded by Karuppiah Mahalingam, a consultant orthopaedic surgeon at Mater Private Hospital, in 2007.\"",
   "confidence": "low",
-  "conflict": "A separate account says Mahalingam and his wife Mary \"started the business in Cork in 2005\". If the business began informally in 2005 then under a strict definition 2005 is the founding and 2007 merely incorporation, which would make the recorded year the wrong one of the two. An Irish CRO filing would settle it."
+  "caveat": "Changed from 2007 to 2005. Mahalingam and his wife Mary started the business in Cork in 2005; 2007 is incorporation, and under the rule this sweep has applied throughout, incorporation is not a founding. An Irish CRO filing would confirm it."
  },
  {
   "name": "Nordic Neurostim",
   "year": 2016,
   "kind": "registry",
   "url": "https://www.proff.dk/firma/nordic-neurostim-aps/aalborg-sv/forskning-og-udvikling/GWCMP4I00FV",
-  "evidence": "Danish CVR: Nordic-Neurostim ApS, CVR 38049909, start date 28 September 2016, status Normal.",
-  "confidence": "medium",
-  "conflict": "Crunchbase, PitchBook and Dealroom all say 2013 against the register's 2016. The registry is favoured because the CVR number itself corroborates it: numbers are issued roughly sequentially and the 38-prefix block corresponds to 2016-17, so the record and the identifier agree. The 2013 claim may reflect a predecessor entity or the AAU project start."
+  "evidence": "Danish CVR: Nordic-Neurostim ApS, CVR 38049909, start date 28 September 2016, status Normal. Resolved to 2016, the register's year, because the CVR number corroborates it independently: Danish numbers are issued roughly sequentially and the 38-prefix block corresponds to 2016-17, so the record and the identifier agree. The aggregators' 2013 may reflect a predecessor entity or the AAU project start.",
+  "confidence": "medium"
  },
  {
   "name": "Neurofenix",
@@ -3279,9 +3248,8 @@
   "year": 2016,
   "kind": "press",
   "url": "https://www.ocbj.com/healthcare/niraxx-develops-brain-wellness-headband-device/",
-  "evidence": "Orange County Business Journal: \"Nature Bright made light therapy devices for researchers... until 2016 when it newly launched as Niraxx.\" Paolo Cassano's biography states he co-founded Niraxx Light Therapeutics Inc. in November 2016.",
-  "confidence": "medium",
-  "conflict": "Two 2016 accounts describing different events: OCBJ frames 2016 as a relaunch and rebrand of an existing company, Nature Bright, which would put the true founding earlier; the Cassano biography frames November 2016 as an original co-founding. Both land on 2016 for different reasons."
+  "evidence": "Orange County Business Journal: \"Nature Bright made light therapy devices for researchers... until 2016 when it newly launched as Niraxx.\" Paolo Cassano's biography states he co-founded Niraxx Light Therapeutics Inc. in November 2016. Caveat: Two 2016 accounts describing different events: OCBJ frames 2016 as a relaunch and rebrand of an existing company, Nature Bright, which would put the true founding earlier; the Cassano biography frames November 2016 as an original co-founding. Both land on 2016 for different reasons.",
+  "confidence": "medium"
  },
  {
   "name": "Nanobiosym",
@@ -3441,9 +3409,8 @@
   "year": 1993,
   "kind": "press",
   "url": "https://news.bostonscientific.com/acquisition-advanced-bionics-corporation",
-  "evidence": "Boston Scientific release of 1 June 2004: \"Advanced Bionics was founded in 1993 by Al Mann to develop and manufacture cochlear implants for profoundly deaf children and adults.\"",
-  "confidence": "high",
-  "conflict": "Three years belong to three different things and must not be blended. 1993 is Advanced Bionics' founding and the direct ancestor of this Valencia entity. 2004 is Boston Scientific's acquisition. 2008 is the restructuring that kept the neurostimulation business and renamed it Boston Scientific Neuromodulation, while the cochlear business went back toward Mann and later to Sonova. 1979 is Boston Scientific Corporation's own founding and belongs to the separate row."
+  "evidence": "Boston Scientific release of 1 June 2004: \"Advanced Bionics was founded in 1993 by Al Mann to develop and manufacture cochlear implants for profoundly deaf children and adults.\" Resolved to 1993, Advanced Bionics' founding and the direct ancestor of this Valencia entity. 2004 is Boston Scientific's acquisition, 2008 the restructuring and rename, and 1979 is Boston Scientific Corporation's own founding, which belongs to a separate row.",
+  "confidence": "high"
  },
  {
   "name": "Fatigue Science",
@@ -3522,9 +3489,8 @@
   "year": 2017,
   "kind": "press",
   "url": "https://amtil.com.au/headsafe-nurochek/",
-  "evidence": "\"Headsafe was established in Sydney, Australia, in 2017 by Dr. Adrian Cohen to develop and commercialise the patented NUROCHEK system.\"",
-  "confidence": "medium",
-  "conflict": "A separate \"HeadSafe\" was established in 1987 as the concussion programme of Necksafe Ltd, an Australian not-for-profit also associated with Dr Adrian Cohen — so the NAME predates the company by thirty years. 2017 is the commercial MedTech entity that built NUROCHEK; 1987 is a nonprofit programme."
+  "evidence": "\"Headsafe was established in Sydney, Australia, in 2017 by Dr. Adrian Cohen to develop and commercialise the patented NUROCHEK system.\" Resolved to 2017: the 1987 \"HeadSafe\" was a concussion programme of the not-for-profit Necksafe Ltd, so the name predates the commercial MedTech entity by thirty years.",
+  "confidence": "medium"
  },
  {
   "name": "Perceiv AI",
@@ -3828,10 +3794,8 @@
   "year": 2008,
   "kind": "wikipedia",
   "url": "https://en.wikipedia.org/wiki/Alberto_Priori",
-  "evidence": "\"In 2008, Alberto Priori founded Newronika SpA, a spin-off company of the University of Milan and Fondazione IRCCS Ca’ Granda.\"",
-  "confidence": "medium",
-  "conflict": "Sources tied to founder Alberto Priori give 2008; FierceBiotech and CB Insights give 2016. 2016 is most likely the recapitalisation when Newronika became a venture-backed operating company, which is not a founding, but that provenance could not be proved.",
-  "caveat": "The company’s own about page states no founding year, only \"two decades of work\", a relative phrase not used here."
+  "evidence": "\"In 2008, Alberto Priori founded Newronika SpA, a spin-off company of the University of Milan and Fondazione IRCCS Ca’ Granda.\" Caveat: The company’s own about page states no founding year, only \"two decades of work\", a relative phrase not used here. Resolved to 2008, the year sources tied to founder Alberto Priori give. 2016 is most likely the recapitalisation when Newronika became a venture-backed operating company, which is not a founding.",
+  "confidence": "medium"
  },
  {
   "name": "Neuromod",
@@ -4425,5 +4389,630 @@
   "confidence": "low",
   "conflict": "Tracxn and CB Insights state a founding of 2016 against a Connecticut incorporation of February 2019, and no source explains the 2016. Notably 2016 is NOT the first-funding date (the seed was April 2020), so it is not the usual back-derivation — it may reflect when Dr Grodberg’s work began at Yale, or it may simply be wrong.",
   "caveat": "The company was DISSOLVED in September 2023. A Yale spin-out by David Grodberg, M.D. of the Yale Child Study Center; the recorded year is an incorporation date."
+ },
+ {
+  "name": "Setpoint Medical",
+  "year": 2007,
+  "kind": "company_site",
+  "url": "https://setpointmedical.com/company/",
+  "evidence": "\"Since its founding in 2007, SetPoint’s mission has been to combine scientific discovery, precision engineering and business acumen to develop and commercialize revolutionary therapies to treat chronic autoimmune conditions.\"",
+  "confidence": "medium",
+  "conflict": "The incorporation on file is 2006 against a founding of 2007 stated by the company, by Northwell/Feinstein and by trade press. Either the Delaware entity was incorporated in 2006 and operations began in 2007, or the 2006 belongs to a predecessor; this was not resolved.",
+  "caveat": "Grew out of Kevin Tracey’s inflammatory reflex work at the Feinstein Institutes; co-founders given as Tracey, H. Shaw Warren and Jim Broderick."
+ },
+ {
+  "name": "NeuroPace",
+  "year": 1997,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/1528287/000162828021005481/neuropaces-1.htm",
+  "evidence": "IPO S-1 corporate history: incorporated in Delaware in November 1997 under the name NeuroPace, Inc.",
+  "confidence": "high",
+  "caveat": "NINE YEARS EARLIER than the \"incorporated by 2006\" the index held. Corroborated independently by the Rosenman Institute biography of co-founder Frank M. Fischer. sec.gov refuses automated fetches, so the S-1 wording was read through search indexing rather than directly; the year is not in doubt but the month is unverified."
+ },
+ {
+  "name": "Ceribell",
+  "year": 2014,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/1861107/000095017024100574/ceribell_s-1.htm",
+  "evidence": "S-1: incorporated in Delaware on 29 August 2014 under the name \"Brain Stethoscope, Inc.\", renamed CeriBell, Inc. on 11 August 2015.",
+  "confidence": "high",
+  "caveat": "INCORPORATED UNDER A DIFFERENT NAME, which the index did not record. Earlier than the \"by 2016\" on file. Stanford Bio-X separately traces the company to a 2012 seed grant to Josef Parvizi and Chris Chafe — that is the research, not the company."
+ },
+ {
+  "name": "Science Corporation",
+  "year": 2021,
+  "kind": "university",
+  "url": "https://dukecapitalpartners.duke.edu/news/spotlight-portfolio-founder-max-hodak/",
+  "evidence": "\"Max founded Science Corporation in April of 2021\" after leaving Neuralink, where he was president until early 2021.",
+  "confidence": "high",
+  "caveat": "Founding and incorporation genuinely coincide. The source is independent of the filing and names a month (April 2021) that a Form D year could not supply. Lead program is the Prima retinal implant, which is retinal prosthetics rather than a cortical BCI."
+ },
+ {
+  "name": "Cognito Therapeutics",
+  "year": 2016,
+  "kind": "company_site",
+  "url": "https://www.cognitotx.com/about",
+  "evidence": "Company timeline places its founding in 2016, the year \"Cognito founders Ed Boyden and Li-Huei Tsai link gamma waves and Alzheimer’s progression\".",
+  "confidence": "medium",
+  "caveat": "Earlier than or equal to the \"by 2017\" on file, and corroborated by December 2016 Boston Globe coverage of an MIT LED startup working on Alzheimer’s. NO PRIOR NAME was found, contrary to the brief’s expectation. Commercialises the Tsai/Boyden 40Hz gamma sensory work; the product is a non-invasive headset, not an implant."
+ },
+ {
+  "name": "Synchron",
+  "year": 2012,
+  "kind": "press",
+  "url": "https://www.medicaldesignandoutsourcing.com/synchron-inc-secures-10-million-in-series-a-financing-round/",
+  "evidence": "The Australian company SmartStent was spun out in 2012 and was acquired by and renamed Synchron in 2016; founders Thomas Oxley and Nicholas Opie continued into Synchron.",
+  "confidence": "medium",
+  "conflict": "2012 for the Australian company SmartStent against 2016 for the US vehicle Synchron Inc. Which is the founding depends on whether the index treats a renamed and redomiciled company as continuous. 2012 is preferred here; 2016 is defensible only if the index dates US corporate vehicles.",
+  "caveat": "A third year, 2007, is when Oxley conceived the Stentrode and is not a founding. Origin is the University of Melbourne Vascular Bionics Laboratory, the Florey Institute and Royal Melbourne Hospital."
+ },
+ {
+  "name": "Cala Health",
+  "year": 2014,
+  "kind": "university",
+  "url": "https://med.stanford.edu/biodesign/our-impact/million-plus-patients-helped/kate-rosenbluth.html",
+  "evidence": "Founder Kate Rosenbluth on the Stanford Biodesign site: \"I founded Cala Health in the fall of 2014 to address this important challenge.\"",
+  "confidence": "medium",
+  "conflict": "The incorporation on file is 2013 against the founder’s own statement of autumn 2014. Most likely the Delaware entity was incorporated in 2013 while the founder dates the company’s real start to 2014, but that was not verified.",
+  "caveat": "A founder’s self-reported date, though hosted by Stanford Biodesign and naming a season a filing could not supply. Emerging from stealth with $18M in February 2016 is not a founding."
+ },
+ {
+  "name": "Paradromics",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://spectrumlocalnews.com/tx/austin/news/2025/09/02/paradromics-brain-bci-human-implant",
+  "evidence": "\"Paradromics was founded in 2015 and relocated its team to Austin in 2019.\"",
+  "confidence": "high",
+  "caveat": "TRAP ON THE COMPANY’S OWN SITE: its timeline’s earliest entry is \"Headquarters: 2019 – Established in Austin, TX\", which reads as a founding and is a relocation. Founded in California; the index’s Austin is correct today but is not where it began."
+ },
+ {
+  "name": "Axoft",
+  "year": 2021,
+  "kind": "university",
+  "url": "https://otd.harvard.edu/news/soft-safer-brain-implants/",
+  "evidence": "\"Axoft, a startup launched out of Harvard in 2021, is developing a softer alternative...\"",
+  "confidence": "high",
+  "caveat": "Harvard’s Office of Technology Development writing about its own licensed spinout from the Lieber and Jia Liu lab work. THE INDEX URL IS A PARKED DOMAIN-SALE PAGE: axoft.co is a GoDaddy for-sale listing; the live site is axoft.us."
+ },
+ {
+  "name": "Cognixion",
+  "year": 2013,
+  "kind": "company_site",
+  "url": "https://www.prnewswire.com/news-releases/new-wearable-device-smartstones-touch-humanizing-technology-sensorial-communication-to-bring-people-together-300033845.html",
+  "evidence": "The company’s own February 2015 release: Andreas Forsland \"established Smartstones, Inc. in late 2013.\"",
+  "confidence": "medium",
+  "conflict": "Pacific Coast Business Times (May 2023) says Cognixion \"was founded in 2014 by Andreas Forsland, under the name Smartstone at the time\". 2013 is preferred because the contemporaneous 2015 source names \"late 2013\", which a later writer could round to 2014.",
+  "caveat": "THE ENTITY WAS SMARTSTONES, INC., renamed Cognixion around 2017-18; a 2018 trade headline reads \"Cognixion (nee Smartstones, Inc.)\". The 2013 year belongs to the predecessor name."
+ },
+ {
+  "name": "Optima Neuroscience",
+  "year": 2005,
+  "kind": "aggregator",
+  "url": "https://www.inknowvation.com/sbir/companies/optima-neuroscience-inc",
+  "evidence": "SBIR company profile: \"Year Founded: 2005\"; founders Timothy J. Tucker and J. Chris Sackellares.",
+  "confidence": "medium",
+  "caveat": "FOUR YEARS EARLIER than the 2009 on file, so not derived from it, and corroborated structurally: the company obtained FDA clearance for IdentEvent in late 2009, which a company founded in 2009 could not plausibly have done. inKnowVation is an SBIR database rather than a VC directory but is labelled aggregator conservatively. Technology originally invented at the University of Florida McKnight Brain Institute. May now be dormant."
+ },
+ {
+  "name": "Neural Dynamics Technologies LLC",
+  "year": 2018,
+  "kind": "accelerator",
+  "url": "https://www.ycombinator.com/companies/neural-dynamics-technologies-inc",
+  "evidence": "Y Combinator company page lists Founded 2018, batch W22, founder Ingrid van Welie PhD.",
+  "confidence": "medium",
+  "caveat": "NOW TRADES AS TORPEDO THERAPEUTICS, and is an Inc. rather than the LLC the index records. YC’s year is founder-supplied at application, so a founder may simply have restated the incorporation year. Closed-loop DBS for Parkinson’s, essential tremor and epilepsy."
+ },
+ {
+  "name": "Forest Devices, Inc.",
+  "year": 2015,
+  "kind": "university",
+  "url": "https://www.heinz.cmu.edu/media/2017/november/forest-devices-alphastroke",
+  "evidence": "\"Kesinger and his co-founder Dan Willis, an electrical engineer, incorporated Forest Devices in April of 2015 with Kesinger serving as CEO.\"",
+  "confidence": "high",
+  "caveat": "Founding and incorporation genuinely coincide — the CMU Heinz College source uses the word \"incorporated\" and names the month. THE INDEX LOCATION IS WRONG: this is a Pittsburgh company, not Grand Rapids, confirmed by CMU, the Pittsburgh Life Sciences Greenhouse and the Pittsburgh Technology Council."
+ },
+ {
+  "name": "Highland Instruments",
+  "year": 2007,
+  "kind": "company_site",
+  "url": "https://www.prnewswire.com/news-releases/highland-instruments-inc-announces-presentation-of-electrosonic-stimulation-as-adjunctive-therapy-to-dopaminergic-treatments-in-parkinsons-disease-discussing-the-highland-instruments-electrosonic-stimulation-esstim-te-234050071.html",
+  "evidence": "Company boilerplate, 2 December 2013: \"Highland Instruments was founded in 2007 by researchers trained at Harvard Medical School and MIT.\"",
+  "confidence": "medium",
+  "caveat": "NINE YEARS EARLIER than the \"by 2016\" on file, and independent by construction — the release predates that filing by three years. The company’s later 2022 boilerplate dropped the year. highlandinstruments.com redirects to highlandinstruments.us; both are the company, not a resale."
+ },
+ {
+  "name": "Oxford Brain Diagnostics",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://startupsmagazine.co.uk/article-oxford-brain-diagnostics-roll-out-dementia-diagnosis-uk-and-us",
+  "evidence": "\"Founded in 2019 by Dr Steven Chance (former Associate Professor of Neuroscience at Oxford University) and Professor Mark Jenkinson (Professor of Neuroimaging)...\"",
+  "confidence": "medium",
+  "conflict": "Companies House shows incorporation on 29 November 2018 against a widely repeated \"founded in 2019\". Oxford’s own spinout announcement is dated 9 August 2019, which is a public launch. The 2019 may be the launch laundered into a founding year.",
+  "caveat": "The company’s own About page gives no founding year, only \"After raising seed funding in 2019...\". Cortical Disarray Measurement, an MRI analysis for dementia."
+ },
+ {
+  "name": "Rhaeos",
+  "year": 2018,
+  "kind": "university",
+  "url": "https://bioelectronics.northwestern.edu/tech-transfer/",
+  "evidence": "\"Founded in 2018 as a spinout company from Northwestern’s Center for Bio-Integrated Electronics.\"",
+  "confidence": "high",
+  "caveat": "Northwestern’s own institute stating its own spinout date. Confirmed a separate entity from NeuroLux, which came from the same John Rogers lab and is a separate row in this index. Product is FlowSense, a non-invasive wearable thermal sensor for ventricular shunt flow."
+ },
+ {
+  "name": "Brain Scientific",
+  "year": 2015,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/1662382/000121390020012856/f10q0320_brainscientific.htm",
+  "evidence": "SEC filing: the registrant was \"incorporated under the laws of the state of Nevada on November 18, 2013 under the name All Soft Gels Inc.\", and on 21 September 2018 acquired \"MemoryMD, Inc., a privately held Delaware corporation formed in February 2015\", accounted for as a reverse recapitalisation because the registrant \"had nominal or no operations and assets prior to\" closing.",
+  "confidence": "high",
+  "caveat": "THE 2013 ON FILE IS A SHELL. All Soft Gels Inc. had no operations; the neurotech business is MemoryMD, formed February 2015. A SECOND reverse merger followed in October 2021 with Piezo Motion Corp, in which Piezo is the accounting acquirer — the company’s centre of gravity has moved to piezo motors. brainscientific.com fails its TLS handshake."
+ },
+ {
+  "name": "NeoSensory",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.prweb.com/releases/neosensory-wins-honorable-mention-in-health-and-wellness-in-fast-company-s-2021-world-changing-ideas-awards-804167922.html",
+  "evidence": "Company-issued boilerplate: \"Founded in 2015 by neuroscientists David Eagleman and Scott Novich, Neosensory builds non-invasive brain-machine interfaces to create new senses.\"",
+  "confidence": "high",
+  "caveat": "THE COMPANY SHUT DOWN in 2025, reported around April, with the tinnitus product discontinued; neosensory.com no longer resolves. The 2013 VEST work is the lab project that preceded the company and is not a founding year."
+ },
+ {
+  "name": "Linus Health",
+  "year": 2019,
+  "kind": "company_site",
+  "url": "https://linushealth.com/about/our-story",
+  "evidence": "\"they formed Linus Health in 2019 alongside two of David’s partners from Tamarisc Ventures.\"",
+  "confidence": "high",
+  "caveat": "NOT formed by a merger, contrary to the brief: Digital Cognition Technologies was ACQUIRED in 2020, a year after Linus Health was formed, so 2019 belongs to Linus Health itself. It later also acquired Together Senior Health."
+ },
+ {
+  "name": "Nia Therapeutics",
+  "year": 2018,
+  "kind": "company_site",
+  "url": "https://niatherapeutics.com/about-us",
+  "evidence": "Company timeline, 2018: \"Nia Therapeutics is founded and licenses patented algorithms from the University of Pennsylvania.\"",
+  "confidence": "medium",
+  "conflict": "The incorporation on file is 2016 against the company’s own timeline of 2018 — a founding LATER than incorporation, which suggests a Penn vehicle incorporated in 2016 that became an operating company when the licence was executed. Not resolved.",
+  "caveat": "A UPenn spinout from Michael Kahana’s DARPA Restoring Active Memory work; the DARPA project began in 2014, which is research, not a founding."
+ },
+ {
+  "name": "Circadian Therapeutics",
+  "year": 2016,
+  "kind": "university",
+  "url": "https://www.ox.ac.uk/news/2016-12-19-sleep-and-circadian-rhythm-disruption-addressed-new-oxford-spinout-circadian",
+  "evidence": "University of Oxford news release of 19 December 2016 announcing Circadian as a new Oxford spin-out; other sources date the spinout to September 2016.",
+  "confidence": "medium",
+  "caveat": "SCOPE: a small-molecule DRUG DISCOVERY company whose entire pipeline is pharmaceutical (CT-1500, CT-2500, CT-2600, CT-3500). No device, no neural interface, no stimulation or recording. Founders include Russell Foster and Sridhar Vasudevan."
+ },
+ {
+  "name": "Ellipsis Health",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://ellipsishealth.com/research/the-ellipsis-health-journey-a-global-solution-inspired-by-a-personal-struggle/",
+  "evidence": "Company narrative: \"it’s easy to forget that the landscape in 2017 was a less dense space\"; trade press states \"Founded in 2017, Ellipsis Health has pioneered an AI-powered, speech-based vital sign\".",
+  "confidence": "medium",
+  "conflict": "A three-way split: 2013 incorporation on file, 2017 from the company and trade press, 2014 from PrivCo. The 2013 filing most likely attaches to a prior or shelf entity that Mondal and Aratow later repurposed; the earlier name could not be identified.",
+  "caveat": "SCOPE: vocal biomarkers — acoustic and NLP analysis of speech to score depression and anxiety. No neural signal is measured. The company has since pivoted further, to an AI voice care-manager agent."
+ },
+ {
+  "name": "Deep Brain Innovations",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://ndimedical.com/ndi-medical-launches-new-portfolio-company-deep-brain-innovations-llc-2/",
+  "evidence": "NDI Medical release of 23 May 2013: NDI \"has launched its next portfolio company, Deep Brain Innovations, LLC (DBI),\" to \"commercialize its groundbreaking technology that is designed to optimize deep brain stimulation (DBS) therapy for patients with Parkinson’s disease.\"",
+  "confidence": "medium",
+  "conflict": "PitchBook says 2012, one year before NDI’s own launch announcement; that may reflect incubation inside NDI or an LLC formation preceding the public launch.",
+  "caveat": "NOT a Case Western spinout, contrary to the brief — no source connects Cameron McIntyre or CWRU to it. It is an NDI Medical PORTFOLIO COMPANY, closer to a vehicle than an independently founded business. There is no live website, which is why the index’s website field is broken."
+ },
+ {
+  "name": "Brain in Hand",
+  "year": 2009,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/06971006",
+  "evidence": "BRAIN-IN-HAND LIMITED, company number 06971006, incorporated 23 July 2009, active, Exeter. No previous company names.",
+  "confidence": "medium",
+  "caveat": "Founding and incorporation coincide, and the registry confirms no rename or shelf history. The platform was \"developed over 4 years\" beforehand, which is prehistory and must not be back-derived. SCOPE is marginal: digital self-management support software rather than neural measurement."
+ },
+ {
+  "name": "MicroTransponder",
+  "year": 2007,
+  "kind": "press",
+  "url": "https://neurotechreports.com/pages/MicroTransponder_profile.html",
+  "evidence": "\"In 2007 Rosellini, Cauller, and Richard Weiner, a Dallas neurosurgeon and pioneer in implanting nerve stimulators, founded the company and licensed the technology from UTD.\"",
+  "confidence": "medium",
+  "caveat": "NOW TRADES AS MOBIA MEDICAL, INC. — microtransponder.com 301-redirects to mobia.com, and the About page no longer mentions the old name, so both the index name and URL are stale. Cauller’s wireless transponder work was patented in 2005 with Zyvex; that is pre-company IP, not a founding."
+ },
+ {
+  "name": "PsycApps",
+  "year": 2016,
+  "kind": "press",
+  "url": "https://tech.eu/2022/09/01/gamified-mental-health-app-psycapps-plays-in-eur17-million/",
+  "evidence": "\"Founded by Silja Litvin and Vanessa Hirsch-Angus in 2016, PsycApp is attempting to alter this with its evidence-based gamification approach.\"",
+  "confidence": "medium",
+  "caveat": "Companies House independently shows PSYCAPPS LIMITED incorporated 8 April 2016 with no previous names, and the press names both co-founders, which a filing would not supply. SCOPE: eQuoo is a gamified mental-health mobile app with no neural measurement or modulation whatsoever."
+ },
+ {
+  "name": "NeuroLutions",
+  "year": 2007,
+  "kind": "university",
+  "url": "https://neuroscienceresearch.wustl.edu/stroke-recovery-device-using-brain-computer-interface-receives-fda-market-authorization/",
+  "evidence": "\"He cofounded Neurolutions in 2007 with Daniel Moran, PhD, a professor of biomedical engineering at the university’s McKelvey School of Engineering, to further develop the technology.\"",
+  "confidence": "high",
+  "caveat": "THIRTEEN YEARS EARLIER than the \"by 2020\" on file. A Washington University spinout by Eric Leuthardt and Daniel Moran; IpsiHand was the first BCI to receive FDA De Novo authorisation. The company has since MERGED INTO KANDU HEALTH."
+ },
+ {
+  "name": "Oxford Endovascular",
+  "year": 2015,
+  "kind": "press",
+  "url": "http://otif.vc/portfolio/oxford-endovascular-oxford-investment-consultants/",
+  "evidence": "\"Oxford Endovascular was spun out of Oxford University’s Engineering Science and Surgical Science Departments in December 2015\"",
+  "confidence": "medium",
+  "caveat": "Companies House shows incorporation on 9 September 2015 with no previous names; the investor page names a different month and describes the spinout mechanism, so it is not simply the registry echoed. Founding and incorporation genuinely coincide. Based on Zhong You’s origami flow-diverter work."
+ },
+ {
+  "name": "Oxford VR",
+  "year": 2016,
+  "kind": "university",
+  "url": "https://www.psych.ox.ac.uk/news/oxford-virtual-reality-spin-out-combines-with-us-based-behavr",
+  "evidence": "\"Based on the research of Professor Daniel Freeman, OxfordVR was spun out in 2016 with support from Oxford Science Enterprises (OSE).\"",
+  "confidence": "medium",
+  "conflict": "The company’s own February 2020 Series A release repeatedly says it was \"founded in 2017\", against the originating Oxford department’s 2016. 2016 is preferred as it matches the registry, but the disagreement is real and 2017 is the company’s own wording.",
+  "caveat": "NAME-SWAP TRAP: a different company, OXVR LTD (10148870), was previously named \"OXFORD VR\" and was dissolved on 14 November 2017; the current entity took the name only afterwards, having itself been incorporated as OXVR LTD. Now absorbed into BehaVR."
+ },
+ {
+  "name": "Autonomic Technologies",
+  "year": 2007,
+  "kind": "press",
+  "url": "https://medcitynews.com/2009/05/cleveland-clinic-backed-autonomic-technologies-raises-20-million/",
+  "evidence": "\"It was created in 2007 through research by Clinic neurologist Dr. Ali Rezai, who remains on the company’s board.\"",
+  "confidence": "medium",
+  "caveat": "THE COMPANY NO LONGER EXISTS. Neurotech Reports listed it among neurotech failures in November 2019 despite roughly $90M raised. ati-spg.com now 301-redirects to realeve.net, a SEPARATE company under Peter Bonutti that picked up the Pulsante asset. A Cleveland Clinic Innovations spinout."
+ },
+ {
+  "name": "electroCore",
+  "year": 2005,
+  "kind": "company_site",
+  "url": "https://www.electrocore.com/our-history",
+  "evidence": "\"We were co-founded in 2005 by JP Errico, Thomas J. Errico, MD, former president of the North American Spine Society, Charles Theofilos, MD, and Peter Staats, MD, former president of the North American Neuromodulation Society.\"",
+  "confidence": "high",
+  "caveat": "THE LLC-TO-CORPORATION MECHANISM: Electrocore, LLC was formed in Delaware in September 2005 and converted to electroCore, Inc. only on 21 June 2018 at the IPO. The \"by 2007\" on file describes the wrong entity type. Headquarters is now Rockaway, New Jersey, not the Basking Ridge in the index."
+ },
+ {
+  "name": "Junebrain",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://technical.ly/startups/junebrain-university-maryland-biopark/",
+  "evidence": "\"A biomedical engineer, Scott founded the company in 2017.\"",
+  "confidence": "medium",
+  "caveat": "TWO YEARS EARLIER than the 2019 on file, corroborated by a 2018 SBIR Phase I award that requires the company to have existed before that incorporation. Founder is SAMANTHA Scott, not Adrienne Scott, a Johns Hopkins retina specialist who surfaces in the same searches. Named for June, the month it was founded. Now at the University of Maryland BioPark in Baltimore, not Rockville."
+ },
+ {
+  "name": "Ectron",
+  "year": 1950,
+  "kind": "company_site",
+  "url": "https://www.ectron.co.uk/",
+  "evidence": "\"Ectron was founded in 1950 by the late Dr. Russell to manufacture medical equipment for use within psychiatry.\"",
+  "confidence": "medium",
+  "conflict": "The 1950 is business lineage; the current legal entity is a SHELF COMPANY, ECTRON LIMITED (06139484), incorporated 6 March 2007 and named BRAYLODGE LIMITED until 25 July 2007. The index’s \"incorporated by 2015\" is wrong on both counts.",
+  "caveat": "SCOPE: SIC 47990, other retail sale not in stores. Ectron today is a UK DISTRIBUTOR of Tyromotion, TecnoBody, Ekso Bionics, ZeroG and Fesia hardware, not a developer; the ECT manufacturing is a 75-year-old legacy. Distinct from Ectron Corporation, a US metrology firm."
+ },
+ {
+  "name": "Maaind",
+  "year": 2019,
+  "kind": "press",
+  "url": "https://lumolabs.io/lumo-labs-invests-in-neuroadaptive-ai-pioneer-maaind/",
+  "evidence": "\"Maaind was founded in London in 2019 by Dr. Martin Dinov and Dzera Kaytati.\"",
+  "confidence": "medium",
+  "conflict": "One aggregator gives 2018, matching the incorporation on file. If the entity was incorporated in 2018 and the founders date the company from 2019, both can be true.",
+  "caveat": "An investor writing its own announcement stated 2019, which cannot be back-derived from a 2018 incorporation. SCOPE: neuroadaptive software inferring emotional and stress state from speech, wearables and environment. No neural recording, electrode or stimulation — the neurotech claim rests on the \"neuroadaptive\" label."
+ },
+ {
+  "name": "Ensodata",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.ensodata.com/press_article/wisconsin-based-startup-earns-new-fda-clearance-for-artificial-intelligence-sleep-scoring-solution/",
+  "evidence": "\"EnsoData’s founders set out in 2015 to harness the power of sleep data to make patient care more accurate, efficient, and affordable.\"",
+  "confidence": "medium",
+  "caveat": "Founding and incorporation coincide legitimately: this is a narrative sentence about founder intent, not a directory field, and UW–Madison independently places Chris Fernandez’s master’s in 2015 with customer discovery in summer 2014 and first seed in April 2016. THE INDEX URL IS A PRODUCT PAGE (/EnsoSleep/); EnsoSleep is the software, EnsoData the company."
+ },
+ {
+  "name": "MedRhythms",
+  "year": 2015,
+  "kind": "accelerator",
+  "url": "https://www.mainetechnology.org/impact/innovator-spotlight/medrhythms/",
+  "evidence": "\"Launched in 2015 at the renowned Spaulding Rehabilitation Hospital in Boston.\"",
+  "confidence": "medium",
+  "conflict": "CB Insights says 2013 and Brian Harris is credited with founding it in January 2014. Those most likely refer to Harris’s NEUROLOGIC MUSIC THERAPY CLINICAL PRACTICE at Spaulding — a hospital practice, not the company — but 2015 against 2014 remains genuinely contested.",
+  "caveat": "A PRACTICE-VERSUS-COMPANY confusion, a variant of product-not-company. The Maine Technology Institute has funded the company directly and ties the year to a specific event. HQ RELOCATED from Boston to Portland, Maine."
+ },
+ {
+  "name": "Stimwave Technologies",
+  "year": 2010,
+  "kind": "press",
+  "url": "https://www.implantable-device.com/category/aimd-companies/curonix/",
+  "evidence": "\"Stimwave Technologies was founded by Laura Tyler Perryman in 2010 to develop wireless injectable neurostimulation devices.\" The DOJ corroborates: \"Perryman and others founded Stimwave in 2010, headquartering it in Pompano Beach, Florida.\"",
+  "confidence": "high",
+  "caveat": "The Department of Justice statement derives from a criminal investigation and trial record, entirely independent of any filing. Perryman was convicted of healthcare fraud in March 2024 over a fake plastic receiver component and sentenced to six years; Stimwave filed Chapter 11 in June 2022 and its assets went to Curonix LLC in November 2022. The 2010 belongs to the original entity, not Curonix."
+ },
+ {
+  "name": "Luminopia",
+  "year": 2015,
+  "kind": "press",
+  "url": "https://www.citybiz.co/article/824327/qa-with-scott-xiao-ceo-and-co-founder-of-luminopia/",
+  "evidence": "Co-founder Scott Xiao states he and his co-founder started Luminopia in 2015 while undergraduates at Harvard.",
+  "confidence": "medium",
+  "conflict": "Aggregator profiles and some press give 2016 against founder interviews giving 2015. The 2016 could be an incorporation of a later entity or a first-funding artefact, but that was not verified.",
+  "caveat": "Luminopia’s own About page states no founding year. Luminopia One is a digital therapeutic for amblyopia using modified video, FDA-authorised in 2021."
+ },
+ {
+  "name": "MyCognition",
+  "year": 2011,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/07875247",
+  "evidence": "MYCOGNITION LIMITED, company no. 07875247, incorporated 8 December 2011, active. Previous name: MY COG LIMITED (8 Dec 2011 – 1 Feb 2013).",
+  "confidence": "medium",
+  "caveat": "INCORPORATED UNDER A PLACEHOLDER NAME, so the trading name is fourteen months younger than the entity. Independent UK press separately credits Keiron Sparrowhawk with founding it in 2011. The registered office is now in Sheffield, not the London the index records; a separate MYCOGNITION SERVICES LIMITED was dissolved in 2020 and must not be conflated."
+ },
+ {
+  "name": "Mainstay Medical",
+  "year": 2008,
+  "kind": "company_site",
+  "url": "https://mainstaymedical.com/company/",
+  "evidence": "Company timeline, 2008: \"Dan Sachs, MD files a patent on the idea that leads to ReActiv8, and Mainstay Medical is officially founded in Minneapolis, MN.\"",
+  "confidence": "high",
+  "caveat": "FOUNDED IN MINNEAPOLIS, NOT IRELAND. The Irish incorporation is a later redomiciling and Dublin is the registered office of Mainstay Medical Holdings plc, not where the company began; the operating base is San Diego. ReActiv8 is implanted restorative neurostimulation for chronic low back pain."
+ },
+ {
+  "name": "Statespace",
+  "year": 2017,
+  "kind": "press",
+  "url": "https://techcrunch.com/2020/11/12/statespace-raises-29-million-series-b-tops-1-5-million-maus/",
+  "evidence": "\"Statespace launched out of stealth in 2017 with a product called Aim Lab.\" Expa records meeting Wayne Mackey through its Labs programme in 2017 while he was still doing his PhD.",
+  "confidence": "medium",
+  "conflict": "The incorporation on file is 2007, TEN YEARS before the company existed — Mackey was an NYU PhD student and the company did not exist in 2007. Either the Form D belongs to a different entity or the year is a data error; it should not be carried forward.",
+  "caveat": "The best-attested 2017 statements describe emerging from stealth rather than founding. SCOPE: Aim Lab is a consumer esports aim-trainer with a neuroscience marketing frame and no neural sensing, stimulation or clinical claim."
+ },
+ {
+  "name": "Manus Neurodynamica",
+  "year": 2008,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/06672976",
+  "evidence": "MANUS NEURODYNAMICA LTD, company no. 06672976, incorporated 14 August 2008, no previous company names. Parkinson’s News Today: \"Dr Rutger Zietsma founded Manus in August 2008.\"",
+  "confidence": "medium",
+  "caveat": "THE COMPANY IS IN ADMINISTRATION per Companies House, at Preston Farm Industrial Estate, Stockton-on-Tees, not the Edinburgh the index records, and manusneuro.com has an expired TLS certificate. The NeuroMotor Pen distinguishes Parkinson’s from other tremor disorders. The research roots are Dutch but no predecessor Dutch company was found."
+ },
+ {
+  "name": "Burl Concepts",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://www.auntminnie.com/clinical-news/ultrasound/article/15622295/start-up-burl-develops-ultrasound-based-ecg-for-stroke",
+  "evidence": "\"Founded in 2013\", based on the research of neurologist Thilo Hoelscher, founder of the UCSD Brain Ultrasound Research Laboratory; co-founded with James Brailean.",
+  "confidence": "medium",
+  "caveat": "THE INDEX DESCRIPTION IS WRONG: this is not concussion sensing. The product is SONAS, a portable microbubble-contrast transcranial ultrasound perfusion device for prehospital stroke triage. The trade piece carries a founding narrative rather than a bare directory field, but the year coincides exactly with the filing."
+ },
+ {
+  "name": "MYOMO",
+  "year": 2004,
+  "kind": "university",
+  "url": "https://deshpande.mit.edu/spinouts/myomo-inc/",
+  "evidence": "MIT Deshpande Center spinout listing gives \"Year 2004\", and notes Myomo is \"a spinout of the 2003 project, Powered joint braces to help the mobility-impaired.\"",
+  "confidence": "high",
+  "caveat": "Founding and incorporation legitimately coincide, and the 10-K independently confirms Delaware incorporation on 1 September 2004. The MIT patent licence completed in 2006 is not a founding. THE INDEX URL IS THE PRODUCT SITE (myopro.com) rather than myomo.com, and headquarters is Burlington, MA, not Cambridge."
+ },
+ {
+  "name": "Mindstrong",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/mindstrong/__LMdOkuSdK9PiPeXF5i5OGsjpwHSdfEz3UPxuNXUMqwk",
+  "evidence": "Founded 2014 by Paul Dagum with Rick Klausner; Tom Insel joined as co-founder in 2017.",
+  "confidence": "low",
+  "conflict": "2014 against 2017. The split appears to be Dagum’s original founding versus the 2017 relaunch when Insel and Klausner came aboard and the Series A was raised. The 2016 incorporation on file sits between the two and matches neither.",
+  "caveat": "No source states \"founded in 2014\" in a primary voice; the year is inferred from STAT’s statement that Insel \"joined in 2017\", which is only coherent if the company predates 2017. THE COMPANY IS DEAD — wound down in early 2023, clinical services ceased 10 March 2023, and mindstronghealth.com does not resolve."
+ },
+ {
+  "name": "ClearPoint Neuro (MRI Interventions)",
+  "year": 1998,
+  "kind": "filing",
+  "url": "https://ir.clearpointneuro.com/sec-filings/all-sec-filings/content/0000950170-25-027934/clpt-20241231.htm",
+  "evidence": "10-K corporate history: the company was incorporated in Delaware in March 1998 under the name Surgi-Vision, Inc.",
+  "confidence": "high",
+  "caveat": "ELEVEN YEARS EARLIER than the \"by 2009\" on file, and under a third name. The chain is Surgi-Vision (1998) to SurgiVision (2008) to MRI Interventions (2011) to ClearPoint Neuro (2020) — three renames, none a founding. HEADQUARTERS IS SOLANA BEACH, CALIFORNIA, not Memphis."
+ },
+ {
+  "name": "Helius Medical Technologies",
+  "year": 2013,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/1610853/000106299315001996/form1012g.htm",
+  "evidence": "\"NHC is a Delaware company, incorporated on January 22, 2013\" — Advanced NeuroRehabilitation LLC and MPJ Healthcare formed NeuroHabilitation Corporation in 2013.",
+  "confidence": "medium",
+  "conflict": "2013 for NeuroHabilitation Corporation, the actual PoNS business later renamed Helius Medical, against 2014 for the listed parent, a British Columbia numbered shell that \"prior to the transaction had no active business\". 2013 is the founding; 2014 is a shell-and-redomicile artefact.",
+  "caveat": "A reverse-merger and serial-redomiciling case: the shell renamed itself in May 2014, the takeover closed 13 June 2014, and it reincorporated Wyoming to Delaware in July 2018. LOCATION IS NEWTOWN, PENNSYLVANIA, not \"Newton\"."
+ },
+ {
+  "name": "Nevro",
+  "year": 2006,
+  "kind": "filing",
+  "url": "https://www.sec.gov/Archives/edgar/data/1444380/000104746914008081/a2221630zs-1.htm",
+  "evidence": "\"Nevro was incorporated in March 2006 as a Minnesota corporation under the name NBI Development, Inc. and in October 2006 reincorporated in Delaware. In June 2007, the company changed its corporate name to Nevro Corp.\"",
+  "confidence": "high",
+  "caveat": "INCORPORATED UNDER A PRIOR NAME, so a registry lookup for \"Nevro Corp\" returns June 2007 and is wrong by fifteen months. The technology concept originated at Mayo Clinic and was developed in an incubator, but no corporate entity predates March 2006. sec.gov refuses automated fetches; the wording was read through search indexing."
+ },
+ {
+  "name": "Empatica",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.economyup.it/startup/empatica-la-startup-fondata-da-italiani-scelta-dallesercito-usa-per-prevenire-il-covid/",
+  "evidence": "\"Fondata nel 2011 da Matteo Lai, Maurizio Garbarino, Rosalind Picard e Simone Tognetti, Empatica ha sede negli Stati Uniti e respiro internazionale.\"",
+  "confidence": "medium",
+  "conflict": "Wikipedia states Empatica Inc. \"was founded in 2013 in Cambridge, Massachusetts\", uncited. Both are correct about different legal entities: the business began in Milan in 2011 and the 2013 is the US entity.",
+  "caveat": "A redomiciling case with TWO LIVE ENTITIES — Empatica Srl in Milan and Empatica Inc. in Cambridge. Founders’ affective-computing research at Politecnico di Milano became a company in 2011; MIT describes it as a Media Lab spin-off via Rosalind Picard. The company’s own pages carry no founding year, which is why two dates circulate."
+ },
+ {
+  "name": "Neurosity",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://thenextweb.com/news/this-startup-is-building-a-brain-reading-device-to-take-on-elon-musks-neuralink",
+  "evidence": "\"The company was founded by AJ Keller, a former Boeing employee, who worked on robots, and Alex Castillo, an ex-Netflix engineer in 2018.\" (published 25 February 2020)",
+  "confidence": "medium",
+  "caveat": "Contemporaneous trade journalism from a founder interview, naming roles and prior employers a filing would not contain. Product lineage is Notion 1 (2019), Notion 2, then Crown (2021) — Crown is a PRODUCT rename, not a company rename, and 2021 is not a founding."
+ },
+ {
+  "name": "EyeGuide",
+  "year": 2010,
+  "kind": "wikipedia",
+  "url": "https://en.wikipedia.org/wiki/EyeGuide",
+  "evidence": "\"The company was founded in 2010 by Dr. Brian Still at Texas Tech University\", citing the Lubbock Avalanche-Journal (3 September 2011) and The Daily Toreador (31 August 2011).",
+  "confidence": "medium",
+  "caveat": "The year rests on two 2011 newspaper articles that predate the incorporation record entirely, so they cannot be echoing it — but they were read through Wikipedia’s citation rather than directly. Founded by the CHAIR OF THE DEPARTMENT OF ENGLISH at Texas Tech. PRODUCT-VERSUS-COMPANY RISK: Wikipedia gives the site as grinbath.com, suggesting the entity traded as Grinbath; the index URL eye.guide appears superseded by eyeguide.tech."
+ },
+ {
+  "name": "Cadence Neuroscience",
+  "year": 2017,
+  "kind": "company_site",
+  "url": "https://cadenceneuro.com/about/",
+  "evidence": "Company About timeline places its founding in 2017 by Kent Leyde and Doug Sheffield: \"Kent and Doug started Cadence with a vision to push the boundaries of neuromodulation and create new possibilities for those with drug-resistant epilepsy.\"",
+  "confidence": "medium",
+  "caveat": "THE MAYO CLINIC RELATIONSHIP IS A LICENCE, NOT A SPINOUT, and was established in 2019, two years after founding — a Mayo announcement would date the licence. Both founders are ex-NeuroVista, which is the real technical lineage. No funding milestone falls in 2017, which argues against a back-derived date."
+ },
+ {
+  "name": "Beacon Biosignals",
+  "year": 2019,
+  "kind": "university",
+  "url": "https://news.mit.edu/2026/beacon-biosignals-maps-brain-during-sleep-0501",
+  "evidence": "\"He had met Revels, who was working as a research software engineer in MIT’s Julia Lab, during his PhD, and convinced him to co-found Beacon with him in 2019.\"",
+  "confidence": "high",
+  "caveat": "An MIT News narrative profile written from interviews, not a filing echo. Beacon’s 2023 acquisition of Dreem’s R&D is a later event and Dreem is a separate row in this index. CB Insights files Beacon under the slug \"checkpoint-ai\", suggesting a prior name Checkpoint AI — an unverified lead."
+ },
+ {
+  "name": "Sway Medical",
+  "year": 2011,
+  "kind": "company_site",
+  "url": "https://www.swaymedical.com/company/about",
+  "evidence": "The \"Sway at a glance\" section gives 2011 as the founding date; the site footer reads \"© 2011-2026 Sway Medical, Inc.\"",
+  "confidence": "medium",
+  "conflict": "Several aggregator-derived sources give 2010 against the company’s own 2011.",
+  "caveat": "THE ENTITY WAS FORMERLY CAPACITY SPORTS — i2E, writing in July 2013, refers to \"Sway (formerly named Capacity Sports)\". The 2017 incorporation on file is almost certainly that renaming and re-registration, not a founding. Founder Chase Curtiss, a clinical exercise physiologist."
+ },
+ {
+  "name": "Hoolest Performance Technologies",
+  "year": 2017,
+  "kind": "university",
+  "url": "https://news.asu.edu/20180130-hoolest-lends-ear-stress-relief",
+  "evidence": "\"Hool founded Hoolest with computer engineering graduate student Sami Mian and electrical engineering undergraduate student John Patterson in May 2017.\"",
+  "confidence": "high",
+  "caveat": "THE CLEANEST INDEPENDENCE PROOF OF THE BATCH: ASU published this on 30 January 2018, two weeks BEFORE the 14 February 2018 incorporation on file, so it cannot be derived from that filing. An ASU spinout from Nicholas Hool’s doctoral neuromodulation research. Now trades at hoolest.com; check whether the index’s hoolestpt.com still resolves."
+ },
+ {
+  "name": "BrainSpec",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://brain-spec.com/about-us/",
+  "evidence": "\"The team was formed in May 2015 at a brainstorming session hosted by the iHub at Brigham and Women’s Hospital.\"",
+  "confidence": "medium",
+  "conflict": "A Brigham-affiliated biography states \"In 2016, with the support of the BWH iHub, Alexander P. Lin co-founded BrainSpec, Inc.\" Both are defensible: May 2015 is team formation and 2016 may be incorporation of the named entity.",
+  "caveat": "ORIGIN IS BRIGHAM AND WOMEN’S HOSPITAL iHUB, not MGH as the brief assumed; MGH radiologists appear only as collaborators. Two domains are in play: brainspecmed.com/about-us/ now 404s while brain-spec.com/about-us/ serves the team page."
+ },
+ {
+  "name": "iSchemaView, Inc.",
+  "year": 2012,
+  "kind": "company_site",
+  "url": "https://www.rapidai.com/blog/a-brief-history-of-stroke-care",
+  "evidence": "\"In 2012, Dr. Albers and Dr. Bammer co-founded the company iSchemaView, now named RapidAI® to ensure Rapid technology is available globally.\"",
+  "confidence": "high",
+  "caveat": "SIX YEARS EARLIER than the \"by 2018\" on file. TRADES AS RAPIDAI since a February 2020 rebrand, and the index URL irapid.com is stale against rapidai.com. The Rapid technology was developed at Stanford in 2008, which is the technology, not the company."
+ },
+ {
+  "name": "NeuroSigma",
+  "year": 2008,
+  "kind": "press",
+  "url": "https://www.news-medical.net/news/20120914/Trigeminal-Nerve-Stimulation-an-interview-with-Dr-Leon-Ekchian-President-and-CEO-of-NeuroSigma.aspx",
+  "evidence": "\"Prior to co-founding NeuroSigma in 2008, Leon served as President of Arrowhead Research Corporation...\"",
+  "confidence": "medium",
+  "caveat": "A FOUNDER BIOGRAPHY, normally a refused source class, but NeuroSigma’s own 2014 S-1 separately states incorporation in Delaware in March 2008 — a different filing from the Form D. Founding and incorporation genuinely coincide: the company was formed to hold the UCLA trigeminal nerve stimulation licence, so there is no pre-incorporation trading period."
+ },
+ {
+  "name": "Neuroelectrics",
+  "year": 2011,
+  "kind": "press",
+  "url": "https://www.mystrategist.com/medtech-strategist/article/in_neurotech_the_global_ambitions_of_neuroelectrics_.html",
+  "evidence": "\"In 2011, Maiques and Ruffini spun out Neuroelectrics, with Maiques as CEO and Ruffini as chief scientific officer.\"",
+  "confidence": "high",
+  "caveat": "NINE YEARS EARLIER than the 2020 on file, which is a US or Delaware entity. STARLAB IS NOT THE ANSWER: Starlab was a Belgian R&D organisation founded 1999/2000 that went bankrupt in 2001; Maiques and Ruffini took over the surviving Barcelona division and only formalised the neurotech work as a separate entity in 2011. Starlab Barcelona still exists separately, so inheriting its date would be wrong."
+ },
+ {
+  "name": "BrainScope Company",
+  "year": 2006,
+  "kind": "company_site",
+  "url": "https://www.brainscope.com/about",
+  "evidence": "\"Dr. Prichep has been working with BrainScope since its inception in 2006.\"",
+  "confidence": "medium",
+  "caveat": "Asserted incidentally in a team biography rather than as a marketing claim, which makes a directory echo less likely. Shares the Leslie Prichep NYU quantitative-EEG lineage with PainQx, a separate row in this index. Ahead 200 was cleared in 2015."
+ },
+ {
+  "name": "Cognetivity Neurosciences",
+  "year": 2013,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/08482058",
+  "evidence": "COGNETIVITY LTD, company number 08482058, incorporated 10 April 2013. A Medsider interview with CEO Sina Habibi corroborates: the founders \"set out to fix the process for diagnosing dementia, resulting in the launch of Cognetivity in 2013.\"",
+  "confidence": "high",
+  "conflict": "The 2018 on file belongs to Cognetivity Neurosciences Ltd, the CANADIAN CSE-LISTED HOLDING VEHICLE, not to the operating company. This is a listing shell, the third such case in this batch after Helius and Brain Scientific.",
+  "caveat": "COGNETIVITY LTD IS IN ADMINISTRATION. A registry decoy exists: NEURAL GAMES LTD (09735779), dissolved 28 February 2017, carries \"COGNETIVITY\" as a previous name, so a naive Companies House search lands on a dead shell. Founders Sina Habibi and Seyed-Mahdi Khaligh-Razavi met doing PhDs at Cambridge."
+ },
+ {
+  "name": "Cytox",
+  "year": 2004,
+  "kind": "companies_house",
+  "url": "https://find-and-update.company-information.service.gov.uk/company/05149130",
+  "evidence": "CYTOX LIMITED, company number 05149130, incorporated 9 June 2004. Founding attributed to Zsuzsanna Nagy, Margaret Esiri, Roy Bicknell and James S. Chadwick, commercialising Oxford and Birmingham research.",
+  "confidence": "medium",
+  "caveat": "CYTOX LIMITED IS IN LIQUIDATION. SCOPE: genomic risk assays for Alzheimer’s — variaTECT, a ~130,000-SNP array, and genoSCORE, a polygenic risk score from saliva or blood. No neural recording, stimulation, imaging or interface. A CYTOX LIFE SCIENCES LIMITED was incorporated in August 2025; continuity is unestablished."
+ },
+ {
+  "name": "PainQx",
+  "year": 2015,
+  "kind": "university",
+  "url": "https://tov.med.nyu.edu/startup/pain-qx/",
+  "evidence": "NYU Langone Health Technology Opportunities & Ventures startup portfolio lists Pain Qx with a founding year of 2015; Leslie Prichep, PhD is named as principal investigator.",
+  "confidence": "medium",
+  "caveat": "NYU Langone’s own tech-transfer office recording its spinout from licensing records rather than a securities filing, and loosely corroborated by a June 2015 MedCity News piece already describing the company. Holds exclusive rights to roughly 25,000 EEG recordings accumulated at NYU over about forty years. Shares the Prichep lineage with BrainScope."
+ },
+ {
+  "name": "Spark Biomedical",
+  "year": 2018,
+  "kind": "press",
+  "url": "https://dallasinnovates.com/dallas-based-spark-biomedical-gets-fda-clearance-for-its-drug-free-solution-to-opioid-withdrawal/",
+  "evidence": "\"The Texas startup was founded in Houston in 2018, but is now headquartered in Dallas where it develops medical devices such as the system.\"",
+  "confidence": "high",
+  "conflict": "The incorporation on file is 2023, five years later — almost certainly a re-incorporation or new financing entity around the July 2023 Sparrow Ascent clearance. The 2023 is plainly wrong as a founding year.",
+  "caveat": "INDEPENDENCE PROVED BY DATE: this 2021 article predates the 2023 incorporation by two years, so it cannot be derived from it. Houston was correct at founding; headquarters is now Dallas. Sparrow transcutaneous auricular neurostimulation for opioid withdrawal."
+ },
+ {
+  "name": "Kokoon",
+  "year": 2013,
+  "kind": "press",
+  "url": "https://startupsmagazine.co.uk/article-worlds-first-sleep-sensing-eeg-headphones",
+  "evidence": "Kokoon was founded in 2013, when founder Tim Antos began struggling with sleep; he and Richard Hall combined mechanical and electronics engineering backgrounds to build it.",
+  "confidence": "medium",
+  "conflict": "THE \"INCORPORATED 2005\" ON FILE BELONGS TO A DIFFERENT COMPANY. KOKOON LIMITED (05514130), incorporated 20 July 2005, is a Bradford design firm with no connection to headphones. The real entity is KOKOON TECHNOLOGY LTD (08740486), incorporated 21 October 2013.",
+  "caveat": "THE COMPANY WAS DISSOLVED ON 21 JULY 2026, and kokoon.io now 302-redirects to a Philips product page, which looks like an asset or IP transfer. Dating it from the ~2015 Kickstarter would be a product-launch back-derivation. Other Kokoon entities exist in the register; check which the index means."
+ },
+ {
+  "name": "Axon Therapies",
+  "year": 2014,
+  "kind": "aggregator",
+  "url": "https://tracxn.com/d/companies/axontherapies/__IcyvYxWfjWia-P28qJ8YyVds1uYRJVydyMikea4JhyM",
+  "evidence": "Axon Therapies spun out of the medtech incubator Coridea in 2014, founded by Mark Gelfand and Howard Levin; first funding round 19 April 2016.",
+  "confidence": "low",
+  "caveat": "The year coincides with the incorporation on file, but the same record carries a DISTINCT later first-funding date of April 2016, so it is not the usual first-round back-derivation. Coridea’s own Axon page now 404s and the company’s About page states no year. SCOPE: the mechanism is nerve ablation, but the indication, endpoints, investigators and commercial context are all heart failure — admitting it means admitting renal denervation and carotid body ablation too."
+ },
+ {
+  "name": "Cumulus Neuroscience",
+  "year": 2015,
+  "kind": "company_site",
+  "url": "https://www.cumulusneuro.com/our-story",
+  "evidence": "Company timeline, 2015: \"Company founded as BrainWaveBank in Belfast.\" A separate 2020 entry reads \"Cumulus Neuroscience formed with funding from Dementia Discovery Fund and Life Arc Ventures.\"",
+  "confidence": "high",
+  "caveat": "THE ENTITY WAS BRAINWAVEBANK, founded January 2015 in Belfast by Ronan Cunningham, Brian Murphy, Siggi Saevarsson and Urs Streidl; 2020 is a REBRAND and must not be used. The company’s own history page names the year and the original name and distinguishes the two. CB Insights still files it under the brainwavebank slug, a useful cross-check."
  }
 ]
