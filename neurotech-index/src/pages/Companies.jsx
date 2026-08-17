@@ -151,9 +151,49 @@ export default function Companies() {
           they describe a company and both figures are drawn from the same
           companies. The scatter used to ignore them while sitting directly
           under them, so a reader who narrowed to one modality saw a chart that
-          obeyed and a chart that did not. */}
-      <FundingChart board={board} filters={fundingFilters} onFiltersChange={setFundingFilters} />
-      <CapitalStageScatter board={board} filters={fundingFilters} />
+          obeyed and a chart that did not.
+
+          Side by side from `twoup`, because stacked they came to just over two
+          thousand pixels and the companies this page is named for began below
+          all of it. Flex rather than grid: either figure returns null when it
+          has too little to say, and a lone survivor should take the full width
+          instead of leaving an empty column beside it.
+
+          Stretched rather than start-aligned, so the two cards share a top and a
+          bottom edge. Each is a column internally and hangs its caption off the
+          bottom, so the slack from the shorter figure opens up between the plot
+          and the caption rather than trailing under the card as dead space. */}
+      {/* Equal columns, so the two cards are the same rectangle: same width,
+          and `items-stretch` gives them the same height. Two matching frames
+          side by side read as one object; two that differ by 120px read as a
+          layout that ran out of room.
+
+          The scatter would rather have the extra width — it is
+          two-dimensional, so width comes off the capital axis AND forces the
+          swarm to stack deeper, where the bar chart only loses bar length. It
+          gets it back inside its own viewBox instead: see W_NARROW. */}
+      {/* Three bands, shared. Each figure is head / plot / caption, and from
+          `twoup` the row is a grid whose three rows both cards subscribe to
+          with `grid-rows-subgrid`. That is what makes the column headings line
+          up with the band labels beside them and the rule above one caption
+          line up with the rule above the other: the rows are measured once, on
+          the tallest of the two, rather than each card being padded to a number
+          somebody typed in.
+
+          `auto_1fr_auto` puts the slack in the middle band, so a shorter figure
+          grows its plot area rather than pushing its caption up.
+
+          auto-fit rather than two fixed columns, because either figure returns
+          null when it has too little to say and an empty track would leave a
+          hole; auto-fit collapses it and the survivor takes the full width. */}
+      <div className="flex flex-wrap items-stretch gap-6 mb-10
+                      twoup:grid twoup:grid-rows-[auto_1fr_auto]
+                      twoup:[grid-template-columns:repeat(auto-fit,minmax(500px,1fr))]">
+        <FundingChart board={board} filters={fundingFilters} onFiltersChange={setFundingFilters}
+          className="basis-full min-w-0 twoup:grid twoup:grid-rows-subgrid twoup:row-span-3" />
+        <CapitalStageScatter board={board} filters={fundingFilters}
+          className="basis-full min-w-0 twoup:grid twoup:grid-rows-subgrid twoup:row-span-3" />
+      </div>
 
       {/* Sorting by age is only offered for companies: labs have no founding
           data and the control would be inert on them. */}

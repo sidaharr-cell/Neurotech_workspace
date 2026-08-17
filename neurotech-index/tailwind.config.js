@@ -3,6 +3,14 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        // The width at which the two funding figures sit side by side rather
+        // than stacked. Below it each one owns the full measure; above it each
+        // gets half of the 1440px page, so both drop to a compact layout.
+        // CapitalStageScatter computes its geometry in JS and matches this
+        // number in a media query rather than a Tailwind variant.
+        twoup: '1400px',
+      },
       colors: {
         // ── Light editorial palette (Nature / Science News feel) ──────────
         paper: '#FFFFFF',

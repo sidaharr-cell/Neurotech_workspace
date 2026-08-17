@@ -98,7 +98,7 @@ describe('FundingChart', () => {
   it('marks a private-only total on a public company and footnotes it', async () => {
     await renderWith([org({ id: 'a', name: 'Axonics', status: 'public' })])
     expect(screen.getByTitle('Private capital only').textContent).toBe('†')
-    expect(screen.getByText(/excludes capital raised on the public markets/)).toBeTruthy()
+    expect(screen.getByText(/Excludes capital raised on the public markets/)).toBeTruthy()
   })
 
   it('gives every row a rank and a link to the organization', async () => {
@@ -123,10 +123,21 @@ describe('FundingChart', () => {
     expect(label).toContain('PMA approved')
   })
 
-  it('states the inclusion rule and the tracked count in the caption', async () => {
+  // The rule moved off the caption and onto a tip beside it, so the caption
+  // carries source, coverage and date, and the rule is one hover away. The
+  // point of the test is unchanged: a reader can still reach the definition
+  // the totals are selected by without leaving the figure.
+  it('states the source and the tracked count in the caption', async () => {
     await renderWith([org({ id: 'a', name: 'A' })])
-    expect(screen.getByText(/primary product interfaces with, measures, or modulates/)).toBeTruthy()
+    expect(screen.getByText(/from SEC Form D filings/)).toBeTruthy()
     expect(screen.getByText(/of 1084 tracked companies/)).toBeTruthy()
+  })
+
+  it('keeps the inclusion rule reachable from the caption', async () => {
+    await renderWith([org({ id: 'a', name: 'A' })])
+    screen.getByRole('button', { name: /what counts as a neurotech company/i }).click()
+    expect(await screen.findByText(/primary product interfaces with, measures, or modulates/))
+      .toBeTruthy()
   })
 
   it('offers a semantic table view of the same data', async () => {

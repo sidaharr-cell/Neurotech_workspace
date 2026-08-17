@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import {
   getFundingBoard, rankFunding, filterFunding, sortTitle, SORTS, DEFAULT_SORT, DEFAULT_STATUS_FILTER,
   STATUS_VALUES, HIDDEN_BY_DEFAULT, STATUS_LABELS, MODALITY_LABELS, STAGE_LABELS,
-  STAGE_ORDER, unavailableLabel, INCLUSION_RULE, MODALITY_COLOR, MODALITY_DESCRIPTIONS,
-  fmtUsd, fmtMonthYear, fmtDay,
+  STAGE_ORDER, unavailableLabel, INCLUSION_RULE, MODALITY_COLOR,
+  MODALITY_DESCRIPTIONS, fmtUsd, fmtMonthYear, fmtDay,
 } from '../lib/fundingBoard'
+import { InfoTip } from './ui'
 
 /** The marker on a private-only total that belongs to a company which has since
  *  listed or been acquired. The figure is real but it is not the whole story. */
@@ -46,7 +47,7 @@ function LatestRaise({ row }) {
     )
   }
   const r = unavailableLabel(row)
-  return <span className="text-muted/70 font-sans text-[11px]" title={r.long}>{r.short}</span>
+  return <span className="text-muted/70 font-sans text-[11px] twoup:text-[12px]" title={r.long}>{r.short}</span>
 }
 
 /** Company, total, status and stage, spoken as one sentence. */
@@ -64,13 +65,21 @@ function rowLabel(row) {
  *  down their left edge whatever the controls beside them are. */
 function ControlRow({ label, children }) {
   return (
-    <div className="flex items-center gap-2 w-max">
-      <span className="w-[72px] shrink-0 uppercase tracking-[0.08em] text-muted/70">
+    <div className="flex items-center gap-2 w-max twoup:w-auto">
+      {/* Narrower in the two-up layout, where every pixel of this strip is one
+          the modality row is short of. It still holds a column, so the three
+          rows keep their left edge. */}
+      <span className="w-[72px] twoup:w-14 shrink-0 uppercase tracking-[0.08em] text-muted/70">
         {label}
       </span>
-      {/* nowrap: a narrow screen scrolls this row rather than folding it into
-          two, which is what used to push the rows below it around. */}
-      <div className="flex flex-nowrap items-center gap-1.5">{children}</div>
+      {/* Scrolls rather than folds at narrow VIEWPORTS, which is the older rule
+          and still right there: folding used to push the rows below it around.
+          In the two-up layout it wraps instead, because the modality row is
+          668px of chips and no split of the page fits that — it was hiding the
+          last chip behind a scroll a reader had no reason to look for. `w-auto`
+          on the wrapper is what allows it: `w-max` alone sizes to max-content
+          and nothing inside it can ever wrap. */}
+      <div className="flex flex-nowrap twoup:flex-wrap items-center gap-1.5">{children}</div>
     </div>
   )
 }
@@ -94,7 +103,7 @@ export const DEFAULT_FUNDING_FILTERS = {
  * to a scatter.
  */
 export default function FundingChart({
-  limit = 20, board: given = null, filters = null, onFiltersChange = null,
+  limit = 20, board: given = null, filters = null, onFiltersChange = null, className = '',
 }) {
   const [fetched, setFetched] = useState(null)
   const [loading, setLoading] = useState(!given)
@@ -158,22 +167,32 @@ export default function FundingChart({
     setModalities(modalities.includes(m) ? modalities.filter(x => x !== m) : [...modalities, m])
 
   return (
-    <figure className="border border-rule rounded-sm bg-canvas/50 p-5 sm:p-6 mb-10">
-      <figcaption className="mb-4">
-        <p className="kicker mb-1">Investment</p>
-        <h2 className="font-serif text-xl sm:text-2xl font-semibold text-ink">
-          {data.length ? sortTitle(sort, data.length) : 'Neurotech companies by private capital raised'}
-        </h2>
-        <p className="text-[13px] text-muted font-sans mt-1">
-          Private capital only, from SEC Form D filings. A total is the sum of a company&apos;s
-          filings, so open the company to see each one, or switch to the table for direct links.
-        </p>
+    // Three bands — head, plot, caption — so the row above can align this card
+    // against the one beside it with `grid-rows-subgrid`. See Companies.jsx.
+    <figure className={`flex flex-col border border-rule rounded-sm bg-canvas/50 p-5 sm:p-6 ${className}`}>
+      {/* A column, matching the scatter: the controls sit on the bottom of the
+          head band, directly above the rows they filter. */}
+      <div className="flex flex-col">
+      {/* The table toggle lives up here rather than in a strip of its own,
+          which is where the scatter has always kept it. That strip held only
+          this and the acquired/defunct switch, and cost the head a whole row. */}
+      <figcaption className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="kicker mb-1">Investment</p>
+          <h2 className="font-serif text-xl sm:text-2xl font-semibold text-ink">
+            {data.length ? sortTitle(sort, data.length) : 'Neurotech companies by private capital raised'}
+          </h2>
+        </div>
+        <button onClick={() => setAsTable(t => !t)} aria-pressed={asTable}
+          className="text-[11px] font-sans text-muted underline decoration-rule underline-offset-2 hover:text-ink">
+          {asTable ? 'View as chart' : 'View as table'}
+        </button>
       </figcaption>
 
       {/* ── Controls ────────────────────────────────────────────────────────
           Sort, modality and minimum stage each hold a row of their own, in a
           fixed order. No control moves when the result set changes. */}
-      <div className="mb-3 space-y-2 pb-1 overflow-x-auto text-[11px] font-sans">
+      <div className="mt-auto mb-3 space-y-2 pb-1 overflow-x-auto text-[11px] font-sans">
         <ControlRow label="Sort">
           {SORTS.map(s => (
             <button key={s.id} onClick={() => setSort(s.id)} aria-pressed={sort === s.id}
@@ -229,24 +248,9 @@ export default function FundingChart({
         </ControlRow>
       </div>
 
-      {/* ── Actions ─────────────────────────────────────────────────────── */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-sans">
-        {hidden > 0 && (
-          <button
-            onClick={() => setStatuses(showingHidden ? DEFAULT_STATUS_FILTER : STATUS_VALUES)}
-            className="text-muted underline decoration-rule underline-offset-2 hover:text-ink">
-            {showingHidden
-              ? 'Hide acquired and defunct companies'
-              : `${hidden} acquired or defunct ${hidden === 1 ? 'company' : 'companies'} hidden. Show`}
-          </button>
-        )}
-
-        <button onClick={() => setAsTable(t => !t)} aria-pressed={asTable}
-          className="ml-auto text-muted underline decoration-rule underline-offset-2 hover:text-ink">
-          {asTable ? 'View as chart' : 'View as table'}
-        </button>
       </div>
 
+      <div>
       {!data.length ? (
         <p className="py-6 text-[13px] font-sans text-muted border-t border-rule">
           No companies match these filters.
@@ -256,34 +260,42 @@ export default function FundingChart({
         // the bars their length, which is the one thing this chart is read for.
         // The fixed columns and gaps come to 580px, so the floor is that plus a
         // 240px bar column: anything narrower scrolls rather than shortens.
+        //
+        // From `twoup` the card holds 45% of the page, so two columns go and
+        // the rest tighten. Stage goes because the figure beside it is entirely
+        // about stage and the table view still carries it; dropping the latest
+        // raise instead would blank the column two of the four sorts are named
+        // after. Rank goes because it is the one column that says nothing the
+        // layout does not: the rows are sorted by the bar, so the number just
+        // counts them. The 32px that buys pays for the type below.
         <div className="overflow-x-auto">
-          <div className="min-w-[820px]">
-          <div className="flex items-center gap-3 pb-1.5 mb-1 border-b border-rule text-[10px] font-sans font-semibold uppercase tracking-[0.08em] text-muted/70">
-            <span className="w-6 shrink-0" />
-            <span className="w-52 shrink-0 text-right">Company</span>
+          <div className="min-w-[820px] twoup:min-w-[500px]">
+          <div className="flex items-center gap-3 twoup:gap-2 pb-1.5 mb-1 border-b border-rule text-[10px] twoup:text-[11px] font-sans font-semibold uppercase tracking-[0.08em] text-muted/70">
+            <span className="w-6 shrink-0 twoup:hidden" />
+            <span className="w-52 twoup:w-36 shrink-0 text-right">Company</span>
             <span className="flex-1" />
-            <span className="w-28 shrink-0">Stage</span>
+            <span className="w-28 shrink-0 twoup:hidden">Stage</span>
             <span className="w-16 shrink-0 text-right">Total</span>
-            <span className="w-28 shrink-0 text-right">Latest</span>
+            <span className="w-28 twoup:w-32 shrink-0 text-right">Latest</span>
           </div>
 
           <div>
             {data.map((r, i) => (
               <Link
                 key={r.id} to={r.href} aria-label={rowLabel(r)}
-                className="flex items-center gap-3 py-[3px] rounded-sm group
+                className="flex items-center gap-3 twoup:gap-2 py-[3px] rounded-sm group
                            hover:bg-paper focus:outline-none focus-visible:ring-2
                            focus-visible:ring-accent focus-visible:ring-offset-1">
-                <span className="w-6 shrink-0 text-right text-[11px] font-mono tabular-nums text-muted/70">
+                <span className="w-6 shrink-0 twoup:hidden text-right text-[11px] font-mono tabular-nums text-muted/70">
                   {r.rank}
                 </span>
                 {/* flex-wrap, so a long name and its status badge stack rather
                     than widen the column the rest of the rows are aligned to. */}
-                <span className="w-52 shrink-0 flex flex-wrap items-center justify-end gap-x-1.5 min-w-0">
+                <span className="w-52 twoup:w-36 shrink-0 flex flex-wrap items-center justify-end gap-x-1.5 min-w-0">
                   <span aria-hidden className="w-2 h-2 rounded-[1px] shrink-0"
                     style={{ background: MODALITY_COLOR[r.modality] || 'transparent' }}
                     title={MODALITY_LABELS[r.modality] || ''} />
-                  <span className="text-[12.5px] font-sans text-ink-soft group-hover:text-accent
+                  <span className="text-[12.5px] twoup:text-[13px] font-sans text-ink-soft group-hover:text-accent
                                    leading-tight break-words text-right">
                     {r.name}
                   </span>
@@ -295,14 +307,14 @@ export default function FundingChart({
                       style={{ width: `${Math.max((barOf(r) / max) * 100, 2)}%`, opacity: 1 - i * 0.018 }} />
                   )}
                 </div>
-                <span className="w-28 shrink-0 flex">
+                <span className="w-28 shrink-0 flex twoup:hidden">
                   <StageBadge row={r} />
                 </span>
-                <span className="w-16 shrink-0 text-[12px] font-mono text-ink tabular-nums text-right">
+                <span className="w-16 shrink-0 text-[12px] twoup:text-[12.5px] font-mono text-ink tabular-nums text-right">
                   {fmtUsd(r.total) || '—'}
                   {r.partialTotal && <sup className="text-muted" title="Private capital only">{PARTIAL}</sup>}
                 </span>
-                <span className="w-28 shrink-0 text-[11px] font-mono tabular-nums text-right whitespace-nowrap">
+                <span className="w-28 twoup:w-32 shrink-0 text-[11px] twoup:text-[12px] font-mono tabular-nums text-right whitespace-nowrap">
                   <LatestRaise row={r} />
                 </span>
               </Link>
@@ -311,20 +323,48 @@ export default function FundingChart({
           </div>
         </div>
       )}
+      </div>
 
-      {/* ── Caption ─────────────────────────────────────────────────────── */}
-      <div className="mt-4 pt-3 border-t border-rule text-[11.5px] font-sans text-muted leading-relaxed space-y-1.5">
+      {/* ── Caption ──────────────────────────────────────────────────────
+          Two lines: what the dagger means, and how much of the field the
+          figure covers. Everything definitional moved up to the standfirst and
+          its tip, because it describes the set rather than the marks.
+
+          The rule on top of this block is the one that has to line up with the
+          rule on the other card, which is why the caption is its own grid band
+          rather than something pushed down by `mt-auto`. */}
+      <div className="mt-auto twoup:mt-0 pt-3 border-t border-rule text-[11px] twoup:text-[12px] font-sans text-muted leading-relaxed space-y-1">
         {anyPartial && (
-          <p><sup>{PARTIAL}</sup> Private capital only. The figure excludes capital raised on the public
-            markets or through an acquirer.</p>
+          <p><sup>{PARTIAL}</sup> Excludes capital raised on the public markets or through an
+            acquirer.</p>
         )}
-        <p>{INCLUSION_RULE}</p>
+        {/* Source, coverage and date on one line. The scope rule is not spelled
+            out here — the title says these are neurotech companies and the tip
+            carries the boundary for anyone testing a particular one. */}
         <p>
-          Totals count private capital only.
-          {' '}{board.meta.fundedCount} of {board.meta.organizationsTracked} tracked companies have a
-          sourced funding figure.
-          {board.meta.lastIngestedAt && <> Last updated {fmtDay(board.meta.lastIngestedAt)}.</>}
+          Private capital, from SEC Form D filings.{' '}
+          {board.meta.fundedCount} of {board.meta.organizationsTracked} tracked companies have a
+          sourced figure.
+          {board.meta.lastIngestedAt && <> Last updated {fmtDay(board.meta.lastIngestedAt)}.</>}{' '}
+          <InfoTip label="What counts as a neurotech company">{INCLUSION_RULE}</InfoTip>
         </p>
+        {/* The acquired-and-defunct switch came down here with the strip that
+            used to hold it. It belongs with the caption anyway: it says what
+            the default view leaves out, which is the same kind of statement as
+            the coverage line above it, and it is the only way back to those
+            companies — so it moved rather than went. */}
+        {hidden > 0 && (
+          <p>
+            {showingHidden
+              ? `Showing ${hidden} acquired or defunct ${hidden === 1 ? 'company' : 'companies'}.`
+              : `${hidden} acquired or defunct ${hidden === 1 ? 'company' : 'companies'} hidden.`}{' '}
+            <button
+              onClick={() => setStatuses(showingHidden ? DEFAULT_STATUS_FILTER : STATUS_VALUES)}
+              className="underline decoration-rule underline-offset-2 hover:text-ink">
+              {showingHidden ? 'Hide' : 'Show'}
+            </button>
+          </p>
+        )}
       </div>
     </figure>
   )
