@@ -48,6 +48,24 @@ const TRIAL_STATUS_MAP = {
  * Out-of-scope rows are hidden unless `includeOutOfScope` is set.
  */
 const arr = v => (Array.isArray(v) ? v : v ? [v] : [])
+
+/**
+ * Hide organizations a PERSON ruled out of the index.
+ *
+ * `in_scope` cannot do this job for companies, and searchCompanies says why:
+ * the classifier abstains on most of them, so gating on it would hide every
+ * company it could not tag. `inclusion_decision` is the human-owned column from
+ * migration 010 and carries no abstention — 'exclude' means somebody looked and
+ * the answer was no, with the written reason in founding-unresolved.json.
+ *
+ * The `.or` is not decoration. `.neq('inclusion_decision', 'exclude')` reads as
+ * the same thing and is not: in SQL, NULL != 'exclude' evaluates to NULL rather
+ * than true, so a plain neq drops every undecided row — which is most of the
+ * table. Null here means "nobody has ruled on this", which must stay visible.
+ */
+const RULED_OUT = 'inclusion_decision.is.null,inclusion_decision.neq.exclude'
+const showable = q => q.or(RULED_OUT)
+
 function applyFacets(q, facets = {}, includeOutOfScope = false) {
   if (!includeOutOfScope) q = q.eq('in_scope', true)
   const fn = arr(facets.function), ax = arr(facets.access), ap = arr(facets.application)
@@ -110,6 +128,14 @@ const SENTINELS = new Set(['none', 'not_applicable'])
  */
 export async function facetCounts({ table = 'devices', facets = {}, kind = null, includeOutOfScope = false } = {}) {
   if (!supabase || !COUNTABLE_TABLES.has(table)) return null
+  // Organizations go the long way round on purpose. The grouped RPC (migration
+  // 017) knows about `in_scope` and nothing about `inclusion_decision`, so it
+  // would count the 319 companies a person ruled out of the index and print
+  // badge numbers the results underneath cannot honour — the one thing the
+  // counting contract here forbids. organizations is a lean table and is on
+  // PER_VALUE_TABLES precisely so it can afford the slower, correct path.
+  // Teaching the RPC the same filter would let this go back to one call.
+  if (table === 'organizations') return perValueFacetCounts({ table, facets, kind, includeOutOfScope })
   const { data, error } = await supabase.rpc('facet_counts', {
     p_table: table,
     p_fn: arr(facets.function),
@@ -148,6 +174,10 @@ async function perValueFacetCounts({ table, facets, kind, includeOutOfScope }) {
   const gate = q => {
     if (!includeOutOfScope) q = q.eq('in_scope', true)
     if (kindCol && kinds.length) q = q.in(kindCol, kinds)
+    // Match searchCompanies/searchLabs, which hide a recorded human exclusion
+    // whatever the classifier thinks. A count that counted them would describe
+    // a different set of rows than the one the reader is looking at.
+    if (table === 'organizations') q = q.or(RULED_OUT)
     return q
   }
   const tasks = []
@@ -547,8 +577,9 @@ export async function searchLabs({ query = '', facets = {}, page = 0, pageSize =
     let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'lab')
     if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
     // Labs abstain (no facets) rather than being marked out of scope, so don't
-    // apply the scope gate here — it would hide every unclassified lab.
-    b = applyFacets(b, facets, true)
+    // apply the scope gate here — it would hide every unclassified lab. A
+    // recorded human exclusion still hides the row, as it does for companies.
+    b = showable(applyFacets(b, facets, true))
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
   }
   // Rank by NIH funding/activity score (best-funded, most-active labs first),
@@ -614,8 +645,9 @@ export async function searchCompanies({
     let b = supabase.from('organizations').select('*', { count: 'exact' }).eq('type', 'company')
     if (term) b = b.or(`name.ilike.%${term}%,description.ilike.%${term}%`)
     // Companies abstain (many are unclassified) — don't apply the scope gate, or
-    // it would hide every company the classifier couldn't tag.
-    b = applyFacets(b, facets, true)
+    // it would hide every company the classifier couldn't tag. A recorded human
+    // exclusion is a different thing entirely, and does hide the row.
+    b = showable(applyFacets(b, facets, true))
     if (foundedBefore) b = b.lte('age_year', foundedBefore)
     if (foundedAfter) b = b.gte('age_year', foundedAfter)
     return b.range(page * pageSize, page * pageSize + pageSize - 1)
