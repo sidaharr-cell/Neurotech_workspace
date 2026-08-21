@@ -830,7 +830,7 @@ export default function CapitalStageScatter({ board, filters = null, className =
                 aria-hidden
                 className="pointer-events-none absolute z-20 w-56 rounded-sm border border-rule
                            bg-paper px-2.5 py-2 shadow-lg font-sans text-[11px] leading-snug
-                           text-ink-soft animate-fade-in"
+                           text-ink-soft animate-fade-in-fast"
                 style={{
                   left: Math.min(Math.max(hover.x, TIP_W / 2), Math.max(hover.w - TIP_W / 2, TIP_W / 2)),
                   top: hover.below ? hover.y + hover.h + 8 : hover.y - 8,

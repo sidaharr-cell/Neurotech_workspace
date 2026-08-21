@@ -59,6 +59,18 @@ const byFit = (a, b) => fitness(a) - fitness(b)
  */
 export const objectFitOf = img => (img?.kind === 'logo' ? 'contain' : 'cover')
 
+/**
+ * Whether a picture can be shown large without being enlarged.
+ *
+ * Mirrors HI_RES in scripts/lib/images.js, which is the bar the pipeline
+ * already applies to the lead slot. A picture with no recorded dimensions is
+ * not assumed to pass: the stored w and h are what the page has to go on, and
+ * guessing in favour of a picture is how a 180px icon ends up four times its
+ * size across the measure.
+ */
+export const isHiRes = img =>
+  !!img && Math.max(img.w || 0, img.h || 0) >= 900 && Math.min(img.w || 0, img.h || 0) >= 500
+
 const POOL_BY_URL = new Map(
   Object.entries(CLASS_POOL).flatMap(([classId, c]) => (c.images || []).map(i => [i.url, classId])),
 )

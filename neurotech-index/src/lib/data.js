@@ -7,7 +7,35 @@ import papersJson from '../data/papers.json'
 import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
 import researchersJson from '../data/researchers.json'
+import companyResearchJson from '../data/company-research.json'
 import { FUNCTION, ACCESS, APPLICATION } from './facets'
+
+/**
+ * The web-researched overlay for one company, or null.
+ *
+ * This layer is sourced by search rather than by the ingest pipeline, so it is
+ * kept beside the database rather than merged into it: the organizations table
+ * has one funding slot, and 203 companies hold an SEC filing-verified figure
+ * there that the Form D table on the page adds up to. Overwriting that with a
+ * press number would make a checkable figure uncheckable. Both are carried and
+ * the page shows which is which.
+ *
+ * Built by scripts/apply-enrichment.js, which drops any field that arrives
+ * without a source URL.
+ */
+export const researchFor = id => (id && companyResearchJson.companies?.[id]) || null
+
+/**
+ * Links a primary-source check found do not belong to this company.
+ *
+ * These are name-match false positives: a trial whose ClinicalTrials.gov sponsor
+ * is a hospital, a paper whose affiliations name a different employer, a device
+ * whose maker is an unrelated firm sharing a word. They are filtered here rather
+ * than deleted from the tables, so the record still exists for whichever company
+ * it DOES belong to, and so the correction is a line in a file that can be read
+ * and undone. Only `remove` verdicts land here; `uncertain` stays on the page.
+ */
+const suppressed = (id, kind) => new Set(researchFor(id)?.suppress?.[kind] || [])
 
 function tag(type) {
   return items => items.map(i => ({ ...i, _type: type }))
@@ -682,8 +710,19 @@ export async function getCompanyById(id) {
   const { data: rounds } = await supabase.from('funding_rounds')
     .select('amount_usd,round_date,source_url,accession_number')
     .eq('organization_id', id).order('round_date', { ascending: true })
+  // A researched picture replaces the stored one only when there IS one, and
+  // the researcher only kept pictures large enough to run at full width. So the
+  // stored apple-touch-icon survives wherever nothing better was found, and the
+  // page renders it as a mark.
+  const rimg = researchFor(id)?.image
   return {
     ...withFunding(data),
+    ...(rimg ? {
+      image_url: rimg.url, image_w: rimg.w, image_h: rimg.h,
+      image_kind: rimg.kind, image_subject: rimg.subject,
+      image_credit: rimg.credit, image_source: rimg.source, image_source_url: rimg.sourceUrl,
+    } : {}),
+    research: researchFor(id),
     fundingRounds: (rounds || [])
       .filter(r => r.amount_usd && r.round_date)
       .map(r => ({
@@ -716,9 +755,16 @@ export async function getCompanyRelated(name) {
     supabase.from('news_feed').select('id,title,url,source,published_at').neq('entry_type', 'trial').or(`title.ilike.${like},summary.ilike.${like}`).order('published_at', { ascending: false, nullsFirst: false }).limit(8),
   ])
   return {
-    devices: dev.data || [], deviceCount: devC.count ?? (dev.data?.length || 0),
-    patents: pat.data || [], patentCount: patC.count ?? (pat.data?.length || 0),
-    trials: trials.data || [], trialCount: trialC.count ?? (trials.data?.length || 0),
+    // A null count means NOT COUNTED, and it is kept null rather than replaced
+    // by the length of the page we happened to fetch. Those lists are capped
+    // (10 patents, 12 devices), so the fallback printed the cap as though it
+    // were the total: Salvia BioElectronics has 13 patents and the page said
+    // 10, indistinguishable from a company that really has 10. This is the same
+    // rule the facet counts already follow — print nothing rather than a number
+    // the data does not stand behind.
+    devices: dev.data || [], deviceCount: devC.count ?? null,
+    patents: pat.data || [], patentCount: patC.count ?? null,
+    trials: trials.data || [], trialCount: trialC.count ?? null,
     news: news.data || [],
   }
 }
@@ -753,8 +799,26 @@ const oldest = ts => ts.filter(Boolean).sort()[0] || null
  * rows so the page can show per-section provenance. Sparse by design: only
  * confidently-matched edges exist, so an org with no edges yields empty sections.
  */
+/**
+ * Leadership found by search, shaped like a researchers row so the People
+ * section can render both from one list. `sourceUrl` is what separates them: a
+ * researcher arrives through an affiliated_with edge, a leader arrives with the
+ * page it was read from, and the section prints that link.
+ */
+function researchPeople(orgId) {
+  const r = researchFor(orgId)
+  return (r?.people || []).map((p, i) => ({
+    id: `research-${orgId}-${i}`,
+    name: p.name,
+    role: p.role,
+    sourceUrl: p.sourceUrl,
+    fromResearch: true,
+  }))
+}
+
 export async function getOrgGraph(orgId) {
-  const empty = { devices: [], trials: { active: [], completed: [] }, regulatory: [], people: [],
+  const found = researchPeople(orgId)
+  const empty = { devices: [], trials: { active: [], completed: [] }, regulatory: [], people: found,
     provenance: { devices: null, trials: null, regulatory: null } }
   if (!supabase || !orgId) return empty
 
@@ -779,8 +843,11 @@ export async function getOrgGraph(orgId) {
     personIds.length ? supabase.from('researchers')
       .select('id,name,role,affiliation').in('id', personIds) : Promise.resolve({ data: [] }),
   ])
-  const devices = devRes.data || []
-  const trials = trialRes.data || []
+  // Drop the links a primary-source check disowned, before anything counts them.
+  const noDev = suppressed(orgId, 'devices')
+  const noTrial = suppressed(orgId, 'trials')
+  const devices = (devRes.data || []).filter(d => !noDev.has(d.name))
+  const trials = (trialRes.data || []).filter(t => !noTrial.has(t.metadata?.nctId))
   const people = personRes.data || []
 
   // Regulatory records hang off this org's devices (device cleared_via record).
@@ -797,7 +864,11 @@ export async function getOrgGraph(orgId) {
   for (const t of trials) (TRIAL_ACTIVE.has(t.metadata?.status) ? active : completed).push(t)
 
   return {
-    devices, trials: { active, completed }, regulatory, people,
+    devices, trials: { active, completed }, regulatory,
+    // Researched leadership first: a reader looking for who runs the company
+    // wants the CEO before an affiliated author. A name found by both routes is
+    // listed once, under the role the research gave it.
+    people: [...found, ...people.filter(p => !found.some(f => f.name.toLowerCase() === (p.name || '').toLowerCase()))],
     provenance: {
       devices: oldest(devices.map(d => d.last_updated)),
       trials: oldest(trials.map(t => t.last_updated)),
@@ -916,7 +987,14 @@ export async function getCompanyAnalytics(id) {
   try {
     const res = await fetch(`/company-analytics/${id}.json`)
     if (!res.ok) return null
-    return await res.json()
+    const data = await res.json()
+    // Papers whose affiliations name a different employer. The total is
+    // recomputed rather than left alone, or the header would keep counting a
+    // paper the list no longer shows.
+    const drop = suppressed(id, 'publications')
+    if (!drop.size || !data?.publications?.items) return data
+    const items = data.publications.items.filter(p => !drop.has(String(p.pmid)))
+    return { ...data, publications: { ...data.publications, items, total: items.length } }
   } catch { return null }
 }
 
