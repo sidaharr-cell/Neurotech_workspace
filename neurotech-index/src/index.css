@@ -41,6 +41,12 @@
    * company, a device — stays on its own narrower measure (max-w-prose,
    * max-w-3xl), because that is a column of prose and 1320px of abstract is
    * unreadable. Those pages set their own width and must not take this one.
+   *
+   * What the rule protects is the MEASURE, not the wrapper. A detail page with
+   * a real second column may run a wider wrapper around a prose-width reading
+   * column: CompanyPage holds max-w-prose plus a 15rem rail inside 1180px. The
+   * reading column does not widen to fill it, and the page still does not take
+   * .page-wide.
    */
   .page-wide {
     @apply w-full max-w-[1440px] mx-auto px-5 sm:px-8;

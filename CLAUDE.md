@@ -171,6 +171,14 @@ page, the five topic pages, search. Anything showing ONE record keeps its own na
 measure (`max-w-prose`, `max-w-3xl`) and must not take `.page-wide`: an abstract set
 1440px wide is unreadable. Nature News, for reference, runs a 1152px grid inside a
 1320px wrapper and caps there at any viewport.
+
+**The rule constrains the MEASURE, not the page.** Amended 20 Aug 2026 for
+`CompanyPage`, which runs a 1180px wrapper holding a `max-w-prose` column and a 15rem
+rail. The prose is still set to the measure the rule protects; what the extra width
+buys is a place to put the summary and the caveats, and taking it out of the reading
+column was what made the dossier a scroll. A detail page may do this when it has a
+genuine second column of its own. It still must not take `.page-wide`, and the reading
+column must not widen to fill the wrapper.
 The older eight-class `DEVICE_CLASSES` scheme in `taxonomy.js` is superseded — do not
 add to it. Calibration lives in `scripts/gold-set.js`, `score-facets.js`,
 `score-taxonomy.js`, and `audit-taxonomy.js`, with the rubric in `docs/taxonomy-rubric.md`.

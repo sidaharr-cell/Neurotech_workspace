@@ -81,7 +81,7 @@ export function InfoTip({ label, children, className = '' }) {
           ref={panel}
           role="tooltip"
           style={shift ? { transform: `translateX(${shift}px)` } : undefined}
-          className="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-1.5rem)] p-3 rounded-sm border border-rule bg-paper shadow-lg font-sans text-[12px] leading-relaxed text-ink-soft normal-case tracking-normal text-left animate-fade-in"
+          className="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-1.5rem)] p-3 rounded-sm border border-rule bg-paper shadow-lg font-sans text-[12px] leading-relaxed text-ink-soft normal-case tracking-normal text-left animate-fade-in-fast"
         >
           {children}
         </span>

@@ -37,6 +37,11 @@ export default {
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out both',
+        // Hover windows. A tooltip is an answer to a pointer that is already
+        // resting on the trigger, so the entrance has to be over almost before
+        // it is noticed: at 0.3s the panel reads as slow to respond, and on a
+        // pointer moving down a column of triggers it never finishes at all.
+        'fade-in-fast': 'fade-in 0.1s ease-out both',
         'slide-down': 'slide-down 0.18s ease-out both',
       },
       keyframes: {
