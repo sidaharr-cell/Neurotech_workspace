@@ -285,6 +285,106 @@
       },
       "note": "IBTimes's own styled portrait of the person the story is about, reading under a tree. Not a picture of a neural interface, but it is the press item's own photograph of its subject, which is the standard applied to the other profile pieces.",
       "at": "2026-08-23"
+    },
+    "newscientist.com/wp-content/uploads/2026/07/sei_270217370.jpg": {
+      "url": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.35,
+        "top": 0.02,
+        "right": 0.8,
+        "bottom": 0.78
+      },
+      "note": "New Scientist's own photograph of the trial participant: skull-mounted percutaneous pedestals, the surgical scar and the lab computer he is driving. Of the story, and legible at card size.",
+      "at": "2026-08-23"
+    },
+    "news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202606/mit-serc-prize.jpg": {
+      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202606/mit-SERC-Prize.JPG?itok=ARDkgV-T",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.33,
+        "top": 0.28,
+        "right": 0.6,
+        "bottom": 0.78
+      },
+      "note": "MIT News's own photograph of the speaker at the MIT Schwarzman College symposium the piece reports.",
+      "at": "2026-08-23"
+    },
+    "th-i.thgim.com/public/incoming/9kfrs4/article71256272.ece/alternates/landscape_1200/adbs-1.jpg": {
+      "url": "https://th-i.thgim.com/public/incoming/9kfrs4/article71256272.ece/alternates/LANDSCAPE_1200/ADBS-1.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.15,
+        "top": 0.08,
+        "right": 0.82,
+        "bottom": 1
+      },
+      "note": "The Hindu's own photograph of the DBS summit the release announces. A grip-and-grin, which is weak, but it is genuinely the press item's picture of its own event.",
+      "at": "2026-08-23"
+    },
+    "img.medscapestatic.com/vim/live/professional_assets/medscape/images/thumbnail_library/ht-260724-holding-an-eggshell-800x450.jpg": {
+      "url": "https://img.medscapestatic.com/vim/live/professional_assets/medscape/images/thumbnail_library/ht-260724-holding-an-eggshell-800x450.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.05,
+        "top": 0.05,
+        "right": 0.85,
+        "bottom": 0.92
+      },
+      "note": "A hand in the BCI-driven orthosis holding an egg, unwatermarked. The clearest single image of what the story reports, and the one frame from this material that carries no publisher branding.",
+      "at": "2026-08-23"
+    },
+    "cdn.mos.cms.futurecdn.net/yaewprac5jvizd3guwk8rc-1920-80.jpg": {
+      "url": "https://cdn.mos.cms.futurecdn.net/yaEWpraC5JvizD3guWK8rC-1920-80.jpg",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "A three-panel composite: two photographs of the same person meditating either side of a circular inset of a watch face. Of the story, but three images in one frame, and at card size the inset is the only legible part.",
+      "at": "2026-08-23"
+    },
+    "hackaday.com/wp-content/uploads/2026/08/octopus-16.-start-measure-eeg-2-48-screenshot-1-e1786602021743.png": {
+      "url": "https://hackaday.com/wp-content/uploads/2026/08/Octopus-16.-Start-measure-EEG-2-48-screenshot-1-e1786602021743.png",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "A browser screenshot of the EEG dashboard: signal traces, a topomap, a spectrum plot, a webcam inset and the tab bar. A screenshot of software, not a photograph, and half a dozen panels at that.",
+      "at": "2026-08-23"
+    },
+    "arxiv.org/html/2607.16296v1/images/data_distribution.png": {
+      "url": "https://arxiv.org/html/2607.16296v1/images/Data_distribution.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "The paper's own figure: a histogram of EEG recording durations. Of the paper, but a data chart.",
+      "at": "2026-08-23"
+    },
+    "i.guim.co.uk/img/media/3fa0a0fddbc03157f610520c1771117dbff98990/0_6_2060_1647/master/2060.jpg": {
+      "url": "https://i.guim.co.uk/img/media/3fa0a0fddbc03157f610520c1771117dbff98990/0_6_2060_1647/master/2060.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=ea993f3067970f079a6691083bcf4944",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "The same hand-and-egg material as the Medscape frame, with The Guardian's logo block burned into the bottom right. Another publisher's branding, and it cannot be cropped out of a 4:3 card reliably.",
+      "at": "2026-08-23"
     }
   },
   "pending": [
@@ -327,13 +427,6 @@
       "url": "https://www.beckersspine.com/wp-content/uploads/sites/6/2025/03/Beckers-Spine-Review.jpeg",
       "item": null,
       "title": "Biotronik Neuro debuts AI for spinal cord st",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://img.medscapestatic.com/vim/live/professional_assets/medscape/images/thumbnail_library/ht-260724-holding-an-eggshell-800x450.jpg",
-      "item": null,
-      "title": "Novel Neuromodulation Restores Movement Afte",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
@@ -387,23 +480,9 @@
       "at": "2026-08-23"
     },
     {
-      "url": "https://cdn.mos.cms.futurecdn.net/yaEWpraC5JvizD3guWK8rC-1920-80.jpg",
-      "item": null,
-      "title": "$299 vagus nerve device vs $0 stress - relie",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
       "url": "https://www.statnews.com/wp-content/uploads/2026/07/prima-implant-2026-1024x576.jpg",
       "item": null,
       "title": "‘Cochlear implant for blindness’ debuts in E",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://th-i.thgim.com/public/incoming/9kfrs4/article71256272.ece/alternates/LANDSCAPE_1200/ADBS-1.jpg",
-      "item": null,
-      "title": "Manipal Hospital Sarjapur Road Hosts India F",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
@@ -432,20 +511,6 @@
       "url": "https://media.wired.com/photos/6a7a29949f31fa362de72566/master/pass/BookExcerpt_BrainMining_v1.jpg",
       "item": null,
       "title": "Big Tech Wants to Harvest Your Thoughts",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
-      "item": null,
-      "title": "Neurostimulation restores feeling in paralys",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202606/mit-SERC-Prize.JPG?itok=ARDkgV-T",
-      "item": null,
-      "title": "Toward a future that preserves benefits of n",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
@@ -650,27 +715,6 @@
       "item": null,
       "title": "Neuropixels Opto: combining high-resolution ",
       "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://arxiv.org/html/2607.16296v1/images/Data_distribution.png",
-      "item": "6ccc01ef-48b6-494d-9959-c0f700fbb39b",
-      "title": "Efficient EEG Seizure Detection Using INT8 Quantization, Channel Pruning, and Sp",
-      "why": "already on the page, never reviewed",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://hackaday.com/wp-content/uploads/2026/08/Octopus-16.-Start-measure-EEG-2-48-screenshot-1-e1786602021743.png",
-      "item": "fed122f6-7625-4c9d-b35a-f871cd340a4f",
-      "title": "Uninvasive EEG Interface Could Be Used To Play Games",
-      "why": "already on the page, never reviewed",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://i.guim.co.uk/img/media/3fa0a0fddbc03157f610520c1771117dbff98990/0_6_2060_1647/master/2060.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=ea993f3067970f079a6691083bcf4944",
-      "item": "1409717e-a778-4db1-ba7e-7f92ebc9bafd",
-      "title": "Brain implant helps paralysed man to feed himself and drink from cup",
-      "why": "already on the page, never reviewed",
       "at": "2026-08-23"
     },
     {
