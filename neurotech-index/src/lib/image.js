@@ -17,24 +17,24 @@
  * imageKind was 'real' or 'stock' and there was no subject. Those read as
  * item-subject photographs, and a 'stock' one reads as no image at all, which
  * is what it was already treated as.
+ *
+ * **The home page takes 'item' and nothing else.** It used to spend the
+ * reviewed class pool against its story cards, so a card whose own technology
+ * had no photograph ran a labelled photograph of a NEIGHBOURING technology
+ * rather than a data figure. Settled 23 Aug 2026, reversing the 4 Aug
+ * decision: a photograph beside a headline is read as a photograph OF that
+ * story, and the "Illustration" label is a caption a reader skims past. A
+ * figure of the record's own numbers claims only what the record says. Class
+ * photographs are still right on the section pages, where the card is a row in
+ * a directory of a technology rather than a story; assignImages is the home
+ * page's function and only the home page calls it.
  */
 
-import CLASS_POOL from '../data/class-images.json'
 import IMAGE_FOCUS from '../data/image-focus.json'
-import { rankClasses } from './class-match'
+import LEDGER from '../data/image-ledger.json'
+import { isFree, keyOf } from './ledger'
 
 const KIND = { real: 'photo' }
-
-/** Which class pool a picture came out of, so a repeat can be swapped for
- *  another photograph of the same technology. */
-/**
- * Cards are landscape, and `object-cover` fills the frame by cropping. A tall
- * portrait loses most of its subject to that crop, so where there is a choice
- * the picture closest to the frame's own shape wins.
- */
-const CARD_ASPECT = 4 / 3
-const fitness = i => Math.abs((i.w || 1) / (i.h || 1) - CARD_ASPECT)
-const byFit = (a, b) => fitness(a) - fitness(b)
 
 /**
  * How a picture should sit in its frame: filling it, or shown whole.
@@ -70,32 +70,6 @@ export const objectFitOf = img => (img?.kind === 'logo' ? 'contain' : 'cover')
  */
 export const isHiRes = img =>
   !!img && Math.max(img.w || 0, img.h || 0) >= 900 && Math.min(img.w || 0, img.h || 0) >= 500
-
-const POOL_BY_URL = new Map(
-  Object.entries(CLASS_POOL).flatMap(([classId, c]) => (c.images || []).map(i => [i.url, classId])),
-)
-
-/**
- * The best unused photograph in the reviewed pool for this record.
- *
- * Classes are asked in the order rankClasses puts them in — the technologies
- * the record is about, then the ones its facets imply, then the rest — and
- * within a class the picture closest to a card's shape wins. `first` is the
- * class a picture the record ALREADY held came out of, so a story that has to
- * give up a repeated photograph is offered another of its own technology
- * before anything else.
- *
- * Everything here is a licensed photograph a person reviewed, carrying its own
- * credit; it is stamped `'class'` because it is a picture of the technology and
- * not of the record, which is what makes the page label it "Illustration".
- */
-function fromPool(entity, used, first = null) {
-  for (const id of [first, ...rankClasses(entity)].filter(Boolean)) {
-    const pick = (CLASS_POOL[id]?.images || []).filter(i => !used.has(i.url)).sort(byFit)[0]
-    if (pick) return { ...pick, subject: 'class' }
-  }
-  return null
-}
 
 /** The image block on a record, or null. */
 export function imageOf(entity) {
@@ -141,7 +115,12 @@ export function imageOf(entity) {
  */
 export function usableImage(entity, { own = false } = {}) {
   const img = imageOf(entity)
-  if (!img || img.kind === 'stock') return null
+  // 'stock' is a picture the vision pass called decoration. 'motif' is older
+  // still: the generated placeholder art this project used before it settled
+  // on "a picture is a photograph somebody took, or it is a figure of the
+  // record's own numbers". Neither is a picture, and a row carrying either
+  // shows its data figure.
+  if (!img || img.kind === 'stock' || img.kind === 'motif') return null
   // A logo is a mark, not a picture. It says nothing about what a company
   // builds or what a story is about, and a page of them reads as a directory.
   // Records whose only image is a mark show their data figure instead.
@@ -162,19 +141,74 @@ export function usableImage(entity, { own = false } = {}) {
 export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
 
 /**
+ * High enough resolution to run on the home page.
+ *
+ * "High resolution" is not a number somebody liked. It is the frame the
+ * picture actually lands in, times the pixel ratio it is viewed at, plus what
+ * the crop throws away. The frames, measured off the layout in
+ * MagazineFeed.jsx against the 1320px measure defined in index.css:
+ *
+ *   lead      the lead column is 8 of 12 with a 40px gap (~853px), and the
+ *             picture is 3 of its 5 columns: **~512 CSS px**. Not the 1100
+ *             the old comments here claimed — that was a layout ago, and the
+ *             floor derived from it was being applied to a frame less than
+ *             half the size.
+ *   featured  four across the measure: **~310 CSS px**.
+ *   latest    five across: **~250 CSS px**.
+ *
+ * At a 2x device pixel ratio those want 1024, 620 and 500 real pixels. So:
+ *
+ *   STORY_MIN_W = 800    the largest CARD frame at 2x, plus a margin for the
+ *                        crop, since `object-fit: cover` throws away part of
+ *                        one axis on top of the scaling.
+ *   LEAD_MIN_W  = 1200   the lead frame at 2x, same margin.
+ *
+ * The short-edge floor is what keeps a banner out: a 2000x300 strip passes any
+ * long-edge test and is a letterbox of nothing once cropped to 4:3.
+ *
+ * Keep these in step with CARD_RES and HI_RES in scripts/lib/images.js, which
+ * are the pipeline's copies. A picture sourced below the page's floor is
+ * stored and then never rendered, which reads in the database as coverage the
+ * page does not have.
+ */
+export const STORY_MIN_W = 800
+export const STORY_MIN_H = 450
+export const LEAD_MIN_W = 1200
+
+const bigEnough = (img, minW = STORY_MIN_W) =>
+  !!img && Math.max(img.w || 0, img.h || 0) >= minW && Math.min(img.w || 0, img.h || 0) >= STORY_MIN_H
+
+/**
+ * The picture a home-page story card may run, or null.
+ *
+ * Three gates, and a card that fails any of them shows its data figure:
+ *
+ *   of the story   `own: true`. See the note at the top of this file. A
+ *                  photograph of a neighbouring technology is not a photograph
+ *                  of this story.
+ *   large enough   bigEnough. A picture enlarged to fill its frame is worse
+ *                  than no picture, and the pipeline is asked for files that
+ *                  clear the frame rather than files that merely exist.
+ *   unspent        checked by the caller against the ledger, because it is a
+ *                  fact about the page and not about the record.
+ */
+export function storyImage(entity) {
+  const img = usableImage(entity, { own: true })
+  return bigEnough(img) ? img : null
+}
+
+/**
  * The picture the lead may run, or null.
  *
- * The lead is displayed eleven hundred pixels wide, so it prefers a
- * photograph OF the story and will otherwise take a labelled illustration
- * only when that illustration is large enough not to look soft at that size.
+ * The lead is displayed eleven hundred pixels wide and is the one picture a
+ * reader is certain to see. It takes a photograph OF the story or it takes
+ * nothing: there is no fallback to a labelled illustration any more, and there
+ * is no fallback to a picture the page assigned from a pool, because there is
+ * no pool.
  */
-const LEAD_MIN_W = 900
-
 export function leadImage(entity) {
   const own = usableImage(entity, { own: true })
-  if (own) return own
-  const any = usableImage(entity)
-  return (any?.w || 0) >= LEAD_MIN_W ? any : null
+  return bigEnough(own, LEAD_MIN_W) ? own : null
 }
 
 /** Can this story lead the page? The top slot is the one picture a reader is
@@ -182,15 +216,20 @@ export function leadImage(entity) {
 export const canLead = entity => Boolean(leadImage(entity))
 
 /**
- * The picture the lead actually runs: its own, or the one the page assigned it.
+ * The picture the lead actually runs.
  *
- * composeStories tries to lead with a story that brings its own picture, and on
- * a day when none of them can, the lead falls to a story whose picture comes
- * out of the pool like any other card's. The size floor still applies either
- * way, because the frame is eleven hundred pixels wide whatever fills it.
+ * `assigned` is what assignImages gave the lead, which is the same photograph
+ * leadImage would find, minus any the ledger has already promised elsewhere.
+ * Honouring it is what stops the lead re-running a picture the page withheld
+ * from it. The size floor applies either way, because the frame is eleven
+ * hundred pixels wide whatever fills it.
  */
 export function leadPicture(entity, assigned) {
-  return leadImage(entity) || ((assigned?.w || 0) >= LEAD_MIN_W ? assigned : null)
+  // `undefined` still means "nobody has decided, work it out"; `null` means the
+  // page withheld a picture, and honouring that is what stops the lead running
+  // a photograph the ledger promised to a different story.
+  const img = assigned === undefined ? leadImage(entity) : assigned
+  return bigEnough(img, LEAD_MIN_W) ? img : null
 }
 
 /** Is this a labelled photograph of the technology rather than of the record? */
@@ -263,59 +302,63 @@ export const needsCredit = img => Boolean(creditLine(img))
 /**
  * The picture each item on the page will actually run, keyed by id.
  *
- * Two passes, because the page's own photographs come first and what is left of
- * the reviewed pool is then shared out among the cards that have none.
+ * A card is in the map when it has a photograph of its own, big enough for the
+ * frame, that no other story has ever been given. A card that is not in the
+ * map shows the data figure built out of its own fields — that is a normal
+ * outcome, not a failure, and on a thin day several cards will take it.
  *
- *   1. A record with a photograph of its own keeps it. A class photograph
- *      belongs to a technology rather than to a record, so eight brain-computer
- *      interface stories would otherwise run the same conference photograph
- *      eight times: the first card keeps it and the rest are re-asked, their
- *      own technology first.
- *   2. Every card still without one takes the best unused photograph in the
- *      pool for what it is about (rankClasses in lib/class-match.js).
+ * The two rules being kept:
  *
- * The second pass is why a card here cannot end up running a plate while the
- * pool still holds a picture. It reaches further than the ingest pipeline will:
- * the photograph is of a technology the record is ABOUT rather than of the
- * record, and past the first few candidates it is of a neighbouring technology.
- * That is a labelled, credited illustration, which is what the `'class'`
- * subject has always meant, and beside a headline it is a better card than a
- * tinted plate carrying an outlet's name. Only the home page's story cards ask
- * for this; nothing else calls assignImages.
+ *   of the story    storyImage above. Nothing here reaches for a photograph of
+ *                   the technology, a neighbouring technology, or anything
+ *                   else the record did not bring with it. There is no pool to
+ *                   reach into any more.
  *
- * Nothing is generated at any point. Every picture here is a licensed
- * photograph out of `src/data/class-images.json`, reviewed by a person, run
- * with the credit and licence it arrived with.
+ *   never twice     enforced in two places at once, because they are two
+ *                   different claims. `seen` is this render: two stories
+ *                   syndicated from the same wire copy carry the same
+ *                   og:image, and the first one asked keeps it. The ledger is
+ *                   every render there has ever been: a picture that ran beside
+ *                   a story in March is that story's, and a story that meets it
+ *                   in November shows its figure instead.
  *
- * An item with no id is skipped rather than keyed as undefined, which would
- * let one entry claim another's picture.
+ * Nothing is written here. The page is read-only — Supabase is anon and there
+ * is no server — so the binding is made by scripts/bind-home-images.js in the
+ * daily run and committed as src/data/image-ledger.json. Between runs the page
+ * enforces the rule against the ledger it was built with, and the day's new
+ * pictures are unbound, which is why `seen` has to do the same job locally.
+ *
+ * An item with no id is skipped rather than keyed as undefined, which would let
+ * one entry claim another's picture.
  */
-export function assignImages(items = []) {
-  const used = new Set()
+export function assignImages(items = [], { ledger = LEDGER } = {}) {
+  const seen = new Set()
   const out = new Map()
-  const unfilled = []
   for (const it of items) {
     if (!it?.id) continue
-    const img = usableImage(it)
-    if (!img) { unfilled.push(it); continue }
-    if (!used.has(img.url)) {
-      used.add(img.url)
-      out.set(it.id, img)
-      continue
-    }
-    const alt = fromPool(it, used, POOL_BY_URL.get(img.url))
-    if (alt) {
-      used.add(alt.url)
-      out.set(it.id, alt)
-    } else {
-      unfilled.push(it)
-    }
-  }
-  for (const it of unfilled) {
-    const pick = fromPool(it, used)
-    if (!pick) continue          // the pool is spent: this card shows its figure
-    used.add(pick.url)
-    out.set(it.id, pick)
+    const img = storyPicture(it, { ledger })
+    if (!img) continue
+    const key = keyOf(img.url)
+    if (seen.has(key)) continue
+    seen.add(key)
+    out.set(it.id, img)
   }
   return out
+}
+
+/**
+ * The picture ONE story may show, asked outside the page's assignment.
+ *
+ * The story page (`/item/:id`) uses this. It has to reach the same answer the
+ * home page reached, or a reader who clicks a card showing a data figure lands
+ * on a page showing a photograph that the ledger has promised to somebody
+ * else, which is the rule broken in the one place a reader is looking hardest.
+ *
+ * The only rule assignImages holds that this cannot is "not twice on this
+ * page", and a page showing one story has no such page to clash with.
+ */
+export function storyPicture(entity, { ledger = LEDGER } = {}) {
+  const img = storyImage(entity)
+  if (!img || !entity?.id) return null
+  return isFree(ledger, img.url, entity.id) ? img : null
 }

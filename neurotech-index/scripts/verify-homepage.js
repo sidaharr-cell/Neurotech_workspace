@@ -10,12 +10,19 @@
  * nothing errors, nothing logs, the row is just short. That is how "Latest" and
  * "Notable research" came to run half empty without anyone being told.
  *
- * A frame with no picture fails the same silent way. The story cards fill from
- * the reviewed pool at render time (assignImages in src/lib/image.js), so this
- * is not something the pipeline writes and then hopes about — but the pool is
- * finite, hotlinks rot, and a day's feed can be wider than what is left. When
- * that happens the card falls back to its data figure, which is exactly the
- * placeholder this page is not supposed to show.
+ * A frame with no picture fails the same silent way, and since 23 Aug 2026 it
+ * is a normal outcome rather than a fault: a story card runs a photograph OF
+ * the story or it runs the record's own data figure, and there is no longer a
+ * pool of technology photographs to fall back on. So the number below is a
+ * COVERAGE figure, not a pass mark. What it is really reporting is how well
+ * the sourcing step is keeping up, and whether the reviewer's queue is moving.
+ *
+ * The two rules that are about time rather than about a render are checked
+ * here too, because they are the two that fail invisibly:
+ *
+ *   no photograph beside two stories    checked across the whole ledger, not
+ *                                       just this render
+ *   the lead changed today              checked against yesterday's entry
  *
  * This asks the same questions the page asks, through the same functions, so
  * the answer cannot drift from what a reader sees:
@@ -38,9 +45,12 @@ import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { getNewsFeed } from '../src/lib/data.js'
 import { SLOTS, composeStories, shownKeys, pickNotable } from '../src/lib/homepage.js'
 import { assignImages, leadPicture, usableImage } from '../src/lib/image.js'
-import CLASS_POOL from '../src/data/class-images.json'
+import { ownerOf, lastLead, leadOn, keyOf } from '../src/lib/ledger.js'
+import LEDGER from '../src/data/image-ledger.json'
+import REVIEW from '../src/data/image-review.json'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const STRICT = process.argv.includes('--strict')
@@ -48,16 +58,14 @@ const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_K
 
 const notable = JSON.parse(readFileSync(join(HERE, '../src/data/notable.json'), 'utf8'))
 
-// The feed the page asks for: getNewsFeed({ limit: 120 }), which is every
-// non-trial row by rank. No facets and no recency, because that is the page a
-// reader lands on.
-const { data: feed, error } = await sb.from('news_feed')
-  .select('id,title,entry_type,published_at,summary,source,relevance_score,metadata,facet_function,facet_access,facet_application,in_scope')
-  .neq('entry_type', 'trial')
-  .order('relevance_score', { ascending: false })
-  .order('published_at', { ascending: false, nullsFirst: false })
-  .limit(120)
-if (error) { console.error('feed query failed:', error.message); process.exit(1) }
+// The feed the page asks for — by CALLING what the page calls. This used to
+// restate the query as `order by relevance_score limit 120`, which is not what
+// getNewsFeed does: that takes a recency window, re-sorts it by the rankScore
+// inside a jsonb blob, and appends the photograph-bearing stories below the
+// cut. The restatement returned a different set of stories, so this check was
+// answering for a page nobody sees.
+const feed = await getNewsFeed({ limit: 120 })
+if (!feed.length) { console.error('the feed came back empty — is VITE_SUPABASE_URL set?'); process.exit(1) }
 
 const { lead, sidebar, featured, latest } = composeStories(feed || [], 'relevant')
 const notablePapers = pickNotable(notable, shownKeys(lead, sidebar, featured, latest))
@@ -103,18 +111,48 @@ const pictures = assignImages(stories)
 const shown = s => (s === lead ? leadPicture(s, pictures.get(s.id)) : pictures.get(s.id))
 const blank = stories.filter(s => !shown(s))
 
-// What the fill has left to work with. It goes dry silently, one card at a
-// time, so the headroom is worth printing on a good day too.
-const poolSize = new Set(Object.values(CLASS_POOL).flatMap(c => (c.images || []).map(i => i.url))).size
-// A frame counts as borrowed when what it shows is not the record's own
-// picture, which covers both a record that had none and a record whose own
-// picture was already spent on the card above it.
-const borrowed = stories.filter(s => shown(s) && shown(s).url !== usableImage(s)?.url).length
+// Every picture shown must be the record's OWN. Anything else on this page is
+// a bug rather than a shortfall, so it is counted separately and loudly.
+const notItsOwn = stories.filter(s => {
+  const img = shown(s)
+  return img && (img.subject !== 'item' || img.url !== usableImage(s)?.url)
+})
+
+// The same photograph beside two stories, checked two ways: on this render,
+// and against every render there has ever been.
+const onPage = stories.map(shown).filter(Boolean)
+const repeatedNow = onPage.length - new Set(onPage.map(i => keyOf(i.url))).size
+const misbound = stories.filter(s => {
+  const img = shown(s)
+  const owner = img && ownerOf(LEDGER, img.url)
+  return owner && owner !== s.id
+})
 
 console.log('\nHome page pictures\n')
-console.log(`  ${blank.length ? '✗' : '✓'} story frames  ${stories.length - blank.length} / ${stories.length} carry a photograph`)
-console.log(`    ${borrowed} filled from the reviewed pool, which holds ${poolSize} pictures`)
-for (const s of blank) console.log(`    ✗ no picture: ${String(s.title).slice(0, 72)}`)
+console.log(`  ${blank.length ? '!' : '✓'} story frames  ${stories.length - blank.length} / ${stories.length} carry a photograph of their own`)
+console.log(`    ${blank.length} show the record's own data figure instead`)
+console.log(`  ${notItsOwn.length ? '✗' : '✓'} every picture is of the story it sits on`)
+console.log(`  ${repeatedNow || misbound.length ? '✗' : '✓'} no photograph appears beside a second story`)
+console.log(`    ledger: ${Object.keys(LEDGER.bindings).length} picture(s) spent, ${(REVIEW.pending || []).length} waiting on review`)
+for (const s of blank) console.log(`    · data figure: ${String(s.title).slice(0, 72)}`)
+for (const s of notItsOwn) console.log(`    ✗ not its own picture: ${String(s.title).slice(0, 60)}`)
+for (const s of misbound) console.log(`    ✗ picture belongs to another story: ${String(s.title).slice(0, 56)}`)
+
+// ── The lead ────────────────────────────────────────────────────────────────
+//
+// It has to be a different story from yesterday's. The page enforces this on
+// its own (chooseLead in src/lib/ledger.js), so a failure here means the
+// ledger stopped being written — which is exactly the silent failure worth an
+// alarm, since the page would go on showing one story indefinitely.
+const previous = lastLead(LEDGER)
+const todayEntry = leadOn(LEDGER, new Date().toISOString().slice(0, 10))
+const staleLead = Boolean(lead && previous && previous.item === lead.id && previous.date !== todayEntry?.date)
+
+console.log('\nThe lead\n')
+console.log(`  today      ${lead ? String(lead.title).slice(0, 64) : '(the feed came back empty)'}`)
+console.log(`  last run   ${previous ? `${previous.date}  ${String(previous.title || previous.item).slice(0, 52)}` : '(nothing recorded yet)'}`)
+console.log(`  ${staleLead ? '✗' : '✓'} the lead is not the one that ran last`)
+console.log(`  ${todayEntry ? '✓' : '!'} today's lead is recorded in the ledger`)
 
 if (short) {
   // The rail is the section that under-fills for a reason worth naming: it is
@@ -126,14 +164,19 @@ if (short) {
   console.log(`\n::warning::${short} home page section(s) cannot fill their slots`)
 }
 
-if (blank.length) {
-  // Only two things get here: the pool ran dry, or the day's stories all landed
-  // on the same few technologies and their pictures were spent on the cards
-  // above. Both are fixed by adding pictures to the reviewed pool
-  // (scripts/data/class-images.json, npm run images:classes), not by relaxing
-  // anything here.
-  console.log(`::warning::${blank.length} home page story frame(s) have no picture and will show a data figure`)
+// A frame showing a data figure is not a fault. More than half of them is a
+// sign the sourcing step or the review queue has stalled, which is.
+if (blank.length > stories.length / 2) {
+  console.log(`::warning::${blank.length} of ${stories.length} home page story frames have no photograph — check the review queue (npm run images:queue)`)
 }
 
-if (!short && !blank.length) console.log('\nEvery section fills, and every story frame has a picture.')
-if ((short || blank.length) && STRICT) process.exit(1)
+// These three ARE faults. Each one is a rule the page is supposed to make
+// impossible, so reaching one means the page and the ledger have come apart.
+const broken = notItsOwn.length + repeatedNow + misbound.length + (staleLead ? 1 : 0)
+if (notItsOwn.length) console.log(`::warning::${notItsOwn.length} home page picture(s) are not of the story they sit on`)
+if (repeatedNow) console.log(`::warning::${repeatedNow} photograph(s) appear beside more than one story on this page`)
+if (misbound.length) console.log(`::warning::${misbound.length} home page picture(s) belong to a different story in the ledger`)
+if (staleLead) console.log('::warning::the lead has not changed since the last recorded run')
+
+if (!short && !broken) console.log('\nEvery section fills, every picture is its story\'s own, and the lead has moved.')
+if ((short || broken) && STRICT) process.exit(1)

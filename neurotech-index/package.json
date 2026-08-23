@@ -17,6 +17,9 @@
     "images:classes": "node --env-file-if-exists=.env scripts/build-class-images.js",
     "images:backfill": "node --env-file-if-exists=.env scripts/backfill-images.js",
     "verify:images": "node --env-file-if-exists=.env scripts/verify-images.js",
+    "images:stories": "node --env-file-if-exists=.env scripts/source-story-images.js",
+    "images:bind": "node node_modules/vite-node/vite-node.mjs scripts/bind-home-images.js",
+    "images:queue": "node --env-file-if-exists=.env scripts/review-queue.js",
     "verify:frontier": "node --env-file-if-exists=.env scripts/check-frontier-schema.js",
     "daily": "node --env-file-if-exists=.env scripts/daily.js"
   },

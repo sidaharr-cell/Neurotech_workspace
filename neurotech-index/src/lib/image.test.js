@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { imageOf, usableImage, isIllustration, creditLine, fullCredit, needsCredit, assignImages, objectFitOf } from './image'
+import { imageOf, usableImage, isIllustration, creditLine, fullCredit, needsCredit, assignImages, objectFitOf, canLead, leadPicture } from './image'
+import { keyOf } from './ledger'
 
 const feedRow = (over = {}) => ({ id: 'f1', metadata: { image: 'https://x/a.jpg', ...over } })
 const deviceRow = (over = {}) => ({ id: 'd1', image_url: 'https://x/b.jpg', image_source: 'commons', ...over })
@@ -75,83 +76,114 @@ describe('creditLine', () => {
   })
 })
 
-describe('assignImages', () => {
-  const withUrl = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
-  // The first entry of the eeg pool, so a repeat can be swapped for the second.
-  const POOL_EEG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg'
+describe('assignImages: a photograph of the story, or nothing', () => {
+  // Big enough for a card. Anything smaller is a separate rule, tested below.
+  const shot = (id, url, over = {}) =>
+    ({ id, metadata: { image: url, imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
 
-  it('gives the first card the picture it carries', () => {
-    const got = assignImages([withUrl('a', 'x.jpg')])
-    expect(got.get('a').url).toBe('x.jpg')
+  it('gives a card the photograph it brought with it', () => {
+    expect(assignImages([shot('a', 'https://x/a.jpg')]).get('a').url).toBe('https://x/a.jpg')
   })
 
-  it('hands a repeat a different photograph of the same technology', () => {
-    const got = assignImages([withUrl('a', POOL_EEG), withUrl('b', POOL_EEG)])
-    expect(got.get('a').url).toBe(POOL_EEG)
-    expect(got.get('b')).toBeTruthy()
-    expect(got.get('b').url).not.toBe(POOL_EEG)
-  })
-
-  it('hands a repeat whose picture belongs to no pool one out of the pool', () => {
-    const got = assignImages([withUrl('a', 'x.jpg'), withUrl('b', 'x.jpg')])
-    expect(got.get('a').url).toBe('x.jpg')
-    expect(got.get('b').url).not.toBe('x.jpg')
-    // Whatever it gets is a picture of a technology rather than of the record,
-    // which is what obliges the "Illustration" label and the credit line.
-    expect(got.get('b').subject).toBe('class')
-    expect(got.get('b').license).toBeTruthy()
-  })
-
-  it('gives a record with no picture of its own one for what it is about', () => {
+  // The reversal of 4 Aug 2026. A card with no photograph of its own used to
+  // be handed a reviewed photograph of the technology it was about, or of a
+  // neighbouring one. It now shows its data figure, which is what an absent
+  // entry in this map means.
+  it('gives a card with no photograph of its own nothing', () => {
     const got = assignImages([{ id: 'a', title: 'A spinal cord stimulator trial for chronic pain', metadata: {} }])
-    expect(got.get('a').url).toMatch(/wikimedia/)
-    expect(got.get('a').subject).toBe('class')
+    expect(got.has('a')).toBe(false)
+  })
+
+  it('will not run a photograph of the technology rather than of the story', () => {
+    const got = assignImages([shot('a', 'https://x/a.jpg', { imageSubject: 'class' })])
+    expect(got.has('a')).toBe(false)
+  })
+
+  it('will not run a logo or anything the vision pass called stock', () => {
+    expect(assignImages([shot('a', 'https://x/a.jpg', { imageKind: 'logo' })]).has('a')).toBe(false)
+    expect(assignImages([shot('a', 'https://x/a.jpg', { imageKind: 'stock' })]).has('a')).toBe(false)
   })
 
   it('skips a record with no id rather than keying it as undefined', () => {
     const got = assignImages([{ id: 'a', metadata: {} }, null, { metadata: { image: 'y.jpg' } }])
-    expect(got.size).toBe(1)
+    expect(got.size).toBe(0)
     expect(got.has(undefined)).toBe(false)
   })
 })
 
-describe('assignImages, uniqueness', () => {
-  const POOL_EEG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg'
-  const card = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
+describe('assignImages: high resolution or the data figure', () => {
+  const at = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'item', imageW: w, imageH: h } })
 
-  it('never gives two entries the same picture', () => {
-    const cards = Array.from({ length: 12 }, (_, i) => card(`c${i}`, POOL_EEG))
-    const got = assignImages(cards)
-    const urls = [...got.values()].map(i => i.url)
-    expect(new Set(urls).size).toBe(urls.length)
+  it('runs a picture that clears the frame at 2x', () => {
+    expect(assignImages([at(1600, 1200)]).has('a')).toBe(true)
+    expect(assignImages([at(884, 560)]).has('a')).toBe(true)     // a real arXiv figure
   })
 
-  it('falls through to the general pool once the technology runs out', () => {
-    const cards = Array.from({ length: 12 }, (_, i) => card(`c${i}`, POOL_EEG))
-    const got = assignImages(cards)
-    expect(got.size).toBeGreaterThan(3)
+  it('will not enlarge a small picture to fill a card', () => {
+    expect(assignImages([at(640, 480)]).has('a')).toBe(false)
+    expect(assignImages([at(766, 512)]).has('a')).toBe(false)    // 34 pixels short
+  })
+
+  it('will not run a banner that is wide and nothing else', () => {
+    expect(assignImages([at(2400, 320)]).has('a')).toBe(false)
+  })
+
+  // Guessing in favour of a picture is how a thumbnail ends up four times its
+  // size across a card, so an unmeasured picture does not pass.
+  it('does not assume a picture with no recorded size is big enough', () => {
+    expect(assignImages([{ id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'item' } }]).has('a')).toBe(false)
   })
 })
 
-describe('assignImages, the withheld case', () => {
-  const POOL_BCI = 'https://upload.wikimedia.org/wikipedia/commons/a/a3/Brain-Computer_Interface_%28BCI%29_-_FET09_Prague.jpg'
-  const card = (id, url) => ({ id, metadata: { image: url, imageSubject: 'class' } })
+describe('assignImages: one photograph, one story', () => {
+  const shot = (id, url) => ({ id, metadata: { image: url, imageSubject: 'item', imageW: 1600, imageH: 1200 } })
+  const WIRE = 'https://cdn.wire.example/photo.jpg'
 
-  it('withholds rather than repeats when the pool is exhausted', () => {
-    // The pool holds thirty-nine pictures and the page shows fifteen, so this
-    // is the case that cannot arise on the page as it stands. It is the rule
-    // that matters: a card runs its data figure before it runs a picture the
-    // card above it is already showing.
-    const cards = Array.from({ length: 60 }, (_, i) => card(`c${i}`, POOL_BCI))
-    const got = assignImages(cards)
-    const urls = [...got.values()].map(i => i.url)
-    expect(new Set(urls).size).toBe(urls.length)
-    expect(got.size).toBeLessThan(cards.length)
+  it('never gives two cards on the page the same picture', () => {
+    // Two syndications of the same wire copy, carrying the same og:image.
+    const got = assignImages([shot('a', WIRE), shot('b', WIRE)])
+    expect(got.get('a').url).toBe(WIRE)
+    expect(got.has('b')).toBe(false)
   })
 
-  it('fills every card on a page the size of the real one', () => {
-    const cards = Array.from({ length: 15 }, (_, i) => card(`c${i}`, POOL_BCI))
-    expect(assignImages(cards).size).toBe(15)
+  it('leaves a picture alone once the ledger has promised it to another story', () => {
+    const ledger = { bindings: { [keyOf(WIRE)]: { item: 'ran-in-march', url: WIRE } }, leads: [] }
+    expect(assignImages([shot('today', WIRE)], { ledger }).has('today')).toBe(false)
+  })
+
+  it('gives a story back the picture the ledger already bound to it', () => {
+    const ledger = { bindings: { [keyOf(WIRE)]: { item: 'a', url: WIRE } }, leads: [] }
+    expect(assignImages([shot('a', WIRE)], { ledger }).get('a').url).toBe(WIRE)
+  })
+
+  // The size the file is served at is not what makes it a different picture.
+  it('recognises the same Wikimedia file re-sourced at a larger width', () => {
+    const small = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Cap.jpg/1280px-Cap.jpg'
+    const large = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Cap.jpg/2000px-Cap.jpg'
+    const ledger = { bindings: { [keyOf(small)]: { item: 'older', url: small } }, leads: [] }
+    expect(assignImages([shot('newer', large)], { ledger }).has('newer')).toBe(false)
+  })
+})
+
+describe('the lead', () => {
+  const shot = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'item', imageW: w, imageH: h } })
+
+  it('needs a picture wide enough for a frame eleven hundred pixels across', () => {
+    expect(canLead(shot(1600, 1200))).toBe(true)
+    expect(canLead(shot(1000, 750))).toBe(false)
+  })
+
+  it('takes a photograph of the story or nothing', () => {
+    const illustrated = { id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'class', imageW: 2000, imageH: 1500 } }
+    expect(canLead(illustrated)).toBe(false)
+    expect(leadPicture(illustrated, undefined)).toBeNull()
+  })
+
+  // The page withholding a picture is the ledger speaking. The lead has to
+  // hear it, or the one card that ignores the rule is the biggest one.
+  it('honours a picture the page withheld', () => {
+    expect(leadPicture(shot(1600, 1200), null)).toBeNull()
+    expect(leadPicture(shot(1600, 1200), undefined).url).toBe('https://x/a.jpg')
   })
 })
 

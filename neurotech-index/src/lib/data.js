@@ -3,6 +3,7 @@
  * Uses Supabase when VITE_SUPABASE_URL is configured; falls back to static JSON.
  */
 import { supabase } from './supabase'
+import { hasRealImage } from './sources'
 import papersJson from '../data/papers.json'
 import devicesJson from '../data/devices.json'
 import organizationsJson from '../data/organizations.json'
@@ -492,10 +493,16 @@ export async function getNewsFeed({ entryTypes = null, limit = 60 } = {}) {
   const rank = r => (r.metadata?.rankScore ?? (r.relevance_score ?? 0) / 10)
   const sorted = (data || []).sort((a, b) => rank(b) - rank(a))
   const top = sorted.slice(0, limit)
-  // Always surface real-image stories (they rank below papers) so the feed has
-  // photos to feature; the UI decides how many to actually show.
+  // Always surface photograph-bearing stories (they rank below papers) so the
+  // feed has photos to feature; the UI decides how many to actually show.
+  //
+  // The test is hasRealImage, which is the same question the page's own
+  // assignment asks. It used to be `imageKind === 'real'` — the pipeline's
+  // FIRST vocabulary, unwritten since the kinds became photo / figure / logo —
+  // so this tail had been empty for as long as that was true, and the one
+  // mechanism for getting photographs onto the front page was doing nothing.
   const inTop = new Set(top)
-  const realExtra = sorted.slice(limit).filter(r => r.metadata?.imageKind === 'real' && !inTop.has(r))
+  const realExtra = sorted.slice(limit).filter(r => hasRealImage(r) && !inTop.has(r))
   return [...top, ...realExtra]
 }
 

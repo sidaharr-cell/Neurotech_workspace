@@ -20,8 +20,15 @@
  * The total is forty-three rather than a rounder number because the sidebar is
  * held to four by the geometry of the row it sits in, not by taste. See below.
  */
-import { pickLead, hasRealImage, byNewest } from './sources'
+import { rankLead, hasRealImage, byNewest } from './sources'
 import { canLead } from './image'
+import { chooseLead } from './ledger'
+import LEDGER from '../data/image-ledger.json'
+
+/** The day the page is being read on, as the ledger records days. UTC, because
+ *  the daily run is a 6am UTC cron and the two have to agree on what "today"
+ *  is or the lead pinned this morning reads as tomorrow's. */
+export const today = () => new Date().toISOString().slice(0, 10)
 
 /** Items per section. The sum is the page's whole budget. */
 export const SLOTS = {
@@ -52,19 +59,32 @@ export const STORY_SLOTS = SLOTS.lead + SLOTS.sidebar + SLOTS.featured + SLOTS.l
  * rank. Under "Newest" the incoming order is already the answer, so image size
  * is not allowed to reorder it.
  */
-export function composeStories(shown, sort = 'relevant') {
+export function composeStories(shown, sort = 'relevant', { ledger = LEDGER, date = today() } = {}) {
   const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
   const withPhotos = shown
     .filter(hasRealImage)
     .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
 
-  // The lead obeys the Sort control and the reputable-source floor (pickLead
+  // The lead obeys the Sort control and the reputable-source floor (rankLead
   // in lib/sources.js), and on top of that it has to be able to fill the slot.
   // The lead is the one picture a reader is certain to see, and a data figure
   // eleven hundred pixels wide is a poor front page. So the choice runs over
   // the stories that HAVE a lead-worthy picture first, and only falls back to
   // the whole list when none of them does.
-  const lead = pickLead(shown.filter(canLead), sort) || pickLead(shown, sort) || withPhotos[0] || shown[0]
+  //
+  // And then it has to be a DIFFERENT story from yesterday's. chooseLead walks
+  // that ordering and takes the best candidate that has not led inside the
+  // memory window — or, once the daily run has written the day's decision, the
+  // story it decided on, so the top of the page does not swap under a reader
+  // when the feed re-ranks mid-session. See src/lib/ledger.js.
+  //
+  // The rotation is a property of the PAGE rather than of the cron: with the
+  // ledger's history and no run at all, yesterday's lead is still excluded,
+  // so the front page changes on a morning the pipeline never fired.
+  const lead =
+    chooseLead(ledger, rankLead(shown.filter(canLead), sort), date)
+    || chooseLead(ledger, rankLead(shown, sort), date)
+    || withPhotos[0] || shown[0]
   const used = new Set(lead ? [lead] : [])
 
   const take = (pool, n) => {

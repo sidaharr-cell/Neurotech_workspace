@@ -74,9 +74,27 @@ describe('isReputableSource', () => {
 })
 
 describe('hasRealImage', () => {
-  it('is true only for a real photograph', () => {
-    expect(hasRealImage({ metadata: { image: 'a.jpg', imageKind: 'real' } })).toBe(true)
-    expect(hasRealImage({ metadata: { image: 'a.jpg', imageKind: 'motif' } })).toBe(false)
+  const shot = (over = {}) =>
+    ({ metadata: { image: 'a.jpg', imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
+
+  it('is true for a photograph of the record, big enough for the frame', () => {
+    expect(hasRealImage(shot())).toBe(true)
+  })
+
+  // The kinds the pipeline writes today. 'real' was the first vocabulary and
+  // reads as an item photograph; 'motif' and 'stock' were never pictures.
+  it('accepts the pipeline\'s current and original vocabularies alike', () => {
+    expect(hasRealImage(shot({ imageKind: 'photo' }))).toBe(true)
+    expect(hasRealImage(shot({ imageKind: 'figure' }))).toBe(true)
+    expect(hasRealImage(shot({ imageKind: 'real' }))).toBe(true)
+    expect(hasRealImage(shot({ imageKind: 'motif' }))).toBe(false)
+    expect(hasRealImage(shot({ imageKind: 'stock' }))).toBe(false)
+    expect(hasRealImage(shot({ imageKind: 'logo' }))).toBe(false)
+  })
+
+  it('is false for anything the home page would not run', () => {
+    expect(hasRealImage(shot({ imageSubject: 'class' }))).toBe(false)   // not of this record
+    expect(hasRealImage(shot({ imageW: 600, imageH: 450 }))).toBe(false) // too small
     expect(hasRealImage({ metadata: {} })).toBe(false)
     expect(hasRealImage(undefined)).toBe(false)
   })

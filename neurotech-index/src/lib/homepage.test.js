@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { SLOTS, MAX_ITEMS, STORY_SLOTS, composeStories, shownKeys, pickNotable } from './homepage'
+import { EMPTY, recordLead } from './ledger'
 import notable from '../data/notable.json'
+
+// A ledger with no history, so the tests below that are not about rotation are
+// not quietly steered by it. The rotation tests pass their own.
+const NONE = { ledger: EMPTY, date: '2026-08-23' }
 
 const story = (over = {}) => ({
   id: over.id,
@@ -12,8 +17,11 @@ const story = (over = {}) => ({
   metadata: { rankScore: 0, ...over.metadata },
 })
 
-const photo = (id, w = 1200, h = 800, over = {}) =>
-  story({ id, ...over, metadata: { imageKind: 'real', image: `https://x/${id}.jpg`, imageW: w, imageH: h, ...over.metadata } })
+// Sizes here are above the home page's resolution floor (STORY_MIN_W in
+// lib/image.js) unless a test is specifically about a picture that is too
+// small, because below the floor a story counts as having no photograph.
+const photo = (id, w = 1600, h = 1100, over = {}) =>
+  story({ id, ...over, metadata: { imageKind: 'photo', imageSubject: 'item', image: `https://x/${id}.jpg`, imageW: w, imageH: h, ...over.metadata } })
 
 describe('the page budget', () => {
   it('holds forty-three items', () => {
@@ -57,21 +65,21 @@ describe('composeStories', () => {
       // outright; what is under test here is the order of what follows.
       photo('lead', 1600, 1000, { metadata: { rankScore: 100 } }),
       story({ id: 'plain-a', metadata: { rankScore: 90 } }),
-      photo('small', 700, 400, { metadata: { rankScore: 10 } }),
+      photo('small', 1000, 700, { metadata: { rankScore: 10 } }),
       photo('large', 2000, 1200, { metadata: { rankScore: 5 } }),
     ]
-    const { lead, featured } = composeStories(items, 'relevant')
+    const { lead, featured } = composeStories(items, 'relevant', NONE)
     expect(lead.id).toBe('lead')
     expect(featured.map(i => i.id).slice(0, 2)).toEqual(['large', 'small'])
   })
 
   it('keeps date order under newest rather than reordering by image size', () => {
     const items = [
-      photo('newer', 700, 400, { published_at: '2026-07-31T00:00:00Z' }),
+      photo('newer', 1000, 700, { published_at: '2026-07-31T00:00:00Z' }),
       photo('older', 2000, 1200, { published_at: '2026-01-01T00:00:00Z' }),
       photo('lead', 1600, 1000, { published_at: '2026-08-01T00:00:00Z' }),
     ]
-    const { lead, featured } = composeStories(items, 'newest')
+    const { lead, featured } = composeStories(items, 'newest', NONE)
     expect(lead.id).toBe('lead')
     expect(featured.map(i => i.id)).toEqual(['newer', 'older'])
   })
@@ -80,6 +88,53 @@ describe('composeStories', () => {
     const { lead, sidebar, featured, latest } = composeStories([], 'relevant')
     expect(lead).toBeUndefined()
     expect([...sidebar, ...featured, ...latest]).toHaveLength(0)
+  })
+})
+
+describe('the lead changes every day', () => {
+  // Three stories a reader would accept at the top of the page, in the order
+  // the page's own ranking puts them.
+  const items = [
+    photo('best', 2000, 1300, { metadata: { rankScore: 100 } }),
+    photo('second', 2000, 1300, { metadata: { rankScore: 90 } }),
+    photo('third', 2000, 1300, { metadata: { rankScore: 80 } }),
+  ]
+
+  it('leads with the best story when nothing has led before', () => {
+    expect(composeStories(items, 'relevant', { ledger: EMPTY, date: '2026-08-23' }).lead.id).toBe('best')
+  })
+
+  it('will not lead with yesterday’s story, however good it still is', () => {
+    const ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
+    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-23' }).lead.id).toBe('second')
+  })
+
+  it('changes the lead again the next day', () => {
+    let ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
+    ledger = recordLead(ledger, { date: '2026-08-23', item: 'second' })
+    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-24' }).lead.id).toBe('third')
+  })
+
+  // The point of this one: no daily job has run on the 24th, and the front
+  // page still is not showing what it showed on the 23rd.
+  it('rotates on a morning the pipeline never fired', () => {
+    const ledger = recordLead(EMPTY, { date: '2026-08-23', item: 'best' })
+    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-24' }).lead.id).not.toBe('best')
+  })
+
+  it('shows the story the day’s run decided on, not the one ranking prefers', () => {
+    const ledger = recordLead(EMPTY, { date: '2026-08-23', item: 'third' })
+    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-23' }).lead.id).toBe('third')
+  })
+
+  // A story dropped from the lead slot is still a story, so it takes a card
+  // below rather than falling off the page.
+  it('keeps a passed-over story on the page', () => {
+    const ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
+    const { lead, sidebar, featured, latest } = composeStories(items, 'relevant', { ledger, date: '2026-08-23' })
+    const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
+    expect(ids).toContain('best')
+    expect(new Set(ids).size).toBe(ids.length)
   })
 })
 

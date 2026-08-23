@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "note": "One photograph, one story, permanently. Written by scripts/bind-home-images.js and read by src/lib/ledger.js. `bindings` is keyed by the normalised picture URL (keyOf in ledger.js) and never loses a key: a spent picture stays spent even after the link rots, because the promise is that it will not appear beside a second story. `leads` is one entry per day, which is what makes the top of the page change.",
+  "bindings": {
+    "spectrum.ieee.org/media-library/close-up-of-a-brain-computer-interface-with-a-translucent-flexible-body-inductive-telemetry-coil-and-microchip.jpg": {
+      "item": "b75228ce-9412-4e62-9288-99fc7022fedb",
+      "title": "Brain Implant Uses Infrared Light to Send Neural Signals",
+      "url": "https://spectrum.ieee.org/media-library/close-up-of-a-brain-computer-interface-with-a-translucent-flexible-body-inductive-telemetry-coil-and-microchip.jpg?id=67644886&width=1200&height=600&coordinates=0%2C67%2C0%2C433",
+      "at": "2026-08-23"
+    },
+    "d.techtimes.com/en/full/471742/naomi-bashkansky-playing-chess.jpg": {
+      "item": "89804f60-57af-425a-8d8a-24b7ab33fbe9",
+      "title": "Naomi Bashkansky Quits OpenAI to Build Thought - to - Text BCI on Largest Neural Dataset",
+      "url": "https://d.techtimes.com/en/full/471742/naomi-bashkansky-playing-chess.jpg",
+      "at": "2026-08-23"
+    },
+    "gray-knoe-prod.gtv-cdn.com/resizer/v2/r5p73xe34ff4zobyshhpukuzta.jpg": {
+      "item": "9008bbc1-2993-4935-839b-cbe79dbea971",
+      "title": "Double neural bypass technology restores movement and sensation in paralyzed patient",
+      "url": "https://gray-knoe-prod.gtv-cdn.com/resizer/v2/R5P73XE34FF4ZOBYSHHPUKUZTA.jpg?auth=52fa96a75df04e5f282c25e147ff82af83f7e64c9b14a6e0a5232e32640a2dd4&smart=true",
+      "at": "2026-08-23"
+    },
+    "arxiv.org/html/2608.02083v1/fig1.png": {
+      "item": "b598d18e-bc79-4e27-aedf-752795d32d89",
+      "title": "A 2-Block Architecture for Real-Time EEG Gait Decoding: A Pilot Study",
+      "url": "https://arxiv.org/html/2608.02083v1/Fig1.png",
+      "at": "2026-08-23"
+    },
+    "i.insider.com/6a5fa868ce52cb26b8391eac": {
+      "item": "5b9ead71-86fa-49b3-a460-169c4d04b3a4",
+      "title": "Investors Are Valuing Elon Musk Neuralink at $42 Billion on Secondary Markets",
+      "url": "https://i.insider.com/6a5fa868ce52cb26b8391eac?&format=jpeg",
+      "at": "2026-08-23"
+    },
+    "arxiv.org/html/2608.08479v1/figures/sparse_vs_dense_10.png": {
+      "item": "d4b535d4-36ba-4c1c-ba7f-2b6015f64b11",
+      "title": "SuperNeuroMAT: An Efficient Matrix-based Simulator for Spiking Neural Networks",
+      "url": "https://arxiv.org/html/2608.08479v1/figures/sparse_vs_dense_10.png",
+      "at": "2026-08-23"
+    },
+    "news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202607/mit-diana_grass_01-press.jpg": {
+      "item": "061798fb-3ce0-48e8-9cca-d9a506191d1e",
+      "title": "Diana Grass: Listening to the body’s language",
+      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202607/MIT-Diana_Grass_01-press.jpg?itok=5WjTbL6C",
+      "at": "2026-08-23"
+    },
+    "d.ibtimes.co.uk/en/full/1825376/khalil-ismail.jpg": {
+      "item": "26467ec4-a245-4ca7-a3c5-4369a1e8573a",
+      "title": "Khalil Ismail Bet : Neural Interfaces Will Become Objects of Desire",
+      "url": "https://d.ibtimes.co.uk/en/full/1825376/khalil-ismail.jpg",
+      "at": "2026-08-23"
+    }
+  },
+  "leads": [
+    {
+      "date": "2026-08-23",
+      "item": "b75228ce-9412-4e62-9288-99fc7022fedb",
+      "image": "https://spectrum.ieee.org/media-library/close-up-of-a-brain-computer-interface-with-a-translucent-flexible-body-inductive-telemetry-coil-and-microchip.jpg?id=67644886&width=1200&height=600&coordinates=0%2C67%2C0%2C433",
+      "title": "Brain Implant Uses Infrared Light to Send Neural Signals"
+    }
+  ]
+}
