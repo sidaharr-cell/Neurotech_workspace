@@ -97,11 +97,31 @@ export function composeStories(shown, sort = 'relevant', { ledger = LEDGER, date
     return out
   }
 
-  // Featured cards are the page's second-largest pictures, so they too prefer
-  // photographs; the rail and the latest grid take the feed's own order.
-  const featured = take([...withPhotos, ...shown], SLOTS.featured)
+  // Featured cards are the page's second-largest pictures, so they prefer
+  // photographs. So does the latest grid, and that is a change of 23 Aug 2026.
+  //
+  // It used to take the feed's own order, which was reasonable while every
+  // card could be backed by the reviewed class pool: a story arriving without
+  // a photograph still got one. It is not reasonable now that a card without a
+  // photograph of its OWN shows a data figure. The picture-bearing stories are
+  // mostly news, and news ranks below papers, so the top of the order is
+  // papers and the whole ten-card grid came out without a single photograph —
+  // while ten perfectly good pictures sat in the feed, unused, on stories that
+  // never reached the page. getNewsFeed goes to the trouble of appending those
+  // stories precisely so the page has pictures to run; this is the half of
+  // that bargain the page was not keeping.
+  //
+  // The rail is not in this list because it has no picture frame: it is four
+  // headlines beside the lead.
+  //
+  // Under "Newest" the incoming order IS the answer and nothing may reorder
+  // it, which is the same rule withPhotos itself follows a few lines up. A
+  // reader who asks for the newest stories and gets the newest ILLUSTRATED
+  // stories has been quietly given a different page.
+  const picturesFirst = sort === 'newest' ? shown : [...withPhotos, ...shown]
+  const featured = take(picturesFirst, SLOTS.featured)
   const sidebar = take(shown, SLOTS.sidebar)
-  const latest = take(shown, SLOTS.latest)
+  const latest = take(picturesFirst, SLOTS.latest)
   return { lead, sidebar, featured, latest }
 }
 

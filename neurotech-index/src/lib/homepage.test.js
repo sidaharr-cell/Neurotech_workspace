@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { SLOTS, MAX_ITEMS, STORY_SLOTS, composeStories, shownKeys, pickNotable } from './homepage'
 import { EMPTY, recordLead } from './ledger'
+import { hasRealImage } from './sources'
 import notable from '../data/notable.json'
 
 // A ledger with no history, so the tests below that are not about rotation are
@@ -88,6 +89,57 @@ describe('composeStories', () => {
     const { lead, sidebar, featured, latest } = composeStories([], 'relevant')
     expect(lead).toBeUndefined()
     expect([...sidebar, ...featured, ...latest]).toHaveLength(0)
+  })
+})
+
+describe('every picture frame prefers a story that has a picture', () => {
+  // The shape that matters: a handful of illustrated stories sitting BELOW a
+  // wall of unillustrated ones in the rank order. That is the real feed —
+  // photographs come with news, and news ranks below papers.
+  const items = [
+    // Enough to fill all nineteen story slots, so a short grid means a real
+    // shortfall rather than a fixture that ran out of stories.
+    ...Array.from({ length: 20 }, (_, i) => story({ id: `plain${i}`, metadata: { rankScore: 100 - i } })),
+    ...Array.from({ length: 6 }, (_, i) => photo(`shot${i}`, 1600, 1100, { metadata: { rankScore: 50 - i } })),
+  ]
+
+  it('spends every photograph it has before it runs a data figure', () => {
+    const { lead, featured, latest } = composeStories(items, 'relevant', NONE)
+    const shown = [lead, ...featured, ...latest].map(i => i.id)
+    // Six photographs, and fifteen frames to put them in. All six are used.
+    for (const id of ['shot0', 'shot1', 'shot2', 'shot3', 'shot4', 'shot5']) {
+      expect(shown).toContain(id)
+    }
+  })
+
+  // The regression this was written for: latest took the feed's own order, so
+  // the ten-card grid was ten papers and every photograph below the cut went
+  // unshown.
+  it('gives the latest grid pictures rather than the top of the rank order', () => {
+    const { latest } = composeStories(items, 'relevant', NONE)
+    expect(latest.filter(i => hasRealImage(i)).length).toBeGreaterThan(0)
+  })
+
+  it('still fills every slot when there are more stories than photographs', () => {
+    const { lead, sidebar, featured, latest } = composeStories(items, 'relevant', NONE)
+    expect(sidebar).toHaveLength(SLOTS.sidebar)
+    expect(featured).toHaveLength(SLOTS.featured)
+    expect(latest).toHaveLength(SLOTS.latest)
+    const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  // A reader who asks for the newest stories and is given the newest
+  // ILLUSTRATED stories has quietly been handed a different page.
+  it('does not let pictures reorder the page under Newest', () => {
+    const dated = [
+      story({ id: 'newest-plain', published_at: '2026-08-20T00:00:00Z' }),
+      story({ id: 'newer-plain', published_at: '2026-08-19T00:00:00Z' }),
+      photo('old-photo', 1600, 1100, { published_at: '2026-01-01T00:00:00Z' }),
+      photo('lead-photo', 1600, 1100, { published_at: '2026-08-21T00:00:00Z' }),
+    ]
+    const { featured, latest } = composeStories(dated, 'newest', NONE)
+    expect([...featured, ...latest].map(i => i.id)).toEqual(['newest-plain', 'newer-plain', 'old-photo'])
   })
 })
 
