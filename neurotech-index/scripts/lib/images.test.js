@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   getImageSize, HI_RES, CARD_RES, SANE_ASPECT, isReusableLicense, firstFigureHref, europePmcFileUrl,
+  arxivFigureHref, arxivFigureHrefs, isAggregator,
   articleCredit, figureHrefs, preprintFigureHref, preprintServer, parseCommons, pickCompanyEntity,
   iconHref, recordText, classifyTechnology, titleAffirmsClass, pickClassImage, DEVICE_CLASSES,
   isRejected, productName, linkScore, pageLinks, hostNamesProduct, contentImage, sameName, productLikeNames,
@@ -22,13 +23,24 @@ describe('getImageSize', () => {
 
 describe('size gates', () => {
   it('holds the lead to a large picture', () => {
+    expect(HI_RES({ width: 1600, height: 1100 })).toBe(true)
     expect(HI_RES({ width: 1200, height: 800 })).toBe(true)
+    expect(HI_RES({ width: 1000, height: 700 })).toBe(false)
     expect(HI_RES({ width: 700, height: 500 })).toBe(false)
   })
 
-  it('lets a card take a journal figure, which is usually modest', () => {
-    expect(CARD_RES({ width: 525, height: 383 })).toBe(true)
+  // The card floor and the page's own STORY_MIN_W are the same number, so a
+  // picture that passes here is a picture the page will actually render.
+  it('holds a card to a picture that will not be enlarged in it', () => {
+    expect(CARD_RES({ width: 1400, height: 1000 })).toBe(true)
+    expect(CARD_RES({ width: 884, height: 560 })).toBe(true)     // a real arXiv figure
+    expect(CARD_RES({ width: 766, height: 512 })).toBe(false)    // 34 pixels short
+    expect(CARD_RES({ width: 525, height: 383 })).toBe(false)
     expect(CARD_RES({ width: 200, height: 150 })).toBe(false)
+  })
+
+  it('refuses a strip that is wide and nothing else, however wide', () => {
+    expect(CARD_RES({ width: 2400, height: 400 })).toBe(false)
   })
 })
 
@@ -384,5 +396,59 @@ describe('figureHrefs', () => {
 
   it('is empty when the full text names none', () => {
     expect(figureHrefs('<article><p>text</p></article>')).toEqual([])
+  })
+})
+
+describe('arXiv figures', () => {
+  // What an arXiv HTML rendering actually opens with: the site's own furniture,
+  // then the paper's figures. Taking the first <img> meant taking the logo,
+  // which then failed the size gate and recorded the paper as having none.
+  const page = 'https://arxiv.org/html/2608.02083v2/'
+  const html = `
+    <img src="/static/browse/0.3.4/images/arxiv-logo-one-color-white.svg">
+    <img src="/static/browse/0.3.4/images/cornell-reduced-white-SMALL.png">
+    <img src="https://licensebuttons.net/l/by/4.0/88x31.png" alt="cc-by">
+    <img src="x1.png"><img src="x2.jpg"><img src="extracted/f3.png">`
+
+  it('skips the site furniture and returns the figures', () => {
+    expect(arxivFigureHrefs(html, page)).toEqual([
+      'https://arxiv.org/html/2608.02083v2/x1.png',
+      'https://arxiv.org/html/2608.02083v2/x2.jpg',
+      'https://arxiv.org/html/2608.02083v2/extracted/f3.png',
+    ])
+    expect(arxivFigureHref(html, page)).toBe('https://arxiv.org/html/2608.02083v2/x1.png')
+  })
+
+  it('resolves relative figures against the version directory, not one above it', () => {
+    // The bug this guards: new URL('x1.png', '.../2608.02083v2') drops the
+    // version segment and every figure URL 404s.
+    expect(arxivFigureHrefs('<img src="x1.png">', page)[0]).toContain('/2608.02083v2/x1.png')
+  })
+
+  it('returns nothing rather than something when the page has no figures', () => {
+    expect(arxivFigureHrefs('<p>no figures here</p>', page)).toEqual([])
+    expect(arxivFigureHref(null, page)).toBe(null)
+  })
+
+  it('drops a repeated figure rather than offering it twice', () => {
+    expect(arxivFigureHrefs('<img src="x1.png"><img src="x1.png">', page)).toHaveLength(1)
+  })
+})
+
+describe('aggregator copies', () => {
+  // Every Google News wrapper on the site answers og:image with the same
+  // 300x300 Google News mark. Twenty-three stories in one run were being
+  // offered it. Asking at all is the mistake.
+  it('knows a republished copy from a publisher’s own page', () => {
+    expect(isAggregator('https://news.google.com/rss/articles/CBMiX0FV')).toBe(true)
+    expect(isAggregator('https://news.yahoo.com/some-story.html')).toBe(true)
+    expect(isAggregator('https://apple.news/AbCdEf')).toBe(true)
+    expect(isAggregator('https://www.statnews.com/2026/08/01/story')).toBe(false)
+    expect(isAggregator('https://spectrum.ieee.org/story')).toBe(false)
+  })
+
+  it('is false rather than throwing on something that is not a URL', () => {
+    expect(isAggregator(null)).toBe(false)
+    expect(isAggregator('not a url')).toBe(false)
   })
 })

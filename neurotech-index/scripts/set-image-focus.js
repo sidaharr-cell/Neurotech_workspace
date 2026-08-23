@@ -16,56 +16,43 @@
  *
  * Keyed by URL rather than by record, because the same photograph carries the
  * same subject wherever it runs.
+ *
+ * WHERE THE ANSWER COMES FROM changed on 23 Aug 2026. It used to be a vision
+ * call per picture per night. It is now the `box` recorded against that picture
+ * in src/data/image-review.json by the daily reviewer — the same pass that
+ * decides whether the picture may be published at all, which is the natural
+ * place for it: both questions are answered by looking at the picture once.
+ * This script no longer calls anything; it reads boxes and does the geometry.
+ *
+ * A picture with no box stays centred and is queued, so tomorrow's run has it.
  */
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync, writeFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-import Anthropic from '@anthropic-ai/sdk'
 import { loadClassImages } from './lib/images.js'
+import { load as loadReview, save as saveReview, box as boxFor, queue as queueForReview } from './lib/review.js'
 import { keptFraction, focusFor, frameFor } from '../src/lib/crop.js'
 
 const COMMIT = process.argv.includes('--commit')
 const HERE = dirname(fileURLToPath(import.meta.url))
 const FOCUS_PATH = join(HERE, '../src/data/image-focus.json')
 const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const UA = 'NeuroBase/1.0 (+https://neurobase-live.vercel.app)'
 
-/** The subject's box, as percentages. Null when the picture cannot be read,
- *  which leaves it centred. */
-export async function findSubjectBox(url) {
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(20000) })
-    if (!res.ok) return null
-    const media = (res.headers.get('content-type') || '').split(';')[0]
-    if (!/^image\/(jpeg|png|webp|gif)$/.test(media)) return null
-    const buf = Buffer.from(await res.arrayBuffer())
-    if (buf.length > 4_500_000) return null
-    const r = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 40,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: media, data: buf.toString('base64') } },
-          { type: 'text', text: `Find the MAIN SUBJECT of this image — the person, device, or object a viewer is meant to look at. Ignore background, bench clutter, captions and whitespace.
-
-Give its BOUNDING BOX as four integers from 0 to 100, separated by commas, in this order: left, top, right, bottom. These are percentages of the image's width and height. 0,0 is the top left corner; 100,100 is the bottom right.
-
-Be tight: the box should contain the subject and as little else as possible. If a person is the subject, box their head and torso, not their feet. If the subject is a multi-panel figure or a diagram with no single focus, box the whole image (0,0,100,100).
-
-Answer with the four numbers only, nothing else.` },
-        ],
-      }],
-    })
-    const m = /(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/.exec(r.content?.[0]?.text || '')
-    if (!m) return null
-    const n = i => Math.min(100, Math.max(0, Number(m[i]))) / 100
-    const [left, top, right, bottom] = [n(1), n(2), n(3), n(4)]
-    if (right <= left || bottom <= top) return null
-    return { left, top, right, bottom }
-  } catch { return null }
+/**
+ * The subject's box, as fractions of the picture's width and height.
+ *
+ * Read from the reviewed decisions. Null means nobody has given this picture a
+ * box, which leaves it centred — the same outcome the old vision call gave on
+ * an image it could not read, so nothing downstream had to change.
+ */
+export function findSubjectBox(store, url) {
+  const b = boxFor(store, url)
+  if (!b) return null
+  const n = v => Math.min(1, Math.max(0, Number(v)))
+  const [left, top, right, bottom] = [n(b.left), n(b.top), n(b.right), n(b.bottom)]
+  if (!(right > left) || !(bottom > top)) return null
+  return { left, top, right, bottom }
 }
 
 // ── Every picture the site can show ─────────────────────────────────────────
@@ -119,14 +106,24 @@ console.log(`${urls.size} pictures in use, ${todo.length} to read`)
 if (RECOMPUTE) console.log(`  (recomputing every picture that loses more than ${Math.round((1 - SEVERE) * 100)}% of an axis)\n`)
 else console.log('')
 
-let offCentre = 0, unread = 0
-for (let i = 0; i < todo.length; i += 4) {
-  const batch = todo.slice(i, i + 4)
-  const found = await Promise.all(batch.map(findSubjectBox))
-  batch.forEach((url, k) => {
-    const meta = urls.get(url)
-    const box = found[k]
-    if (!box) { unread++; console.log(`  ·  unreadable          ${meta.label}`); return }
+let review = loadReview()
+let offCentre = 0, unread = 0, queued = 0
+const TODAY = new Date().toISOString().slice(0, 10)
+for (const url of todo) {
+  const meta = urls.get(url)
+  const box = findSubjectBox(review, url)
+  // No box yet. The picture stays centred and goes on the reviewer's list; a
+  // centred crop is a fair default and a wrong one is the thing this script
+  // exists to fix, so it is worth one day's wait rather than a guess.
+  if (!box) {
+    unread++
+    const before = review.pending.length
+    review = queueForReview(review, url, { title: meta.label, why: 'where is the subject', at: TODAY })
+    if (review.pending.length > before) queued++
+    console.log(`  ·  no box yet          ${meta.label}`)
+    continue
+  }
+  {
     const frame = frameFor(meta.w, meta.h)
     const { x, y } = focusFor(box, meta.w, meta.h, frame)
     // A position within a few percent of the middle IS the default, so storing
@@ -139,12 +136,13 @@ for (let i = 0; i < todo.length; i += 4) {
     const keep = keptFraction(meta.w, meta.h, frame)
     const tight = Math.round(Math.min(keep.x, keep.y) * 100)
     console.log(`  ${centred ? '·' : '●'}  ${String(`${x}% ${y}%`).padEnd(10)} keeps ${String(tight + '%').padEnd(5)} ${meta.label}`)
-  })
+  }
 }
 
-console.log(`\n${offCentre} pictures need their crop moved off centre, ${unread} could not be read`)
+console.log(`\n${offCentre} pictures need their crop moved off centre, ${unread} have no box yet (${queued} queued for review)`)
 if (COMMIT) {
   writeFileSync(FOCUS_PATH, JSON.stringify(focus, null, 2) + '\n')
+  saveReview(review)
   console.log(`Wrote src/data/image-focus.json (${Object.keys(focus).length} entries).`)
 } else {
   console.log('Dry run. Re-run with --commit to write.')

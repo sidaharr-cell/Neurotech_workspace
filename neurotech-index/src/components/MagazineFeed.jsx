@@ -346,17 +346,17 @@ export default function MagazineFeed() {
   const showSections = !type
   const maxRound = Math.max(...rounds.map(r => r.amountUsd || 0), 0)
 
-  // Every story card's picture, decided centrally: the record's own photograph
-  // where it has one, and otherwise the best unused photograph in the reviewed
-  // pool for what the story is about. A class photograph belongs to a
-  // technology rather than to a record, so eight brain-computer interface
-  // stories would otherwise run the same conference photograph eight times; the
-  // first card keeps it and the rest are given a different one.
+  // Every story card's picture, decided centrally: the record's OWN
+  // photograph, big enough for the frame, and not one that has ever run beside
+  // a different story. A card that gets nothing shows the data figure built
+  // out of its own fields, and on a thin day several will. See assignImages in
+  // lib/image.js for why there is no longer a pool to fall back on, and
+  // lib/ledger.js for why "has ever run" is a fact this page can check.
   //
   // Only the story cards are in this list. The rail is not, because it shows no
   // pictures, and neither are the record sections: an item assigned a
-  // photograph it never renders takes that photograph out of the pool for a
-  // card that would have shown it.
+  // photograph it never renders spends that photograph permanently for a card
+  // that would have shown it.
   const images = useMemo(
     () => assignImages([lead, ...featured, ...latest]),
     [lead, featured, latest],

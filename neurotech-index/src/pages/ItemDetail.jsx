@@ -2,7 +2,50 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, FileQuestion } from 'lucide-react'
 import { getNewsItem } from '../lib/data'
+import { storyPicture, objectFitOf, focusOf } from '../lib/image'
+import { ImageCredit } from '../components/Figure'
 import { Loader, EmptyState, Kicker, DeviceClassLabels, fmtDate, typeWord } from '../components/ui'
+
+/**
+ * The story's photograph, and where it came from.
+ *
+ * A card on the home page runs a picture at 300 pixels with a source name
+ * under it. This is the page a reader reaches by clicking that card, and it is
+ * where the attribution is actually legible: the same picture at full measure,
+ * the same one-line credit, and that line is a link to the file's own
+ * description page — the licence, the photographer, the terms. Minimal on
+ * purpose. A reader who wants to know where a picture came from gets one line
+ * and one click; a reader who does not is not made to read a rights notice.
+ *
+ * The picture is asked for through storyPicture rather than read off the
+ * record, so this page and the home page agree: what the ledger has promised
+ * to a different story does not appear here either.
+ *
+ * The frame is 16:9 and the picture fills it, cropped at the focal point the
+ * daily run found — the same geometry as every other frame on the site, so a
+ * subject that survives a card survives this.
+ */
+function StoryPhoto({ item }) {
+  const img = storyPicture(item)
+  if (!img) return null
+  const fit = objectFitOf(img)
+  return (
+    <figure className="mt-8">
+      <div className="w-full aspect-[16/9] overflow-hidden bg-canvas">
+        <img
+          src={img.url}
+          alt=""
+          decoding="async"
+          style={fit === 'cover' ? { objectPosition: focusOf(img) } : undefined}
+          className={`w-full h-full ${fit === 'cover' ? 'object-cover' : 'object-contain'}`}
+        />
+      </div>
+      <figcaption>
+        <ImageCredit img={img} />
+      </figcaption>
+    </figure>
+  )
+}
 
 function authorsOf(item) {
   const a = item.metadata?.authors
@@ -53,6 +96,8 @@ export default function ItemDetail() {
         {item.published_at && <><span aria-hidden>·</span><span>{fmtDate(item.published_at)}</span></>}
         {cites > 0 && <><span aria-hidden>·</span><span>{cites.toLocaleString()} citations</span></>}
       </div>
+
+      <StoryPhoto item={item} />
 
       <div className="mb-8" />
 

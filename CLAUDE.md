@@ -35,7 +35,13 @@ npm run refresh          # ingest only: PubMed + arXiv + media + trials -> Supab
 npm run verify:cron      # post-cron integrity check; exits non-zero on data collapse
 npm run validate:funding # fails on any unsupported financial/regulatory claim (runs in CI)
 npm run verify:funding
+npm run images:queue     # what pictures are waiting on the daily reviewer
 ```
+
+The picture review is not in this list because it is not a script. It is the
+`refresh-home-images` skill, run daily by a scheduled agent, and it is the only
+thing in the system that looks at an image. See "No script in this repo calls a
+vision model" below.
 
 **Use `npm run daily`, not `npm run refresh`.** `refresh` is the first of fifteen steps
 and nothing else: it ingests, and it does not source a picture for anything it ingested,
@@ -344,19 +350,46 @@ out of this paper, this company's logo, the photograph the outlet ran) or `'clas
 licensed photograph of the *technology*, because no photograph of an individual 510(k)
 submission or clinical trial exists anywhere). Class photographs come from the reviewed
 pool in `scripts/data/class-images.json`, resolved once by `npm run images:classes`;
-each candidate must be affirmed by BOTH the file's own title and a vision model, and a
+each candidate must be affirmed by BOTH the file's own title and a reviewer, and a
 class with no confirmable photograph yields nothing rather than something approximate.
 `npm run images:backfill` assigns them and `npm run verify:images` clears rotted
 hotlinks. The nightly workflow runs the whole sequence, and the ORDER is load-bearing:
 `verify-image-fit` first, so records it clears are refilled in the same run;
 `backfill-images`; then `apply-card-images`, so hand-placed pictures beat the general
-sources; then `fill-page-images`, which sees what is already spoken for and keeps every
-card on the page distinct; then `set-image-focus`. That last one writes
-`image-focus.json`, which the workflow's commit step must stage or the work is discarded. Three files carry judgement the pipeline cannot make:
+sources; then `source-story-images`, which finds each home story a photograph of its
+OWN; then `set-image-focus`; then `bind-home-images` last, because it writes down what
+the page will actually show and nothing may change after it does. The workflow's commit
+step must stage `image-focus.json`, `image-ledger.json` and `image-review.json` or the
+work is discarded. Five files carry judgement the pipeline cannot make:
 `class-images-rejected.json` (pictures a person looked at and turned down, so a rebuild
 cannot reinstate them), `card-images.json` (a picture chosen by hand for one record,
-with the reason), and `image-focus.json` (where the subject sits, handed to CSS
-object-position, because a card crops to the middle and the subject often is not there).
+with the reason), `image-focus.json` (where the subject sits, handed to CSS
+object-position, because a card crops to the middle and the subject often is not there),
+`image-review.json` (every verdict on every candidate picture, plus the queue of ones
+still waiting) and `image-ledger.json` (which picture belongs to which story, and which
+story led on which day).
+
+**No script in this repo calls a vision model, and none may.** Until 23 Aug 2026 the
+image steps asked Claude per candidate per night: is this a photograph, one panel, safe
+beside a headline, where is its subject. Those questions are now answered OFFLINE by the
+daily reviewer — the `refresh-home-images` skill, run by a scheduled agent — and written
+to `src/data/image-review.json`. `scripts/lib/review.js` is the whole vocabulary, and
+its one invariant is that **unreviewed means no**: a candidate with no verdict is
+rejected and queued, so a picture cannot reach the page by being fetched, only by being
+looked at. The cost is a day of latency on a new source. `ANTHROPIC_API_KEY` is still
+required by `refresh.js` for news scoring and summaries, which is a separate concern; no
+image path touches it. `npm run images:queue` shows what is waiting.
+
+A verdict has four fields and all four must be true to publish: `photo`, `single`,
+`safe`, and `depicts` — is this a picture OF the record it was queued for. `depicts` was
+added during the first review pass, when the other three passed a Frontiers journal's
+masthead photograph of a posed EEG session onto a paper about DBS electrodes in surgery.
+Two pictures that had been on the front page for weeks failed the same pass: an arXiv
+"figure" that was an electrode-montage schematic with a nine-entry legend, unreadable at
+card size, and a local TV frame-grab carrying the station's chyron, logo and a sponsor's
+advert. Both had been sourced before the review existed and never asked about again, so
+`source-story-images` now re-asks about STORED pictures too — "it already has one" is
+exactly the condition under which nobody looks.
 **Every picture sits in a declared frame and fills it** (`objectFitOf` in `src/lib/image.js`):
 a picture shown whole inside a landscape card is letterboxed, and a letterboxed portrait
 beside a filled neighbour reads as a vertical picture in a row of horizontal ones. A logo
@@ -412,19 +445,55 @@ numbers.
 
 **How far a photograph may be from its record is a per-surface decision.** The ingest
 pipeline holds the strict line: it gives a record a picture of the technology its
-classifier named, and nothing else. The home page's story cards hold a looser one.
-Settled 4 Aug 2026: those fifteen frames are filled from the reviewed pool by
-relevance, and a card whose own technology has no photograph left takes the best
-unused picture of a NEIGHBOURING one rather than running a plate. `rankClasses` in
-`src/lib/class-match.js` is that ordering — the technologies the record's own words
-name, then the ones its facets imply, then the rest, most general first — and the
-second pass of `assignImages` in `src/lib/image.js` spends the pool against it. It
-reads local data only: no API call, no model call, no picture that a person has not
-already reviewed, and every one of them is stamped `'class'`, so it renders labelled
-"Illustration" with its credit and licence. The pool is `src/data/class-images.json`,
-39 pictures; the page needs 15, and `image.test.js` covers what happens when it runs
-dry, which is that a card shows its data figure rather than repeat a picture already
-on the page.
+classifier named, and nothing else. **The home page now holds a stricter one still.**
+
+Settled 4 Aug 2026, and REVERSED 23 Aug 2026: the fifteen story frames used to be
+filled from the reviewed class pool by relevance, so a card whose own technology had no
+photograph took the best unused picture of a NEIGHBOURING one rather than running a
+plate. That is the right call for a card in a directory of a technology and the wrong
+one for a card in a news feed. A photograph beside a headline is read as a photograph OF
+that story, and "Illustration" is a caption a reader skims past. `assignImages` in
+`src/lib/image.js` now takes `subject: 'item'` and nothing else, there is no pool pass,
+and a card with no photograph of its own shows the data figure built from its own
+fields. That is a NORMAL outcome, not a shortfall: on a typical day most frames take it,
+because roughly half the feed arrives as Google News wrapper URLs that have no
+photograph of their own and a recent paper is usually not yet in PMC. Class photographs
+are still right on the section pages (`/trials`, `/devices`, `/companies`, `/research`),
+which is why the pool and `rankClasses` in `src/lib/class-match.js` still exist.
+
+**Three home page rules are about time rather than about a render**, so the page cannot
+enforce them alone and `src/data/image-ledger.json` remembers instead (`src/lib/ledger.js`,
+pure and tested):
+
+- **One photograph, one story, permanently.** A picture that has run beside a story is
+  that story's for good — not on the same page and not eleven months later. Deduplicating
+  within a render is not enough: a reader who comes back on Thursday recognises Monday's
+  picture, and one photograph doing duty for two findings quietly says they are the same
+  finding. There is deliberately no unbind; a promise a nightly job can revoke is not one.
+  Keys are normalised (`keyOf`), so re-sourcing the same Wikimedia file at a larger
+  thumbnail width does not hand a spent picture back to the pool.
+- **The lead changes every day.** `chooseLead` walks the page's own ranking and takes the
+  best story that has not led inside a fortnight, or the story the daily run pinned. It is
+  a property of the PAGE, not of the cron: with the ledger's history and no run at all,
+  yesterday's lead is still excluded, so the front page moves on a morning the pipeline
+  never fired.
+- **High resolution means the frame, measured.** `STORY_MIN_W` is 800 and `LEAD_MIN_W` is
+  1200, derived from the real layout — the lead picture frame is ~512 CSS px (not the 1100
+  the old comments claimed, which was a layout ago), featured cards ~310, latest ~250 —
+  times a 2x device pixel ratio, plus a margin for the crop. `CARD_RES`/`HI_RES` in
+  `scripts/lib/images.js` and `HI_RES` in `refresh.js` are the pipeline's copies of those
+  numbers; keep all of them in step, or pictures get stored that the page will never render.
+
+`hasRealImage` in `src/lib/sources.js` used to test `imageKind === 'real'`, the pipeline's
+FIRST vocabulary, which nothing had written since the kinds became photo/figure/logo. Every
+item answered no, so `composeStories`' preference for putting photographs in the visual
+slots had silently stopped applying and the page filled its picture frames in feed order.
+It now asks `storyImage`, the same question the assignment asks.
+
+**A story's picture is credited on its own page.** `/item/:id` renders the photograph at
+full measure with a one-line source credit linking to the file's description page —
+licence, photographer, terms. It asks through `storyPicture`, not off the record, so the
+story page and the home page cannot disagree about what a story may show.
 
 **The home page splits both rules by section.** The stories (lead, More stories,
 Featured, Latest) carry the photographs; the four record rails — In the clinic, FDA

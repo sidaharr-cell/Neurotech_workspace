@@ -36,21 +36,68 @@
  *
  * A search engine is not a picture editor: Commons answers "microelectrode
  * array" with a file called Mea Culpa.JPG and "vagus nerve" with a page of a
- * physiology textbook from 1897. Every class candidate is therefore confirmed
- * by a vision model before it is accepted, and a class with no confirmable
- * photograph yields nothing.
+ * physiology textbook from 1897. Every candidate is therefore confirmed by
+ * somebody LOOKING at it before it is accepted, and a subject with no
+ * confirmable photograph yields nothing.
+ *
+ * Who looks changed on 23 August 2026. It used to be a vision model called
+ * from inside this file, per candidate, per nightly run. It is now the daily
+ * reviewer, offline, writing its answers to src/data/image-review.json — see
+ * scripts/lib/review.js for why, and for the rule that governs everything
+ * below: **a picture nobody has looked at is rejected, and queued.** No
+ * function in this file calls a model API, and neither does any script that
+ * imports it. A new source therefore costs one day of latency before its
+ * pictures can appear, which is the price of the guarantee that nothing
+ * reaches the page unseen.
  */
-import Anthropic from '@anthropic-ai/sdk'
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import {
+  load as loadReview, save as saveReview, approved as approvedInReview,
+  decided as decidedInReview, queue as queueForReview,
+} from './review.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const UA = 'NeuroBase/1.0 (+https://neurobase-live.vercel.app)'
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
 
-let anthropic = null
-const claude = () => (anthropic ||= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }))
+// The reviewed decisions, loaded once per process. A script that queues
+// candidates writes the store back itself (see queueCandidate below); this
+// copy is the read side and the two are reconciled by the daily reviewer.
+let REVIEW = null
+const review = () => (REVIEW ||= loadReview())
+
+/** Re-read the decisions from disk. For a caller that has just written some. */
+export const reloadReview = () => { REVIEW = loadReview(); return REVIEW }
+
+/**
+ * Candidates this process wanted a ruling on and did not have one for.
+ *
+ * Held in memory rather than written per lookup, because a nightly run asks
+ * about a few hundred pictures and the queue is a file. `flushQueue` writes
+ * them once at the end; a script that forgets to call it loses nothing except
+ * a day.
+ */
+const QUEUED = []
+export function queueCandidate(url, context = {}) {
+  if (url) QUEUED.push({ url, ...context })
+}
+
+/** Write everything this process queued into the review store. Returns the
+ *  number of NEW entries, which is what a script should report. */
+export function flushQueue() {
+  if (!QUEUED.length) return 0
+  let store = loadReview()
+  const before = (store.pending || []).length
+  for (const q of QUEUED) {
+    const { url, ...ctx } = q
+    store = queueForReview(store, url, { at: new Date().toISOString().slice(0, 10), ...ctx })
+  }
+  saveReview(store)
+  QUEUED.length = 0
+  return (store.pending || []).length - before
+}
 
 const getJson = async (url, ua = UA) => {
   try {
@@ -103,8 +150,16 @@ export async function measureImage(url) {
   } catch { return null }
 }
 
-/** The bar for the lead slot, which is displayed 1100px wide. */
-export const HI_RES = d => !!d && Math.max(d.width, d.height) >= 900 && Math.min(d.width, d.height) >= 500
+/**
+ * The bar for the lead slot, which is displayed 1100px wide.
+ *
+ * This and CARD_RES below are the pipeline's copies of LEAD_MIN_W and
+ * STORY_MIN_W in src/lib/image.js, where the arithmetic is written out. Keep
+ * the four numbers in step: a picture sourced below the page's floor is stored
+ * and then never rendered, which reads in the database as coverage the page
+ * does not have.
+ */
+export const HI_RES = d => !!d && Math.max(d.width, d.height) >= 1200 && Math.min(d.width, d.height) >= 500
 
 /**
  * A shape a card can crop without destroying it.
@@ -119,9 +174,22 @@ export const SANE_ASPECT = d => {
   return r <= 3 && r >= 1 / 3
 }
 
-/** The bar for a card. Journal figures are often modest; 450px still reads
- *  cleanly in a 4:3 card and refusing them would throw away most of PMC. */
-export const CARD_RES = d => !!d && Math.max(d.width, d.height) >= 450 && SANE_ASPECT(d)
+/**
+ * The bar for a card: STORY_MIN_W / STORY_MIN_H in src/lib/image.js.
+ *
+ * It was 450 on the reasoning that journal figures are often modest and that
+ * 450px reads cleanly in a 4:3 card. It does not: the largest card frame on
+ * the home page is ~310 CSS pixels and half the traffic is at a 2x device
+ * pixel ratio, so 450 real pixels is a picture rendered at 1.4x its own size
+ * before the crop takes part of an axis. Raised 23 Aug 2026 with the
+ * high-resolution rule; the arithmetic is written out at STORY_MIN_W in
+ * src/lib/image.js and these two numbers are that pair.
+ *
+ * It does throw away part of PMC, and the figures it throws away are the small
+ * ones. The walk in europePmcFigure now simply passes over them.
+ */
+export const CARD_RES = d =>
+  !!d && Math.max(d.width, d.height) >= 800 && Math.min(d.width, d.height) >= 450 && SANE_ASPECT(d)
 
 /**
  * Is this URL still an image? Used by the rot check. Returns
@@ -140,120 +208,90 @@ export async function verifyImage(url) {
 
 // ── Vision checks ───────────────────────────────────────────────────────────
 
-/** Anthropic's fetcher cannot download from every host — Wikimedia refuses it —
- *  so the bytes are fetched here and sent inline. Oversized files are skipped
- *  rather than sent: the callers all have a thumbnail to offer instead. */
-const MAX_INLINE = 4_500_000
-const ask = async (url, text, maxTokens = 5) => {
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) })
-    if (!res.ok) return ''
-    const mediaType = (res.headers.get('content-type') || '').split(';')[0]
-    if (!/^image\/(jpeg|png|gif|webp)$/.test(mediaType)) return ''
-    const buf = Buffer.from(await res.arrayBuffer())
-    if (buf.length > MAX_INLINE) return ''
-    const r = await claude().messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: maxTokens,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: buf.toString('base64') } },
-          { type: 'text', text },
-        ],
-      }],
-    })
-    return (r.content?.[0]?.text || '').toUpperCase()
-  } catch { return '' }
-}
-
-/** Photograph, scan or figure of real subject matter, vs stock decoration. */
-export async function classifyImageUrl(url) {
-  const a = await ask(url, 'Reply REAL if this image is a photograph, microscopy image, medical/brain scan, or an anatomical or technical diagram of actual subject matter. Reply STOCK if it is a data chart, graph, plot, or table; a generic stock illustration or 3D render; a publisher logo; or decorative art. Exactly one word: REAL or STOCK.')
-  return a.includes('REAL') ? 'real' : a.includes('STOCK') ? 'stock' : null
-}
-
 /**
- * Does this picture actually show the technology we are about to label it
- * with? The gate that keeps a scanned 1897 physiology textbook off a vagus
- * nerve stimulator card, and a patent line drawing off a microelectrode array.
- * Defaults to NO on any doubt or any error.
+ * The five questions the pipeline used to put to a vision model, now put to
+ * the reviewed decisions instead.
  *
- * Photographs and radiographs only. A diagram is not wrong, exactly, but a
- * card that already carries a data figure gains nothing from a second one, and
- * an explanatory diagram of a mechanism is a claim about how something works
- * rather than a picture of it.
- */
-/**
- * Is this a photograph at all?
+ * Each one keeps its old name and its old signature, so every caller reads the
+ * same as it did; what changed is where the answer comes from. All of them
+ * fail closed on an unreviewed picture AND queue it, which is the only way the
+ * queue ever fills — the pipeline discovers candidates, the reviewer rules on
+ * them, and tomorrow's run can use them.
  *
- * Wikipedia leads a drug article with its skeletal formula and a protein
- * article with a ribbon rendering. Both are the right picture for Wikipedia
- * and the wrong picture for a card: a card that already carries a data figure
- * gains nothing from a second diagram. Defaults to NO on any error.
+ * They collapse onto one stored verdict because the three stored fields are
+ * the three things a picture has to be: a photograph, one image rather than a
+ * grid of panels, and runnable beside a headline. The old prompts asked
+ * overlapping subsets of that; the overlap is gone rather than the questions.
  */
-export async function confirmPhotograph(url) {
-  const a = await ask(url, 'Is this a PHOTOGRAPH of a real object, person, or place, or a medical scan such as an X-ray or MRI? Reply NO if it is a chemical structure, molecular diagram, schematic, chart, graph, map, logo, line drawing, rendering, or screenshot. Exactly one word: YES or NO.')
-  return a.includes('YES')
+const askStore = (url, why) => {
+  if (!url) return false
+  if (decidedInReview(review(), url)) return approvedInReview(review(), url)
+  queueCandidate(url, { why })
+  return false
 }
 
-/**
- * Is the DEVICE the subject of this photograph?
- *
- * A maker's site is mostly lifestyle photography: Cala Health's home page
- * leads with a man holding a mug and a tablet, wearing the wristband
- * somewhere out of focus. A reader learns nothing about the device from it.
- * This gate asks for the hardware, not the mood.
- */
-export async function confirmProductPhoto(url) {
-  const a = await ask(url, 'Is a medical device, wearable, implant, or piece of hardware the MAIN SUBJECT of this photograph — the device by itself, or worn, held or attached so that the device itself is clearly visible and in focus? Reply NO if it is a lifestyle or marketing photograph where the device is incidental, out of focus, or absent; a portrait or group of people; an office, home or laboratory scene; a logo; or a diagram. Exactly one word: YES or NO.')
-  return a.includes('YES')
+/** Photograph, scan or figure of real subject matter, vs stock decoration.
+ *  Returns null for "not yet ruled on", which callers must not read as 'real'. */
+export function classifyImageUrl(url) {
+  if (!decidedInReview(review(), url)) { queueCandidate(url, { why: 'unreviewed' }); return null }
+  return approvedInReview(review(), url) ? 'real' : 'stock'
 }
 
-/**
- * Two structural questions a class photograph has to pass, asked separately
- * because a combined prompt lets them blur.
- *
- * SINGLE catches the figures Commons is full of: four panels lettered A to D,
- * scale bars, arrows and callouts. One of those on a card is an unreadable
- * fragment of itself.
- *
- * SAFE catches what a general news page should not run without warning:
- * exposed tissue, surgery in progress, cadavers. Both were slipping past the
- * depiction check, which asks only whether the subject is right.
- */
-/**
- * One image, or a grid of panels?
- *
- * Asked of a paper's own figure, where the subject is right by definition and
- * the only question is whether a reader can make anything of it 300 pixels
- * wide. Figure 1 is usually a composite of lettered panels, microscopy grids
- * and plots; at card size that is grey noise.
- */
-export async function confirmSinglePanel(url) {
-  const a = await ask(url, 'Is this ONE single image, rather than a composite of several panels? Reply NO if it is divided into multiple panels or sub-figures, has panels lettered a, b, c or A, B, C, or combines photographs with plots or charts. Reply YES only for a single uninterrupted image. Exactly one word: YES or NO.')
-  return a.includes('YES')
-}
+/** Is this a photograph at all, rather than a chemical structure, a schematic
+ *  or a rendering? */
+export const confirmPhotograph = url => askStore(url, 'is it a photograph')
 
-export async function confirmSinglePhoto(url) {
-  const a = await ask(url, `Answer both questions about this image, one per line, exactly:
-SINGLE: yes|no
-SAFE: yes|no
+/** Is the DEVICE the subject, rather than a mug-and-tablet lifestyle shot with
+ *  the hardware somewhere out of focus? */
+export const confirmProductPhoto = url => askStore(url, 'is the device the subject')
 
-SINGLE is yes only if this is ONE photograph. It is no if the image combines several panels or views, has panels lettered A, B, C, has arrows, callouts, scale bars or text labels drawn onto it, or contains an embedded chart.
-SAFE is yes if a general news site could run it beside a headline without warning the reader. It is no for exposed tissue or organs, surgery in progress, open wounds, blood, cadavers or dissection.`, 20)
-  return /SINGLE:\s*yes/i.test(a) && /SAFE:\s*yes/i.test(a)
-}
+/** One image, or a grid of lettered panels? Asked of a paper's own figure,
+ *  where the subject is right by definition and the only question is whether a
+ *  reader can make anything of it 300 pixels wide. */
+export const confirmSinglePanel = url => askStore(url, 'one panel or many')
 
-export async function confirmDepicts(url, label) {
-  const a = await ask(url, `Is this a PHOTOGRAPH (or a medical scan such as an X-ray or MRI) showing ${label}? Reply YES only if a reader would recognise the actual hardware, or a person wearing or implanted with it. Reply NO if it is a diagram, illustration, schematic, patent drawing, chart, book or document scan, logo, screenshot, or shows something else. Reply NO if it is a FIGURE FROM A PAPER: several panels combined, panels lettered a/b/c, arrows or callouts drawn on, embedded plots, or captions burned into the image. Exactly one word: YES or NO.`)
-  return a.includes('YES')
+/** One photograph, and one a general news page could run unwarned. */
+export const confirmSinglePhoto = url => askStore(url, 'single and safe')
+
+/** Does this picture show the thing we are about to label it with? The label
+ *  travels with the queue entry so the reviewer can answer it. */
+export function confirmDepicts(url, label) {
+  if (!url) return false
+  if (decidedInReview(review(), url)) return approvedInReview(review(), url)
+  queueCandidate(url, { why: `does it show ${label}` })
+  return false
 }
 
 // ── Open Graph (news, and any page that will answer us) ─────────────────────
 
+/**
+ * Hosts that republish somebody else's story under their own URL.
+ *
+ * Asking one of these for the story's photograph gets you the AGGREGATOR'S
+ * logo, every time and identically: every Google News wrapper on the site
+ * answers og:image with the same 300x300 `google_news` mark, which was being
+ * offered to twenty-three different stories in one run. The size gate caught
+ * it and the uniqueness rule would have caught it again, but the fetch is
+ * wasted and the failure reads in the log as "this story has no picture" when
+ * what it means is "we asked the wrong page".
+ *
+ * The destination cannot simply be followed. Google News now encodes it in an
+ * opaque `AU_yqL…` token that only a call to Google's own batchexecute RPC
+ * will resolve; that is a scraper against a service we do not control, run
+ * nightly, and it is not something to build a picture pipeline on. The honest
+ * answer is that an aggregator copy of a story has no photograph of its own,
+ * and the fix is upstream: prefer the direct-URL copy at ingest, which
+ * dedupeFeedRows in scripts/refresh.js already does when it sees one.
+ */
+const AGGREGATORS = /^(news\.google\.|www\.google\.|feedproxy\.google\.|news\.yahoo\.|flipboard\.|apple\.news)/i
+
+export function isAggregator(pageUrl) {
+  try { return AGGREGATORS.test(new URL(pageUrl).hostname) } catch { return false }
+}
+
 /** Best-effort Open Graph image for a page. Fails soft. */
 export async function ogImage(pageUrl) {
+  if (isAggregator(pageUrl)) return null
   const html = await getText(pageUrl, BROWSER_UA)
   if (!html) return null
   const m =
@@ -411,7 +449,7 @@ const stripHtml = s => String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, '
  * Commons carries requires attribution, and a picture we cannot attribute is a
  * picture we cannot publish.
  */
-export function parseCommons(json, { subject = 'class', minWidth = 500 } = {}) {
+export function parseCommons(json, { subject = 'class', minWidth = 1000 } = {}) {
   return Object.values(json?.query?.pages || {})
     .map(p => {
       const info = p.imageinfo?.[0]
@@ -444,10 +482,20 @@ export function parseCommons(json, { subject = 'class', minWidth = 500 } = {}) {
     .filter(Boolean)
 }
 
-const COMMONS_PROPS = 'prop=imageinfo&iiprop=url|size|mime|extmetadata&iiurlwidth=1280'
+/**
+ * 2000, not 1280.
+ *
+ * Wikimedia renders a thumbnail at whatever width is asked for, and hotlinking
+ * an 8000px original to fill a 400px card is 20MB of page weight — which is why
+ * this asked for 1280. But 1280 is also the width the LEAD frame is displayed
+ * at on a 2x screen, so every Commons picture on the site arrived exactly at
+ * the point where it is about to be enlarged. 2000 clears the lead with room
+ * for the crop and is still a fraction of an original.
+ */
+const COMMONS_PROPS = 'prop=imageinfo&iiprop=url|size|mime|extmetadata&iiurlwidth=2000'
 
 /** Search Commons for photographs matching a term. */
-export async function commonsSearch(term, { limit = 8, subject = 'class', minWidth = 500 } = {}) {
+export async function commonsSearch(term, { limit = 8, subject = 'class', minWidth = 1000 } = {}) {
   const url = 'https://commons.wikimedia.org/w/api.php?action=query&format=json'
     + `&generator=search&gsrsearch=${encodeURIComponent(`${term} filetype:bitmap`)}`
     + `&gsrnamespace=6&gsrlimit=${limit}&${COMMONS_PROPS}`
@@ -462,7 +510,7 @@ export async function commonsSearch(term, { limit = 8, subject = 'class', minWid
  * carries photographs of machines and sessions, while searching the same words
  * returns the schematic that leads the Wikipedia article.
  */
-export async function commonsCategory(category, { limit = 24, subject = 'class', minWidth = 500 } = {}) {
+export async function commonsCategory(category, { limit = 24, subject = 'class', minWidth = 1000 } = {}) {
   const url = 'https://commons.wikimedia.org/w/api.php?action=query&format=json'
     + `&generator=categorymembers&gcmtitle=${encodeURIComponent(`Category:${category}`)}`
     + `&gcmtype=file&gcmlimit=${limit}&${COMMONS_PROPS}`
@@ -474,7 +522,7 @@ export async function commonsCategory(category, { limit = 24, subject = 'class',
  * The lead image of "Transcranial magnetic stimulation" is a schematic; the
  * photographs are further down the page.
  */
-export async function wikipediaArticleImages(title, { limit = 20, subject = 'class', minWidth = 500 } = {}) {
+export async function wikipediaArticleImages(title, { limit = 20, subject = 'class', minWidth = 1000 } = {}) {
   const json = await getJson('https://en.wikipedia.org/w/api.php?action=query&format=json'
     + `&titles=${encodeURIComponent(title)}&generator=images&gimlimit=${limit}&${COMMONS_PROPS}`)
   return parseCommons(json, { subject, minWidth })
@@ -503,7 +551,7 @@ export const sameName = (a, b) => {
  * "Nerivio" with an article about migraine, and a picture of a migraine is not
  * a picture of the device. Pure name matching is what keeps this honest.
  */
-export async function wikipediaImage(name, { subject = 'item', minWidth = 400 } = {}) {
+export async function wikipediaImage(name, { subject = 'item', minWidth = 1000 } = {}) {
   if (!name || name.length < 3) return null
   // pilimit is 1 by default, so a three-result search returns the lead image
   // for one arbitrary page — usually not the page whose title we are matching.
@@ -694,39 +742,91 @@ export async function guessMakerSite(maker) {
 
 // ── arXiv: the preprint's own first figure ──────────────────────────────────
 
-/** The first figure on an arXiv HTML rendering. Pure. */
+/** The first figure on an arXiv HTML rendering. Pure. Kept because it is the
+ *  single-answer form the tests cover; the walk below is what callers use. */
 export function arxivFigureHref(html, pageUrl) {
-  const m = String(html || '').match(/<img\b[^>]*src=["']([^"']+\.(?:png|jpe?g))["']/i)
-  if (!m) return null
-  try { return new URL(m[1], pageUrl).href } catch { return null }
+  return arxivFigureHrefs(html, pageUrl)[0] || null
+}
+
+/**
+ * Every figure graphic on an arXiv HTML rendering, in order. Pure.
+ *
+ * Two things this does that taking the first `<img>` did not.
+ *
+ * It drops the furniture: the arXiv logo, the Cornell mark, the ORCID icon,
+ * the Creative Commons button. Those are the first images on the page, so "the
+ * first img" frequently meant "the arXiv logo" — which then failed the size
+ * gate and the paper was recorded as having no figure at all. Two filters,
+ * because they catch different things: a figure is served from the SAME HOST
+ * as the article (the licence button is on licensebuttons.net), and arXiv's
+ * own assets live under /static/ or are named for what they are.
+ *
+ * And it returns the whole list rather than one, because Figure 1 of a paper
+ * is nearly always the composite that sets it up: eight lettered panels, a
+ * schematic and a plot. The photograph or micrograph is further in. Callers
+ * walk until one is a single panel, which is the same shape as the Europe PMC
+ * and bioRxiv walks.
+ */
+export function arxivFigureHrefs(html, pageUrl) {
+  let host = null
+  try { host = new URL(pageUrl).host } catch { return [] }
+  const srcs = [...String(html || '').matchAll(/<img\b[^>]*\bsrc=["']([^"']+)["']/gi)].map(m => m[1])
+  const out = []
+  for (const src of srcs) {
+    if (!/\.(png|jpe?g)$/i.test(src)) continue
+    if (/\b(logo|icon|badge|orcid|creativecommons|favicon)\b|\/static\//i.test(src)) continue
+    try {
+      const u = new URL(src, pageUrl)
+      if (u.host !== host) continue          // a badge on somebody else's CDN
+      out.push(u.href)
+    } catch { /* a src we cannot resolve is not a figure */ }
+  }
+  return [...new Set(out)]
 }
 
 /**
  * A figure from an arXiv preprint, through the HTML rendering arXiv now
  * publishes. arXiv preprints carry an author licence that permits display, and
  * the credit names the paper.
+ *
+ * The version matters. This asked for v1 and nothing else, so every paper that
+ * had been revised — which is most of the ones worth showing — returned a 404
+ * and no figure. The abs page names the current version, and v1 stays as the
+ * fallback for the papers that have only ever had one.
  */
 export async function arxivFigure(arxivId) {
   const id = String(arxivId || '').replace(/v\d+$/, '')
   if (!id) return null
-  const page = `https://arxiv.org/html/${id}v1`
-  const fig = arxivFigureHref(await getText(page, BROWSER_UA), page)
-  if (!fig) return null
-  const dims = await measureImage(fig)
-  if (!CARD_RES(dims)) return null
-  if (!(await confirmSinglePanel(fig))) return null
-  return {
-    url: fig,
-    kind: 'figure',
-    subject: 'item',
-    credit: `arXiv:${id}`,
-    license: null,
-    licenseUrl: null,
-    source: 'arxiv',
-    sourceUrl: `https://arxiv.org/abs/${id}`,
-    w: dims.width,
-    h: dims.height,
+
+  const abs = await getText(`https://arxiv.org/abs/${id}`, BROWSER_UA)
+  const latest = Number(String(abs || '').match(/\[v(\d+)\]/g)?.pop()?.match(/\d+/)?.[0] || 0)
+  const versions = [...new Set([latest, 1].filter(v => v > 0))]
+
+  for (const v of versions) {
+    const page = `https://arxiv.org/html/${id}v${v}`
+    // Resolved against the page as a DIRECTORY. arXiv's HTML refers to its
+    // figures relatively ("x1.png"), and `new URL('x1.png', '.../2608.02083v1')`
+    // resolves to /html/x1.png — a 404, one path segment too high.
+    const figs = arxivFigureHrefs(await getText(page, BROWSER_UA), `${page}/`)
+    for (const fig of figs.slice(0, 6)) {
+      const dims = await measureImage(fig)
+      if (!CARD_RES(dims)) continue
+      if (!(await confirmSinglePanel(fig))) continue
+      return {
+        url: fig,
+        kind: 'figure',
+        subject: 'item',
+        credit: `arXiv:${id}`,
+        license: null,
+        licenseUrl: null,
+        source: 'arxiv',
+        sourceUrl: `https://arxiv.org/abs/${id}`,
+        w: dims.width,
+        h: dims.height,
+      }
+    }
   }
+  return null
 }
 
 // ── Wikidata: a company's own logo ──────────────────────────────────────────

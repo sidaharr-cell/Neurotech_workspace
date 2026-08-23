@@ -38,10 +38,17 @@ const ROOT = join(HERE, '..')
  * The image block's order is load-bearing and documented in CLAUDE.md:
  * the fit check clears stale assignments FIRST so the records it empties are
  * refilled in the same run; hand-placed pictures then beat the general
- * sources; the page fill runs last of the assigning steps so it can see what
- * is already spoken for and keep every card distinct; and the focus pass runs
- * after all of them, since it can only find a focal point for a picture that
- * has already been assigned.
+ * sources; the story sourcing runs last of the assigning steps so it can see
+ * what is already spoken for; the focus pass runs after all of them, since it
+ * can only find a focal point for a picture that has already been assigned;
+ * and the binding runs after THAT, because it writes down what the page will
+ * actually show and nothing may change after it does.
+ *
+ * No step in this sequence calls a model API. The judgement each of them needs
+ * — is this a photograph, is it one panel, is it safe beside a headline, where
+ * is its subject — is read from src/data/image-review.json, written offline by
+ * the daily reviewer. Anything unreviewed is rejected and queued. See
+ * scripts/lib/review.js.
  */
 const STEPS = [
   { name: 'refresh (PubMed, arXiv, media, trials)', cmd: 'refresh.js', required: true },
@@ -58,9 +65,16 @@ const STEPS = [
   { name: 'clear images that no longer fit',        cmd: 'verify-image-fit.js', args: ['--commit'] },
   { name: 'source images for new records',          cmd: 'backfill-images.js', args: ['--commit', '--limit=150'] },
   { name: 're-place the hand-picked pictures',      cmd: 'apply-card-images.js', args: ['--commit'] },
-  { name: 'give every home card its own picture',   cmd: 'fill-page-images.js', args: ['--commit'] },
+  { name: 'find each home story a photograph of its own', cmd: 'source-story-images.js', args: ['--commit', '--limit=30'] },
   { name: 'find focal points for new pictures',     cmd: 'set-image-focus.js', args: ['--commit'] },
   { name: 'clear rotted image links',               cmd: 'verify-images.js', args: ['--commit', '--stale-days=30', '--limit=300'] },
+
+  // Second to last, and through vite-node for the same reason as the check
+  // below: it composes the page through the page's own code. This is the step
+  // that writes down which photograph is which story's, permanently, and which
+  // story leads today — the two home page rules that are about time rather
+  // than about a render, and that the page therefore cannot enforce alone.
+  { name: 'bind pictures to stories, and pick the lead', cmd: 'bind-home-images.js', args: ['--commit'], node: 'vite-node' },
 
   // Last, because it judges the result of everything above: can each of the
   // home page's eight sections fill its slots, and does every story frame come

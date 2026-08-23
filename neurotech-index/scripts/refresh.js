@@ -15,10 +15,16 @@ import { dirname, join } from 'path'
 import { syncTrials } from './trials.js'
 import { classify } from '../src/lib/classify.js'
 import { scanReproLinks } from '../src/lib/repro.js'
-import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage, FALLBACK_CLASS } from './lib/images.js'
+import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage, FALLBACK_CLASS, queueCandidate, flushQueue } from './lib/images.js'
+import { load as loadReview, approved as approvedInReview, decided as decidedInReview } from './lib/review.js'
 import { NEUROTECH_LEXICON, onTopicByLexicon } from './lib/lexicon.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
+
+// The reviewed picture decisions, read once. Nothing in this run writes them;
+// the queue of pictures still needing one is flushed at the end of main().
+let REVIEW = null
+const reviewStore = () => (REVIEW ||= loadReview())
 
 // ── Clients ────────────────────────────────────────────────────────────────
 
@@ -693,43 +699,41 @@ async function measureImage(url) {
 /**
  * The floor for a picture we are willing to feature.
  *
- * Relaxed from 900/500 to 700/400 on 11 Aug 2026. The original pair was set
- * against the home page lead, which is the largest frame on the site; applied
- * uniformly it was also throwing away pictures that are perfectly sharp in a
- * card. NeuroNews — a neuro trade title that illustrates every item, and one of
- * the few direct-URL sources we have — publishes at 766x512, so every one of its
- * pictures was discarded for being 134 pixels short on the long edge while the
- * card that wanted it is under 400 wide.
+ * 900/500 originally, relaxed to 700/400 on 11 Aug 2026 because that pair was
+ * set against the home page lead and, applied uniformly, threw away pictures
+ * that are sharp in a card. Set to 800/450 on 23 Aug 2026, which is that same
+ * reasoning done with the real measurements: STORY_MIN_W in src/lib/image.js
+ * is the largest card frame at a 2x device pixel ratio plus a crop margin, and
+ * this is the same pair. A picture stored below the page's floor is kept and
+ * then never shown, which reads in the database as coverage the page does not
+ * have.
  *
- * Still a real floor: it rejects the 300x200 and 400x225 thumbnails that RSS
- * media tags are full of, which is what this check exists to do.
+ * It costs one source. NeuroNews publishes at 766x512 and now falls 34 pixels
+ * short. That is the trade the high-resolution rule asks for, and a card
+ * showing the record's own numbers is better than a soft photograph.
+ *
+ * It also still does the job it was written for: rejecting the 300x200 and
+ * 400x225 thumbnails that RSS media tags are full of.
  */
-const HI_RES = d => !!d && Math.max(d.width, d.height) >= 700 && Math.min(d.width, d.height) >= 400
+const HI_RES = d => !!d && Math.max(d.width, d.height) >= 800 && Math.min(d.width, d.height) >= 450
 
 /**
  * Classify each item's image as a REAL photograph/microscopy/scientific figure
- * vs a generic STOCK illustration/3D render, using Claude vision. Sets
- * item.imageKind = 'real' | 'stock' (null on error). Bounded concurrency.
- * This lets the homepage guarantee the top story never uses stock art.
+ * vs a generic STOCK illustration/3D render. Sets item.imageKind to 'real' or
+ * 'stock', and to null when nobody has looked at the picture yet — which the
+ * page reads as no picture, and which is the point. This is what lets the
+ * homepage guarantee its top story never runs stock art.
+ *
+ * The answer used to come from a vision call per image per night. It now comes
+ * from src/data/image-review.json, written by the daily reviewer; an image
+ * with no ruling is queued for one. See scripts/lib/review.js.
  */
-async function classifyImageUrl(url) {
-  try {
-    const resp = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 5,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'url', url } },
-          { type: 'text', text: 'Reply REAL if this image is a photograph, microscopy image, medical/brain scan, or an anatomical or technical diagram of actual subject matter. Reply STOCK if it is a data chart, graph, plot, or table; a generic stock illustration or 3D render; a publisher logo; or decorative art. Exactly one word: REAL or STOCK.' },
-        ],
-      }],
-    })
-    const ans = (resp.content?.[0]?.text || '').toUpperCase()
-    return ans.includes('REAL') ? 'real' : ans.includes('STOCK') ? 'stock' : null
-  } catch {
+function classifyImageUrl(url) {
+  if (!decidedInReview(reviewStore(), url)) {
+    queueCandidate(url, { why: 'unreviewed' })
     return null
   }
+  return approvedInReview(reviewStore(), url) ? 'real' : 'stock'
 }
 
 async function classifyImages(items) {
@@ -1630,6 +1634,12 @@ async function main() {
   console.log('Syncing clinical trials (ClinicalTrials.gov)...')
   const nTrials = await syncTrials(supabase)
   console.log(`      ${nTrials} trials`)
+
+  // Every picture this run met and had no ruling on. Written once, at the end,
+  // so the daily reviewer has a work list in the morning and tomorrow's run can
+  // use what it decides. See scripts/lib/review.js.
+  const queued = flushQueue()
+  if (queued) console.log(`      ${queued} new picture(s) queued for review`)
 
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
