@@ -81,9 +81,9 @@
     "image_license_url": "https://creativecommons.org/licenses/by/3.0",
     "image_source": "commons",
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
-    "image_w": 1280,
-    "image_h": 1855,
-    "image_checked_at": "2026-08-23T07:17:27.323Z",
+    "image_w": 2000,
+    "image_h": 2898,
+    "image_checked_at": "2026-08-24T07:23:22.591Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -113,16 +113,16 @@
     "significance": "This study reveals how DBS mechanically remodels white matter and reorganizes brain networks, providing crucial biological mechanisms explaining why this treatment alleviates depression."
   },
   {
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/1280px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg/3840px-Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_%28MPL%29..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Official Navy Page from United States of America Sarah Fortney/U.S. Navy",
     "image_license": "Public domain",
     "image_source": "commons",
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
-    "image_w": 1280,
-    "image_h": 853,
-    "image_checked_at": "2026-08-23T07:17:27.802Z",
+    "image_w": 2000,
+    "image_h": 1333,
+    "image_checked_at": "2026-08-24T07:23:23.295Z",
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -150,7 +150,7 @@
     "image_license_url": null
   },
   {
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
     "image_kind": "photo",
     "image_subject": "class",
     "image_credit": "Peter Duncan",
@@ -158,9 +158,9 @@
     "image_license_url": "https://creativecommons.org/licenses/by-sa/4.0",
     "image_source": "commons",
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
-    "image_w": 1280,
-    "image_h": 468,
-    "image_checked_at": "2026-08-23T07:17:27.638Z",
+    "image_w": 2000,
+    "image_h": 732,
+    "image_checked_at": "2026-08-24T07:23:23.023Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",

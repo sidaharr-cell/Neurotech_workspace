@@ -109,6 +109,24 @@
       "title": "Deep learning refines how bionic eyes communicate with the brain",
       "url": "https://www.sott.net/image/s37/748163/full/1_Bionic_eye_a_new_development.jpg",
       "at": "2026-08-23"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/27a044cc-44d1-4e5e-a886893a3fe656f4/a72d78d9-73cd-4c75-910fb7c0d04825c0/websitewebp_xl-fnins_main visual_purple_website.webp": {
+      "item": "a35b0655-70d1-4f5e-b3d9-6153eec73e42",
+      "title": "From deep brain stimulation to brain–computer interfaces: current progress in implantable neurotechnology",
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/27A044CC-44D1-4E5E-A886893A3FE656F4/A72D78D9-73CD-4C75-910FB7C0D04825C0/WebsiteWebP_XL-FNINS_Main Visual_Purple_Website.webp",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/a-teenage-girl-in-an-electric-wheelchair-smiling-while-wearing-an-assistive-gadget-around-her-neck.jpg": {
+      "item": "67475287-2ad4-4c04-b004-b070288593e4",
+      "title": "Augmental’s Mouthpad Is a Touchpad for Your Tongue",
+      "url": "https://spectrum.ieee.org/media-library/a-teenage-girl-in-an-electric-wheelchair-smiling-while-wearing-an-assistive-gadget-around-her-neck.jpg?id=67605451&width=980",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg": {
+      "item": "e919ab7b-ed99-4576-b4cb-43e5a1988ab9",
+      "title": "Injectable Outlet in the Body Powers Bioelectric Implants",
+      "url": "https://spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg?id=67508805&width=980",
+      "at": "2026-08-24"
     }
   },
   "leads": [
@@ -117,6 +135,12 @@
       "item": "b75228ce-9412-4e62-9288-99fc7022fedb",
       "image": "https://spectrum.ieee.org/media-library/close-up-of-a-brain-computer-interface-with-a-translucent-flexible-body-inductive-telemetry-coil-and-microchip.jpg?id=67644886&width=1200&height=600&coordinates=0%2C67%2C0%2C433",
       "title": "Brain Implant Uses Infrared Light to Send Neural Signals"
+    },
+    {
+      "date": "2026-08-24",
+      "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
+      "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
+      "title": "Neurostimulation restores feeling in paralysed hand for months after"
     }
   ]
 }
