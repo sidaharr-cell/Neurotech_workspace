@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, Link, Outlet, useLocation } from 'react-router-dom'
-import { ChevronDown, Search, Menu, X, Cog, Star } from 'lucide-react'
+import { ChevronDown, Search, Menu, X, Cog, Star, Sparkles } from 'lucide-react'
 import { facetSearch } from '../lib/useUrlFacets'
+import WhatsNewDialog from './WhatsNewDialog'
 
 const TOPICS = [
   { to: '/trials', label: 'Clinical Trials' },
@@ -99,8 +100,17 @@ function TopicsDropdown() {
 
 function Masthead() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  // "What's new today?" is a window over the page rather than a route (see
+  // WhatsNewDialog), so its open state lives here, beside the tab that opens it.
+  const [whatsNewOpen, setWhatsNewOpen] = useState(false)
+  const { pathname } = useLocation()
   const { topics, home } = useTopicLinks()
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
+  // Following a link out of the window is leaving it: the story the reader
+  // clicked is behind the panel, and a window that stayed open over it would
+  // hide the thing it just sent them to.
+  useEffect(() => { setWhatsNewOpen(false) }, [pathname])
 
   const navLink = ({ isActive }) =>
     `text-[13px] font-sans font-semibold uppercase tracking-[0.1em] py-3 transition-colors ${isActive ? 'text-accent' : 'text-ink hover:text-accent'}`
@@ -119,6 +129,15 @@ function Masthead() {
             <Wordmark />
           </Link>
           <div className="justify-self-end hidden sm:flex items-center gap-5">
+            <button
+              type="button"
+              onClick={() => setWhatsNewOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={whatsNewOpen}
+              className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors"
+            >
+              <Sparkles className="w-4 h-4" /> What&apos;s new today?
+            </button>
             <Link to="/watchlist" className="inline-flex items-center gap-1.5 text-[13px] font-sans text-ink-soft hover:text-accent transition-colors">
               <Star className="w-4 h-4" /> Watchlist
             </Link>
@@ -145,10 +164,20 @@ function Masthead() {
         <div className="sm:hidden border-t border-rule px-4 py-3 space-y-1">
           <MobileLink to={home} label="Home" onClick={() => setMobileOpen(false)} />
           {topics.map(t => <MobileLink key={t.to} to={t.href} label={t.label} onClick={() => setMobileOpen(false)} />)}
+          <button
+            type="button"
+            onClick={() => { setMobileOpen(false); setWhatsNewOpen(true) }}
+            aria-haspopup="dialog"
+            className="block w-full text-left py-2 font-sans text-[14px] font-semibold uppercase tracking-[0.08em] text-ink"
+          >
+            What&apos;s new today?
+          </button>
           <MobileLink to="/watchlist" label="Watchlist" onClick={() => setMobileOpen(false)} />
           <MobileLink to="/search" label="Search" onClick={() => setMobileOpen(false)} />
         </div>
       )}
+
+      <WhatsNewDialog open={whatsNewOpen} onClose={() => setWhatsNewOpen(false)} />
     </header>
   )
 }
