@@ -54,6 +54,13 @@ jobs:
           # comment three files away.
           VITE_SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          # The "What's new today" digest, mailed by the last step of the
+          # sequence. Both are optional: without them scripts/send-digest.js
+          # prints a ::warning:: and sends nothing, which is what a repo with no
+          # mail provider configured should do rather than fail the run.
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DIGEST_FROM:    ${{ secrets.DIGEST_FROM }}
+          SITE_ORIGIN:    ${{ vars.SITE_ORIGIN }}
 
       # image-ledger.json and image-review.json are as load-bearing here as
       # notable.json. The ledger is the ONLY record of which photograph belongs

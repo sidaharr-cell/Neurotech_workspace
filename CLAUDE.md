@@ -36,6 +36,7 @@ npm run verify:cron      # post-cron integrity check; exits non-zero on data col
 npm run validate:funding # fails on any unsupported financial/regulatory claim (runs in CI)
 npm run verify:funding
 npm run images:queue     # what pictures are waiting on the daily reviewer
+npm run digest           # "What's new today" by email — DRY RUN; --commit sends
 ```
 
 The picture review is not in this list because it is not a script. It is the
@@ -506,6 +507,49 @@ that failed to load. And a sourced photograph obliges an `ImageCredit` line, whi
 list-row density costs more than the picture returns. A figure drawn from the record's
 own fields owes no attribution, so the rows stay tight. Photographs still run on the
 section pages (`/trials`, `/devices`, `/companies`, `/research`).
+
+### What's new today
+
+The tab left of Watchlist opens a window over the page — `src/components/WhatsNewDialog.jsx`,
+blurred backdrop, Escape or a click outside to close — listing everything the index gained
+**today and only today**, grouped by category: Research, News, Clinical trials, Devices and
+clearances, Patents, Companies and labs, Funding rounds. Empty categories are omitted, not
+shown as zeroes.
+
+`src/lib/whatsNew.js` is the one definition of that list, and three things follow from it:
+
+- **Today is UTC.** `created_at` is stamped by Postgres and the run is a 6am UTC cron, so
+  the window has to use the same day boundary the pipeline did or a reader west of
+  Greenwich opens it in the evening and finds it empty. `src/lib/homepage.js` takes the
+  same view for the same reason. The selection is `created_at`, not `published_at`: a paper
+  published in June and ingested this morning is what "new today" means here.
+- **The TLDR is extractive, and there is no model call anywhere in this feature.** Research
+  and news each carry a two-sentence summary taken from what the run already wrote —
+  `metadata.significance`, else `summary`, else the abstract — trimmed by `tldr()`. The
+  other categories get none: a clearance or a patent says what it is in its own title, and
+  a gloss written from the same fields would be padding. Adding a summariser here would
+  bill the run again for prose that is already in the row, and would mean a window that
+  cannot render without an API.
+- **The email is the same list.** `scripts/send-digest.js` runs last in `scripts/daily.js`,
+  through vite-node so it composes the digest with the page's own module. A digest that
+  disagreed with the window would be worse than no digest.
+
+The signup box writes to `digest_subscribers` (migration `025`) with the anon key under an
+**insert-only** policy. There is no server and the anon key is in every reader's browser,
+so a subscribe box has exactly one safe shape: it may add an address and may not read the
+list back. A duplicate is treated as success — the reader asked for the same outcome twice
+— because checking first would need the select policy the table must not have.
+
+Sending is off until two secrets exist: `RESEND_API_KEY` and `DIGEST_FROM` (optionally
+`SITE_ORIGIN`, which otherwise defaults to the live URL). Without them `send-digest.js`
+prints a `::warning::` and exits 0, and it sends nothing on a day with no new items. Like
+every other write script here it is **dry-run by default**; `npm run digest` prints the
+subject line, the recipient count and the plain-text body, and `--commit` is what sends.
+`--to=you@example.com` sends one test message to a single address.
+
+**Migration 025 is not applied yet.** Until it is, the box fails gracefully with "Could not
+save that address" and the console names the missing table; run it in the Supabase SQL
+editor, or with `scripts/run-migration.js` if a `DATABASE_URL` is in `.env`.
 
 ## Working rules
 

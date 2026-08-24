@@ -21,6 +21,7 @@
     "images:bind": "node node_modules/vite-node/vite-node.mjs scripts/bind-home-images.js",
     "images:queue": "node --env-file-if-exists=.env scripts/review-queue.js",
     "verify:frontier": "node --env-file-if-exists=.env scripts/check-frontier-schema.js",
+    "digest": "node --env-file-if-exists=.env node_modules/vite-node/vite-node.mjs scripts/send-digest.js",
     "daily": "node --env-file-if-exists=.env scripts/daily.js"
   },
   "dependencies": {

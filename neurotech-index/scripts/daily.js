@@ -81,6 +81,15 @@ const STEPS = [
   // out with a picture in it? Both fail silently — nothing errors, the row is
   // just half empty and the frame holds a plate.
   { name: 'home page sections and pictures fill', cmd: 'verify-homepage.js', node: 'vite-node' },
+
+  // After everything, because the mail describes the finished day: a digest
+  // sent before the backfills and the pictures would list the morning's items
+  // without the fields the window shows for them. Through vite-node because it
+  // composes the digest with the page's own module (src/lib/whatsNew.js), which
+  // is what keeps the mail and the "What's new today?" window one list rather
+  // than two. It sends nothing unless RESEND_API_KEY and DIGEST_FROM are set,
+  // and nothing on a day with no new items.
+  { name: 'email the daily digest', cmd: 'send-digest.js', args: ['--commit'], node: 'vite-node' },
 ]
 
 /** PatentsView is key-gated; without one the step is skipped, not failed. */

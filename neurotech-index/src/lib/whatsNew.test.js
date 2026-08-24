@@ -1,0 +1,271 @@
+import { describe, it, expect } from 'vitest'
+import {
+  CATEGORIES, dayWindow, formatDay, tldr, tldrOf, fromFeedRow, fromDevice, fromPatent,
+  fromOrganization, fromFundingRound, fetchWhatsNew, filledSections, digestSubject,
+  digestHtml, digestText, isEmail, subscribe,
+} from './whatsNew'
+
+// A supabase-js stand-in: every builder method returns the chain, and awaiting
+// the chain yields whatever the table was seeded with. It records the filters
+// it was given so the window itself can be asserted.
+function stubClient(tables = {}, { failing = [] } = {}) {
+  const calls = []
+  return {
+    calls,
+    from(table) {
+      const call = { table, filters: {} }
+      calls.push(call)
+      const chain = {
+        select() { return chain },
+        in(col, vals) { call.filters[col] = vals; return chain },
+        gte(col, v) { call.filters.gte = [col, v]; return chain },
+        lte(col, v) { call.filters.lte = [col, v]; return chain },
+        order() { return chain },
+        limit(n) { call.filters.limit = n; return chain },
+        insert(row) { call.insert = row; return chain },
+        then(resolve) {
+          resolve(failing.includes(table)
+            ? { data: null, error: { message: 'boom' } }
+            : { data: tables[table] || [], error: null })
+        },
+      }
+      return chain
+    },
+  }
+}
+
+const feedRow = (over = {}) => ({
+  id: over.id || 'f1',
+  title: 'A cortical implant restores touch',
+  summary: 'One crisp line about why it matters.',
+  source: 'Nature',
+  url: 'https://example.org/a',
+  entry_type: 'paper',
+  metadata: {},
+  created_at: '2026-08-24T07:10:00Z',
+  ...over,
+})
+
+describe('dayWindow', () => {
+  it('is the UTC calendar day, as a half-open pair the query can use', () => {
+    const w = dayWindow(new Date('2026-08-24T07:23:00Z'))
+    expect(w).toEqual({
+      day: '2026-08-24',
+      startISO: '2026-08-24T00:00:00.000Z',
+      endISO: '2026-08-24T23:59:59.999Z',
+    })
+  })
+
+  it('does not slide to the previous day for a reader west of Greenwich', () => {
+    // 02:23 in Chicago on the 24th is 07:23 UTC on the 24th: same day, and the
+    // window has to agree with the cron that stamped the rows.
+    expect(dayWindow(new Date('2026-08-24T07:23:00Z')).day).toBe('2026-08-24')
+  })
+
+  it('formats the day for a heading', () => {
+    expect(formatDay('2026-08-24')).toBe('24 August 2026')
+  })
+})
+
+describe('tldr', () => {
+  it('takes the first two sentences', () => {
+    const t = tldr('First one here. Second one here. Third one should be dropped.')
+    expect(t).toBe('First one here. Second one here.')
+  })
+
+  it('keeps a single sentence whole when that is all there is', () => {
+    expect(tldr('Only the one sentence.')).toBe('Only the one sentence.')
+  })
+
+  it('does not split on a lower-case continuation after a full stop', () => {
+    // "et al." and "vs." are the common case; the splitter needs a capital
+    // after the space before it will call it a sentence break.
+    expect(tldr('Chen et al. report a decoder. It ran for six months. And more.'))
+      .toBe('Chen et al. report a decoder. It ran for six months.')
+  })
+
+  it('cuts on a word boundary and marks the cut', () => {
+    const long = `${'word '.repeat(80)}end.`
+    const t = tldr(long, { maxChars: 40 })
+    expect(t.length).toBeLessThanOrEqual(41)
+    expect(t.endsWith('…')).toBe(true)
+    expect(t).not.toMatch(/wor…$/)
+  })
+
+  it('collapses whitespace and returns null for nothing', () => {
+    expect(tldr('  a   b.  ')).toBe('a b.')
+    expect(tldr('')).toBe(null)
+    expect(tldr(null)).toBe(null)
+  })
+})
+
+describe('tldrOf', () => {
+  it('prefers the significance paragraph, then the summary, then the abstract', () => {
+    const sig = feedRow({ summary: 'Summary line.', metadata: { significance: 'Sig one. Sig two. Sig three.', abstract: 'Abs.' } })
+    expect(tldrOf(sig)).toBe('Sig one. Sig two.')
+    expect(tldrOf(feedRow({ metadata: { abstract: 'Abs one. Abs two.' } }))).toBe('One crisp line about why it matters.')
+    expect(tldrOf(feedRow({ summary: '', metadata: { abstract: 'Abs one. Abs two. Abs three.' } }))).toBe('Abs one. Abs two.')
+    expect(tldrOf(feedRow({ summary: '', metadata: {} }))).toBe(null)
+  })
+})
+
+describe('row mappers', () => {
+  it('links a feed row to its item page and carries the outbound url', () => {
+    const e = fromFeedRow(feedRow({ id: 'abc' }), { withTldr: true })
+    expect(e.href).toBe('/item/abc')
+    expect(e.url).toBe('https://example.org/a')
+    expect(e.tldr).toBe('One crisp line about why it matters.')
+  })
+
+  it('leaves the TLDR off the categories that were not promised one', () => {
+    expect(fromFeedRow(feedRow()).tldr).toBe(null)
+  })
+
+  it('names a trial with its phase and status', () => {
+    const e = fromFeedRow(feedRow({ entry_type: 'trial', source: 'ClinicalTrials.gov', metadata: { phase: 'Phase 2', status: 'Recruiting' } }))
+    expect(e.meta).toBe('ClinicalTrials.gov · Phase 2 · Recruiting')
+  })
+
+  it('links devices, labs and companies to their own pages, and patents out', () => {
+    expect(fromDevice({ id: 'd1', name: 'Array', manufacturer: 'Acme', status: 'Cleared' }).href).toBe('/device/d1')
+    expect(fromOrganization({ id: 'o1', name: 'Acme', type: 'company' }).href).toBe('/company/o1')
+    expect(fromOrganization({ id: 'l1', name: 'Lab', type: 'lab' }).href).toBe('/lab/l1')
+    const p = fromPatent({ id: 'p1', title: 'Electrode', assignee: 'Acme', patent_number: 'US1', url: 'https://patents/1' })
+    expect(p.href).toBe(null)
+    expect(p.url).toBe('https://patents/1')
+  })
+
+  it('gives a funding round the company that raised it, and a readable amount', () => {
+    const e = fromFundingRound(
+      { id: 'r1', organization_id: 'o1', amount_usd: 42_000_000, round_date: '2026-08-24' },
+      { id: 'o1', name: 'Acme Neuro' },
+    )
+    expect(e.title).toBe('Acme Neuro')
+    expect(e.href).toBe('/company/o1')
+    expect(e.meta).toBe('$42M · 2026-08-24')
+  })
+
+  it('does not invent a company for an unresolved round', () => {
+    const e = fromFundingRound({ id: 'r1', amount_usd: 1_500_000_000 }, null)
+    expect(e.title).toBe('Undisclosed company')
+    expect(e.href).toBe(null)
+    expect(e.meta).toBe('$1.5B')
+  })
+})
+
+describe('fetchWhatsNew', () => {
+  const client = () => stubClient({
+    news_feed: [feedRow({ id: 'n1' })],
+    devices: [{ id: 'd1', name: 'Array', manufacturer: 'Acme' }],
+    patents: [{ id: 'p1', title: 'Electrode', url: 'https://patents/1' }],
+    organizations: [{ id: 'o1', name: 'Acme', type: 'company' }],
+    funding_rounds: [{ id: 'r1', organization_id: 'o1', amount_usd: 5e6 }],
+  })
+
+  it('reads every category inside today\'s UTC window', async () => {
+    const c = client()
+    const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.day).toBe('2026-08-24')
+    // news_feed is asked three times (research, news, trials), plus five tables.
+    const windowed = c.calls.filter(x => x.filters.gte)
+    expect(windowed.length).toBe(7)
+    for (const call of windowed) {
+      expect(call.filters.gte).toEqual(['created_at', '2026-08-24T00:00:00.000Z'])
+      expect(call.filters.lte).toEqual(['created_at', '2026-08-24T23:59:59.999Z'])
+    }
+  })
+
+  it('keeps the category order and counts the total', async () => {
+    const digest = await fetchWhatsNew(client(), { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.sections.map(s => s.key)).toEqual(CATEGORIES.map(c => c.key))
+    // one feed row per feed category (3) + device + patent + org + round
+    expect(digest.total).toBe(7)
+    expect(digest.sections.find(s => s.key === 'research').items[0].tldr).toBeTruthy()
+    expect(digest.sections.find(s => s.key === 'trials').items[0].tldr).toBe(null)
+  })
+
+  it('survives one category failing', async () => {
+    const c = stubClient({ devices: [{ id: 'd1', name: 'Array' }] }, { failing: ['news_feed'] })
+    const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.sections.find(s => s.key === 'research').items).toEqual([])
+    expect(digest.sections.find(s => s.key === 'devices').items).toHaveLength(1)
+  })
+
+  it('returns an empty day rather than throwing with no client', async () => {
+    const digest = await fetchWhatsNew(null, { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.total).toBe(0)
+    expect(filledSections(digest)).toEqual([])
+  })
+})
+
+describe('the email', () => {
+  const digest = {
+    day: '2026-08-24',
+    total: 2,
+    sections: [
+      { key: 'research', label: 'Research', items: [{ id: 'a', title: 'Implant & array', href: '/item/a', meta: 'Nature', tldr: 'Two sentences. Right here.' }] },
+      { key: 'news', label: 'News', items: [] },
+      { key: 'patents', label: 'Patents', items: [{ id: 'p', title: 'Electrode', url: 'https://patents/1', meta: 'Acme', tldr: null }] },
+    ],
+  }
+
+  it('names the day and the count in the subject', () => {
+    expect(digestSubject(digest)).toBe("NeuroBase: what's new on 24 August 2026 (2 new items)")
+    expect(digestSubject({ ...digest, total: 1 })).toMatch(/\(1 new item\)$/)
+  })
+
+  it('drops empty sections and makes site links absolute', () => {
+    const html = digestHtml(digest, { origin: 'https://neurobase-live.vercel.app' })
+    expect(html).toContain('https://neurobase-live.vercel.app/item/a')
+    expect(html).toContain('https://patents/1')
+    expect(html).not.toContain('>News <')
+    expect(html).toContain('Two sentences. Right here.')
+  })
+
+  it('escapes what the pipeline ingested', () => {
+    const html = digestHtml({ day: '2026-08-24', total: 1, sections: [{ key: 'news', label: 'News', items: [{ id: 'x', title: '<script>alert(1)</script>', href: '/item/x' }] }] })
+    expect(html).not.toContain('<script>')
+    expect(html).toContain('&lt;script&gt;')
+  })
+
+  it('renders a plain-text twin', () => {
+    const text = digestText(digest, { origin: 'https://n.b' })
+    expect(text).toContain('RESEARCH (1)')
+    expect(text).toContain('https://n.b/item/a')
+    expect(text).not.toContain('NEWS (0)')
+  })
+
+  it('says so when the day was empty', () => {
+    expect(digestText({ day: '2026-08-24', total: 0, sections: [] })).toContain('Nothing new landed today.')
+  })
+})
+
+describe('subscribe', () => {
+  it('accepts an ordinary address and rejects the rest', () => {
+    expect(isEmail('a@b.co')).toBe(true)
+    expect(isEmail('a@b')).toBe(false)
+    expect(isEmail('a b@c.com')).toBe(false)
+    expect(isEmail('')).toBe(false)
+  })
+
+  it('lower-cases and trims before inserting', async () => {
+    const c = stubClient()
+    const r = await subscribe(c, '  Reader@Example.COM ')
+    expect(r.ok).toBe(true)
+    expect(c.calls.at(-1).insert).toEqual({ email: 'reader@example.com' })
+  })
+
+  it('treats an address already on the list as success', async () => {
+    const c = {
+      from: () => ({ insert: () => ({ then: r => r({ error: { code: '23505', message: 'duplicate' } }) }) }),
+    }
+    expect(await subscribe(c, 'reader@example.com')).toEqual({ ok: true, already: true })
+  })
+
+  it('refuses a malformed address without touching the network', async () => {
+    const c = stubClient()
+    const r = await subscribe(c, 'nope')
+    expect(r.ok).toBe(false)
+    expect(c.calls).toHaveLength(0)
+  })
+})
