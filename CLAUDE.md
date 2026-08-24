@@ -540,6 +540,14 @@ so a subscribe box has exactly one safe shape: it may add an address and may not
 list back. A duplicate is treated as success — the reader asked for the same outcome twice
 — because checking first would need the select policy the table must not have.
 
+**Every send carries an opt-out**, because bulk mail has to. There is no server to host a
+one-click unsubscribe endpoint and the anon key cannot update the table, so the route is a
+reply to the sending address: `send-digest.js` sets Resend's `reply_to` and the mail ends
+with "reply with unsubscribe", the address taken from `DIGEST_FROM` (override with
+`DIGEST_REPLY_TO`). Acting on a reply is manual today — set `unsubscribed_at` on the row
+with the service key. `unsubscribeLine()` in `whatsNew.js` is the seam: give it an
+`unsubscribeUrl` and the link becomes a real endpoint the moment one exists.
+
 Sending is off until two secrets exist: `RESEND_API_KEY` and `DIGEST_FROM` (optionally
 `SITE_ORIGIN`, which otherwise defaults to the live URL). Without them `send-digest.js`
 prints a `::warning::` and exits 0, and it sends nothing on a day with no new items. Like
