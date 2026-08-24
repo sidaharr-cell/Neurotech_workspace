@@ -599,9 +599,12 @@ every other write script here it is **dry-run by default**; `npm run digest` pri
 subject line, the recipient count and the plain-text body, and `--commit` is what sends.
 `--to=you@example.com` sends one test message to a single address.
 
-**Migration 025 is not applied yet.** Until it is, the box fails gracefully with "Could not
-save that address" and the console names the missing table; run it in the Supabase SQL
-editor, or with `scripts/run-migration.js` if a `DATABASE_URL` is in `.env`.
+**Migration 025 is applied** (checked 24 Aug 2026: `send-digest.js` reads the table with
+the service key and reports a count rather than warning that it is missing, and the anon
+key gets `200 []` from it, which is RLS with no select policy doing its job). The list is
+empty. Were it ever dropped, the box fails gracefully with "Could not save that address"
+and the console names the missing table; re-run the migration in the Supabase SQL editor,
+or with `scripts/run-migration.js` if a `DATABASE_URL` is in `.env`.
 
 ## Working rules
 
