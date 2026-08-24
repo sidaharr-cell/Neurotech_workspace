@@ -146,8 +146,7 @@
     "fwci": 28.212,
     "citedBy": 6,
     "relevance": 9,
-    "significance": "While laboratory BCIs have decoded speech and cursor control with impressive accuracy, they have required constant technical supervision and lab environments, blocking real clinical translation. This work demonstrates that an intracortical BCI system can be operated independently by a patient at home for extended periods, supporting both naturalistic speech decoding and digital cursor control without expert oversight. This is a landmark proof of concept that addresses the critical gap between research prototypes and practical, patient-independent neurotechnology, showing that implantable BCIs can deliver genuine functional benefit and usability in real life, not just in controlled settings.",
-    "image_license_url": null
+    "significance": "While laboratory BCIs have decoded speech and cursor control with impressive accuracy, they have required constant technical supervision and lab environments, blocking real clinical translation. This work demonstrates that an intracortical BCI system can be operated independently by a patient at home for extended periods, supporting both naturalistic speech decoding and digital cursor control without expert oversight. This is a landmark proof of concept that addresses the critical gap between research prototypes and practical, patient-independent neurotechnology, showing that implantable BCIs can deliver genuine functional benefit and usability in real life, not just in controlled settings."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
@@ -198,11 +197,45 @@
     "doi": "10.1038/s41592-026-03076-z",
     "url": "https://doi.org/10.1038/s41592-026-03076-z",
     "publishedAt": "2026-06-01",
-    "pctile": 0.98716822,
-    "fwci": 15.5398,
+    "pctile": 0.98692469,
+    "fwci": 15.2668,
     "citedBy": 15,
     "relevance": 9,
     "significance": "This paper enables simultaneous high-resolution recording and spatially precise optogenetic manipulation of thousands of neurons, revolutionizing circuit neuroscience research capabilities."
+  },
+  {
+    "title": "Real-time brain-computer interface control of walking exoskeleton with bilateral sensory feedback.",
+    "authors": [
+      "Jeffrey Lim",
+      "Po T Wang",
+      "Won Joon Sohn",
+      "Derrick Lin",
+      "Shravan Thaploo",
+      "Luke Bashford",
+      "David A Bjanes",
+      "Angelica Nguyen",
+      "Hui Gong",
+      "Michelle Armacost",
+      "Susan J Shaw",
+      "Spencer Kellis",
+      "Brian Lee",
+      "Darrin J Lee",
+      "Payam Heydari",
+      "Richard A Andersen",
+      "Zoran Nenadic",
+      "Charles Y Liu",
+      "An H Do"
+    ],
+    "journal": "Brain stimulation",
+    "pmid": "41771420",
+    "doi": "10.1016/j.brs.2026.103065",
+    "url": "https://doi.org/10.1016/j.brs.2026.103065",
+    "publishedAt": "2026-02-28T00:00:00+00:00",
+    "pctile": 0.98307852,
+    "fwci": 14.0334,
+    "citedBy": 2,
+    "relevance": 8,
+    "significance": "Restoring both motor output and sensory input through a single BCI interface is a key goal for spinal cord injury patients seeking to walk again. This work demonstrates simultaneous brain-controlled exoskeleton movement and electrical stimulation-based sensation feedback in a closed-loop system, a notable step toward natural, bidirectional brain-body communication. Sensory feedback enhances embodiment and motor control, making BCIs more intuitive and effective for functional restoration."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
@@ -236,5 +269,27 @@
     "citedBy": 1,
     "relevance": 7,
     "significance": ""
+  },
+  {
+    "title": "Perception of brain-computer interface implantation surgery for motor, sensory, and autonomic restoration in spinal cord injury and stroke.",
+    "authors": [
+      "Derrick Lin",
+      "Tracie Tran",
+      "Shravan Thaploo",
+      "Jose Gabrielle E Matias",
+      "Joy E Pixley",
+      "Zoran Nenadic",
+      "An H Do"
+    ],
+    "journal": "Frontiers in Neuroscience",
+    "pmid": "41929704",
+    "doi": "10.3389/fnins.2026.1678175",
+    "url": "https://doi.org/10.3389/fnins.2026.1678175",
+    "publishedAt": "2026-03-18T00:00:00+00:00",
+    "pctile": 0.95360135,
+    "fwci": 7.1103,
+    "citedBy": 1,
+    "relevance": 6,
+    "significance": "Understanding how patients view BCI implantation surgery shapes neurotechnology development priorities and clinical implementation strategies. This work evaluates perceptions of ECoG-based systems for motor and sensory restoration in two major patient populations, providing real-world feedback that guides device refinement, surgical protocols, and informed consent processes. Patient-centered insights are critical for translating lab prototypes into widely adopted clinical tools."
   }
 ]
