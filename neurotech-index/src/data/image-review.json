@@ -420,135 +420,309 @@
       "box": null,
       "note": "A photograph of a conference slide listing the River trial endpoints. It is a photograph, and it is of the story, but the image IS text: at 250 pixels it is an unreadable grey slab. The single gate exists to keep burned-in text off a card, and a photographed slide is nothing but.",
       "at": "2026-08-23"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2023/11/ipsihand-system-featured.jpg": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2023/11/IpsiHand-system-featured.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 403",
+      "at": "2026-08-24"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2026/06/connexus-bci-implantation-procedure-featured.jpg": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/06/Connexus-BCI-implantation-procedure-featured.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 403",
+      "at": "2026-08-24"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/bdca168b-6cc2-4a6f-a56241b17e91a9f1/a800b1c0-1ee1-4bb3-ac9406e31fe27744/websitewebp_xl-fnagi_main%20visual_orange_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/BDCA168B-6CC2-4A6F-A56241B17E91A9F1/A800B1C0-1EE1-4BB3-AC9406E31FE27744/WebsiteWebP_XL-FNAGI_Main%20Visual_Orange_Website.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Frontiers masthead art: a 3D render of a neuron, and nothing to do with this locus coeruleus paper.",
+      "at": "2026-08-24"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/1727ebaa-c9e3-4dce-84ab224e8b723501/9e2029cb-6573-4a48-934df00fc2b83673/websitewebp_xl-fnhum_main%20visual_red_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/1727EBAA-C9E3-4DCE-84AB224E8B723501/9E2029CB-6573-4A48-934DF00FC2B83673/WebsiteWebP_XL-FNHUM_Main%20Visual_Red_Website.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Frontiers masthead art: a 3D anatomical render of a head and nerves, not a picture of this taVNS study.",
+      "at": "2026-08-24"
+    },
+    "scpr.brightspotcdn.com/dims4/default/9828033/2147483647/strip/true/crop/1200x630+0+85/resize/1200x630!/quality/90": {
+      "url": "https://scpr.brightspotcdn.com/dims4/default/9828033/2147483647/strip/true/crop/1200x630+0+85/resize/1200x630!/quality/90/?url=http%3A%2F%2Fscpr-brightspot.s3.us-west-2.amazonaws.com%2F78%2Fcf%2F8e3e1930486cbc61f17fe1e5835e%2Fneural-data-privacy-ah-cm-01.jpeg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "LAist photo-illustration: a montage of archive cut-outs, brains and keyboards over a grid, unreadable at card size.",
+      "at": "2026-08-24"
+    },
+    "cdn.mos.cms.futurecdn.net/ffir7nszj9kqbkcvmzgsdu-1920-80.jpg": {
+      "url": "https://cdn.mos.cms.futurecdn.net/ffiR7Nszj9KqbkcVmZGSDU-1920-80.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.34,
+        "top": 0.3,
+        "right": 0.58,
+        "bottom": 0.85
+      },
+      "note": "The outlet's own photograph of the $299 chest-worn vagus nerve device it tested, worn as described in the headline.",
+      "at": "2026-08-24"
+    },
+    "news.mit.edu/sites/default/files/images/202606/mit-serc-prize.jpg": {
+      "url": "https://news.mit.edu/sites/default/files/images/202606/mit-SERC-Prize.JPG",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.34,
+        "top": 0.28,
+        "right": 0.62,
+        "bottom": 0.72
+      },
+      "note": "MIT's own photograph of the SERC event this MIT News story reports, one speaker clearly the subject.",
+      "at": "2026-08-24"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/2d61470c-ea2e-4625-9e9a2d0beec8aa35/17462a88-26a3-49a9-843e8ae5ccb117b7/websitewebp_xl-fdgth_main%20visual_red_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/2D61470C-EA2E-4625-9E9A2D0BEEC8AA35/17462A88-26A3-49A9-843E8AE5CCB117B7/WebsiteWebP_XL-FDGTH_Main%20Visual_Red_Website.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Generic clinic stock photograph of a doctor and patient with a tablet; nothing to do with this pilot implementation.",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/this-scanning-electron-microscope-image-gives-a-glimpse-of-the-porous-material-making-up-the-implantable-power-outlet.jpg": {
+      "url": "https://spectrum.ieee.org/media-library/this-scanning-electron-microscope-image-gives-a-glimpse-of-the-porous-material-making-up-the-implantable-power-outlet.jpg?id=67508805&width=1200&height=600&coordinates=0%2C136%2C0%2C364",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.02,
+        "right": 0.98,
+        "bottom": 0.98
+      },
+      "note": "IEEE Spectrum's own scanning electron micrograph of the porous bioelectronic structure this story is about.",
+      "at": "2026-08-24"
+    },
+    "upload.wikimedia.org/wikipedia/commons/2/2e/eeg_registration.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Eeg_registration.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.6,
+        "top": 0.08,
+        "right": 0.97,
+        "bottom": 0.6
+      },
+      "note": "Photograph of a subject in a full EEG cap during a recording session; the capped head is the subject.",
+      "at": "2026-08-24"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/0b/fnirs_head_hitachi_etg4000_2.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/FNIRS_head_Hitachi_ETG4000_2.jpg/1280px-FNIRS_head_Hitachi_ETG4000_2.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.52,
+        "top": 0.05,
+        "right": 0.88,
+        "bottom": 0.7
+      },
+      "note": "Photograph of an fNIRS optode cap on a head beside the Hitachi ETG-4000 it plugs into.",
+      "at": "2026-08-24"
+    },
+    "upload.wikimedia.org/wikipedia/commons/7/75/optogenetics_imetronic.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Optogenetics_imetronic.JPG/1280px-Optogenetics_imetronic.JPG",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.08,
+        "top": 0.22,
+        "right": 0.97,
+        "bottom": 0.8
+      },
+      "note": "Photograph of a real optogenetics rig: two lit behavioural chambers under blue illumination with the laser driver above.",
+      "at": "2026-08-24"
+    },
+    "science.xyz/images/meta/apple-touch-icon.png": {
+      "url": "https://science.xyz/images/meta/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Science Corporation's site icon, a wordmark glyph, not a photograph of the European rollout.",
+      "at": "2026-08-24"
+    },
+    "upload.wikimedia.org/wikipedia/commons/f/ff/%c4%90%e1%bb%8bnh_v%e1%bb%8b_v%c3%a0_chu%e1%ba%a9n_b%e1%bb%8b_b%e1%bb%87nh_nh%c3%a2n_mri_hifu.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/%C4%90%E1%BB%8Bnh_v%E1%BB%8B_v%C3%A0_chu%E1%BA%A9n_b%E1%BB%8B_b%E1%BB%87nh_nh%C3%A2n_MRI_HIFU.jpg/1280px-%C4%90%E1%BB%8Bnh_v%E1%BB%8B_v%C3%A0_chu%E1%BA%A9n_b%E1%BB%8B_b%E1%BB%87nh_nh%C3%A2n_MRI_HIFU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Stock Wikimedia photograph of an MR-guided ultrasound suite in general, not a picture of this particular study.",
+      "at": "2026-08-24"
+    },
+    "beckersspine.com/wp-content/uploads/sites/6/2025/03/beckers-spine-review.jpeg": {
+      "url": "https://www.beckersspine.com/wp-content/uploads/sites/6/2025/03/Beckers-Spine-Review.jpeg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Becker's Spine Review house placeholder: the publication's wordmark burned over a dimmed skyline.",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/illustration-of-a-non-invasive-pacemaker-adhered-to-the-skin-outside-of-a-persons-chest.jpg": {
+      "url": "https://spectrum.ieee.org/media-library/illustration-of-a-non-invasive-pacemaker-adhered-to-the-skin-outside-of-a-persons-chest.jpg?id=66888072&width=980",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Drawn editorial illustration of a patch and circuit board, not a photograph.",
+      "at": "2026-08-24"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2026/05/tavallaii-et-al-pic-ftrd.png": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/05/Tavallaii-et-al-pic-FTRD.png",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Three separate author headshots stitched into one strip; a multi-panel montage reads as nothing at card size.",
+      "at": "2026-08-24"
+    },
+    "statnews.com/wp-content/uploads/2026/08/bci-study-1024x576.jpg": {
+      "url": "https://www.statnews.com/wp-content/uploads/2026/08/bci-study-1024x576.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "STAT editorial illustration: a silhouetted head with a halftone brain and speech bubbles, not a photograph.",
+      "at": "2026-08-24"
+    },
+    "paradromics.com/wp-content/uploads/2026/06/paradromics-site-icons-300x300.png": {
+      "url": "https://paradromics.com/wp-content/uploads/2026/06/Paradromics-Site-Icons-300x300.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Paradromics site icon, a logo glyph rather than a picture of the milestone.",
+      "at": "2026-08-24"
+    },
+    "statnews.com/wp-content/uploads/2026/07/prima-implant-2026-1024x576.jpg": {
+      "url": "https://www.statnews.com/wp-content/uploads/2026/07/prima-implant-2026-1024x576.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.3,
+        "top": 0.03,
+        "right": 0.68,
+        "bottom": 0.7
+      },
+      "note": "Macro studio photograph of the Prima subretinal implant held in tweezers, the exact device the story covers.",
+      "at": "2026-08-24"
+    },
+    "arxiv.org/html/2606.02939v1/figures/erp_xttn_architecture.png": {
+      "url": "https://arxiv.org/html/2606.02939v1/figures/erp_xttn_architecture.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "The paper's architecture block diagram, all boxes and text, illegible on a card.",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg": {
+      "url": "https://spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg?id=67508805&width=980",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.02,
+        "right": 0.98,
+        "bottom": 0.98
+      },
+      "note": "Second Spectrum SEM close-up of the same spongy bioelectronic scaffold this story is about.",
+      "at": "2026-08-24"
+    },
+    "spectrum.ieee.org/media-library/illustration-of-someone-with-an-intracranial-electrode-device.jpg": {
+      "url": "https://spectrum.ieee.org/media-library/illustration-of-someone-with-an-intracranial-electrode-device.jpg?id=66785254&width=980",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Flat vector illustration of a head with an electrode grid, not a photograph.",
+      "at": "2026-08-24"
+    },
+    "media.wired.com/photos/6a7a29949f31fa362de72566/master/pass/bookexcerpt_brainmining_v1.jpg": {
+      "url": "https://media.wired.com/photos/6a7a29949f31fa362de72566/master/pass/BookExcerpt_BrainMining_v1.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Wired book-excerpt collage: four duotone panels including a stock lab shot and an archive gag photo.",
+      "at": "2026-08-24"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/aurenar-logo-featured.jpg": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/Aurenar-logo-featured.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Aurenar's corporate logo and wordmark, not a picture of the FDA designation.",
+      "at": "2026-08-24"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/27a044cc-44d1-4e5e-a886893a3fe656f4/a72d78d9-73cd-4c75-910fb7c0d04825c0/websitewebp_xl-fnins_main visual_purple_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/27A044CC-44D1-4E5E-A886893A3FE656F4/A72D78D9-73CD-4C75-910FB7C0D04825C0/WebsiteWebP_XL-FNINS_Main Visual_Purple_Website.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Frontiers in Neuroscience masthead art: a 3D render of a brain on black, the journal's branding rather than a picture of any paper. Same file already turned down under its percent-encoded URL.",
+      "at": "2026-08-24"
     }
   },
   "pending": [
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Eeg_registration.jpg",
-      "item": null,
-      "title": "eeg: Eeg registration.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/FNIRS_head_Hitachi_ETG4000_2.jpg/1280px-FNIRS_head_Hitachi_ETG4000_2.jpg",
-      "item": null,
-      "title": "fnirs: FNIRS head Hitachi ETG4000 2.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Optogenetics_imetronic.JPG/1280px-Optogenetics_imetronic.JPG",
-      "item": null,
-      "title": "optogenetics: Optogenetics imetronic.JPG",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://science.xyz/images/meta/apple-touch-icon.png",
-      "item": null,
-      "title": "Science Corporation begins European rollout ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/%C4%90%E1%BB%8Bnh_v%E1%BB%8B_v%C3%A0_chu%E1%BA%A9n_b%E1%BB%8B_b%E1%BB%87nh_nh%C3%A2n_MRI_HIFU.jpg/1280px-%C4%90%E1%BB%8Bnh_v%E1%BB%8B_v%C3%A0_chu%E1%BA%A9n_b%E1%BB%8B_b%E1%BB%87nh_nh%C3%A2n_MRI_HIFU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "item": null,
-      "title": "Motor and Non-Motor Effects of Low-Intensity",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.beckersspine.com/wp-content/uploads/sites/6/2025/03/Beckers-Spine-Review.jpeg",
-      "item": null,
-      "title": "Biotronik Neuro debuts AI for spinal cord st",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://spectrum.ieee.org/media-library/illustration-of-a-non-invasive-pacemaker-adhered-to-the-skin-outside-of-a-persons-chest.jpg?id=66888072&width=980",
-      "item": null,
-      "title": "Ultrasound Patch Could Form Future Pacemaker",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2023/11/IpsiHand-system-featured.jpg",
-      "item": null,
-      "title": "Newly published BCI study confirms IpsiHand’",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/05/Tavallaii-et-al-pic-FTRD.png",
-      "item": null,
-      "title": "Five questions every neurosurgeon should ask",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.statnews.com/wp-content/uploads/2026/08/bci-study-1024x576.jpg",
-      "item": null,
-      "title": "What patients actually think about ‘minimall",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://paradromics.com/wp-content/uploads/2026/06/Paradromics-Site-Icons-300x300.png",
-      "item": null,
-      "title": "Paradromics and University of Michigan Compl",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.statnews.com/wp-content/uploads/2026/07/prima-implant-2026-1024x576.jpg",
-      "item": null,
-      "title": "‘Cochlear implant for blindness’ debuts in E",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://arxiv.org/html/2606.02939v1/figures/erp_xttn_architecture.png",
-      "item": null,
-      "title": "ERP-XTTN: Interpretable Prototype-Guided Cro",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg?id=67508805&width=980",
-      "item": null,
-      "title": "Injectable Outlet in the Body Powers Bioelec",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://spectrum.ieee.org/media-library/illustration-of-someone-with-an-intracranial-electrode-device.jpg?id=66785254&width=980",
-      "item": null,
-      "title": "System Boosts Speech Volume Based on Brain S",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://media.wired.com/photos/6a7a29949f31fa362de72566/master/pass/BookExcerpt_BrainMining_v1.jpg",
-      "item": null,
-      "title": "Big Tech Wants to Harvest Your Thoughts",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/06/Connexus-BCI-implantation-procedure-featured.jpg",
-      "item": null,
-      "title": "Paradromics and University of Michigan compl",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/Aurenar-logo-featured.jpg",
-      "item": null,
-      "title": "Aurenar gains US FDA breakthrough designatio",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
     {
       "url": "https://epiwatch.com/wp-content/uploads/2025/06/testimonial-bg.jpg",
       "item": null,
@@ -736,41 +910,6 @@
       "item": null,
       "title": "Neuropixels Opto: combining high-resolution ",
       "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/BDCA168B-6CC2-4A6F-A56241B17E91A9F1/A800B1C0-1EE1-4BB3-AC9406E31FE27744/WebsiteWebP_XL-FNAGI_Main%20Visual_Orange_Website.webp",
-      "item": "0017173c-3afb-42ab-b2af-74d05f3cf6df",
-      "title": "A locus coeruleus-centric framework for novelty, salience, and gamma oscillation",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/1727EBAA-C9E3-4DCE-84AB224E8B723501/9E2029CB-6573-4A48-934DF00FC2B83673/WebsiteWebP_XL-FNHUM_Main%20Visual_Red_Website.webp",
-      "item": "024aad5d-fa38-4ec5-848b-23853ac73ef2",
-      "title": "Transcutaneous auricular vagus nerve stimulation for disorders of consciousness:",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://scpr.brightspotcdn.com/dims4/default/9828033/2147483647/strip/true/crop/1200x630+0+85/resize/1200x630!/quality/90/?url=http%3A%2F%2Fscpr-brightspot.s3.us-west-2.amazonaws.com%2F78%2Fcf%2F8e3e1930486cbc61f17fe1e5835e%2Fneural-data-privacy-ah-cm-01.jpeg",
-      "item": "7b360d17-e32f-479b-a444-a6cd36ff6431",
-      "title": "Would you trust your boss with data about your brain ? California moves to regul",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.mos.cms.futurecdn.net/ffiR7Nszj9KqbkcVmZGSDU-1920-80.jpg",
-      "item": "8958202c-9ad9-46ff-9791-64bab60f3539",
-      "title": "$299 vagus nerve device vs $0 stress - relief hacks : Which works best ?",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://news.mit.edu/sites/default/files/images/202606/mit-SERC-Prize.JPG",
-      "item": "5931a917-bc7c-4ff1-b505-90896a40922e",
-      "title": "Toward a future that preserves benefits of neurotechnology for all",
-      "why": "the photograph this outlet ran",
       "at": "2026-08-23"
     },
     {
@@ -994,13 +1133,6 @@
       "url": "https://technode.com/wp-content/uploads/2026/08/steve-a-johnson-_0iV9LmPDn0-unsplash.jpg",
       "item": null,
       "title": "Shanghai - based BCI startup raises RMB330 m",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/27A044CC-44D1-4E5E-A886893A3FE656F4/A72D78D9-73CD-4C75-910FB7C0D04825C0/WebsiteWebP_XL-FNINS_Main Visual_Purple_Website.webp",
-      "item": null,
-      "title": "A CNN-BiLSTM-GRU and attention-integrated hy",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
