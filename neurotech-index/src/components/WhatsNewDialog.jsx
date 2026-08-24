@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { X, ExternalLink, Mail, Check, Loader2 } from 'lucide-react'
+import { X, ExternalLink, Mail, Check, Loader2, ChevronDown, ChevronUp } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import { fetchWhatsNew, filledSections, formatDay, isEmail, subscribe } from '../lib/whatsNew'
+import { fetchWhatsNew, filledSections, formatDay, isEmail, subscribe, PREVIEW_PER_CATEGORY } from '../lib/whatsNew'
 
 /**
  * WhatsNewDialog — the day's arrivals, over the page rather than instead of it.
@@ -32,9 +32,57 @@ function Item({ item }) {
   return (
     <li className="py-3 border-b border-rule-soft last:border-0">
       <div className="font-serif text-[16px] leading-snug font-semibold">{title}</div>
+      {/* The byline sits directly under the headline, where a byline goes, and
+          darker than the source line below it: it names who did the work, which
+          the journal and the phase do not. Research is the only category that
+          has one; see byline() in lib/whatsNew.js. */}
+      {item.byline && <div className="mt-1 font-sans text-[12px] text-ink-soft">{item.byline}</div>}
       {item.meta && <div className="mt-1 font-sans text-[12px] text-muted">{item.meta}</div>}
       {item.tldr && <p className="mt-1.5 font-serif text-[14px] leading-relaxed text-ink-soft">{item.tldr}</p>}
     </li>
+  )
+}
+
+/**
+ * One category, folded to its first ten.
+ *
+ * Every category is read in full and counted in full — the number beside the
+ * heading is the day's real total, not the number of rows on screen — and the
+ * rest sit behind one disclosure. Without the fold a heavy morning's Research
+ * pushes every other category off the bottom of a window the reader then has to
+ * scroll past to find out that trials moved at all, which is the opposite of a
+ * glance. Each category keeps its own open state, so opening one does not
+ * lengthen the others.
+ *
+ * The emailed digest is not folded: an inbox has no disclosure to open, and the
+ * fold hides nothing the mail would have said differently.
+ */
+export function Section({ section }) {
+  const [expanded, setExpanded] = useState(false)
+  const hidden = section.items.length - PREVIEW_PER_CATEGORY
+  const shown = expanded ? section.items : section.items.slice(0, PREVIEW_PER_CATEGORY)
+
+  return (
+    <section className="mt-7">
+      <h3 className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-ink border-b border-rule pb-1.5">
+        {section.label} <span className="text-muted">({section.items.length})</span>
+      </h3>
+      <ul className="mt-1">
+        {shown.map(item => <Item key={`${section.key}-${item.id}`} item={item} />)}
+      </ul>
+      {hidden > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded(v => !v)}
+          aria-expanded={expanded}
+          className="mt-2 inline-flex items-center gap-1 font-sans text-[12px] font-semibold uppercase tracking-[0.08em] text-muted hover:text-accent transition-colors"
+        >
+          {expanded
+            ? <><ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />Show fewer</>
+            : <><ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />Show {hidden} more</>}
+        </button>
+      )}
+    </section>
   )
 }
 
@@ -68,7 +116,7 @@ function EmailSignup() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 border-t border-rule pt-6">
+    <form onSubmit={onSubmit} className="mt-5 border border-rule rounded-sm bg-canvas/50 p-4">
       <label htmlFor="whats-new-email" className="block font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-ink">
         <Mail className="inline w-3.5 h-3.5 mr-1.5 -mt-0.5" aria-hidden="true" />
         Get this by email
@@ -181,6 +229,14 @@ export default function WhatsNewDialog({ open, onClose }) {
         </div>
 
         <div className="px-5 sm:px-8 pb-8">
+          {/* The signup comes before the list, not after it. A reader who wants
+              the digest should not have to scroll a day's worth of arrivals to
+              find the box, and on a heavy day the foot of this window is a long
+              way down. It is boxed rather than ruled off so that sitting above
+              the sections it reads as an offer beside the list, not as the first
+              section of it. */}
+          <EmailSignup />
+
           {loading && !digest && (
             <p className="py-10 text-center font-sans text-[13px] text-muted">Loading…</p>
           )}
@@ -191,18 +247,7 @@ export default function WhatsNewDialog({ open, onClose }) {
             </p>
           )}
 
-          {sections.map(section => (
-            <section key={section.key} className="mt-7 first:mt-6">
-              <h3 className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-ink border-b border-rule pb-1.5">
-                {section.label} <span className="text-muted">({section.items.length})</span>
-              </h3>
-              <ul className="mt-1">
-                {section.items.map(item => <Item key={`${section.key}-${item.id}`} item={item} />)}
-              </ul>
-            </section>
-          ))}
-
-          <EmailSignup />
+          {sections.map(section => <Section key={section.key} section={section} />)}
         </div>
       </div>
     </div>

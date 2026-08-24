@@ -534,11 +534,12 @@ section pages (`/trials`, `/devices`, `/companies`, `/research`).
 
 The tab left of Watchlist opens a window over the page — `src/components/WhatsNewDialog.jsx`,
 blurred backdrop, Escape or a click outside to close — listing everything the index gained
-**today and only today**, grouped by category: Research, News, Clinical trials, Devices and
-clearances, Patents, Companies and labs, Funding rounds. Empty categories are omitted, not
-shown as zeroes.
+**today and only today**, grouped by category: Research, News, Clinical trials, Clinical
+trial changes, Devices and clearances, Patents, Funding rounds. Empty categories are
+omitted, not shown as zeroes. The signup box sits **above** the list, not under it, so a
+reader does not have to scroll a heavy morning to find it.
 
-`src/lib/whatsNew.js` is the one definition of that list, and three things follow from it:
+`src/lib/whatsNew.js` is the one definition of that list, and six things follow from it:
 
 - **Today is UTC.** `created_at` is stamped by Postgres and the run is a 6am UTC cron, so
   the window has to use the same day boundary the pipeline did or a reader west of
@@ -552,9 +553,30 @@ shown as zeroes.
   a gloss written from the same fields would be padding. Adding a summariser here would
   bill the run again for prose that is already in the row, and would mean a window that
   cannot render without an API.
+- **Research carries a byline, and only research does.** `byline()` prints the first author
+  and "et al." whenever there is a second, from `metadata.authors` — whole names, as PubMed
+  and arXiv ingestion wrote them. Thirty names would swamp the title, and the first author
+  is the one a reader recognises; the full list is on the item page. News rows carry a
+  publication in `source`, not authors, so they get none.
+- **There is no Companies and labs category.** A new `organizations` row is bookkeeping,
+  not news: the pipeline mints one the first time a name turns up as an affiliation, a
+  manufacturer or a sponsor, so the section filled with companies that had done nothing
+  that day. A company earns a line by raising money — Funding rounds, floored at
+  `FUNDING_FLOOR_USD` ($1M). The floor is in the query, not applied to the page it returns,
+  so a backfill day of small rounds cannot use up `PER_CATEGORY` and push the big ones off;
+  `gte` on a nullable column drops undisclosed amounts too, which is the intended reading.
+- **Clinical trial changes replaced it.** `trials` is trials the index gained today;
+  `trialChanges` reads the `trial_changes` log for trials that moved today and groups it
+  through `groupTrialChanges` (`src/lib/trial-changes.js`), so a study that closes is one
+  entry with two clauses and not two rows with the same title. A change whose trial has
+  left the index is dropped — no title to print, nowhere to link — the same call
+  `getRecentTrialChanges` makes in `data.js`.
 - **The email is the same list.** `scripts/send-digest.js` runs last in `scripts/daily.js`,
   through vite-node so it composes the digest with the page's own module. A digest that
-  disagreed with the window would be worse than no digest.
+  disagreed with the window would be worse than no digest. The window's
+  `PREVIEW_PER_CATEGORY` fold (first ten, then "Show N more") is a fold and not a shorter
+  list: the heading counts the whole day, and the mail carries every item because an inbox
+  has no disclosure to open.
 
 The signup box writes to `digest_subscribers` (migration `025`) with the anon key under an
 **insert-only** policy. There is no server and the anon key is in every reader's browser,
