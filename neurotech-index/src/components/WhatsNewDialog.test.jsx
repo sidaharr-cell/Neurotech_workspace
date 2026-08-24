@@ -49,6 +49,17 @@ describe('WhatsNewDialog section fold', () => {
     expect(screen.queryByRole('button')).toBeNull()
   })
 
+  it('still prints a category that had nothing, as a heading and a zero', () => {
+    // A quiet morning has to say WHICH category was quiet. Dropping the section
+    // leaves a reader unable to tell "no trials moved" from "this index does
+    // not follow trials".
+    renderSection(0)
+    expect(within(screen.getByRole('heading')).getByText('(0)')).toBeTruthy()
+    expect(screen.getByText('Nothing today.')).toBeTruthy()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+    expect(screen.queryByRole('button')).toBeNull()
+  })
+
   it('prints the byline under the title, and nothing where there is none', () => {
     const [a, b] = items(2)
     renderSection(0, { items: [{ ...a, byline: 'Chen Wang et al.' }, b] })

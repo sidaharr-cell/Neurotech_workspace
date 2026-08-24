@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { X, ExternalLink, Mail, Check, Loader2, ChevronDown, ChevronUp } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import { fetchWhatsNew, filledSections, formatDay, isEmail, subscribe, PREVIEW_PER_CATEGORY } from '../lib/whatsNew'
+import { fetchWhatsNew, formatDay, isEmail, subscribe, PREVIEW_PER_CATEGORY } from '../lib/whatsNew'
 
 /**
  * WhatsNewDialog — the day's arrivals, over the page rather than instead of it.
@@ -56,6 +56,15 @@ function Item({ item }) {
  *
  * The emailed digest is not folded: an inbox has no disclosure to open, and the
  * fold hides nothing the mail would have said differently.
+ *
+ * A CATEGORY WITH NOTHING IN IT STILL PRINTS, as a heading and a zero. The
+ * window used to drop it, and a reader who opened a quiet morning saw Research
+ * and News and had no way to tell whether trials had not moved or whether the
+ * index does not follow trials at all. The zero answers that: the category is
+ * tracked, and today it is empty. The emailed digest still drops its empty
+ * sections — it is sent only on a day that has something, and five zeroes under
+ * a heading is padding in an inbox, where it is a fact worth stating in a window
+ * the reader opened to ask exactly this question.
  */
 export function Section({ section }) {
   const [expanded, setExpanded] = useState(false)
@@ -67,6 +76,9 @@ export function Section({ section }) {
       <h3 className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-ink border-b border-rule pb-1.5">
         {section.label} <span className="text-muted">({section.items.length})</span>
       </h3>
+      {!section.items.length && (
+        <p className="py-3 font-sans text-[13px] text-muted">Nothing today.</p>
+      )}
       <ul className="mt-1">
         {shown.map(item => <Item key={`${section.key}-${item.id}`} item={item} />)}
       </ul>
@@ -191,7 +203,11 @@ export default function WhatsNewDialog({ open, onClose }) {
 
   if (!open) return null
 
-  const sections = digest ? filledSections(digest) : []
+  // Every category, empty ones included, so a quiet morning says which of them
+  // was quiet rather than leaving the reader to guess whether the index follows
+  // trials at all. A day with nothing at all in it is the exception: seven
+  // zeroes says less than one sentence does, so that case gets the sentence.
+  const sections = digest?.total ? digest.sections : []
 
   return (
     <div className="fixed inset-0 z-[60] flex items-start sm:items-center justify-center p-0 sm:p-6">

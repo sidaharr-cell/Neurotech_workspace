@@ -535,9 +535,14 @@ section pages (`/trials`, `/devices`, `/companies`, `/research`).
 The tab left of Watchlist opens a window over the page — `src/components/WhatsNewDialog.jsx`,
 blurred backdrop, Escape or a click outside to close — listing everything the index gained
 **today and only today**, grouped by category: Research, News, Clinical trials, Clinical
-trial changes, Devices and clearances, Patents, Funding rounds. Empty categories are
-omitted, not shown as zeroes. The signup box sits **above** the list, not under it, so a
-reader does not have to scroll a heavy morning to find it.
+trial changes, Devices and clearances, Patents, Funding rounds. **Every category prints,
+empty ones as a heading and a zero** — a quiet morning has to say which category was
+quiet, or a reader cannot tell "no trials moved today" from "this index does not follow
+trials". The exception is a day with nothing at all in it: seven zeroes say less than one
+sentence, so `total === 0` gets the sentence instead. The emailed digest still drops its
+empty sections (`filledSections`), because it is only sent on a day that has something and
+zeroes under a heading are padding in an inbox. The signup box sits **above** the list, not
+under it, so a reader does not have to scroll a heavy morning to find it.
 
 `src/lib/whatsNew.js` is the one definition of that list, and six things follow from it:
 
