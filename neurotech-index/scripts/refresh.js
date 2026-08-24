@@ -18,6 +18,7 @@ import { scanReproLinks } from '../src/lib/repro.js'
 import { resolvePaperImage, classifyTechnology, loadClassImages, pickClassImage, FALLBACK_CLASS, queueCandidate, flushQueue } from './lib/images.js'
 import { load as loadReview, approved as approvedInReview, decided as decidedInReview } from './lib/review.js'
 import { NEUROTECH_LEXICON, onTopicByLexicon } from './lib/lexicon.js'
+import { NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, feedCandidates } from './lib/notable.js'
 
 const NOTABLE_PATH = join(dirname(fileURLToPath(import.meta.url)), '../src/data/notable.json')
 
@@ -1395,14 +1396,15 @@ async function syncToSupabase(pubmed, arxiv, news) {
 }
 
 // ── Notable research rail ────────────────────────────────────────────────────
-// A rolling ~90-day set of the highest FIELD-normalized-impact neurotech papers,
-// written to src/data/notable.json (committed daily, like funding.json). Papers
-// "graduate" here from the fresh 7-day feed once OpenAlex shows real, top-decile
-// citation impact — giving landmark work a longer runway than the feed allows.
-
-const NOTABLE_MAX = 12
-const NOTABLE_PCTILE_MIN = 0.90
-const NOTABLE_WINDOW_DAYS = 90
+// A rolling six-month set of the highest FIELD-normalized-impact neurotech
+// papers, written to src/data/notable.json (committed daily, like funding.json).
+// Papers "graduate" here from the fresh 7-day feed once OpenAlex shows real,
+// top-decile citation impact — giving landmark work a longer runway than the
+// feed allows.
+//
+// The rail's numbers, and the feed sweep that keeps it from draining, live in
+// scripts/lib/notable.js. The window is 180 days rather than the 90 it was
+// until 24 Aug 2026; the header there has the measurement that changed it.
 
 /** The image block scripts/backfill-images.js writes onto a rail entry. */
 const NOTABLE_IMAGE_KEYS = [
@@ -1518,13 +1520,73 @@ async function topUpNotable(byKey, keyOf, need) {
   return added
 }
 
-async function syncNotable(researchItems) {
+/** How many feed rows one sweep will re-enrich through OpenAlex in a night. */
+const SWEEP_MAX_ENRICH = 60
+
+/**
+ * Admit papers the index already holds and has already judged.
+ *
+ * This is the re-check the rail never had. Every gate is the one the rest of
+ * the rail uses; what is different is only WHEN the question gets asked, which
+ * is every night rather than once on the day a paper arrived. See the header of
+ * scripts/lib/notable.js for the arithmetic that made that the difference
+ * between a full rail and an empty one.
+ *
+ * Two economies keep this cheap enough to run nightly. Candidates are filtered
+ * on their STORED percentile before anything is fetched, so OpenAlex sees a
+ * handful of rows rather than the whole feed — a percentile is age-normalised
+ * and does not swing far, and the papers-table top-up below is the deeper net
+ * for anything this pre-filter passes over. And nothing here is scored: the
+ * topic judgement rides along on the row from the run that ingested it.
+ */
+async function sweepFeedIntoRail(byKey, keyOf, need) {
+  const all = await feedCandidates(supabase)
+  const candidates = all
+    .filter(c => !byKey.has(keyOf(c)))
+    .filter(isOnTopic)
+    .filter(c => c.pctile == null || c.pctile >= NOTABLE_PCTILE_MIN)
+    .filter(c => daysOld(c.publishedAt) <= NOTABLE_WINDOW_DAYS)
+    .slice(0, SWEEP_MAX_ENRICH)
+  if (!candidates.length) return 0
+
+  // The stored citation count is written at ingest and is usually 0 on a paper
+  // that has been cited since — and under 60 days old, citations are the only
+  // thing that can make its impact trusted. So ask OpenAlex again.
+  await enrichOpenAlex(candidates)
+
+  const qualified = candidates.filter(c =>
+    impactTrusted(c)
+    && (c.pctile ?? 0) >= NOTABLE_PCTILE_MIN
+    && daysOld(c.publishedAt || c.oaDate) <= NOTABLE_WINDOW_DAYS)
+
+  let added = 0
+  for (const c of qualified.sort((a, b) => b.pctile - a.pctile)) {
+    if (added >= need) break
+    byKey.set(keyOf(c), toNotable(c))
+    added++
+  }
+  console.log(`      rail sweep: ${all.length} papers in the feed, ${candidates.length} plausible, ${qualified.length} qualify, added ${added}`)
+  return added
+}
+
+/**
+ * Rebuild the rail.
+ *
+ * `allowModel` is false when the caller must not spend the Claude API — the
+ * repair script (scripts/backfill-notable.js) runs that way. It skips the two
+ * steps that score: back-filling a topic judgement onto pre-gate entries, and
+ * the papers-table top-up. Everything else, including the feed sweep, needs
+ * only OpenAlex and what the rows already carry.
+ *
+ * `commit` false reports what the rail would become without writing the file.
+ */
+async function syncNotable(researchItems, { allowModel = true, commit = true } = {}) {
   // Load the existing rail and re-enrich it — citations climb over time, so a
   // paper's percentile is re-checked every run (and it drops off if it fades).
   let existing = []
   try { if (existsSync(NOTABLE_PATH)) existing = JSON.parse(readFileSync(NOTABLE_PATH, 'utf8')) } catch { /* first run */ }
   await enrichOpenAlex(existing) // mutates in place: refreshes pctile/fwci/citedBy
-  await scoreRailTopics(existing)
+  if (allowModel) await scoreRailTopics(existing)
 
   // New qualifiers from this run: trusted impact AND top-decile field percentile.
   const fresh = researchItems.filter(it => it.doi && impactTrusted(it) && (it.pctile ?? 0) >= NOTABLE_PCTILE_MIN)
@@ -1549,17 +1611,34 @@ async function syncNotable(researchItems) {
   const offTopic = [...byKey.values()].filter(x => !isOnTopic(x))
   let rail = build()
 
-  // The home page shows four and takes them from this file AFTER dropping any
-  // that already appear in the feed above, so a rail of exactly four can render
+  // The home page shows six and takes them from this file AFTER dropping any
+  // that already appear in the feed above, so a rail of exactly six can render
   // fewer. Carrying the full twelve is what keeps the section full.
+  //
+  // The first place to look is the index itself. A paper cannot clear
+  // impactTrusted until day 60 (citations, or age), and the only two things
+  // that used to admit one were today's ingest and a scan of the last few days
+  // of ingest — so a paper that became eligible two months after it arrived
+  // was never looked at again, and the rail drained to five. This sweeps the
+  // research rows already in the feed and admits the ones that qualify NOW.
+  // They carry the percentile and the topic score the run already wrote, so it
+  // costs no model call; see scripts/lib/notable.js.
   if (rail.length < NOTABLE_MAX) {
+    const added = await sweepFeedIntoRail(byKey, keyOf, NOTABLE_MAX - rail.length)
+    if (added) rail = build()
+  }
+
+  // Only then the expensive path: a scan of the papers table, which has to
+  // enrich and topic-score its candidates from scratch.
+  if (allowModel && rail.length < NOTABLE_MAX) {
     await topUpNotable(byKey, keyOf, NOTABLE_MAX - rail.length)
     rail = build()
   }
 
-  writeFileSync(NOTABLE_PATH, JSON.stringify(rail, null, 2) + '\n')
-  console.log(`      notable rail: ${rail.length} papers (${existing.length} carried + ${fresh.length} new qualifiers)`)
+  if (commit) writeFileSync(NOTABLE_PATH, JSON.stringify(rail, null, 2) + '\n')
+  console.log(`      notable rail: ${rail.length} papers (${existing.length} carried + ${fresh.length} new qualifiers)${commit ? '' : ' — DRY RUN, not written'}`)
   for (const x of offTopic) console.log(`      dropped off-topic (relevance ${relevanceOf(x)}): ${x.title.slice(0, 64)}`)
+  return rail
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
@@ -1647,7 +1726,7 @@ async function main() {
   console.log('\n✅ Refresh complete — ' + new Date().toUTCString())
 }
 
-export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, isOnTopic, relevanceOf, RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
+export { enrichOpenAlex, impactTrusted, researchScore, mediaScore, scoreWithClaude, cleanTitle, dedupeFeedRows, venuePrestige, clamp01, daysOld, toNotable, isOnTopic, relevanceOf, syncNotable, RELEVANCE_FLOOR, NOTABLE_MAX, NOTABLE_PCTILE_MIN, NOTABLE_WINDOW_DAYS, NOTABLE_PATH }
 
 // Media-side internals, exported for scripts/backfill-news.js. The backfill runs
 // the same fetch, the same gate and the same picture sourcing as the nightly

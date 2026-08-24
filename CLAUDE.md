@@ -436,6 +436,28 @@ now refills from the papers table through the SAME gates (trusted impact, top de
 window, on topic) up to `NOTABLE_MAX` of 12. Nothing is relaxed to fill a slot: a short
 rail is better than a padded one.
 
+**It starved anyway, and the reason was a clash between two gates** (fixed 24 Aug 2026;
+the arithmetic is in `scripts/lib/notable.js`). `impactTrusted` distrusts a percentile
+until a paper has 3+ citations **or is more than 60 days old**, and recent neurotech
+papers sit at zero citations for months — so in practice a paper cannot enter the rail
+before day 60. The window was 90 days. That left a thirty-day slot in which a paper had
+to both enter and live, and the only two things that could admit one were today's ingest
+and a scan of the last few days of ingest. A paper is ingested within days of publication,
+so by the time it qualified nothing was looking at it. Measured that day: nineteen research
+rows cleared topic and percentile, **zero** cleared all three gates, and the rail had gone
+9 → 5 in a week, heading for empty by mid-September.
+
+Two changes, both from that arithmetic. `syncNotable` now **sweeps the research rows
+already in the feed** on every run (`sweepFeedIntoRail`), so a paper is re-considered when
+it *becomes* eligible rather than only on the day it arrived — and it costs no model call,
+because those rows already carry the percentile and the topic score the ingest paid for.
+And `NOTABLE_WINDOW_DAYS` is **180**, so an entry has real shelf life past the 60 days it
+waits to be trusted. The percentile bar, the topic bar and the trust rule are unchanged.
+
+`npm run notable` rebuilds the rail on its own (dry-run by default, `--commit` writes). It
+shares `syncNotable` with the nightly run and passes `allowModel: false`, so it spends
+nothing on Claude — useful when the rail is short and the next cron is a day away.
+
 Every card carries a picture: a photograph when the
 record has one, otherwise a figure drawn from that record's own fields
 (`src/components/Figure.jsx` — trial phase and enrollment, FDA submission number and
