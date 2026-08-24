@@ -233,7 +233,30 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
 
 const linkFor = (item, origin) => (item.href ? `${origin}${item.href}` : item.url) || null
 
-export function digestHtml(digest, { origin = 'https://neurobase-live.vercel.app', unsubscribeUrl = null } = {}) {
+/**
+ * How a reader gets off the list, in one line at the bottom of every send.
+ *
+ * Bulk mail carries an opt-out. There is no server here to host a one-click
+ * unsubscribe endpoint and the anon key cannot update the table (migration 025
+ * grants insert and nothing else), so until something can, the opt-out is a
+ * reply to the address the digest was sent from — a real route a person can
+ * use, which is the part that matters, rather than a link that would need
+ * infrastructure that does not exist. `unsubscribeUrl` is the seam for that
+ * endpoint when there is one; it wins over the mailto when both are given.
+ */
+export function unsubscribeLine({ unsubscribeUrl = null, replyTo = null } = {}) {
+  if (unsubscribeUrl) return { href: unsubscribeUrl, label: 'Unsubscribe', how: 'Unsubscribe' }
+  if (replyTo) {
+    return {
+      href: `mailto:${replyTo}?subject=${encodeURIComponent('Unsubscribe')}`,
+      label: 'Reply with "unsubscribe"',
+      how: `To stop these, reply to ${replyTo} with "unsubscribe".`,
+    }
+  }
+  return null
+}
+
+export function digestHtml(digest, { origin = 'https://neurobase-live.vercel.app', unsubscribeUrl = null, replyTo = null } = {}) {
   const sections = filledSections(digest).map(s => {
     const items = s.items.map(it => {
       const href = linkFor(it, origin)
@@ -247,8 +270,9 @@ export function digestHtml(digest, { origin = 'https://neurobase-live.vercel.app
     return `<h2 style="font:600 13px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:#16181D;border-bottom:1px solid #E4E2DC;padding-bottom:6px;margin:28px 0 14px">${esc(s.label)} <span style="color:#6B7280">(${s.items.length})</span></h2><ul style="list-style:none;padding:0;margin:0">${items}</ul>`
   }).join('')
 
-  const foot = unsubscribeUrl
-    ? `<p style="font:12px/1.5 Arial,sans-serif;color:#6B7280;margin-top:28px">You are receiving this because you asked for the daily digest on NeuroBase. <a href="${esc(unsubscribeUrl)}" style="color:#6B7280">Unsubscribe</a>.</p>`
+  const out = unsubscribeLine({ unsubscribeUrl, replyTo })
+  const foot = out
+    ? `<p style="font:12px/1.5 Arial,sans-serif;color:#6B7280;margin-top:28px">You are receiving this because you asked for the daily digest on NeuroBase. <a href="${esc(out.href)}" style="color:#6B7280">${esc(out.label)}</a>.</p>`
     : ''
 
   return `<div style="max-width:640px;margin:0 auto;padding:24px;background:#FFFFFF">
@@ -259,7 +283,7 @@ ${foot}
 </div>`
 }
 
-export function digestText(digest, { origin = 'https://neurobase-live.vercel.app' } = {}) {
+export function digestText(digest, { origin = 'https://neurobase-live.vercel.app', unsubscribeUrl = null, replyTo = null } = {}) {
   const lines = [`What's new today — ${formatDay(digest.day)} (${digest.total} new)`, '']
   for (const s of filledSections(digest)) {
     lines.push(`${s.label.toUpperCase()} (${s.items.length})`)
@@ -273,6 +297,8 @@ export function digestText(digest, { origin = 'https://neurobase-live.vercel.app
     lines.push('')
   }
   if (!filledSections(digest).length) lines.push('Nothing new landed today.')
+  const out = unsubscribeLine({ unsubscribeUrl, replyTo })
+  if (out) lines.push('', out.how)
   return lines.join('\n')
 }
 

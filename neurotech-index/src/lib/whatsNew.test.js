@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   CATEGORIES, dayWindow, formatDay, tldr, tldrOf, fromFeedRow, fromDevice, fromPatent,
   fromOrganization, fromFundingRound, fetchWhatsNew, filledSections, digestSubject,
-  digestHtml, digestText, isEmail, subscribe,
+  digestHtml, digestText, isEmail, subscribe, unsubscribeLine,
 } from './whatsNew'
 
 // A supabase-js stand-in: every builder method returns the chain, and awaiting
@@ -237,6 +237,23 @@ describe('the email', () => {
 
   it('says so when the day was empty', () => {
     expect(digestText({ day: '2026-08-24', total: 0, sections: [] })).toContain('Nothing new landed today.')
+  })
+
+  it('carries an opt-out: the endpoint when there is one, a reply when there is not', () => {
+    expect(unsubscribeLine({ unsubscribeUrl: 'https://n.b/unsub' }).href).toBe('https://n.b/unsub')
+    const mail = unsubscribeLine({ replyTo: 'digest@n.b' })
+    expect(mail.href).toBe('mailto:digest@n.b?subject=Unsubscribe')
+    expect(mail.how).toContain('reply to digest@n.b')
+    // An endpoint beats a reply when both are given.
+    expect(unsubscribeLine({ unsubscribeUrl: 'https://n.b/unsub', replyTo: 'digest@n.b' }).href).toBe('https://n.b/unsub')
+    expect(unsubscribeLine({})).toBe(null)
+  })
+
+  it('puts the opt-out in both renderings', () => {
+    expect(digestHtml(digest, { replyTo: 'digest@n.b' })).toContain('mailto:digest@n.b')
+    expect(digestText(digest, { replyTo: 'digest@n.b' })).toContain('reply to digest@n.b with "unsubscribe"')
+    // No route to offer, no promise made.
+    expect(digestHtml(digest)).not.toContain('You are receiving this')
   })
 })
 

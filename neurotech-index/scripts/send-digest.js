@@ -40,6 +40,12 @@ const ORIGIN = process.env.SITE_ORIGIN || 'https://neurobase-live.vercel.app'
 const FROM = process.env.DIGEST_FROM                       // e.g. "NeuroBase <digest@yourdomain>"
 const RESEND_KEY = process.env.RESEND_API_KEY
 
+// The address a reader replies to in order to get off the list. DIGEST_FROM is
+// usually "Name <addr@domain>", so the bare address is pulled out of it;
+// DIGEST_REPLY_TO overrides when replies should land somewhere else.
+const bareAddress = s => (String(s || '').match(/<([^>]+)>/)?.[1] || String(s || '')).trim() || null
+const REPLY_TO = process.env.DIGEST_REPLY_TO || bareAddress(FROM)
+
 const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.log('::warning::send-digest: no SUPABASE_URL / SUPABASE_SERVICE_KEY, nothing to send')
@@ -81,7 +87,9 @@ async function send({ to, subject, html, text }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${RESEND_KEY}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, text }),
+    // reply_to is set because the opt-out line at the foot of the mail asks for
+    // a reply: an unsubscribe route nobody reads is not one.
+    body: JSON.stringify({ from: FROM, to: [to], subject, html, text, ...(REPLY_TO ? { reply_to: REPLY_TO } : {}) }),
   })
   if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 200)}`)
   return res.json()
@@ -89,8 +97,8 @@ async function send({ to, subject, html, text }) {
 
 const digest = await fetchWhatsNew(sb)
 const subject = digestSubject(digest)
-const text = digestText(digest, { origin: ORIGIN })
-const html = digestHtml(digest, { origin: ORIGIN })
+const text = digestText(digest, { origin: ORIGIN, replyTo: REPLY_TO })
+const html = digestHtml(digest, { origin: ORIGIN, replyTo: REPLY_TO })
 
 console.log(`\nWhat's new today — ${digest.day}`)
 for (const s of digest.sections) console.log(`  ${String(s.items.length).padStart(4)}  ${s.label}`)
