@@ -45,6 +45,15 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWS_API_KEY:         ${{ secrets.NEWS_API_KEY }}
           PATENTSVIEW_API_KEY:  ${{ secrets.PATENTSVIEW_API_KEY }}
+          # Two steps in the sequence compose the home page through the PAGE'S
+          # own code, so they read Supabase through src/lib/supabase.js, which
+          # wants the VITE_ names. There is no .env here — it is gitignored —
+          # so they are passed explicitly. src/lib/supabase.js also falls back
+          # to the unprefixed names, and either route works; this one is here
+          # so the dependency is visible in the workflow rather than only in a
+          # comment three files away.
+          VITE_SUPABASE_URL:      ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       # image-ledger.json and image-review.json are as load-bearing here as
       # notable.json. The ledger is the ONLY record of which photograph belongs
