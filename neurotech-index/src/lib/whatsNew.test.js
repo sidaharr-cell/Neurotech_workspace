@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import {
-  CATEGORIES, dayWindow, formatDay, tldr, tldrOf, fromFeedRow, fromDevice, fromPatent,
-  fromOrganization, fromFundingRound, fetchWhatsNew, filledSections, digestSubject,
+  CATEGORIES, FUNDING_FLOOR_USD, dayWindow, formatDay, tldr, tldrOf, byline, bylineOf,
+  fromFeedRow, fromDevice, fromPatent, fromTrialChangeGroup, changeLine,
+  fromFundingRound, fetchWhatsNew, filledSections, digestSubject,
   digestHtml, digestText, isEmail, subscribe, unsubscribeLine,
 } from './whatsNew'
 
@@ -18,7 +19,10 @@ function stubClient(tables = {}, { failing = [] } = {}) {
       const chain = {
         select() { return chain },
         in(col, vals) { call.filters[col] = vals; return chain },
-        gte(col, v) { call.filters.gte = [col, v]; return chain },
+        // A query can carry more than one gte (the day window, plus the funding
+        // floor). `gte` stays the first — the day window, applied first
+        // everywhere — and `gtes` keeps them all.
+        gte(col, v) { (call.filters.gtes ||= []).push([col, v]); call.filters.gte ||= [col, v]; return chain },
         lte(col, v) { call.filters.lte = [col, v]; return chain },
         order() { return chain },
         limit(n) { call.filters.limit = n; return chain },
@@ -109,6 +113,33 @@ describe('tldrOf', () => {
   })
 })
 
+describe('byline', () => {
+  it('names the first author and marks that there are more', () => {
+    expect(byline(['Chen Wang', 'Ana Ruiz', 'John Smith'])).toBe('Chen Wang et al.')
+  })
+
+  it('says "et al." at exactly two authors rather than naming both', () => {
+    expect(byline(['Chen Wang', 'Ana Ruiz'])).toBe('Chen Wang et al.')
+  })
+
+  it('leaves a sole author standing alone', () => {
+    expect(byline(['Chen Wang'])).toBe('Chen Wang')
+  })
+
+  it('is null when there is nobody to credit', () => {
+    expect(byline([])).toBe(null)
+    expect(byline(null)).toBe(null)
+    expect(byline(['', '  '])).toBe(null)
+    expect(bylineOf(feedRow({ metadata: {} }))).toBe(null)
+    expect(bylineOf(undefined)).toBe(null)
+  })
+
+  it('accepts a bare string as one author, and tidies whitespace', () => {
+    expect(byline('  Chen   Wang ')).toBe('Chen Wang')
+    expect(bylineOf(feedRow({ metadata: { authors: ['Chen  Wang', 'Ana Ruiz'] } }))).toBe('Chen Wang et al.')
+  })
+})
+
 describe('row mappers', () => {
   it('links a feed row to its item page and carries the outbound url', () => {
     const e = fromFeedRow(feedRow({ id: 'abc' }), { withTldr: true })
@@ -121,18 +152,47 @@ describe('row mappers', () => {
     expect(fromFeedRow(feedRow()).tldr).toBe(null)
   })
 
+  it('puts a byline on research and on nothing else', () => {
+    const row = feedRow({ metadata: { authors: ['Chen Wang', 'Ana Ruiz'] } })
+    expect(fromFeedRow(row, { withTldr: true, withByline: true }).byline).toBe('Chen Wang et al.')
+    // News carries a publication in `source`, not an author list.
+    expect(fromFeedRow(row, { withTldr: true }).byline).toBe(null)
+    expect(fromFeedRow(row).byline).toBe(null)
+  })
+
   it('names a trial with its phase and status', () => {
     const e = fromFeedRow(feedRow({ entry_type: 'trial', source: 'ClinicalTrials.gov', metadata: { phase: 'Phase 2', status: 'Recruiting' } }))
     expect(e.meta).toBe('ClinicalTrials.gov · Phase 2 · Recruiting')
   })
 
-  it('links devices, labs and companies to their own pages, and patents out', () => {
+  it('links devices to their own pages, and patents out', () => {
     expect(fromDevice({ id: 'd1', name: 'Array', manufacturer: 'Acme', status: 'Cleared' }).href).toBe('/device/d1')
-    expect(fromOrganization({ id: 'o1', name: 'Acme', type: 'company' }).href).toBe('/company/o1')
-    expect(fromOrganization({ id: 'l1', name: 'Lab', type: 'lab' }).href).toBe('/lab/l1')
     const p = fromPatent({ id: 'p1', title: 'Electrode', assignee: 'Acme', patent_number: 'US1', url: 'https://patents/1' })
     expect(p.href).toBe(null)
     expect(p.url).toBe('https://patents/1')
+  })
+
+  it('spells out a trial change from and to, and tidies the stored status', () => {
+    expect(changeLine({ field: 'status', old_value: 'recruiting', new_value: 'active_not_recruiting' }))
+      .toBe('status: Recruiting to Active Not Recruiting')
+    expect(changeLine({ field: 'enrollment', old_value: null, new_value: '48' }))
+      .toBe('enrollment: none to 48')
+  })
+
+  it('gives one entry per changed trial, with every field it moved', () => {
+    const e = fromTrialChangeGroup({
+      key: 't1',
+      title: 'A trial of a cortical implant',
+      itemId: 't1',
+      changes: [
+        { id: 'c1', field: 'status', old_value: 'recruiting', new_value: 'completed' },
+        { id: 'c2', field: 'enrollment', old_value: '40', new_value: '48' },
+      ],
+    })
+    expect(e.title).toBe('A trial of a cortical implant')
+    expect(e.href).toBe('/item/t1')
+    expect(e.meta).toBe('status: Recruiting to Completed · enrollment: 40 to 48')
+    expect(e.tldr).toBe(null)
   })
 
   it('gives a funding round the company that raised it, and a readable amount', () => {
@@ -155,7 +215,8 @@ describe('row mappers', () => {
 
 describe('fetchWhatsNew', () => {
   const client = () => stubClient({
-    news_feed: [feedRow({ id: 'n1' })],
+    news_feed: [feedRow({ id: 'n1', metadata: { authors: ['Chen Wang', 'Ana Ruiz'] } })],
+    trial_changes: [{ id: 'c1', nct_id: 'NCT1', trial_id: 'n1', field: 'status', old_value: 'recruiting', new_value: 'completed' }],
     devices: [{ id: 'd1', name: 'Array', manufacturer: 'Acme' }],
     patents: [{ id: 'p1', title: 'Electrode', url: 'https://patents/1' }],
     organizations: [{ id: 'o1', name: 'Acme', type: 'company' }],
@@ -166,22 +227,73 @@ describe('fetchWhatsNew', () => {
     const c = client()
     const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
     expect(digest.day).toBe('2026-08-24')
-    // news_feed is asked three times (research, news, trials), plus five tables.
+    // news_feed is asked three times (research, news, trials), plus four tables:
+    // trial_changes, devices, patents, funding_rounds.
     const windowed = c.calls.filter(x => x.filters.gte)
     expect(windowed.length).toBe(7)
     for (const call of windowed) {
       expect(call.filters.gte).toEqual(['created_at', '2026-08-24T00:00:00.000Z'])
       expect(call.filters.lte).toEqual(['created_at', '2026-08-24T23:59:59.999Z'])
     }
+    // Organizations are read only to name the companies behind funding rounds,
+    // and that read is not windowed: a company indexed last year can raise today.
+    const orgReads = c.calls.filter(x => x.table === 'organizations')
+    expect(orgReads).toHaveLength(1)
+    expect(orgReads[0].filters.gte).toBeUndefined()
   })
 
   it('keeps the category order and counts the total', async () => {
     const digest = await fetchWhatsNew(client(), { now: new Date('2026-08-24T09:00:00Z') })
     expect(digest.sections.map(s => s.key)).toEqual(CATEGORIES.map(c => c.key))
-    // one feed row per feed category (3) + device + patent + org + round
+    expect(digest.sections.map(s => s.key)).not.toContain('organizations')
+    // one feed row per feed category (3) + trial change + device + patent + round
     expect(digest.total).toBe(7)
     expect(digest.sections.find(s => s.key === 'research').items[0].tldr).toBeTruthy()
+    expect(digest.sections.find(s => s.key === 'research').items[0].byline).toBe('Chen Wang et al.')
     expect(digest.sections.find(s => s.key === 'trials').items[0].tldr).toBe(null)
+    expect(digest.sections.find(s => s.key === 'trials').items[0].byline).toBe(null)
+  })
+
+  it('lists a changed trial once, under its own title', async () => {
+    const c = stubClient({
+      news_feed: [feedRow({ id: 't1', title: 'A trial of a cortical implant', entry_type: 'trial' })],
+      trial_changes: [
+        { id: 'c1', nct_id: 'NCT1', trial_id: 't1', field: 'status', old_value: 'recruiting', new_value: 'completed' },
+        { id: 'c2', nct_id: 'NCT1', trial_id: 't1', field: 'enrollment', old_value: '40', new_value: '48' },
+      ],
+    })
+    const items = (await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') }))
+      .sections.find(s => s.key === 'trialChanges').items
+    expect(items).toHaveLength(1)
+    expect(items[0].title).toBe('A trial of a cortical implant')
+    expect(items[0].href).toBe('/item/t1')
+    expect(items[0].meta).toBe('status: Recruiting to Completed · enrollment: 40 to 48')
+  })
+
+  it('drops a change whose trial has left the index', async () => {
+    // Nothing to name it with and nowhere to link: it could only render as a
+    // bare NCT number in a list of named studies.
+    const c = stubClient({
+      news_feed: [],
+      trial_changes: [{ id: 'c1', nct_id: 'NCT9', trial_id: 'gone', field: 'status', old_value: 'recruiting', new_value: 'terminated' }],
+    })
+    const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.sections.find(s => s.key === 'trialChanges').items).toEqual([])
+  })
+
+  it('asks only for rounds big enough to put a company back on the list', async () => {
+    // The floor is in the QUERY, not applied to the page it returns: a day of
+    // small rounds must not use up the cap and push the big ones off it. gte on
+    // a nullable column drops the undisclosed amounts along with the small ones,
+    // which is the intended reading.
+    const c = client()
+    await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
+    const round = c.calls.find(x => x.table === 'funding_rounds')
+    expect(round.filters.gtes).toContainEqual(['amount_usd', FUNDING_FLOOR_USD])
+    expect(round.filters.limit).toBe(40)
+    // Every other windowed read asks for the day and nothing more.
+    const trials = c.calls.find(x => x.table === 'trial_changes')
+    expect(trials.filters.gtes).toHaveLength(1)
   })
 
   it('survives one category failing', async () => {
@@ -203,7 +315,7 @@ describe('the email', () => {
     day: '2026-08-24',
     total: 2,
     sections: [
-      { key: 'research', label: 'Research', items: [{ id: 'a', title: 'Implant & array', href: '/item/a', meta: 'Nature', tldr: 'Two sentences. Right here.' }] },
+      { key: 'research', label: 'Research', items: [{ id: 'a', title: 'Implant & array', href: '/item/a', byline: 'Chen Wang et al.', meta: 'Nature', tldr: 'Two sentences. Right here.' }] },
       { key: 'news', label: 'News', items: [] },
       { key: 'patents', label: 'Patents', items: [{ id: 'p', title: 'Electrode', url: 'https://patents/1', meta: 'Acme', tldr: null }] },
     ],
@@ -233,6 +345,13 @@ describe('the email', () => {
     expect(text).toContain('RESEARCH (1)')
     expect(text).toContain('https://n.b/item/a')
     expect(text).not.toContain('NEWS (0)')
+  })
+
+  it('carries the byline into both renderings, the same as the window', () => {
+    expect(digestHtml(digest)).toContain('Chen Wang et al.')
+    expect(digestText(digest)).toContain('Chen Wang et al.')
+    // The patent has no byline, and gets no blank line standing in for one.
+    expect(digestText(digest)).toContain('- Electrode\n  Acme\n  https://patents/1')
   })
 
   it('says so when the day was empty', () => {

@@ -19,11 +19,24 @@
  * summariser would mean an API call per new item per reader per day, which is
  * both a cost nobody agreed to and a page that cannot render without one.
  */
+import { groupTrialChanges } from './trial-changes.js'
 
 /** Rows to read per category. A day's ingest is tens, not thousands; the cap is
  *  a guard against a runaway backfill dumping ten thousand patents into a
  *  window a reader has to scroll. Anything past it is counted, not listed. */
 export const PER_CATEGORY = 40
+
+/**
+ * How many of a category the window shows before the rest are folded away
+ * behind "Show N more".
+ *
+ * Ten is what a reader can take in without the first category pushing the
+ * seventh off the bottom of a window they have to scroll. This is a FOLD, not a
+ * shorter list: the items behind it are read, counted and one click away, and
+ * the emailed digest carries all of them because an inbox has no disclosure to
+ * open. The heading count is the real total either way.
+ */
+export const PREVIEW_PER_CATEGORY = 10
 
 /**
  * The categories, in the order they are shown.
@@ -32,16 +45,46 @@ export const PER_CATEGORY = 40
  * research and news. The rest are records, not stories: a device clearance or a
  * patent says what it is in its own title, and a two-sentence gloss on it would
  * be padding written from the same fields already on the row.
+ *
+ * THERE IS NO "COMPANIES AND LABS" CATEGORY, and that is deliberate. A new
+ * organization row is an index bookkeeping event, not news: the pipeline mints
+ * one the first time a name turns up as a paper affiliation, a device
+ * manufacturer or a trial sponsor, so the section filled with companies that had
+ * done nothing that day and were merely noticed for the first time. A company
+ * earns a line here by raising money (Funding rounds, below, floored at
+ * FUNDING_FLOOR_USD) — the one organization event that is dated, sourced and
+ * worth a reader's attention on the day it lands.
+ *
+ * WHAT REPLACED IT IS TRIAL CHANGES. `trials` is trials the index gained today;
+ * `trialChanges` is tracked trials that moved today — a study that opened,
+ * closed, changed phase or resized. For a reader following the field that second
+ * list is the one that carries news, because a trial's registration is a
+ * one-time event and its status is the thing that keeps moving afterwards.
  */
 export const CATEGORIES = [
   { key: 'research', label: 'Research', tldr: true },
   { key: 'news', label: 'News', tldr: true },
   { key: 'trials', label: 'Clinical trials', tldr: false },
+  { key: 'trialChanges', label: 'Clinical trial changes', tldr: false },
   { key: 'devices', label: 'Devices and clearances', tldr: false },
   { key: 'patents', label: 'Patents', tldr: false },
-  { key: 'organizations', label: 'Companies and labs', tldr: false },
   { key: 'funding', label: 'Funding rounds', tldr: false },
 ]
+
+/**
+ * The smallest raise that puts a company on this list.
+ *
+ * Companies came off the list because being newly indexed says nothing; the
+ * agreed exception is a company that raises a big sum, so the floor is what
+ * "big" means here. $1M keeps every real institutional round — a neurotech seed
+ * is $2M to $5M — and drops micro-grants and angel cheques.
+ *
+ * A round with no `amount_usd` is dropped too. The carve-out is about the size
+ * of the raise, and an undisclosed figure cannot be shown to clear a floor;
+ * listing it anyway would put a company back on the list on the strength of a
+ * number nobody has. It stays visible on the company's own page either way.
+ */
+export const FUNDING_FLOOR_USD = 1_000_000
 
 /** The UTC day `now` falls in, and the half-open window that selects it. */
 export function dayWindow(now = new Date()) {
@@ -93,6 +136,32 @@ export function tldr(text, { sentences = 2, maxChars = 300 } = {}) {
 export const tldrOf = row =>
   tldr(row?.metadata?.significance) || tldr(row?.summary) || tldr(row?.metadata?.abstract) || null
 
+/**
+ * "Chen Wang et al." — the first author, and an honest marker that there are
+ * more.
+ *
+ * A research row's author list runs to thirty names and would swamp the title it
+ * sits under, and the first author is the one a reader recognises and searches
+ * on. "et al." is appended whenever a second author exists, including at exactly
+ * two: the alternative is naming both, which sets a rule the list breaks again
+ * at three, and the point of the line is to attribute the work, not to be the
+ * citation. The full list is on the item page.
+ *
+ * Ingestion writes whole names ("Chen Wang", not "Wang C"), from PubMed's
+ * ForeName plus LastName and from arXiv's author elements, so there is no
+ * surname to reconstruct here. Absent or empty lists give null, which renders as
+ * nothing rather than as an empty byline.
+ */
+export function byline(authors) {
+  const list = (Array.isArray(authors) ? authors : authors ? [authors] : [])
+    .map(clean).filter(Boolean)
+  if (!list.length) return null
+  return list.length > 1 ? `${list[0]} et al.` : list[0]
+}
+
+/** The byline for a feed row, from the author list ingestion stored on it. */
+export const bylineOf = row => byline(row?.metadata?.authors)
+
 const money = n => {
   if (!Number.isFinite(n)) return null
   if (n >= 1e9) return `$${(n / 1e9).toFixed(n >= 1e10 ? 0 : 1)}B`
@@ -105,16 +174,23 @@ const money = n => {
 //
 // One shape for every category, so the window and the email each render one
 // kind of thing: a title, a link on the site where there is a page for it, the
-// outbound source, a line of context, and a TLDR where the category has one.
+// outbound source, a byline where the record has authors, a line of context, and
+// a TLDR where the category has one.
 
-const entry = (o) => ({ tldr: null, href: null, url: null, meta: null, ...o })
+const entry = (o) => ({ tldr: null, href: null, url: null, meta: null, byline: null, ...o })
 
-export const fromFeedRow = (row, { withTldr = false } = {}) => entry({
+/**
+ * `withByline` is research and only research. News rows carry a publication in
+ * `source`, not an author list, and a wire story credited to one named reporter
+ * as "Name et al." would be wrong twice over.
+ */
+export const fromFeedRow = (row, { withTldr = false, withByline = false } = {}) => entry({
   id: row.id,
   title: clean(row.title),
   href: `/item/${row.id}`,
   url: row.url || null,
   meta: [row.source, row.metadata?.phase, row.metadata?.status].filter(Boolean).join(' · ') || null,
+  byline: withByline ? bylineOf(row) : null,
   tldr: withTldr ? tldrOf(row) : null,
 })
 
@@ -135,12 +211,29 @@ export const fromPatent = (row) => entry({
   meta: [row.assignee, row.patent_number, row.grant_date].filter(Boolean).join(' · ') || null,
 })
 
-export const fromOrganization = (row) => entry({
-  id: row.id,
-  title: clean(row.display_name || row.name),
-  href: row.type === 'lab' ? `/lab/${row.id}` : `/company/${row.id}`,
-  url: row.website || null,
-  meta: [row.type === 'lab' ? 'Lab' : 'Company', row.location].filter(Boolean).join(' · ') || null,
+/** "Recruiting" out of "recruiting", as the trials page prints it. */
+const prettyStatus = s => clean(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+const changeValue = (field, v) => (field === 'status' ? prettyStatus(String(v || '').replace(/_/g, ' ')) : clean(v)) || 'none'
+
+/** "status: Recruiting to Active Not Recruiting" — one moved field. */
+export const changeLine = c => `${clean(c.field)}: ${changeValue(c.field, c.old_value)} to ${changeValue(c.field, c.new_value)}`
+
+/**
+ * One trial that moved today, not one row per field that moved.
+ *
+ * trial_changes is one row per field, and a study that closes writes status and
+ * enrollment together, so a raw list prints the same trial twice under two
+ * different half-sentences. groupTrialChanges stacks a trial's changes under its
+ * own title; this turns that group into an entry, with every change it carries
+ * on the context line (at most three: status, phase and enrollment are all that
+ * scripts/trials.js tracks).
+ */
+export const fromTrialChangeGroup = (group) => entry({
+  id: group.key,
+  title: clean(group.title),
+  href: group.itemId ? `/item/${group.itemId}` : null,
+  url: group.url || null,
+  meta: group.changes.map(changeLine).join(' · ') || null,
 })
 
 export const fromFundingRound = (row, org) => entry({
@@ -178,17 +271,25 @@ export async function fetchWhatsNew(client, { now = new Date(), perCategory = PE
   const feed = types => rows(window_(client.from('news_feed').select('*').in('entry_type', types))
     .order('created_at', { ascending: false }).limit(perCategory))
 
-  const [research, news, trials, devices, patents, orgs, funding] = await Promise.all([
+  const [research, news, trials, trialChanges, devices, patents, funding] = await Promise.all([
     feed(['paper', 'preprint']),
     feed(['news']),
     feed(['trial']),
+    // Read more change rows than the category will show: they group down to one
+    // entry per trial, and a study that closes writes three of them at once.
+    rows(window_(client.from('trial_changes').select('id,nct_id,trial_id,field,old_value,new_value,changed_at,created_at'))
+      .order('created_at', { ascending: false }).limit(perCategory * 3)),
     rows(window_(client.from('devices').select('id,name,manufacturer,type,status,url,created_at'))
       .order('created_at', { ascending: false }).limit(perCategory)),
     rows(window_(client.from('patents').select('id,title,assignee,patent_number,grant_date,url,created_at'))
       .order('created_at', { ascending: false }).limit(perCategory)),
-    rows(window_(client.from('organizations').select('id,name,display_name,type,location,website,created_at'))
-      .order('created_at', { ascending: false }).limit(perCategory)),
+    // A company earns its line by the size of the raise, not by existing, so the
+    // floor goes in the query rather than after it: filtering the page would let
+    // small rounds use up the cap and push big ones off a backfill day. `gte`
+    // drops a null amount too, which is the intended reading — see
+    // FUNDING_FLOOR_USD.
     rows(window_(client.from('funding_rounds').select('id,organization_id,amount_usd,round_date,source_url,created_at'))
+      .gte('amount_usd', FUNDING_FLOOR_USD)
       .order('created_at', { ascending: false }).limit(perCategory)),
   ])
 
@@ -201,13 +302,28 @@ export async function fetchWhatsNew(client, { now = new Date(), perCategory = PE
     orgById = Object.fromEntries(named.map(o => [o.id, o]))
   }
 
+  // A change row names a trial by id; the trial's own title lives in news_feed.
+  // A change whose trial has left the index (a purge, a re-ingest) is dropped:
+  // it has no title to print and nowhere to link, so it can only render as a
+  // bare NCT number in a list of named studies. getRecentTrialChanges in
+  // data.js drops them for the same reason.
+  let trialById = {}
+  const trialIds = [...new Set(trialChanges.map(c => c.trial_id).filter(Boolean))]
+  if (trialIds.length) {
+    const named = await rows(client.from('news_feed').select('id,title,url').in('id', trialIds))
+    trialById = Object.fromEntries(named.map(t => [t.id, t]))
+  }
+  const namedChanges = trialChanges
+    .filter(c => trialById[c.trial_id])
+    .map(c => ({ ...c, itemId: c.trial_id, title: trialById[c.trial_id].title, url: trialById[c.trial_id].url }))
+
   const byKey = {
-    research: research.map(r => fromFeedRow(r, { withTldr: true })),
+    research: research.map(r => fromFeedRow(r, { withTldr: true, withByline: true })),
     news: news.map(r => fromFeedRow(r, { withTldr: true })),
     trials: trials.map(r => fromFeedRow(r)),
+    trialChanges: groupTrialChanges(namedChanges, perCategory).map(fromTrialChangeGroup),
     devices: devices.map(fromDevice),
     patents: patents.map(fromPatent),
-    organizations: orgs.map(fromOrganization),
     funding: funding.map(r => fromFundingRound(r, orgById[r.organization_id])),
   }
 
@@ -263,9 +379,10 @@ export function digestHtml(digest, { origin = 'https://neurobase-live.vercel.app
       const title = href
         ? `<a href="${esc(href)}" style="color:#0B5FA6;text-decoration:none">${esc(it.title)}</a>`
         : esc(it.title)
+      const by = it.byline ? `<div style="font:12px/1.5 Arial,sans-serif;color:#3D424D">${esc(it.byline)}</div>` : ''
       const meta = it.meta ? `<div style="font:12px/1.5 Arial,sans-serif;color:#6B7280">${esc(it.meta)}</div>` : ''
       const sum = it.tldr ? `<div style="font:14px/1.6 Georgia,serif;color:#3D424D;margin-top:4px">${esc(it.tldr)}</div>` : ''
-      return `<li style="margin:0 0 14px 0"><div style="font:600 15px/1.4 Georgia,serif">${title}</div>${meta}${sum}</li>`
+      return `<li style="margin:0 0 14px 0"><div style="font:600 15px/1.4 Georgia,serif">${title}</div>${by}${meta}${sum}</li>`
     }).join('')
     return `<h2 style="font:600 13px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:#16181D;border-bottom:1px solid #E4E2DC;padding-bottom:6px;margin:28px 0 14px">${esc(s.label)} <span style="color:#6B7280">(${s.items.length})</span></h2><ul style="list-style:none;padding:0;margin:0">${items}</ul>`
   }).join('')
@@ -289,6 +406,7 @@ export function digestText(digest, { origin = 'https://neurobase-live.vercel.app
     lines.push(`${s.label.toUpperCase()} (${s.items.length})`)
     for (const it of s.items) {
       lines.push(`- ${it.title}`)
+      if (it.byline) lines.push(`  ${it.byline}`)
       if (it.meta) lines.push(`  ${it.meta}`)
       if (it.tldr) lines.push(`  ${it.tldr}`)
       const href = linkFor(it, origin)
