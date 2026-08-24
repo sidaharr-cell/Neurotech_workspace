@@ -158,10 +158,18 @@ export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
  *
  * At a 2x device pixel ratio those want 1024, 620 and 500 real pixels. So:
  *
- *   STORY_MIN_W = 800    the largest CARD frame at 2x, plus a margin for the
- *                        crop, since `object-fit: cover` throws away part of
- *                        one axis on top of the scaling.
- *   LEAD_MIN_W  = 1200   the lead frame at 2x, same margin.
+ *   STORY_MIN_W = 700    the largest CARD frame at 2x (620), plus a margin for
+ *                        the crop, since `object-fit: cover` throws away part
+ *                        of one axis on top of the scaling. It was 800 for a
+ *                        day, which was that same 620 rounded up generously
+ *                        rather than derived, and the rounding cost real
+ *                        coverage: eight of the twenty pictures in the whole
+ *                        index sit between 600 and 800 on the long edge, most
+ *                        of them the 766x512 that one trade title publishes
+ *                        everything at. 766 across a 620-pixel frame is not a
+ *                        picture being enlarged. 800 was.
+ *   LEAD_MIN_W  = 1200   the lead frame at 2x, same margin. Unchanged: the
+ *                        lead is 1024 real pixels and a 766 there IS enlarged.
  *
  * The short-edge floor is what keeps a banner out: a 2000x300 strip passes any
  * long-edge test and is a letterbox of nothing once cropped to 4:3.
@@ -171,8 +179,8 @@ export const focusOf = img => (img && IMAGE_FOCUS[img.url]) || '50% 50%'
  * stored and then never rendered, which reads in the database as coverage the
  * page does not have.
  */
-export const STORY_MIN_W = 800
-export const STORY_MIN_H = 450
+export const STORY_MIN_W = 700
+export const STORY_MIN_H = 400
 export const LEAD_MIN_W = 1200
 
 const bigEnough = (img, minW = STORY_MIN_W) =>

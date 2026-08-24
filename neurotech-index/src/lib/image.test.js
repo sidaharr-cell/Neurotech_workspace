@@ -117,11 +117,12 @@ describe('assignImages: high resolution or the data figure', () => {
   it('runs a picture that clears the frame at 2x', () => {
     expect(assignImages([at(1600, 1200)]).has('a')).toBe(true)
     expect(assignImages([at(884, 560)]).has('a')).toBe(true)     // a real arXiv figure
+    expect(assignImages([at(766, 512)]).has('a')).toBe(true)     // the trade press house size
   })
 
   it('will not enlarge a small picture to fill a card', () => {
     expect(assignImages([at(640, 480)]).has('a')).toBe(false)
-    expect(assignImages([at(766, 512)]).has('a')).toBe(false)    // 34 pixels short
+    expect(assignImages([at(2400, 320)]).has('a')).toBe(false)   // a banner, not a picture
   })
 
   it('will not run a banner that is wide and nothing else', () => {

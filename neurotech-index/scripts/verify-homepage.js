@@ -47,8 +47,8 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { getNewsFeed } from '../src/lib/data.js'
 import { SLOTS, composeStories, shownKeys, pickNotable } from '../src/lib/homepage.js'
-import { assignImages, leadPicture, usableImage } from '../src/lib/image.js'
-import { ownerOf, lastLead, leadOn, keyOf } from '../src/lib/ledger.js'
+import { assignImages, leadPicture, usableImage, storyPicture, canLead } from '../src/lib/image.js'
+import { ownerOf, lastLead, leadOn, keyOf, recentLeadIds, LEAD_MEMORY_DAYS } from '../src/lib/ledger.js'
 import LEDGER from '../src/data/image-ledger.json'
 import REVIEW from '../src/data/image-review.json'
 
@@ -138,6 +138,30 @@ for (const s of blank) console.log(`    · data figure: ${String(s.title).slice(
 for (const s of notItsOwn) console.log(`    ✗ not its own picture: ${String(s.title).slice(0, 60)}`)
 for (const s of misbound) console.log(`    ✗ picture belongs to another story: ${String(s.title).slice(0, 56)}`)
 
+// ── Headroom ────────────────────────────────────────────────────────────────
+//
+// Whether the page fills TOMORROW, which is a different question from whether
+// it filled today and the one that gives any warning.
+//
+// A picture is spent permanently once it is bound, hotlinks rot, and a story
+// eventually falls out of the feed. So a page that fills with nothing to spare
+// is one dead link away from a blank frame, and the first anyone would know is
+// the frame. Printing the margin is what turns that into a week's notice.
+//
+// The lead has a tighter constraint than the cards and it is worth stating
+// separately: it needs a picture wide enough for the largest frame on the
+// site, AND a story that has not led inside the memory window. Nine
+// lead-worthy stories against a fortnight's memory is nine days of rotation.
+const usable = feed.filter(s => storyPicture(s, { ledger: LEDGER }))
+const leadable = usable.filter(canLead)
+const spentLeads = recentLeadIds(LEDGER, new Date().toISOString().slice(0, 10))
+const freeLeads = leadable.filter(s => !spentLeads.has(s.id)).length
+const headroom = usable.length - stories.length
+
+console.log('\nHeadroom\n')
+console.log(`  ${headroom > 0 ? '✓' : '!'} ${usable.length} stories carry a usable photograph, for ${stories.length} frames (spare: ${headroom})`)
+console.log(`  ${freeLeads > 3 ? '✓' : '!'} ${leadable.length} of them can lead, ${freeLeads} not used as a lead in the last ${LEAD_MEMORY_DAYS} days`)
+
 // ── The lead ────────────────────────────────────────────────────────────────
 //
 // It has to be a different story from yesterday's. The page enforces this on
@@ -164,10 +188,17 @@ if (short) {
   console.log(`\n::warning::${short} home page section(s) cannot fill their slots`)
 }
 
-// A frame showing a data figure is not a fault. More than half of them is a
-// sign the sourcing step or the review queue has stalled, which is.
-if (blank.length > stories.length / 2) {
-  console.log(`::warning::${blank.length} of ${stories.length} home page story frames have no photograph — check the review queue (npm run images:queue)`)
+// A frame showing a data figure is not a fault in itself. Running out of
+// pictures to put in the frames is, and it is worth saying before the page is
+// the thing that says it.
+if (blank.length) {
+  console.log(`::warning::${blank.length} of ${stories.length} home page story frames have no photograph — work the review queue (npm run images:queue)`)
+}
+if (headroom <= 0) {
+  console.log('::warning::no spare photographs: one dead link is a blank frame. Source and review more before it costs a frame.')
+}
+if (freeLeads <= 3) {
+  console.log(`::warning::only ${freeLeads} unused lead-worthy picture(s) left; the lead cannot keep rotating past that.`)
 }
 
 // These three ARE faults. Each one is a rule the page is supposed to make

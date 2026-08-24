@@ -708,14 +708,17 @@ async function measureImage(url) {
  * then never shown, which reads in the database as coverage the page does not
  * have.
  *
- * It costs one source. NeuroNews publishes at 766x512 and now falls 34 pixels
- * short. That is the trade the high-resolution rule asks for, and a card
- * showing the record's own numbers is better than a soft photograph.
+ * Set to 700/400 rather than 800/450 after measuring what the floor actually
+ * excluded: eight of the twenty pictures in the whole index sit between 600 and
+ * 800 on the long edge, most of them the 766x512 NeuroNews publishes everything
+ * at. A 766 across a 620-pixel card frame is not enlarged; 800 was a generous
+ * rounding rather than a derivation. The lead keeps its own, higher floor,
+ * because 766 across a 1024-pixel lead frame IS enlarged.
  *
  * It also still does the job it was written for: rejecting the 300x200 and
  * 400x225 thumbnails that RSS media tags are full of.
  */
-const HI_RES = d => !!d && Math.max(d.width, d.height) >= 800 && Math.min(d.width, d.height) >= 450
+const HI_RES = d => !!d && Math.max(d.width, d.height) >= 700 && Math.min(d.width, d.height) >= 400
 
 /**
  * Classify each item's image as a REAL photograph/microscopy/scientific figure

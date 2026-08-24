@@ -385,6 +385,41 @@
       "box": null,
       "note": "The same hand-and-egg material as the Medscape frame, with The Guardian's logo block burned into the bottom right. Another publisher's branding, and it cannot be cropped out of a 4:3 card reliably.",
       "at": "2026-08-23"
+    },
+    "medicaldesignandoutsourcing.com/wp-content/uploads/2026/07/vagus-nerve-web.jpg": {
+      "url": "https://www.medicaldesignandoutsourcing.com/wp-content/uploads/2026/07/Vagus-Nerve-web.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.02,
+        "right": 0.98,
+        "bottom": 0.98
+      },
+      "note": "A fluorescence micrograph of the nerve cross-section the study mapped, fibres labelled red and green. Real subject matter, one uninterrupted image, and it fills the frame.",
+      "at": "2026-08-23"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2023/04/ai-brain-pic-featured.jpg": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2023/04/AI-brain-pic-featured.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Stock art: a neon circuit-board head with a brain drawn inside it. An illustration, and the trade title runs it on anything it has no picture for.",
+      "at": "2026-08-23"
+    },
+    "neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/river-study-snis-2026-featured.jpg": {
+      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/RIVER-study-SNIS-2026-featured.jpg",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "A photograph of a conference slide listing the River trial endpoints. It is a photograph, and it is of the story, but the image IS text: at 250 pixels it is an unreadable grey slab. The single gate exists to keep burned-in text off a card, and a photographed slide is nothing but.",
+      "at": "2026-08-23"
     }
   },
   "pending": [
@@ -438,13 +473,6 @@
       "at": "2026-08-23"
     },
     {
-      "url": "https://www.medicaldesignandoutsourcing.com/wp-content/uploads/2026/07/Vagus-Nerve-web.jpg",
-      "item": null,
-      "title": "Researchers complete first-of-its-kind vagus",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
       "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2023/11/IpsiHand-system-featured.jpg",
       "item": null,
       "title": "Newly published BCI study confirms IpsiHand’",
@@ -455,13 +483,6 @@
       "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/05/Tavallaii-et-al-pic-FTRD.png",
       "item": null,
       "title": "Five questions every neurosurgeon should ask",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2023/04/AI-brain-pic-featured.jpg",
-      "item": null,
-      "title": "Ability Neurotech announces first-in-human t",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
@@ -1015,13 +1036,6 @@
       "url": "https://cdn.mos.cms.futurecdn.net/cSsCTyD9FgAgp52SwPRQZa-2000-80.jpg",
       "item": null,
       "title": "I electrocuted my own vagus nerve every day ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuronewsinternational.com/wp-content/uploads/sites/3/2026/07/RIVER-study-SNIS-2026-featured.jpg",
-      "item": null,
-      "title": "Long-term data support durability of River s",
       "why": "where is the subject",
       "at": "2026-08-23"
     },
