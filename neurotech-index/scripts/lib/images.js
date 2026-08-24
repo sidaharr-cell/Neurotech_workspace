@@ -189,7 +189,7 @@ export const SANE_ASPECT = d => {
  * ones. The walk in europePmcFigure now simply passes over them.
  */
 export const CARD_RES = d =>
-  !!d && Math.max(d.width, d.height) >= 800 && Math.min(d.width, d.height) >= 450 && SANE_ASPECT(d)
+  !!d && Math.max(d.width, d.height) >= 700 && Math.min(d.width, d.height) >= 400 && SANE_ASPECT(d)
 
 /**
  * Is this URL still an image? Used by the rot check. Returns

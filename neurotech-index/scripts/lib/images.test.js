@@ -34,7 +34,8 @@ describe('size gates', () => {
   it('holds a card to a picture that will not be enlarged in it', () => {
     expect(CARD_RES({ width: 1400, height: 1000 })).toBe(true)
     expect(CARD_RES({ width: 884, height: 560 })).toBe(true)     // a real arXiv figure
-    expect(CARD_RES({ width: 766, height: 512 })).toBe(false)    // 34 pixels short
+    expect(CARD_RES({ width: 766, height: 512 })).toBe(true)     // the trade press house size
+    expect(CARD_RES({ width: 640, height: 480 })).toBe(false)
     expect(CARD_RES({ width: 525, height: 383 })).toBe(false)
     expect(CARD_RES({ width: 200, height: 150 })).toBe(false)
   })

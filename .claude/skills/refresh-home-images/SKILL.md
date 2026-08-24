@@ -118,14 +118,32 @@ Commit `src/data/image-review.json`, `src/data/image-ledger.json`,
 record of what has been spent and what led yesterday: drop it and the same
 pictures get handed out again and the lead stops rotating.
 
-## What a good day looks like
+## The target: 15 of 15, with something spare
 
-Most frames showing a data figure is **normal and correct**, not a failure. The
-supply of pictures that are genuinely of their story is thin: roughly half the
-feed arrives as Google News wrapper URLs that have no photograph of their own,
-and a recent paper is usually not in PMC yet, so it has no figure anyone may
-publish. A card showing the record's own numbers claims only what the record
-says. Do not fix a thin page by relaxing `depicts`.
+**Every one of the fifteen picture frames should carry a photograph, every
+day.** That is the standard. A frame showing a data figure is a shortfall to be
+worked, not a resting state.
 
-Two things are real failures, and `verify-homepage.js` names both: a picture
-that is not of the story it sits on, and the lead not having changed.
+It is genuinely hard, and the arithmetic is worth knowing before you start:
+
+- The index holds ~590 stories and about twenty carry a picture OF themselves.
+- Roughly half the feed arrives as Google News wrapper URLs. An aggregator copy
+  has no photograph of its own — its og:image is Google's logo — and the
+  destination is an opaque token that cannot be resolved.
+- Of sixty recent papers, **fifty-two are not open access**. No figure exists
+  that we may publish. arXiv renders its figures too small for a card.
+
+So the supply is news photographs, and it is finite. `verify-homepage.js`
+prints the headroom: how many usable photographs exist against fifteen frames,
+and how many of those can lead. **Watch that number, not just today's fill.** A
+page that fills with nothing spare is one dead hotlink from a blank frame, and
+the lead needs a story that has not led in a fortnight, so a handful of
+lead-worthy pictures is only a handful of days of rotation.
+
+When the headroom is thin, the work is to find more pictures — review deeper
+into the queue, and look at the stories that were skipped. It is **not** to
+relax `depicts`. A photograph of the wrong thing is worse than a data figure,
+and it breaks the one rule the whole page rests on.
+
+Two things are outright failures, and `verify-homepage.js` names both: a
+picture that is not of the story it sits on, and the lead not having changed.
