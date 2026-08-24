@@ -22,8 +22,8 @@
 import { groupTrialChanges } from './trial-changes.js'
 
 /** Rows to read per category. A day's ingest is tens, not thousands; the cap is
- *  a guard against a runaway backfill dumping ten thousand patents into a
- *  window a reader has to scroll. Anything past it is counted, not listed. */
+ *  a guard against a runaway backfill dumping ten thousand rows into a window a
+ *  reader has to scroll. Anything past it is counted, not listed. */
 export const PER_CATEGORY = 40
 
 /**
@@ -46,28 +46,33 @@ export const PREVIEW_PER_CATEGORY = 10
  * patent says what it is in its own title, and a two-sentence gloss on it would
  * be padding written from the same fields already on the row.
  *
- * THERE IS NO "COMPANIES AND LABS" CATEGORY, and that is deliberate. A new
- * organization row is an index bookkeeping event, not news: the pipeline mints
- * one the first time a name turns up as a paper affiliation, a device
- * manufacturer or a trial sponsor, so the section filled with companies that had
- * done nothing that day and were merely noticed for the first time. A company
- * earns a line here by raising money (Funding rounds, below, floored at
- * FUNDING_FLOOR_USD) — the one organization event that is dated, sourced and
- * worth a reader's attention on the day it lands.
+ * FOUR CATEGORIES, AND THE OMISSIONS ARE THE DESIGN. Companies and labs, new
+ * clinical trials, devices and clearances, and patents were each on this list
+ * and each came off it, for one reason in two forms.
  *
- * WHAT REPLACED IT IS TRIAL CHANGES. `trials` is trials the index gained today;
- * `trialChanges` is tracked trials that moved today — a study that opened,
- * closed, changed phase or resized. For a reader following the field that second
- * list is the one that carries news, because a trial's registration is a
- * one-time event and its status is the thing that keeps moving afterwards.
+ * Three of them are the index NOTICING something rather than something
+ * happening. A new organization row is minted the first time a name turns up as
+ * a paper affiliation, a device manufacturer or a trial sponsor, so the section
+ * filled with companies that had done nothing that day. Devices and patents
+ * arrive in periodic backfills — a openFDA or PatentsView sweep drops hundreds
+ * of records at once, dated to when the sweep ran and not to when anything
+ * happened — so the category was silent for weeks and then enormous, and neither
+ * state told a reader anything about that day.
+ *
+ * New trials are the fourth, and the reason is sharper. A registration is a
+ * one-time event, and it is the trial's STATUS that keeps moving afterwards:
+ * opening, closing, changing phase, resizing. `trialChanges` is that movement,
+ * and it is what a reader following the field actually wants. Listing both put
+ * the same studies in the window twice under two headings.
+ *
+ * What is left is four things that are dated because they happened: a paper, a
+ * story, a trial that moved, a company that raised money above
+ * FUNDING_FLOOR_USD.
  */
 export const CATEGORIES = [
   { key: 'research', label: 'Research', tldr: true },
   { key: 'news', label: 'News', tldr: true },
-  { key: 'trials', label: 'Clinical trials', tldr: false },
   { key: 'trialChanges', label: 'Clinical trial changes', tldr: false },
-  { key: 'devices', label: 'Devices and clearances', tldr: false },
-  { key: 'patents', label: 'Patents', tldr: false },
   { key: 'funding', label: 'Funding rounds', tldr: false },
 ]
 
@@ -194,23 +199,6 @@ export const fromFeedRow = (row, { withTldr = false, withByline = false } = {}) 
   tldr: withTldr ? tldrOf(row) : null,
 })
 
-export const fromDevice = (row) => entry({
-  id: row.id,
-  title: clean(row.name),
-  href: `/device/${row.id}`,
-  url: row.url || null,
-  meta: [row.manufacturer, row.status || row.type].filter(Boolean).join(' · ') || null,
-})
-
-export const fromPatent = (row) => entry({
-  id: row.id,
-  // Patents have no page of their own on the site; the row links out to the
-  // grant. Devices and Patents is a search surface, not a per-record route.
-  title: clean(row.title),
-  url: row.url || null,
-  meta: [row.assignee, row.patent_number, row.grant_date].filter(Boolean).join(' · ') || null,
-})
-
 /** "Recruiting" out of "recruiting", as the trials page prints it. */
 const prettyStatus = s => clean(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
 const changeValue = (field, v) => (field === 'status' ? prettyStatus(String(v || '').replace(/_/g, ' ')) : clean(v)) || 'none'
@@ -271,18 +259,13 @@ export async function fetchWhatsNew(client, { now = new Date(), perCategory = PE
   const feed = types => rows(window_(client.from('news_feed').select('*').in('entry_type', types))
     .order('created_at', { ascending: false }).limit(perCategory))
 
-  const [research, news, trials, trialChanges, devices, patents, funding] = await Promise.all([
+  const [research, news, trialChanges, funding] = await Promise.all([
     feed(['paper', 'preprint']),
     feed(['news']),
-    feed(['trial']),
     // Read more change rows than the category will show: they group down to one
     // entry per trial, and a study that closes writes three of them at once.
     rows(window_(client.from('trial_changes').select('id,nct_id,trial_id,field,old_value,new_value,changed_at,created_at'))
       .order('created_at', { ascending: false }).limit(perCategory * 3)),
-    rows(window_(client.from('devices').select('id,name,manufacturer,type,status,url,created_at'))
-      .order('created_at', { ascending: false }).limit(perCategory)),
-    rows(window_(client.from('patents').select('id,title,assignee,patent_number,grant_date,url,created_at'))
-      .order('created_at', { ascending: false }).limit(perCategory)),
     // A company earns its line by the size of the raise, not by existing, so the
     // floor goes in the query rather than after it: filtering the page would let
     // small rounds use up the cap and push big ones off a backfill day. `gte`
@@ -320,10 +303,7 @@ export async function fetchWhatsNew(client, { now = new Date(), perCategory = PE
   const byKey = {
     research: research.map(r => fromFeedRow(r, { withTldr: true, withByline: true })),
     news: news.map(r => fromFeedRow(r, { withTldr: true })),
-    trials: trials.map(r => fromFeedRow(r)),
     trialChanges: groupTrialChanges(namedChanges, perCategory).map(fromTrialChangeGroup),
-    devices: devices.map(fromDevice),
-    patents: patents.map(fromPatent),
     funding: funding.map(r => fromFundingRound(r, orgById[r.organization_id])),
   }
 

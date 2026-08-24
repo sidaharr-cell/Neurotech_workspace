@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   CATEGORIES, FUNDING_FLOOR_USD, dayWindow, formatDay, tldr, tldrOf, byline, bylineOf,
-  fromFeedRow, fromDevice, fromPatent, fromTrialChangeGroup, changeLine,
+  fromFeedRow, fromTrialChangeGroup, changeLine,
   fromFundingRound, fetchWhatsNew, filledSections, digestSubject,
   digestHtml, digestText, isEmail, subscribe, unsubscribeLine,
 } from './whatsNew'
@@ -160,16 +160,9 @@ describe('row mappers', () => {
     expect(fromFeedRow(row).byline).toBe(null)
   })
 
-  it('names a trial with its phase and status', () => {
-    const e = fromFeedRow(feedRow({ entry_type: 'trial', source: 'ClinicalTrials.gov', metadata: { phase: 'Phase 2', status: 'Recruiting' } }))
-    expect(e.meta).toBe('ClinicalTrials.gov · Phase 2 · Recruiting')
-  })
-
-  it('links devices to their own pages, and patents out', () => {
-    expect(fromDevice({ id: 'd1', name: 'Array', manufacturer: 'Acme', status: 'Cleared' }).href).toBe('/device/d1')
-    const p = fromPatent({ id: 'p1', title: 'Electrode', assignee: 'Acme', patent_number: 'US1', url: 'https://patents/1' })
-    expect(p.href).toBe(null)
-    expect(p.url).toBe('https://patents/1')
+  it('names the publication a paper or a story came from', () => {
+    expect(fromFeedRow(feedRow({ source: 'Nature' })).meta).toBe('Nature')
+    expect(fromFeedRow(feedRow({ source: null })).meta).toBe(null)
   })
 
   it('spells out a trial change from and to, and tidies the stored status', () => {
@@ -217,8 +210,6 @@ describe('fetchWhatsNew', () => {
   const client = () => stubClient({
     news_feed: [feedRow({ id: 'n1', metadata: { authors: ['Chen Wang', 'Ana Ruiz'] } })],
     trial_changes: [{ id: 'c1', nct_id: 'NCT1', trial_id: 'n1', field: 'status', old_value: 'recruiting', new_value: 'completed' }],
-    devices: [{ id: 'd1', name: 'Array', manufacturer: 'Acme' }],
-    patents: [{ id: 'p1', title: 'Electrode', url: 'https://patents/1' }],
     organizations: [{ id: 'o1', name: 'Acme', type: 'company' }],
     funding_rounds: [{ id: 'r1', organization_id: 'o1', amount_usd: 5e6 }],
   })
@@ -227,14 +218,18 @@ describe('fetchWhatsNew', () => {
     const c = client()
     const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
     expect(digest.day).toBe('2026-08-24')
-    // news_feed is asked three times (research, news, trials), plus four tables:
-    // trial_changes, devices, patents, funding_rounds.
+    // news_feed is asked twice (research, news), plus trial_changes and
+    // funding_rounds. Four windowed reads, one per category.
     const windowed = c.calls.filter(x => x.filters.gte)
-    expect(windowed.length).toBe(7)
+    expect(windowed.length).toBe(4)
     for (const call of windowed) {
       expect(call.filters.gte).toEqual(['created_at', '2026-08-24T00:00:00.000Z'])
       expect(call.filters.lte).toEqual(['created_at', '2026-08-24T23:59:59.999Z'])
     }
+    // Nothing asks devices or patents anything any more: a backfill sweep dates
+    // those to when it ran, so they said nothing about the day.
+    expect(c.calls.map(x => x.table)).not.toContain('devices')
+    expect(c.calls.map(x => x.table)).not.toContain('patents')
     // Organizations are read only to name the companies behind funding rounds,
     // and that read is not windowed: a company indexed last year can raise today.
     const orgReads = c.calls.filter(x => x.table === 'organizations')
@@ -244,14 +239,16 @@ describe('fetchWhatsNew', () => {
 
   it('keeps the category order and counts the total', async () => {
     const digest = await fetchWhatsNew(client(), { now: new Date('2026-08-24T09:00:00Z') })
+    expect(digest.sections.map(s => s.key)).toEqual(['research', 'news', 'trialChanges', 'funding'])
     expect(digest.sections.map(s => s.key)).toEqual(CATEGORIES.map(c => c.key))
-    expect(digest.sections.map(s => s.key)).not.toContain('organizations')
-    // one feed row per feed category (3) + trial change + device + patent + round
-    expect(digest.total).toBe(7)
+    for (const gone of ['organizations', 'trials', 'devices', 'patents']) {
+      expect(digest.sections.map(s => s.key)).not.toContain(gone)
+    }
+    // one feed row per feed category (2) + trial change + round
+    expect(digest.total).toBe(4)
     expect(digest.sections.find(s => s.key === 'research').items[0].tldr).toBeTruthy()
     expect(digest.sections.find(s => s.key === 'research').items[0].byline).toBe('Chen Wang et al.')
-    expect(digest.sections.find(s => s.key === 'trials').items[0].tldr).toBe(null)
-    expect(digest.sections.find(s => s.key === 'trials').items[0].byline).toBe(null)
+    expect(digest.sections.find(s => s.key === 'news').items[0].byline).toBe(null)
   })
 
   it('lists a changed trial once, under its own title', async () => {
@@ -297,10 +294,13 @@ describe('fetchWhatsNew', () => {
   })
 
   it('survives one category failing', async () => {
-    const c = stubClient({ devices: [{ id: 'd1', name: 'Array' }] }, { failing: ['news_feed'] })
+    const c = stubClient({
+      organizations: [{ id: 'o1', name: 'Acme Neuro' }],
+      funding_rounds: [{ id: 'r1', organization_id: 'o1', amount_usd: 5e6 }],
+    }, { failing: ['news_feed'] })
     const digest = await fetchWhatsNew(c, { now: new Date('2026-08-24T09:00:00Z') })
     expect(digest.sections.find(s => s.key === 'research').items).toEqual([])
-    expect(digest.sections.find(s => s.key === 'devices').items).toHaveLength(1)
+    expect(digest.sections.find(s => s.key === 'funding').items).toHaveLength(1)
   })
 
   it('returns an empty day rather than throwing with no client', async () => {
@@ -317,7 +317,7 @@ describe('the email', () => {
     sections: [
       { key: 'research', label: 'Research', items: [{ id: 'a', title: 'Implant & array', href: '/item/a', byline: 'Chen Wang et al.', meta: 'Nature', tldr: 'Two sentences. Right here.' }] },
       { key: 'news', label: 'News', items: [] },
-      { key: 'patents', label: 'Patents', items: [{ id: 'p', title: 'Electrode', url: 'https://patents/1', meta: 'Acme', tldr: null }] },
+      { key: 'funding', label: 'Funding rounds', items: [{ id: 'r', title: 'Undisclosed company', url: 'https://sec.gov/d/1', meta: '$42M · 2026-08-24', tldr: null }] },
     ],
   }
 
@@ -329,7 +329,7 @@ describe('the email', () => {
   it('drops empty sections and makes site links absolute', () => {
     const html = digestHtml(digest, { origin: 'https://neurobase-live.vercel.app' })
     expect(html).toContain('https://neurobase-live.vercel.app/item/a')
-    expect(html).toContain('https://patents/1')
+    expect(html).toContain('https://sec.gov/d/1')
     expect(html).not.toContain('>News <')
     expect(html).toContain('Two sentences. Right here.')
   })
@@ -350,8 +350,8 @@ describe('the email', () => {
   it('carries the byline into both renderings, the same as the window', () => {
     expect(digestHtml(digest)).toContain('Chen Wang et al.')
     expect(digestText(digest)).toContain('Chen Wang et al.')
-    // The patent has no byline, and gets no blank line standing in for one.
-    expect(digestText(digest)).toContain('- Electrode\n  Acme\n  https://patents/1')
+    // The funding round has no byline, and gets no blank line standing in for one.
+    expect(digestText(digest)).toContain('- Undisclosed company\n  $42M · 2026-08-24\n  https://sec.gov/d/1')
   })
 
   it('says so when the day was empty', () => {

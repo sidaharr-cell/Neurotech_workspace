@@ -534,17 +534,17 @@ section pages (`/trials`, `/devices`, `/companies`, `/research`).
 
 The tab left of Watchlist opens a window over the page — `src/components/WhatsNewDialog.jsx`,
 blurred backdrop, Escape or a click outside to close — listing everything the index gained
-**today and only today**, grouped by category: Research, News, Clinical trials, Clinical
-trial changes, Devices and clearances, Patents, Funding rounds. **Every category prints,
-empty ones as a heading and a zero** — a quiet morning has to say which category was
-quiet, or a reader cannot tell "no trials moved today" from "this index does not follow
-trials". The exception is a day with nothing at all in it: seven zeroes say less than one
-sentence, so `total === 0` gets the sentence instead. The emailed digest still drops its
-empty sections (`filledSections`), because it is only sent on a day that has something and
-zeroes under a heading are padding in an inbox. The signup box sits **above** the list, not
-under it, so a reader does not have to scroll a heavy morning to find it.
+**today and only today**, in **four categories: Research, News, Clinical trial changes,
+Funding rounds**. **Every one of them prints, empty ones as a heading and a zero** — a
+quiet morning has to say which category was quiet, or a reader cannot tell "no trials
+moved today" from "this index does not follow trials". The exception is a day with nothing
+at all in it: four zeroes say less than one sentence, so `total === 0` gets the sentence
+instead. The emailed digest still drops its empty sections (`filledSections`), because it
+is only sent on a day that has something and zeroes under a heading are padding in an
+inbox. The signup box sits **above** the list, not under it, so a reader does not have to
+scroll a heavy morning to find it.
 
-`src/lib/whatsNew.js` is the one definition of that list, and six things follow from it:
+`src/lib/whatsNew.js` is the one definition of that list, and seven things follow from it:
 
 - **Today is UTC.** `created_at` is stamped by Postgres and the run is a 6am UTC cron, so
   the window has to use the same day boundary the pipeline did or a reader west of
@@ -563,19 +563,26 @@ under it, so a reader does not have to scroll a heavy morning to find it.
   and arXiv ingestion wrote them. Thirty names would swamp the title, and the first author
   is the one a reader recognises; the full list is on the item page. News rows carry a
   publication in `source`, not authors, so they get none.
-- **There is no Companies and labs category.** A new `organizations` row is bookkeeping,
-  not news: the pipeline mints one the first time a name turns up as an affiliation, a
-  manufacturer or a sponsor, so the section filled with companies that had done nothing
-  that day. A company earns a line by raising money — Funding rounds, floored at
-  `FUNDING_FLOOR_USD` ($1M). The floor is in the query, not applied to the page it returns,
-  so a backfill day of small rounds cannot use up `PER_CATEGORY` and push the big ones off;
-  `gte` on a nullable column drops undisclosed amounts too, which is the intended reading.
-- **Clinical trial changes replaced it.** `trials` is trials the index gained today;
-  `trialChanges` reads the `trial_changes` log for trials that moved today and groups it
-  through `groupTrialChanges` (`src/lib/trial-changes.js`), so a study that closes is one
-  entry with two clauses and not two rows with the same title. A change whose trial has
-  left the index is dropped — no title to print, nowhere to link — the same call
-  `getRecentTrialChanges` makes in `data.js`.
+- **Four categories, and the omissions are the design.** Companies and labs, new clinical
+  trials, devices and clearances, and patents were each on this list and each came off it.
+  Three of them are the index *noticing* something rather than something happening: an
+  `organizations` row is minted the first time a name turns up as an affiliation, a
+  manufacturer or a sponsor, and devices and patents arrive in periodic openFDA and
+  PatentsView backfills dated to when the sweep ran, so the category was silent for weeks
+  and then enormous. New trials came off for a sharper reason — a registration is a
+  one-time event, the status is what keeps moving, and listing both put the same studies
+  in the window twice. **Do not add a category for a table's `created_at` alone**; ask
+  first whether the date means something happened.
+- **Clinical trial changes.** `trialChanges` reads the `trial_changes` log for trials that
+  moved today and groups it through `groupTrialChanges` (`src/lib/trial-changes.js`), so a
+  study that closes is one entry with two clauses and not two rows with the same title. A
+  change whose trial has left the index is dropped — no title to print, nowhere to link —
+  the same call `getRecentTrialChanges` makes in `data.js`. Trial titles still come from
+  `news_feed`, which is the only thing that still reads trial rows here.
+- **Funding rounds are the one way a company gets a line**, floored at `FUNDING_FLOOR_USD`
+  ($1M). The floor is in the query, not applied to the page it returns, so a backfill day
+  of small rounds cannot use up `PER_CATEGORY` and push the big ones off; `gte` on a
+  nullable column drops undisclosed amounts too, which is the intended reading.
 - **The email is the same list.** `scripts/send-digest.js` runs last in `scripts/daily.js`,
   through vite-node so it composes the digest with the page's own module. A digest that
   disagreed with the window would be worse than no digest. The window's
