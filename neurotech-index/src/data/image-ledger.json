@@ -127,6 +127,18 @@
       "title": "Injectable Outlet in the Body Powers Bioelectric Implants",
       "url": "https://spectrum.ieee.org/media-library/close-up-sem-image-of-the-soft-spongy-structure-of-an-implantable-bioelectric-outlet.jpg?id=67508805&width=980",
       "at": "2026-08-24"
+    },
+    "mmx.prnewswire.com/media/ms1963674/zenowell-luna-plus.jpg": {
+      "item": "48a8ef28-d930-4680-ad5c-777b153feab9",
+      "title": "ZenoWell Unveils Luna Plus : An AI - Driven Vagus Nerve Ecosystem for Your Personalized Life Model",
+      "url": "https://mmx.prnewswire.com/media/MS1963674/ZenoWell-Luna-Plus.jpg?id=OA2823823&p=facebook",
+      "at": "2026-08-25"
+    },
+    "sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_ls_brainstimulation_main.jpg": {
+      "item": "6b94b08a-497d-4284-8265-1fd6c45735c5",
+      "title": "Personalized brain stimulation can ease chronic pain",
+      "url": "https://www.sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_LS_brainstimulation_main.jpg?w=800",
+      "at": "2026-08-25"
     }
   },
   "leads": [
@@ -141,6 +153,12 @@
       "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
       "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
       "title": "Neurostimulation restores feeling in paralysed hand for months after"
+    },
+    {
+      "date": "2026-08-25",
+      "item": "061798fb-3ce0-48e8-9cca-d9a506191d1e",
+      "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202607/MIT-Diana_Grass_01-press.jpg?itok=5WjTbL6C",
+      "title": "Diana Grass: Listening to the body’s language"
     }
   ]
 }
