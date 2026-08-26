@@ -139,6 +139,12 @@
       "title": "Personalized brain stimulation can ease chronic pain",
       "url": "https://www.sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_LS_brainstimulation_main.jpg?w=800",
       "at": "2026-08-25"
+    },
+    "mmx.prnewswire.com/media/ms1975830/gestala_logo_l2_c.jpg": {
+      "item": "1dcb3013-6ff6-45ba-b933-a2bc0c4124bb",
+      "title": "China's BCI Race Accelerates: Gestala Raises US$84 Million in Six Months",
+      "url": "https://mmx.prnewswire.com/media/MS1975830/Gestala_Logo_L2_C.jpg?id=OA2912172&p=original",
+      "at": "2026-08-26"
     }
   },
   "leads": [
@@ -159,6 +165,12 @@
       "item": "061798fb-3ce0-48e8-9cca-d9a506191d1e",
       "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202607/MIT-Diana_Grass_01-press.jpg?itok=5WjTbL6C",
       "title": "Diana Grass: Listening to the body’s language"
+    },
+    {
+      "date": "2026-08-26",
+      "item": "5931a917-bc7c-4ff1-b505-90896a40922e",
+      "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202606/mit-SERC-Prize.JPG?itok=ARDkgV-T",
+      "title": "Toward a future that preserves benefits of neurotechnology for all"
     }
   ]
 }
