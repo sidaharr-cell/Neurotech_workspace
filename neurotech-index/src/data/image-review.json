@@ -1625,6 +1625,20 @@
       "title": null,
       "why": "unreviewed",
       "at": "2026-08-25"
+    },
+    {
+      "url": "https://mmx.prnewswire.com/media/MS1975830/Gestala_Logo_L2_C.jpg?id=OA2912172&p=facebook",
+      "item": "1dcb3013-6ff6-45ba-b933-a2bc0c4124bb",
+      "title": "China's BCI Race Accelerates: Gestala Raises US$84 Million in Six Months",
+      "why": "the photograph this outlet ran",
+      "at": "2026-08-26"
+    },
+    {
+      "url": "https://www.jneurosci.org/sites/default/files/images/jn_twitter_image_2.png",
+      "item": "857e6261-3469-42d9-9a58-4a25b490d485",
+      "title": "Distinct neural modes carry information about attempted grasp timing and force i",
+      "why": "the photograph this outlet ran",
+      "at": "2026-08-26"
     }
   ],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
