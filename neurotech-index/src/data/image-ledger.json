@@ -145,6 +145,12 @@
       "title": "China's BCI Race Accelerates: Gestala Raises US$84 Million in Six Months",
       "url": "https://mmx.prnewswire.com/media/MS1975830/Gestala_Logo_L2_C.jpg?id=OA2912172&p=original",
       "at": "2026-08-26"
+    },
+    "sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp": {
+      "item": "e2ab5d86-dda8-4f48-b1cb-f6aa0c160d0a",
+      "title": "Scientists discover a hidden brain rhythm that could improve Parkinson’s treatment",
+      "url": "https://www.sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp",
+      "at": "2026-08-27"
     }
   },
   "leads": [
@@ -171,6 +177,12 @@
       "item": "5931a917-bc7c-4ff1-b505-90896a40922e",
       "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202606/mit-SERC-Prize.JPG?itok=ARDkgV-T",
       "title": "Toward a future that preserves benefits of neurotechnology for all"
+    },
+    {
+      "date": "2026-08-27",
+      "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
+      "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
+      "title": "Neurostimulation restores feeling in paralysed hand for months after"
     }
   ]
 }
