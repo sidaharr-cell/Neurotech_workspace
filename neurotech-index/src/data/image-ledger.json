@@ -151,6 +151,12 @@
       "title": "Scientists discover a hidden brain rhythm that could improve Parkinson’s treatment",
       "url": "https://www.sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp",
       "at": "2026-08-27"
+    },
+    "news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-axonsinferno.jpg": {
+      "item": "1a12181f-b425-4e85-a50b-5b92db0693df",
+      "title": "Brain circuit keeps tabs on what just happened to aid judgment of what’s happening now",
+      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-Axonsinferno.jpg?itok=y8K7Oxeh",
+      "at": "2026-08-28"
     }
   },
   "leads": [
@@ -183,6 +189,12 @@
       "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
       "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
       "title": "Neurostimulation restores feeling in paralysed hand for months after"
+    },
+    {
+      "date": "2026-08-28",
+      "item": "1a12181f-b425-4e85-a50b-5b92db0693df",
+      "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-Axonsinferno.jpg?itok=y8K7Oxeh",
+      "title": "Brain circuit keeps tabs on what just happened to aid judgment of what’s happening now"
     }
   ]
 }
