@@ -56,7 +56,7 @@ if (!feed.length) { console.error('the feed came back empty — is VITE_SUPABASE
 
 // Composed against the ledger AS IT STANDS, which is what makes the lead
 // rotate: yesterday's lead is already in it and is excluded here.
-const { lead, featured, latest } = composeStories(feed || [], 'relevant', { ledger, date: DATE })
+const { lead, featured, latest } = composeStories(feed || [], { ledger, date: DATE })
 const stories = [lead, ...featured, ...latest].filter(Boolean)
 const pictures = assignImages(stories, { ledger })
 const shown = s => (s === lead ? leadPicture(s, pictures.get(s.id) ?? null) : pictures.get(s.id))

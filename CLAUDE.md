@@ -116,17 +116,29 @@ confidence allows.
 APPLICATION — stored as `text[]` columns with GIN indexes and stamped with
 `CLASSIFIER_VERSION`. It is deterministic (no model calls), runs once at ingest, and
 pages read the stored columns. `src/lib/classify.js` applies it and `applyFacets` in
-`data.js` filters (OR within a facet, AND across facets). `FilterBar.jsx` is the UI
-everywhere: one closed line of dropdowns carrying the three facet groups plus whatever
+`data.js` filters (OR within a facet, AND across facets). `FilterBar.jsx` is the UI on
+every page that filters: one closed line of dropdowns carrying the three facet groups plus whatever
 single-select `extras` a page adds, per-value `counts`, and a `histogram`
 (the results-by-year bars, which live inside a Year dropdown).
 
-**A facet selection lives in the URL on every surface, and survives navigation.**
-`useUrlFacets` backs all seven (`?fn=&ax=&app=`, repeated keys for OR within a facet);
+**The home page has no filters and no Sort control, as of 29 Aug 2026.** It is the one
+surface that answers a question nobody asked — what matters in neurotechnology today —
+and it answers it in one order, the composite significance rank `getNewsFeed` already
+applied. Removing the control removed the second ordering with it: `composeStories`,
+`rankLead` and `pickLead` no longer take a `sort`, `byNewest` is gone, and so are
+`SORT_SIGNIF` and `FEED_TYPE` in `Filters.jsx`. The four record sections below the feed
+(trials, clearances, funding, notable) stand on their own recency rules and are fetched
+unfiltered. Every OTHER surface keeps its full filter bar; a reader who wants to narrow
+goes to one of them.
+
+**A facet selection lives in the URL on every filter surface, and survives navigation.**
+`useUrlFacets` backs all six (`?fn=&ax=&app=`, repeated keys for OR within a facet);
 none of them keep facets in component state any more. `facetSearch` in the same file
-extracts just those three params, and the masthead's Home and topic links plus the home
-page's rail links hang the result on their `to`, so a reader who narrows the front page
-and opens Trials stays narrowed. **Only the three facets travel.** They are the one
+extracts just those three params, and the masthead's topic links hang the result on
+their `to`, so a reader who narrows Research and opens Trials stays narrowed. **Home is
+the one link in that row that does not carry**, because a `?fn=` the front page cannot
+read would be a filter set with nothing on the page to unset it. **Only the three facets
+travel.** They are the one
 vocabulary every page shares, so a value means the same thing wherever it lands; the
 single-select extras must not be carried, because recency is `week|month|year` on the
 feed and `y1|y3|y10` on research and carrying it would set a filter the destination
@@ -135,7 +147,7 @@ it still renders as selected with Clear all beside it — `FilterBar` never hide
 value, so a filter cannot be set with no way to unset it. The wordmark is the deliberate
 exception and goes to `/` plain: it is the one gesture that drops a filter.
 
-**Every filter surface carries counts** — the seven are `/`, `/media`, `/research`,
+**Every filter surface carries counts** — the six are `/media`, `/research`,
 `/trials`, `/companies`, `/devices`, `/search` — because a value that would return
 nothing should not cost a click to discover. A count sits beside each value and a
 zero-count value is hidden. `null` counts mean "not counted", which is a different thing
@@ -495,8 +507,9 @@ pure and tested):
   finding. There is deliberately no unbind; a promise a nightly job can revoke is not one.
   Keys are normalised (`keyOf`), so re-sourcing the same Wikimedia file at a larger
   thumbnail width does not hand a spent picture back to the pool.
-- **The lead changes every day.** `chooseLead` walks the page's own ranking and takes the
-  best story that has not led inside a fortnight, or the story the daily run pinned. It is
+- **The lead changes every day.** `chooseLead` walks the page's own ranking — one
+  ordering, significance, since the Sort control went — and takes the best story that
+  has not led inside a fortnight, or the story the daily run pinned. It is
   a property of the PAGE, not of the cron: with the ledger's history and no run at all,
   yesterday's lead is still excluded, so the front page moves on a morning the pipeline
   never fired.

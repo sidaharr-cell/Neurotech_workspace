@@ -12,50 +12,35 @@ const item = (over = {}) => ({
 })
 
 describe('pickLead', () => {
-  it('leads with the newest item when sorted by newest', () => {
+  // There is one ordering: significance. The Sort control that offered a date
+  // ordering beside it was taken off the front page on 29 Aug 2026, and the
+  // second ordering went with it — see rankLead in sources.js.
+  it('leads with the most significant item, not the freshest', () => {
     const old = item({ id: 'old', published_at: '2026-02-28T00:00:00Z', metadata: { rankScore: 99 } })
-    const fresh = item({ id: 'fresh', published_at: '2026-07-31T00:00:00Z' })
-    expect(pickLead([old, fresh], 'newest').id).toBe('fresh')
-  })
-
-  it('leads with the most significant item when sorted by relevance', () => {
-    const old = item({ id: 'old', published_at: '2026-02-28T00:00:00Z', metadata: { rankScore: 99 } })
-    const fresh = item({ id: 'fresh', published_at: '2026-07-31T00:00:00Z' })
-    expect(pickLead([old, fresh], 'relevant').id).toBe('old')
-  })
-
-  it('defaults to significance when no sort is given', () => {
-    const old = item({ id: 'old', metadata: { rankScore: 99 } })
     const fresh = item({ id: 'fresh', published_at: '2026-07-31T00:00:00Z' })
     expect(pickLead([old, fresh]).id).toBe('old')
   })
 
-  it('keeps the reputable-source floor under newest', () => {
-    const aggregator = item({ id: 'wire', entry_type: 'news', source: 'ScienceDaily', published_at: '2026-07-31T00:00:00Z' })
-    const journal = item({ id: 'journal', published_at: '2026-07-30T00:00:00Z' })
-    expect(pickLead([aggregator, journal], 'newest').id).toBe('journal')
+  it('keeps the reputable-source floor above the score', () => {
+    const aggregator = item({ id: 'wire', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 99 } })
+    const journal = item({ id: 'journal', metadata: { rankScore: 1 } })
+    expect(pickLead([aggregator, journal]).id).toBe('journal')
   })
 
   it('falls back to the whole list when nothing is reputable', () => {
-    const a = item({ id: 'wire-a', entry_type: 'news', source: 'ScienceDaily', published_at: '2026-07-20T00:00:00Z' })
-    const b = item({ id: 'wire-b', entry_type: 'news', source: 'ScienceDaily', published_at: '2026-07-31T00:00:00Z' })
-    expect(pickLead([a, b], 'newest').id).toBe('wire-b')
-  })
-
-  it('sorts undated items last rather than leading with them', () => {
-    const undated = item({ id: 'undated', published_at: null })
-    const dated = item({ id: 'dated', published_at: '2026-07-31T00:00:00Z' })
-    expect(pickLead([undated, dated], 'newest').id).toBe('dated')
+    const a = item({ id: 'wire-a', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 1 } })
+    const b = item({ id: 'wire-b', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 99 } })
+    expect(pickLead([a, b]).id).toBe('wire-b')
   })
 
   it('returns undefined for an empty or missing list', () => {
-    expect(pickLead([], 'newest')).toBeUndefined()
-    expect(pickLead(undefined, 'newest')).toBeUndefined()
+    expect(pickLead([])).toBeUndefined()
+    expect(pickLead(undefined)).toBeUndefined()
   })
 
   it('does not mutate the list it is given', () => {
     const list = [item({ id: 'a', published_at: '2026-02-28T00:00:00Z' }), item({ id: 'b', published_at: '2026-07-31T00:00:00Z' })]
-    pickLead(list, 'newest')
+    pickLead(list)
     expect(list.map(i => i.id)).toEqual(['a', 'b'])
   })
 })

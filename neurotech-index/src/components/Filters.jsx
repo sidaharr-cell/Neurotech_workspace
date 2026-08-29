@@ -38,10 +38,6 @@ export const SORT_IMPACT = [ // research: OpenAlex field-normalized citation imp
   { id: 'relevant', label: 'Highest impact' },
   { id: 'newest', label: 'Newest' },
 ]
-export const SORT_SIGNIF = [ // trials / feed: composite significance score
-  { id: 'relevant', label: 'Most significant' },
-  { id: 'newest', label: 'Newest' },
-]
 export const SORT_DATE = [ // devices: no ranking score, date only
   { id: 'newest', label: 'Newest' },
   { id: 'oldest', label: 'Oldest' },
@@ -95,10 +91,6 @@ export const DEVICE_FDA = [
 export const RESEARCH_SOURCE = [
   { id: 'pubmed', label: 'Papers' },
   { id: 'arxiv', label: 'Preprints' },
-]
-export const FEED_TYPE = [
-  { id: 'research', label: 'Research' },
-  { id: 'media', label: 'News' },
 ]
 
 /**

@@ -46,7 +46,7 @@ describe('composeStories', () => {
   const many = Array.from({ length: 40 }, (_, i) => story({ id: `s${i}`, metadata: { rankScore: 100 - i } }))
 
   it('never fills more slots than the budget allows', () => {
-    const { lead, sidebar, featured, latest } = composeStories(many, 'relevant')
+    const { lead, sidebar, featured, latest } = composeStories(many)
     expect(lead).toBeTruthy()
     expect(sidebar).toHaveLength(SLOTS.sidebar)
     expect(featured).toHaveLength(SLOTS.featured)
@@ -55,7 +55,7 @@ describe('composeStories', () => {
   })
 
   it('shows no story twice', () => {
-    const { lead, sidebar, featured, latest } = composeStories(many, 'relevant')
+    const { lead, sidebar, featured, latest } = composeStories(many)
     const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
     expect(new Set(ids).size).toBe(ids.length)
   })
@@ -69,24 +69,13 @@ describe('composeStories', () => {
       photo('small', 1000, 700, { metadata: { rankScore: 10 } }),
       photo('large', 2000, 1200, { metadata: { rankScore: 5 } }),
     ]
-    const { lead, featured } = composeStories(items, 'relevant', NONE)
+    const { lead, featured } = composeStories(items, NONE)
     expect(lead.id).toBe('lead')
     expect(featured.map(i => i.id).slice(0, 2)).toEqual(['large', 'small'])
   })
 
-  it('keeps date order under newest rather than reordering by image size', () => {
-    const items = [
-      photo('newer', 1000, 700, { published_at: '2026-07-31T00:00:00Z' }),
-      photo('older', 2000, 1200, { published_at: '2026-01-01T00:00:00Z' }),
-      photo('lead', 1600, 1000, { published_at: '2026-08-01T00:00:00Z' }),
-    ]
-    const { lead, featured } = composeStories(items, 'newest', NONE)
-    expect(lead.id).toBe('lead')
-    expect(featured.map(i => i.id)).toEqual(['newer', 'older'])
-  })
-
   it('returns empty slots rather than throwing on an empty feed', () => {
-    const { lead, sidebar, featured, latest } = composeStories([], 'relevant')
+    const { lead, sidebar, featured, latest } = composeStories([])
     expect(lead).toBeUndefined()
     expect([...sidebar, ...featured, ...latest]).toHaveLength(0)
   })
@@ -104,7 +93,7 @@ describe('every picture frame prefers a story that has a picture', () => {
   ]
 
   it('spends every photograph it has before it runs a data figure', () => {
-    const { lead, featured, latest } = composeStories(items, 'relevant', NONE)
+    const { lead, featured, latest } = composeStories(items, NONE)
     const shown = [lead, ...featured, ...latest].map(i => i.id)
     // Six photographs, and fifteen frames to put them in. All six are used.
     for (const id of ['shot0', 'shot1', 'shot2', 'shot3', 'shot4', 'shot5']) {
@@ -116,30 +105,17 @@ describe('every picture frame prefers a story that has a picture', () => {
   // the ten-card grid was ten papers and every photograph below the cut went
   // unshown.
   it('gives the latest grid pictures rather than the top of the rank order', () => {
-    const { latest } = composeStories(items, 'relevant', NONE)
+    const { latest } = composeStories(items, NONE)
     expect(latest.filter(i => hasRealImage(i)).length).toBeGreaterThan(0)
   })
 
   it('still fills every slot when there are more stories than photographs', () => {
-    const { lead, sidebar, featured, latest } = composeStories(items, 'relevant', NONE)
+    const { lead, sidebar, featured, latest } = composeStories(items, NONE)
     expect(sidebar).toHaveLength(SLOTS.sidebar)
     expect(featured).toHaveLength(SLOTS.featured)
     expect(latest).toHaveLength(SLOTS.latest)
     const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
     expect(new Set(ids).size).toBe(ids.length)
-  })
-
-  // A reader who asks for the newest stories and is given the newest
-  // ILLUSTRATED stories has quietly been handed a different page.
-  it('does not let pictures reorder the page under Newest', () => {
-    const dated = [
-      story({ id: 'newest-plain', published_at: '2026-08-20T00:00:00Z' }),
-      story({ id: 'newer-plain', published_at: '2026-08-19T00:00:00Z' }),
-      photo('old-photo', 1600, 1100, { published_at: '2026-01-01T00:00:00Z' }),
-      photo('lead-photo', 1600, 1100, { published_at: '2026-08-21T00:00:00Z' }),
-    ]
-    const { featured, latest } = composeStories(dated, 'newest', NONE)
-    expect([...featured, ...latest].map(i => i.id)).toEqual(['newest-plain', 'newer-plain', 'old-photo'])
   })
 })
 
@@ -153,37 +129,37 @@ describe('the lead changes every day', () => {
   ]
 
   it('leads with the best story when nothing has led before', () => {
-    expect(composeStories(items, 'relevant', { ledger: EMPTY, date: '2026-08-23' }).lead.id).toBe('best')
+    expect(composeStories(items, { ledger: EMPTY, date: '2026-08-23' }).lead.id).toBe('best')
   })
 
   it('will not lead with yesterday’s story, however good it still is', () => {
     const ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
-    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-23' }).lead.id).toBe('second')
+    expect(composeStories(items, { ledger, date: '2026-08-23' }).lead.id).toBe('second')
   })
 
   it('changes the lead again the next day', () => {
     let ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
     ledger = recordLead(ledger, { date: '2026-08-23', item: 'second' })
-    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-24' }).lead.id).toBe('third')
+    expect(composeStories(items, { ledger, date: '2026-08-24' }).lead.id).toBe('third')
   })
 
   // The point of this one: no daily job has run on the 24th, and the front
   // page still is not showing what it showed on the 23rd.
   it('rotates on a morning the pipeline never fired', () => {
     const ledger = recordLead(EMPTY, { date: '2026-08-23', item: 'best' })
-    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-24' }).lead.id).not.toBe('best')
+    expect(composeStories(items, { ledger, date: '2026-08-24' }).lead.id).not.toBe('best')
   })
 
   it('shows the story the day’s run decided on, not the one ranking prefers', () => {
     const ledger = recordLead(EMPTY, { date: '2026-08-23', item: 'third' })
-    expect(composeStories(items, 'relevant', { ledger, date: '2026-08-23' }).lead.id).toBe('third')
+    expect(composeStories(items, { ledger, date: '2026-08-23' }).lead.id).toBe('third')
   })
 
   // A story dropped from the lead slot is still a story, so it takes a card
   // below rather than falling off the page.
   it('keeps a passed-over story on the page', () => {
     const ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'best' })
-    const { lead, sidebar, featured, latest } = composeStories(items, 'relevant', { ledger, date: '2026-08-23' })
+    const { lead, sidebar, featured, latest } = composeStories(items, { ledger, date: '2026-08-23' })
     const ids = [lead, ...sidebar, ...featured, ...latest].map(i => i.id)
     expect(ids).toContain('best')
     expect(new Set(ids).size).toBe(ids.length)
@@ -222,19 +198,19 @@ describe('the lead always carries a picture', () => {
   const noImage = (id, rank) => story({ id, metadata: { rankScore: rank } })
 
   it('passes over a higher-ranked story that cannot fill the slot', () => {
-    const { lead } = composeStories([noImage('top', 99), withImage('second', 'https://x/a.jpg', { rank: 80 })], 'relevant')
+    const { lead } = composeStories([noImage('top', 99), withImage('second', 'https://x/a.jpg', { rank: 80 })])
     expect(lead.id).toBe('second')
   })
 
   it('still leads with the best story when none has a picture', () => {
-    const { lead } = composeStories([noImage('top', 99), noImage('next', 80)], 'relevant')
+    const { lead } = composeStories([noImage('top', 99), noImage('next', 80)])
     expect(lead.id).toBe('top')
   })
 
   it('will not lead on an illustration too small for the slot', () => {
     const small = story({ id: 'small', metadata: { rankScore: 99, image: 'https://x/s.jpg', imageSubject: 'class', imageW: 700, imageH: 500 } })
     const big = withImage('big', 'https://x/b.jpg', { rank: 10 })
-    expect(composeStories([small, big], 'relevant').lead.id).toBe('big')
+    expect(composeStories([small, big]).lead.id).toBe('big')
   })
 })
 

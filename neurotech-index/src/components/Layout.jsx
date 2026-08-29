@@ -14,12 +14,12 @@ const TOPICS = [
 
 /**
  * Topic links carry whatever facets are set on the page you are leaving, so a
- * reader who narrows the front page to implanted BCIs and opens Trials stays
+ * reader who narrows Research to implanted BCIs and opens Trials stays
  * narrowed instead of arriving somewhere unfiltered with no sign their filter
  * was dropped.
  *
- * This menu is on every page, so the carry is not special-cased to the home
- * page: the facets mean the same thing on all six surfaces, and a filter that
+ * This menu is on every page, so the carry is not special-cased to one of
+ * them: the facets mean the same thing on all six surfaces, and a filter that
  * survived one hop and silently died on the next would be worse than one that
  * never survived at all. A value with nothing behind it on the destination is
  * still shown as selected, with Clear all beside it — FilterBar never hides a
@@ -29,10 +29,11 @@ const TOPICS = [
 function useTopicLinks() {
   const { search } = useLocation()
   const carry = facetSearch(search)
-  // Home carries too. It is a destination in this same nav row, and a filter
-  // that survives every hop except the one back to the front page is a filter
-  // the reader has to rebuild for no reason they could predict.
-  return { carry, home: `/${carry}`, topics: TOPICS.map(t => ({ ...t, href: `${t.to}${carry}` })) }
+  // Home does NOT carry, and is the one link in this row that does not. The
+  // front page has no filter controls: it is the day's answer, unnarrowed. A
+  // ?fn= it cannot read would be a filter set with nothing on the page to
+  // unset it, which is the state FilterBar exists to make impossible.
+  return { carry, home: '/', topics: TOPICS.map(t => ({ ...t, href: `${t.to}${carry}` })) }
 }
 
 // Wordmark: a gear replacing the "o" in NeuroBase (neuro + technology).

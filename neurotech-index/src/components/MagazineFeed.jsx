@@ -1,16 +1,13 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Newspaper } from 'lucide-react'
-import { getNewsFeed, recencyCutoffISO, searchTrials, getRecentClearances, getRecentFundingRounds } from '../lib/data'
+import { getNewsFeed, searchTrials, getRecentClearances, getRecentFundingRounds } from '../lib/data'
 import { supabase } from '../lib/supabase'
 import { Loader, EmptyState, Kicker, Byline, RuleHeading, InfoTip, fmtDate, typeWord } from './ui'
-import FilterSelect, { RECENCY_DATE, FEED_TYPE, SORT_SIGNIF } from './Filters'
-import FilterBar from './FilterBar'
-import { useUrlFacets, facetSearch } from '../lib/useUrlFacets'
 import { StoryFigure, ImageCredit, TrialFigure, ClearanceFigure, FundingFigure, ResearchFigure, clearanceNumber, topPct } from './Figure'
-import { SLOTS, composeStories, shownKeys, pickNotable, byNewest } from '../lib/homepage'
+import { SLOTS, composeStories, shownKeys, pickNotable } from '../lib/homepage'
 import { assignImages, leadPicture } from '../lib/image'
-import { entityMatchesFacets, countFacets, cardBadges } from '../lib/facets'
+import { cardBadges } from '../lib/facets'
 import { fmtUsd, fmtMonthYear } from '../lib/fundingBoard'
 import notable from '../data/notable.json'
 
@@ -270,15 +267,6 @@ export default function MagazineFeed() {
   const [trials, setTrials] = useState([])
   const [clearances, setClearances] = useState([])
   const [rounds, setRounds] = useState([])
-  // In the URL, not in component state, so the selection survives the trip into
-  // a topic page — the rails below and the masthead's topic menu hang it on
-  // their links. It also makes a narrowed front page shareable, which is what
-  // the topic pages already got from this hook.
-  const [facets, setFacets] = useUrlFacets()
-  const [recency, setRecency] = useState(null)
-  const [type, setType] = useState(null)
-  const [sort, setSort] = useState('relevant')
-  const carry = facetSearch(useLocation().search)
 
   useEffect(() => {
     let alive = true
@@ -288,21 +276,16 @@ export default function MagazineFeed() {
     return () => { alive = false }
   }, [])
 
-  // The sections below the feed answer the same facet and recency filters. The
-  // key keeps the effect from refiring on a new object with the same selection.
-  const facetKey = JSON.stringify(facets)
-  const anyFacet = Boolean(facets.function.length || facets.access.length || facets.application.length)
-
+  // The record sections below the feed. They stand on their own recency rules
+  // (a trial's registration date, a clearance's decision date, a filing's
+  // date), so there is nothing here for a reader to set and nothing to refire
+  // on: the front page shows the most significant of each, always.
   useEffect(() => {
     let alive = true
-    const f = JSON.parse(facetKey)
     Promise.all([
-      searchTrials({ facets: f, recency, sort: 'relevant', pageSize: SLOTS.trials }),
-      getRecentClearances({ facets: f, recency, limit: SLOTS.clearances }),
-      // Rounds carry no facet columns, so a facet selection has nothing to test
-      // them against; the section stands down rather than answer the wrong
-      // question. Recency it can answer, from the filing date.
-      anyFacet ? Promise.resolve([]) : getRecentFundingRounds({ sinceISO: recencyCutoffISO(recency), limit: SLOTS.funding }),
+      searchTrials({ sort: 'relevant', pageSize: SLOTS.trials }),
+      getRecentClearances({ limit: SLOTS.clearances }),
+      getRecentFundingRounds({ limit: SLOTS.funding }),
     ]).then(([t, c, r]) => {
       if (!alive) return
       setTrials(t.rows || [])
@@ -310,29 +293,15 @@ export default function MagazineFeed() {
       setRounds(r || [])
     })
     return () => { alive = false }
-  }, [facetKey, recency, anyFacet])
+  }, [])
 
-  // Everything recency and type allow, before any facet is applied. The facet
-  // counts come off this, so each number is how many of the stories on THIS page
-  // the value holds — the feed filters in memory, so it can be exact about the
-  // other controls in a way the server-side pages cannot.
-  const candidates = useMemo(() => {
-    const cutoff = recencyCutoffISO(recency)
-    const isResearch = i => i.entry_type === 'paper' || i.entry_type === 'preprint'
-    return items.filter(i =>
-      (!cutoff || (i.published_at && i.published_at >= cutoff)) &&
-      (!type || (type === 'research' ? isResearch(i) : i.entry_type === 'news'))
-    )
-  }, [items, recency, type])
-
-  const facetCts = useMemo(() => countFacets(candidates, facets), [candidates, facets])
-
-  const shown = useMemo(() => {
-    const out = candidates.filter(i => entityMatchesFacets(i, facets))
-    return sort === 'newest' ? [...out].sort(byNewest) : out
-  }, [candidates, facets, sort])
-
-  const { lead, sidebar, featured, latest } = useMemo(() => composeStories(shown, sort), [shown, sort])
+  // The feed as the ranking left it. The front page has no controls: it is the
+  // one surface that answers a question nobody asked — what matters in
+  // neurotechnology today — and its answer is the composite significance score
+  // getNewsFeed already ordered these rows by (relevance, then citations and
+  // recency; outlet authority for news). Every other surface keeps its filters;
+  // a reader who wants to narrow goes to one of them.
+  const { lead, sidebar, featured, latest } = useMemo(() => composeStories(items), [items])
 
   // Notable research is a standing rail rather than a filtered result, so it
   // only drops the papers the feed above has already run.
@@ -341,9 +310,6 @@ export default function MagazineFeed() {
     [lead, sidebar, featured, latest],
   )
 
-  // Type narrows the page to research or to news. The sections that are neither
-  // stand down for as long as it is set.
-  const showSections = !type
   const maxRound = Math.max(...rounds.map(r => r.amountUsd || 0), 0)
 
   // Every story card's picture, decided centrally: the record's OWN
@@ -371,7 +337,7 @@ export default function MagazineFeed() {
     // there for why it is 1320 and not the window.
     <div className="page-wide py-6">
       {/* Masthead: what this page is, on one line, over a heavy rule. */}
-      <div className="flex items-end justify-between gap-4 flex-wrap border-b-2 border-ink pb-2.5">
+      <div className="flex items-end justify-between gap-4 flex-wrap border-b-2 border-ink pb-2.5 mb-8">
         {/* 2.5rem is SectionHeading's h1, which is what every topic page sets
             its title at. This is the same rank of thing and is set to match. */}
         <h1 className="font-serif text-3xl sm:text-[2.5rem] leading-none font-semibold text-ink tracking-[-0.015em]">
@@ -382,26 +348,13 @@ export default function MagazineFeed() {
         </p>
       </div>
 
-      <div className="border-b border-rule mb-8">
-        <FilterBar
-          facets={facets}
-          onChange={setFacets}
-          counts={facetCts}
-          extras={[
-            { label: 'Type', value: type, onChange: setType, options: FEED_TYPE, allLabel: 'All types' },
-            { label: 'Recency', value: recency, onChange: setRecency, options: RECENCY_DATE, allLabel: 'Any time' },
-          ]}
-          sort={<FilterSelect label="Sort" value={sort} onChange={setSort} options={SORT_SIGNIF} required />}
-        />
-      </div>
-
       {!supabase ? (
         <EmptyState icon={Newspaper} title="Feed unavailable offline">Connect Supabase to see the live feed.</EmptyState>
       ) : loading ? (
         <Loader label="Loading…" />
       ) : !lead ? (
         <EmptyState icon={Newspaper} title="Nothing here yet">
-          {anyFacet ? 'No items match these filters right now.' : 'The feed populates after the daily refresh.'}
+          The feed populates after the daily refresh.
         </EmptyState>
       ) : (
         <>
@@ -453,81 +406,79 @@ export default function MagazineFeed() {
             section on this page, and scripts/verify-homepage.js is what says
             whether any of them is short.
           */}
-          {showSections && (
-            <div className="grid lg:grid-cols-2 gap-x-10 gap-y-10 mt-12">
-              {notablePapers.length > 0 && (
-                <Rail title="Notable research" note="Highest field-normalized citation impact, past 90 days" tip={<NotableTip />} to={`/research${carry}`} linkLabel="All research">
-                  {notablePapers.map((p, i) => (
-                    <RecordRow
-                      key={p.doi || p.pmid || i}
-                      to={p.pmid ? `/paper/${p.pmid}` : p.url}
-                      external={!p.pmid}
-                      figure={<ResearchFigure paper={p} size="sm" />}
-                      // Every rail restates its chip's datum in the grey line
-                      // below the headline, because the chip is aria-hidden and
-                      // the fact has to be readable without it. This row is the
-                      // only one that had put its copy in the kicker instead,
-                      // which set "Top 1%" twice within an inch of itself in
-                      // two near-identical styles.
-                      kicker="Research"
-                      aside={p.citedBy > 0 ? `${p.citedBy} citation${p.citedBy === 1 ? '' : 's'}` : null}
-                      title={p.title}
-                      meta={[topPct(p.pctile), p.journal, p.publishedAt ? fmtDate(p.publishedAt) : null].filter(Boolean).join(' · ')}
-                    />
-                  ))}
-                </Rail>
-              )}
+          <div className="grid lg:grid-cols-2 gap-x-10 gap-y-10 mt-12">
+            {notablePapers.length > 0 && (
+              <Rail title="Notable research" note="Highest field-normalized citation impact, past 90 days" tip={<NotableTip />} to="/research" linkLabel="All research">
+                {notablePapers.map((p, i) => (
+                  <RecordRow
+                    key={p.doi || p.pmid || i}
+                    to={p.pmid ? `/paper/${p.pmid}` : p.url}
+                    external={!p.pmid}
+                    figure={<ResearchFigure paper={p} size="sm" />}
+                    // Every rail restates its chip's datum in the grey line
+                    // below the headline, because the chip is aria-hidden and
+                    // the fact has to be readable without it. This row is the
+                    // only one that had put its copy in the kicker instead,
+                    // which set "Top 1%" twice within an inch of itself in
+                    // two near-identical styles.
+                    kicker="Research"
+                    aside={p.citedBy > 0 ? `${p.citedBy} citation${p.citedBy === 1 ? '' : 's'}` : null}
+                    title={p.title}
+                    meta={[topPct(p.pctile), p.journal, p.publishedAt ? fmtDate(p.publishedAt) : null].filter(Boolean).join(' · ')}
+                  />
+                ))}
+              </Rail>
+            )}
 
-              {trials.length > 0 && (
-                <Rail title="In the clinic" note="Registered on ClinicalTrials.gov" to={`/trials${carry}`} linkLabel="All trials">
-                  {trials.map(t => {
-                    const m = t.metadata || {}
-                    return (
-                      <RecordRow
-                        key={t.id}
-                        to={`/item/${t.id}`}
-                        figure={<TrialFigure trial={t} size="sm" />}
-                        kicker={m.phase || 'Clinical trial'}
-                        aside={m.status ? prettyStatus(m.status) : null}
-                        title={t.title}
-                        meta={[m.sponsor, m.enrollment ? `n=${m.enrollment.toLocaleString()}` : null, m.nctId].filter(Boolean).join(' · ')}
-                      />
-                    )
-                  })}
-                </Rail>
-              )}
-
-              {rounds.length > 0 && (
-                <Rail title="Funding" note="Private capital from SEC Form D filings" to={`/companies${carry}`} linkLabel="All companies">
-                  {rounds.map(r => (
+            {trials.length > 0 && (
+              <Rail title="In the clinic" note="Registered on ClinicalTrials.gov" to="/trials" linkLabel="All trials">
+                {trials.map(t => {
+                  const m = t.metadata || {}
+                  return (
                     <RecordRow
-                      key={r.id}
-                      to={r.href}
-                      figure={<FundingFigure round={r} max={maxRound} size="sm" />}
-                      kicker="Funding round"
-                      title={r.name}
-                      meta={[fmtUsd(r.amountUsd), fmtMonthYear(r.roundDate)].filter(Boolean).join(' · ')}
+                      key={t.id}
+                      to={`/item/${t.id}`}
+                      figure={<TrialFigure trial={t} size="sm" />}
+                      kicker={m.phase || 'Clinical trial'}
+                      aside={m.status ? prettyStatus(m.status) : null}
+                      title={t.title}
+                      meta={[m.sponsor, m.enrollment ? `n=${m.enrollment.toLocaleString()}` : null, m.nctId].filter(Boolean).join(' · ')}
                     />
-                  ))}
-                </Rail>
-              )}
+                  )
+                })}
+              </Rail>
+            )}
 
-              {clearances.length > 0 && (
-                <Rail title="FDA decisions" note="From the openFDA device database" to={`/devices${carry}`} linkLabel="All devices">
-                  {clearances.map(d => (
-                    <RecordRow
-                      key={d.id}
-                      to={`/device/${d.id}`}
-                      figure={<ClearanceFigure device={d} size="sm" />}
-                      kicker={d.status || 'FDA record'}
-                      title={d.name}
-                      meta={[d.manufacturer, clearanceNumber(d), d.year].filter(Boolean).join(' · ')}
-                    />
-                  ))}
-                </Rail>
-              )}
-            </div>
-          )}
+            {rounds.length > 0 && (
+              <Rail title="Funding" note="Private capital from SEC Form D filings" to="/companies" linkLabel="All companies">
+                {rounds.map(r => (
+                  <RecordRow
+                    key={r.id}
+                    to={r.href}
+                    figure={<FundingFigure round={r} max={maxRound} size="sm" />}
+                    kicker="Funding round"
+                    title={r.name}
+                    meta={[fmtUsd(r.amountUsd), fmtMonthYear(r.roundDate)].filter(Boolean).join(' · ')}
+                  />
+                ))}
+              </Rail>
+            )}
+
+            {clearances.length > 0 && (
+              <Rail title="FDA decisions" note="From the openFDA device database" to="/devices" linkLabel="All devices">
+                {clearances.map(d => (
+                  <RecordRow
+                    key={d.id}
+                    to={`/device/${d.id}`}
+                    figure={<ClearanceFigure device={d} size="sm" />}
+                    kicker={d.status || 'FDA record'}
+                    title={d.name}
+                    meta={[d.manufacturer, clearanceNumber(d), d.year].filter(Boolean).join(' · ')}
+                  />
+                ))}
+              </Rail>
+            )}
+          </div>
         </>
       )}
     </div>
