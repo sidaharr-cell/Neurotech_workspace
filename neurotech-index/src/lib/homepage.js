@@ -20,7 +20,7 @@
  * The total is forty-three rather than a rounder number because the sidebar is
  * held to four by the geometry of the row it sits in, not by taste. See below.
  */
-import { rankLead, hasRealImage, byNewest } from './sources'
+import { rankLead, hasRealImage } from './sources'
 import { canLead } from './image'
 import { chooseLead } from './ledger'
 import LEDGER from '../data/image-ledger.json'
@@ -52,21 +52,26 @@ export const MAX_ITEMS = Object.values(SLOTS).reduce((n, v) => n + v, 0)
 export const STORY_SLOTS = SLOTS.lead + SLOTS.sidebar + SLOTS.featured + SLOTS.latest
 
 /**
- * Split the filtered feed into the four story slots.
+ * Split the feed into the four story slots.
+ *
+ * `shown` arrives in significance order — the composite rank getNewsFeed
+ * applied — and that is the only order there is. The page carried a Sort
+ * control offering "Newest" until 29 Aug 2026; it and the filter bar beside it
+ * are gone, so the front page is one answer to one question rather than a
+ * query surface, and every ordering below is the ranking's.
  *
  * The visual slots go to photograph-bearing stories first (largest image first,
  * since a bigger source image survives the lead's crop), then to the rest by
- * rank. Under "Newest" the incoming order is already the answer, so image size
- * is not allowed to reorder it.
+ * rank.
  */
-export function composeStories(shown, sort = 'relevant', { ledger = LEDGER, date = today() } = {}) {
+export function composeStories(shown, { ledger = LEDGER, date = today() } = {}) {
   const area = i => (i.metadata?.imageW || 0) * (i.metadata?.imageH || 0)
   const withPhotos = shown
     .filter(hasRealImage)
-    .sort((a, b) => (sort === 'newest' ? 0 : area(b) - area(a)))
+    .sort((a, b) => area(b) - area(a))
 
-  // The lead obeys the Sort control and the reputable-source floor (rankLead
-  // in lib/sources.js), and on top of that it has to be able to fill the slot.
+  // The lead obeys the reputable-source floor (rankLead in lib/sources.js),
+  // and on top of that it has to be able to fill the slot.
   // The lead is the one picture a reader is certain to see, and a data figure
   // eleven hundred pixels wide is a poor front page. So the choice runs over
   // the stories that HAVE a lead-worthy picture first, and only falls back to
@@ -82,8 +87,8 @@ export function composeStories(shown, sort = 'relevant', { ledger = LEDGER, date
   // ledger's history and no run at all, yesterday's lead is still excluded,
   // so the front page changes on a morning the pipeline never fired.
   const lead =
-    chooseLead(ledger, rankLead(shown.filter(canLead), sort), date)
-    || chooseLead(ledger, rankLead(shown, sort), date)
+    chooseLead(ledger, rankLead(shown.filter(canLead)), date)
+    || chooseLead(ledger, rankLead(shown), date)
     || withPhotos[0] || shown[0]
   const used = new Set(lead ? [lead] : [])
 
@@ -113,12 +118,7 @@ export function composeStories(shown, sort = 'relevant', { ledger = LEDGER, date
   //
   // The rail is not in this list because it has no picture frame: it is four
   // headlines beside the lead.
-  //
-  // Under "Newest" the incoming order IS the answer and nothing may reorder
-  // it, which is the same rule withPhotos itself follows a few lines up. A
-  // reader who asks for the newest stories and gets the newest ILLUSTRATED
-  // stories has been quietly given a different page.
-  const picturesFirst = sort === 'newest' ? shown : [...withPhotos, ...shown]
+  const picturesFirst = [...withPhotos, ...shown]
   const featured = take(picturesFirst, SLOTS.featured)
   const sidebar = take(shown, SLOTS.sidebar)
   const latest = take(picturesFirst, SLOTS.latest)
@@ -146,5 +146,3 @@ export function pickNotable(notable = [], exclude = new Set(), n = SLOTS.notable
     .filter(p => !((p.doi && exclude.has(p.doi.toLowerCase())) || exclude.has(norm(p.title))))
     .slice(0, n)
 }
-
-export { byNewest }

@@ -67,7 +67,7 @@ const notable = JSON.parse(readFileSync(join(HERE, '../src/data/notable.json'), 
 const feed = await getNewsFeed({ limit: 120 })
 if (!feed.length) { console.error('the feed came back empty — is VITE_SUPABASE_URL set?'); process.exit(1) }
 
-const { lead, sidebar, featured, latest } = composeStories(feed || [], 'relevant')
+const { lead, sidebar, featured, latest } = composeStories(feed || [])
 const notablePapers = pickNotable(notable, shownKeys(lead, sidebar, featured, latest))
 
 const { count: trials } = await sb.from('news_feed')
