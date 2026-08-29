@@ -720,6 +720,131 @@
       "box": null,
       "note": "Frontiers in Neuroscience masthead art: a 3D render of a brain on black, the journal's branding rather than a picture of any paper. Same file already turned down under its percent-encoded URL.",
       "at": "2026-08-24"
+    },
+    "jneurosci.org/sites/default/files/images/jn_twitter_image_2.png": {
+      "url": "https://www.jneurosci.org/sites/default/files/images/jn_twitter_image_2.png",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 403",
+      "at": "2026-08-29"
+    },
+    "sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_ls_brainstimulation_main.jpg": {
+      "url": "https://www.sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_LS_brainstimulation_main.jpg?w=800",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Science News art for the story: a green motion-blurred portrait. A photograph, but conceptual mood art — it shows nothing of the stimulation study, and reads as an abstract blur at card size.",
+      "at": "2026-08-29"
+    },
+    "statik.tempo.co/data/2026/08/05/id_1485313/1485313_720.jpg": {
+      "url": "https://statik.tempo.co/data/2026/08/05/id_1485313/1485313_720.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Press composite for the retinal implant: a rendered implant held in tweezers stacked above rendered camera glasses, on a padded backdrop. Two panels, and renders rather than photographs.",
+      "at": "2026-08-29"
+    },
+    "mmx.prnewswire.com/media/ms1975830/gestala_logo_l2_c.jpg": {
+      "url": "https://mmx.prnewswire.com/media/MS1975830/Gestala_Logo_L2_C.jpg?id=OA2912172&p=facebook",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Gestala company logo and tagline on white — a wordmark, not a picture of the funding round.",
+      "at": "2026-08-29"
+    },
+    "news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-axonsinferno.jpg": {
+      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-Axonsinferno.jpg?itok=y8K7Oxeh",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "MIT Picower fluorescence micrograph of labelled axons and boutons, the lab own image for this circuit study. One uninterrupted frame, no burned-in text.",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/focused-ultrasound-sho.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/focused-ultrasound-sho.jpg",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Four-panel MRI figure from the trial with headings, R/L labels and a pressure-density colour bar. Real scans of the study, but a labelled grid.",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/has-the-next-neurotech.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/has-the-next-neurotech.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "The roadmap paper own graphical abstract: a circular schematic of captioned boxes, clipart neurons and icons. A diagram, unreadable at card size.",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/electric-fields-offer.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/electric-fields-offer.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.45,
+        "top": 0.06,
+        "right": 0.99,
+        "bottom": 1
+      },
+      "note": "Western University photograph of the researcher at her desk beside the electric-field tumour simulations from this work. Subject is the seated person on the right, with the monitors behind her.'",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/new-study-helps-explai.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/new-study-helps-explai.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Five-panel results figure (A-E): SEEG/hd-EEG traces, channel heatmaps, scatter and histograms. Charts, not a photograph.",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2019/12-brain.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2019/12-brain.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Stock 3D render of a glowing brain wreathed in lightning, reused from 2019. Decoration, and nothing to do with this Parkinson trial.",
+      "at": "2026-08-29"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/f7fad318-14b9-4441-a0b7cbd4a110bd2e/ac3d7cca-7b3c-48af-84d20f065ab517ad/websitewebp_xl-fped_main%20visual_red_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/F7FAD318-14B9-4441-A0B7CBD4A110BD2E/AC3D7CCA-7B3C-48AF-84D20F065AB517AD/WebsiteWebP_XL-FPED_Main%20Visual_Red_Website.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Frontiers section art: a stock photograph of a newborn held in an adult hands. Real and safe, but not a picture of this cerebral-palsy stimulation trial.",
+      "at": "2026-08-29"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2021/brain.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2021/brain.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Left-brain/right-brain clipart with equations and paint splatter, reused from 2021. An illustration, and generic to the DBS reward study.",
+      "at": "2026-08-29"
     }
   },
   "pending": [
@@ -1611,48 +1736,6 @@
       "title": "Deep brain stimulation induces white matter ",
       "why": "where is the subject",
       "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sciencenews.org/wp-content/uploads/sites/2/2026/08/081326_LS_brainstimulation_main.jpg?w=800",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-08-25"
-    },
-    {
-      "url": "https://statik.tempo.co/data/2026/08/05/id_1485313/1485313_720.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-08-25"
-    },
-    {
-      "url": "https://mmx.prnewswire.com/media/MS1975830/Gestala_Logo_L2_C.jpg?id=OA2912172&p=facebook",
-      "item": "1dcb3013-6ff6-45ba-b933-a2bc0c4124bb",
-      "title": "China's BCI Race Accelerates: Gestala Raises US$84 Million in Six Months",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-26"
-    },
-    {
-      "url": "https://www.jneurosci.org/sites/default/files/images/jn_twitter_image_2.png",
-      "item": "857e6261-3469-42d9-9a58-4a25b490d485",
-      "title": "Distinct neural modes carry information about attempted grasp timing and force i",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-26"
-    },
-    {
-      "url": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-Axonsinferno.jpg?itok=y8K7Oxeh",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-08-28"
-    },
-    {
-      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/focused-ultrasound-sho.jpg",
-      "item": "5c4832b6-8859-432e-87c8-e5d4627f8cc1",
-      "title": "Focused ultrasound shows safety and feasibility in epilepsy pilot trial",
-      "why": "the photograph this outlet ran",
-      "at": "2026-08-28"
     }
   ],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
