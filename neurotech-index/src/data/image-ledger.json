@@ -163,6 +163,12 @@
       "title": "Electric fields offer new hope against aggressive brain cancer",
       "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/electric-fields-offer.jpg",
       "at": "2026-08-29"
+    },
+    "sciencedaily.com/images/1920/sleep-therapy-brain-delta-waves.webp": {
+      "item": "e1019541-f9f6-47a2-affc-b3b30f69453f",
+      "title": "AI can tell if your brain is aging faster than you are",
+      "url": "https://www.sciencedaily.com/images/1920/sleep-therapy-brain-delta-waves.webp",
+      "at": "2026-08-30"
     }
   },
   "leads": [
@@ -204,6 +210,12 @@
     },
     {
       "date": "2026-08-29",
+      "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
+      "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
+      "title": "Neurostimulation restores feeling in paralysed hand for months after"
+    },
+    {
+      "date": "2026-08-30",
       "item": "aca0786c-58c8-485c-bc2d-fc799f511501",
       "image": "https://www.newscientist.com/wp-content/uploads/2026/07/SEI_270217370.jpg",
       "title": "Neurostimulation restores feeling in paralysed hand for months after"
