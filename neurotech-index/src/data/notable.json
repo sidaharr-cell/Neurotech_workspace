@@ -66,8 +66,8 @@
     "doi": "10.1002/epi.70321",
     "url": "https://doi.org/10.1002/epi.70321",
     "publishedAt": "2026-06-03",
-    "pctile": 0.99781952,
-    "fwci": 34.0952,
+    "pctile": 0.99782332,
+    "fwci": 34.039,
     "citedBy": 5,
     "relevance": 8,
     "significance": "This trial demonstrates that responsive thalamic stimulation safely reduces seizures in drug-resistant generalized epilepsy patients who lack other effective treatment options."
@@ -83,7 +83,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 2000,
     "image_h": 2898,
-    "image_checked_at": "2026-08-30T11:49:00.623Z",
+    "image_checked_at": "2026-08-31T13:21:54.946Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -122,7 +122,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 2000,
     "image_h": 1333,
-    "image_checked_at": "2026-08-30T11:49:01.137Z",
+    "image_checked_at": "2026-08-31T13:21:55.411Z",
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -160,7 +160,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 2000,
     "image_h": 732,
-    "image_checked_at": "2026-08-30T11:49:00.953Z",
+    "image_checked_at": "2026-08-31T13:21:55.250Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -224,7 +224,7 @@
     "fwci": 13.9169,
     "citedBy": 2,
     "relevance": 7,
-    "significance": "Translating invasive brain-computer interfaces to clinical practice requires understanding not only technical feasibility but also patient acceptance and informed consent. This study captures patient perceptions of ECoG implantation surgery, functional restoration goals, and willingness to undergo the procedure after devastating injuries. These insights inform BCI system design priorities, risk-benefit communication, and clinical trial recruitment. For the neurotech field, understanding patient needs and concerns is critical to ensuring that technologies developed in the lab actually reach and benefit the intended populations."
+    "significance": "User acceptance and perception are critical bottlenecks for neurotechnology adoption. This study gathers qualitative input from potential BCI recipients on surgical implantation, helping developers understand patient priorities, fears, and expectations around invasive brain implants. Such insights are essential for designing patient-centered clinical trials and informed consent processes, and they guide research priorities to ensure that neurotechnology advances address real clinical needs and patient values."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
@@ -299,8 +299,8 @@
     "doi": "10.1016/j.neurot.2026.e01042",
     "url": "https://doi.org/10.1016/j.neurot.2026.e01042",
     "publishedAt": "2026-07-01",
-    "pctile": 0.97001461,
-    "fwci": 6.1794,
+    "pctile": 0.96996582,
+    "fwci": 6.1487,
     "citedBy": 1,
     "relevance": 7,
     "significance": ""
