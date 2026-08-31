@@ -2,13 +2,25 @@ name: Daily Neurotech Refresh
 
 on:
   schedule:
-    - cron: '0 6 * * *'   # every day at 6am UTC
+    # 06:23 UTC, not 06:00. GitHub queues every scheduled workflow on the
+    # planet at the top of the hour and runs them as capacity frees up, so a
+    # job asking for :00 is at the back of the longest queue of the day. Runs
+    # 55-62 started within ten minutes of their slot; runs 63-68, all still
+    # asking for :00, started as much as twelve hours late. An odd minute is
+    # the only lever the schedule offers — GitHub promises no start time for
+    # cron either way, which is why nothing downstream assumes one.
+    - cron: '23 6 * * *'  # every day at 06:23 UTC
   workflow_dispatch:        # lets you trigger manually from GitHub UI
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 75 minutes for the JOB; the sequence itself is capped at 55 below. The
+    # gap is deliberate — see the note on that step. A job-level timeout is a
+    # cancellation, and a cancelled job runs no further steps, which is how
+    # 26 and 27 Aug lost their commit AND their integrity check while showing
+    # up as neither a failure nor a success.
+    timeout-minutes: 75
     permissions:
       contents: write   # allows committing the refreshed data snapshots
 
@@ -36,7 +48,15 @@ jobs:
       # Failure policy is unchanged and lives in the script: every step is
       # best-effort except the refresh itself, so one dead upstream API cannot
       # stop the rest. Each step is a ::group:: in the log below.
+      #
+      # The cap lives HERE rather than on the job so that an overrun fails one
+      # step instead of cancelling the run: the two steps below carry
+      # `if: !cancelled()` and still commit what the sequence managed to write
+      # and still run the alarm. Recent runs take 16-17 minutes; 55 is roughly
+      # triple that, and above the 45 that 26 and 27 Aug hit.
       - name: Run the daily sequence
+        id: daily
+        timeout-minutes: 55
         working-directory: neurotech-index
         run: npm run daily
         env:
@@ -67,7 +87,13 @@ jobs:
       # to which story and which story led yesterday; drop it and the same
       # pictures are handed out again tomorrow and the lead stops rotating. The
       # review file carries the queue the daily reviewer works from.
+      #
+      # Runs even when the sequence above failed or timed out. The steps are
+      # best-effort by design and the files they wrote before the failure are
+      # the day's work; throwing them away would mean the same pictures handed
+      # out again tomorrow and the lead not rotating.
       - name: Commit updated data (funding, notable research, image ledger, Airtable snapshots)
+        if: ${{ !cancelled() && steps.daily.conclusion != 'skipped' }}
         run: |
           git config user.name "neurobase-bot"
           git config user.email "bot@users.noreply.github.com"
@@ -103,7 +129,12 @@ jobs:
       #
       # This step fails the run when the table has collapsed, so the alarm is
       # the workflow going red rather than somebody noticing weeks later.
+      # Also `!cancelled()`: the alarm is least dispensable on exactly the days
+      # the sequence went wrong. A half-finished run is when a table is most
+      # likely to have lost rows, and it is the one case the old arrangement
+      # skipped the check entirely.
       - name: Verify the run destroyed nothing
+        if: ${{ !cancelled() && steps.daily.conclusion != 'skipped' }}
         working-directory: neurotech-index
         run: node scripts/verify-cron.js
         env:
