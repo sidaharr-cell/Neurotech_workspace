@@ -58,9 +58,19 @@ build spec asks for "typecheck passes", read it as "build + lint pass".
 
 CI (`.github/workflows/ci.yml`, on push to `main`/`revamp` and on PRs) runs lint, tests,
 build, and `validate:funding`. `.github/workflows/refresh.yml` runs `npm run daily` at
-6am UTC, then commits the data files it wrote, then `verify:cron`. The workflow holds no
+06:23 UTC, then commits the data files it wrote, then `verify:cron`. The workflow holds no
 sequence of its own: it used to list every step in YAML, which is how the sequence and
 the manual command drifted apart.
+
+The odd minute and the timeouts are both scars. Asking for `0 6` put the job at the back
+of the longest cron queue GitHub has, and starts drifted from six minutes late to twelve
+hours late over a week; `23 6` is the only lever a schedule offers, and nothing downstream
+assumes a start time. The 45-minute cap used to sit on the JOB, so the runs of 26 and 27
+Aug 2026 that overran it were *cancelled* — which skipped the commit and skipped
+`verify:cron`, losing the day's pictures and silencing the alarm, while showing up as
+neither a failure nor a success. The cap is now on the sequence step (55 min, against a
+75-minute job), and the commit and the check carry `if: !cancelled()`, so an overrun keeps
+what was written and still runs the alarm.
 
 Every step in `daily.js` is best-effort except the ingest, so one dead upstream API
 cannot stop the rest. A failed step prints a `::warning::` and the script still exits 0
@@ -559,7 +569,7 @@ scroll a heavy morning to find it.
 
 `src/lib/whatsNew.js` is the one definition of that list, and seven things follow from it:
 
-- **Today is UTC.** `created_at` is stamped by Postgres and the run is a 6am UTC cron, so
+- **Today is UTC.** `created_at` is stamped by Postgres and the run is an early-morning UTC cron, so
   the window has to use the same day boundary the pipeline did or a reader west of
   Greenwich opens it in the evening and finds it empty. `src/lib/homepage.js` takes the
   same view for the same reason. The selection is `created_at`, not `published_at`: a paper
