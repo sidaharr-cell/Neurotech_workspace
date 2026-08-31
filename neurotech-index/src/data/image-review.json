@@ -845,177 +845,274 @@
       "box": null,
       "note": "Left-brain/right-brain clipart with equations and paint splatter, reused from 2021. An illustration, and generic to the DBS reward study.",
       "at": "2026-08-29"
+    },
+    "mmx.prnewswire.com/media/ms1963673/zenowell-ai.jpg": {
+      "url": "https://mmx.prnewswire.com/media/MS1963673/ZenoWell-AI.jpg?id=OA2823822&p=facebook",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.4,
+        "top": 0.25,
+        "right": 0.73,
+        "bottom": 0.82
+      },
+      "note": "ZenoWell press photograph of its own Zeno handheld stimulator and companion app in use, which is the product this announcement is about.",
+      "at": "2026-08-31"
+    },
+    "epiwatch.com/wp-content/uploads/2025/06/testimonial-bg.jpg": {
+      "url": "https://epiwatch.com/wp-content/uploads/2025/06/testimonial-bg.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Generic stock photograph of a wrist with a blank-screened consumer smartwatch, not the EpiWatch monitoring system.",
+      "at": "2026-08-31"
+    },
+    "cionic.com/hubfs/home-hero-bg.jpg": {
+      "url": "https://www.cionic.com/hubfs/home-hero-bg.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.44,
+        "top": 0.02,
+        "right": 0.63,
+        "bottom": 0.78
+      },
+      "note": "Cionic own product photograph of the Neural Sleeve worn on a walking leg, logo visible on the thigh module.",
+      "at": "2026-08-31"
+    },
+    "neuralynx.fh-co.com/wp-content/themes/neuralynx/images/digital-lynx+-image-optimized.png": {
+      "url": "https://neuralynx.fh-co.com/wp-content/themes/neuralynx/images/digital-lynx+-image-optimized.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Studio shot of a Neuralynx Digital Lynx acquisition rack, which is a different product from the Atlas Stim Headbox it was queued for.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/5/59/euphronios_krater_side_a_met_l.2006.10.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Euphronios_krater_side_A_MET_L.2006.10.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Photograph of the Euphronios krater showing Hypnos and Thanatos, matched to the Hypnos device by name alone and nothing to do with neurotechnology.",
+      "at": "2026-08-31"
+    },
+    "truerelief.com/wp-content/uploads/2019/12/photo-truerelief-crop.jpg": {
+      "url": "https://truerelief.com/wp-content/uploads/2019/12/photo-truerelief-crop.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.16,
+        "top": 0.1,
+        "right": 0.58,
+        "bottom": 0.93
+      },
+      "note": "Product photograph of the TrueRelief 1250 console and probe, which is the device itself.",
+      "at": "2026-08-31"
+    },
+    "sensomedical.com/wp-content/uploads/2021/06/dsc00016_780x420-p7ohwtai8k3l5aw4uxlpki4w6331i5tl1b8dy83814.png": {
+      "url": "https://sensomedical.com/wp-content/uploads/2021/06/DSC00016_780x420-p7ohwtai8k3l5aw4uxlpki4w6331i5tl1b8dy83814.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Photograph of a woman wearing a surface EEG headband, not the implanted Wovyn depth electrode it was queued for.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/689dfb15305eb43a367916b6/6a3aacef670d6f537d0e2113_zeta%20concept-16.png": {
+      "url": "https://cdn.prod.website-files.com/689dfb15305eb43a367916b6/6a3aacef670d6f537d0e2113_ZETA%20CONCEPT-16.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Decorative stock photograph of a lightbulb in a lampshade, unrelated to the Zeta navigation system.",
+      "at": "2026-08-31"
+    },
+    "inbrain-neuroelectronics.com/wp-content/themes/igeneve_starter/images/favicon/apple-icon-180x180.png": {
+      "url": "https://inbrain-neuroelectronics.com/wp-content/themes/igeneve_starter/images/favicon/apple-icon-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "INBRAIN Neuroelectronics site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "framerusercontent.com/images/ag3lgwsevyhd2idmj7o9etojxk0.png": {
+      "url": "https://framerusercontent.com/images/aG3lgWsevYhd2idmj7O9etojXK0.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Beacon Biosignals site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/65650d46320d701ba6ed16eb/660f3951f9af2c3456a5a367_luminopia-webclip.png": {
+      "url": "https://cdn.prod.website-files.com/65650d46320d701ba6ed16eb/660f3951f9af2c3456a5a367_luminopia-webclip.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Luminopia site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "i0.wp.com/burlconcepts.com/wp-content/uploads/2025/10/cropped-burl-site-icon.png": {
+      "url": "https://i0.wp.com/burlconcepts.com/wp-content/uploads/2025/10/cropped-BURL-Site-Icon.png?fit=180%2C180&#038;ssl=1",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Burl Concepts site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "cognixion.com/apple-touch-icon.png": {
+      "url": "https://cognixion.com/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Cognixion site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "rhaeos.com/wp-content/uploads/2023/02/cropped-rhaeos_logo_notext-square-180x180.png": {
+      "url": "https://www.rhaeos.com/wp-content/uploads/2023/02/cropped-rhaeos_Logo_NoText-square-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Rhaeos site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "shiratronics.com/wp-content/uploads/2022/10/cropped-shiratronics-s-180x180.png": {
+      "url": "https://shiratronics.com/wp-content/uploads/2022/10/cropped-ShiraTronics-S-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "ShiraTronics site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/5f18858d324bad3e005c0273/5f781627b9e0060879356bc4_webclip.png": {
+      "url": "https://cdn.prod.website-files.com/5f18858d324bad3e005c0273/5f781627b9e0060879356bc4_webclip.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Rune Labs site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/5e69157054fa3863ce8acaa5/5e69157054fa384b398acafd_eyeguide-logo-white-webclip-large.png": {
+      "url": "https://cdn.prod.website-files.com/5e69157054fa3863ce8acaa5/5e69157054fa384b398acafd_eyeguide-logo-white-webclip-large.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "EyeGuide site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "neurometrix.com/wp-content/uploads/2017/06/cropped-quellnm-x-180x180.png": {
+      "url": "https://www.neurometrix.com/wp-content/uploads/2017/06/cropped-QuellNM-X-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "NeuroMetrix site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "neuspera.com/wp-content/uploads/favicon.png": {
+      "url": "https://neuspera.com/wp-content/uploads/favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "NeuSpera Medical site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "novasignal.com/wp-content/uploads/2025/12/cropped-neurasignal_logo-180x180.png": {
+      "url": "https://novasignal.com/wp-content/uploads/2025/12/cropped-NeuraSignal_Logo-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "NovaSignal site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "oculogica.com/favicon.png": {
+      "url": "https://www.oculogica.com/favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Oculogica site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "openbci.com/apple-touch-icon.png": {
+      "url": "https://openbci.com/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "OpenBCI site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/639c8bc611894e698511788b/63ea9ea2be37020078afea20_60f8c9467db944269214d584_clinical-webclip.png": {
+      "url": "https://cdn.prod.website-files.com/639c8bc611894e698511788b/63ea9ea2be37020078afea20_60f8c9467db944269214d584_clinical-webclip.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Sway Medical site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "kernel.com/icons/icon-512x512.png": {
+      "url": "https://kernel.com/icons/icon-512x512.png?v=3b8dcdc2c30493c7f20543dfa1e4a23d",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Kernel site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
+    },
+    "photopharmics.com/wp-content/uploads/2017/04/cropped-icon-180x180.png": {
+      "url": "https://photopharmics.com/wp-content/uploads/2017/04/cropped-icon-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "PhotoPharmics site logo or app icon, not a photograph of anything.",
+      "at": "2026-08-31"
     }
   },
   "pending": [
-    {
-      "url": "https://epiwatch.com/wp-content/uploads/2025/06/testimonial-bg.jpg",
-      "item": null,
-      "title": "EpiWatch Monitoring System",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.cionic.com/hubfs/home-hero-bg.jpg",
-      "item": null,
-      "title": "CIONIC NEURAL SLEEVE (NS-200)",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuralynx.fh-co.com/wp-content/themes/neuralynx/images/digital-lynx+-image-optimized.png",
-      "item": null,
-      "title": "Atlas Stim Headbox (NK) (31-0601-0077); Atla",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Euphronios_krater_side_A_MET_L.2006.10.jpg",
-      "item": null,
-      "title": "Hypnos (369054-200)",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://truerelief.com/wp-content/uploads/2019/12/photo-truerelief-crop.jpg",
-      "item": null,
-      "title": "TrueRelief Device",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://sensomedical.com/wp-content/uploads/2021/06/DSC00016_780x420-p7ohwtai8k3l5aw4uxlpki4w6331i5tl1b8dy83814.png",
-      "item": null,
-      "title": "Wovyn Depth Electrode",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/689dfb15305eb43a367916b6/6a3aacef670d6f537d0e2113_ZETA%20CONCEPT-16.png",
-      "item": null,
-      "title": "Zeta Navigation System (ZNS131-US)",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://inbrain-neuroelectronics.com/wp-content/themes/igeneve_starter/images/favicon/apple-icon-180x180.png",
-      "item": null,
-      "title": "INBRAIN Neuroelectronics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://framerusercontent.com/images/aG3lgWsevYhd2idmj7O9etojXK0.png",
-      "item": null,
-      "title": "Beacon Biosignals",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/65650d46320d701ba6ed16eb/660f3951f9af2c3456a5a367_luminopia-webclip.png",
-      "item": null,
-      "title": "Luminopia",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://i0.wp.com/burlconcepts.com/wp-content/uploads/2025/10/cropped-BURL-Site-Icon.png?fit=180%2C180&#038;ssl=1",
-      "item": null,
-      "title": "Burl Concepts",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cognixion.com/apple-touch-icon.png",
-      "item": null,
-      "title": "Cognixion",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.rhaeos.com/wp-content/uploads/2023/02/cropped-rhaeos_Logo_NoText-square-180x180.png",
-      "item": null,
-      "title": "Rhaeos",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://shiratronics.com/wp-content/uploads/2022/10/cropped-ShiraTronics-S-180x180.png",
-      "item": null,
-      "title": "ShiraTronics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/5f18858d324bad3e005c0273/5f781627b9e0060879356bc4_webclip.png",
-      "item": null,
-      "title": "Rune Labs",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/5e69157054fa3863ce8acaa5/5e69157054fa384b398acafd_eyeguide-logo-white-webclip-large.png",
-      "item": null,
-      "title": "EyeGuide",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.neurometrix.com/wp-content/uploads/2017/06/cropped-QuellNM-X-180x180.png",
-      "item": null,
-      "title": "NeuroMetrix",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuspera.com/wp-content/uploads/favicon.png",
-      "item": null,
-      "title": "NeuSpera Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://novasignal.com/wp-content/uploads/2025/12/cropped-NeuraSignal_Logo-180x180.png",
-      "item": null,
-      "title": "NovaSignal",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.oculogica.com/favicon.png",
-      "item": null,
-      "title": "Oculogica",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://openbci.com/apple-touch-icon.png",
-      "item": null,
-      "title": "OpenBCI",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/639c8bc611894e698511788b/63ea9ea2be37020078afea20_60f8c9467db944269214d584_clinical-webclip.png",
-      "item": null,
-      "title": "Sway Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://kernel.com/icons/icon-512x512.png?v=3b8dcdc2c30493c7f20543dfa1e4a23d",
-      "item": null,
-      "title": "Kernel",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://photopharmics.com/wp-content/uploads/2017/04/cropped-icon-180x180.png",
-      "item": null,
-      "title": "PhotoPharmics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
     {
       "url": "https://braincheck.com/hubfs/BrainCheck%202025/Images/BrainCheck%20Logo%20Favicon.png",
       "item": null,
