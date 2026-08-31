@@ -1110,730 +1110,1178 @@
       "box": null,
       "note": "PhotoPharmics site logo or app icon, not a photograph of anything.",
       "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/6/69/child_undergoing_an_eeg_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg/1280px-Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/e/e6/nimh_meg.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/NIMH_MEG.jpg/1280px-NIMH_MEG.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/01/blonde_fnirs_lady.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Blonde_fNIRS_lady.jpg/1280px-Blonde_fNIRS_lady.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/9/9e/fnirs_eeg_hmd.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/FNIRS_EEG_HMD.jpg/1280px-FNIRS_EEG_HMD.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/5/5a/fnirs_head_hitachi_etg4000_4.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/FNIRS_head_Hitachi_ETG4000_4.jpg/1280px-FNIRS_head_Hitachi_ETG4000_4.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/e/ee/mri-philips.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/MRI-Philips.JPG/1280px-MRI-Philips.JPG",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/8/85/electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg/1280px-Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/6/6e/myoelectric_prosthetic_arm.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Myoelectric_prosthetic_arm.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/f/f5/brain_tms.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Brain_TMS.jpg/1280px-Brain_TMS.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/b/b7/anterior_thoracic_scs.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/05/synapse_ipg.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Synapse_IPG.jpg/1280px-Synapse_IPG.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/d/d7/tens.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/TENS.jpg/1280px-TENS.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/2/2c/4-week-old_neurons_%287184654817%29.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/4-week-old_neurons_%287184654817%29.jpg/1280px-4-week-old_neurons_%287184654817%29.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/9/97/aktivni_egzoskelet_02%2c_1974._godina.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Aktivni_egzoskelet_02%2C_1974._godina.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/4/4e/01ttrdzn2020.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/01TTRDZN2020.jpg",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/8/85/elon_musk_unveiling_neuralink.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Elon_Musk_unveiling_Neuralink.jpg/1280px-Elon_Musk_unveiling_Neuralink.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: HTTP 429",
+      "at": "2026-08-31"
+    },
+    "empatica.com/website/assets/images/favicons/favicon.png": {
+      "url": "https://www.empatica.com/website/assets/images/favicons/favicon.png",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": false,
+      "box": null,
+      "note": "unreachable: not an image (text/html)",
+      "at": "2026-08-31"
+    },
+    "braincheck.com/hubfs/braincheck%202025/images/braincheck%20logo%20favicon.png": {
+      "url": "https://braincheck.com/hubfs/BrainCheck%202025/Images/BrainCheck%20Logo%20Favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "BrainCheck's black-on-yellow logo mark, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "nexalin.com/wp-content/uploads/2021/05/w-icon@3x.png": {
+      "url": "https://nexalin.com/wp-content/uploads/2021/05/w-icon@3x.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Nexalin's circular icon logo, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/1/13/patch_rig.png": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Three-panel montage of a patch-clamp rig, and nothing to do with the Neuropixels Opto paper it was queued for.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/8/86/cochlear_implant_user.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Cochlear_implant_user.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.1,
+        "top": 0.02,
+        "right": 0.95,
+        "bottom": 0.9
+      },
+      "note": "Profile photograph of a man wearing a cochlear implant processor and coil.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/7/73/tiefe_hirnstimulation_-_sonden_roeschaedel_ap.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/73/Tiefe_Hirnstimulation_-_Sonden_RoeSchaedel_ap.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.05,
+        "top": 0.02,
+        "right": 0.95,
+        "bottom": 0.98
+      },
+      "note": "Skull radiograph showing two deep brain stimulation leads in place.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/2/28/prep_for_deep_brain_stimulation.png": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Prep_for_Deep_Brain_Stimulation.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.2,
+        "top": 0.17,
+        "right": 0.88,
+        "bottom": 0.88
+      },
+      "note": "Patient in a stereotactic head frame being prepared for deep brain stimulation.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/01/vagusstimulator_bei_lennox-gastaut-syndrom_17m_-_cr_ap_-_001.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg/1280px-Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.2,
+        "top": 0.06,
+        "right": 0.88,
+        "bottom": 0.85
+      },
+      "note": "Chest radiograph showing an implanted vagus nerve stimulator and its lead.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/7/71/tens_unit.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Tens_unit.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.16,
+        "top": 0.12,
+        "right": 0.88,
+        "bottom": 0.95
+      },
+      "note": "Studio photograph of a handheld TENS unit.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/9/9a/barry_kerzin_meditating_with_eeg_for_neuroscience_research.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg/1280px-Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.08,
+        "top": 0.02,
+        "right": 0.52,
+        "bottom": 0.78
+      },
+      "note": "Seated man wearing a dense EEG electrode net beside recording equipment.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/4/41/eeg_recording_cap.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.05,
+        "right": 0.97,
+        "bottom": 1
+      },
+      "note": "Close-up of an EEG recording cap and electrodes on a participant's head.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/a/ae/eeg_hospital.png": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/EEG_Hospital.png",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Wide black pillar bars are baked into the file on both sides, so it cannot fill a card frame.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/c/ce/eeg_experiment.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/EEG_Experiment.jpg/1280px-EEG_Experiment.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.24,
+        "right": 0.6,
+        "bottom": 0.9
+      },
+      "note": "Participant in an EEG cap seated at a recording workstation, seen from behind.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/a/a0/%d0%9f%d0%b5%d1%80%d0%b2%d0%be%d0%b5_%d0%b2%d0%bf%d0%b5%d1%87%d0%b0%d1%82%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5_22.05.16.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg/1280px-%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.18,
+        "top": 0.13,
+        "right": 0.78,
+        "bottom": 0.98
+      },
+      "note": "ExoLite lower-limb exoskeleton being adjusted by hand.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/4/4c/%d0%ad%d0%ba%d0%b7%d0%be%d1%81%d0%ba%d0%b5%d0%bb%d0%b5%d1%82_exolite.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg/1280px-%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.2,
+        "top": 0.19,
+        "right": 0.87,
+        "bottom": 0.95
+      },
+      "note": "Frontal photograph of an ExoLite exoskeleton standing unoccupied.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/5/5e/lg_cloi%2c_ifa_2018%2c_berlin_%28p1070245%29.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg/1280px-LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.13,
+        "top": 0.08,
+        "right": 0.92,
+        "bottom": 0.93
+      },
+      "note": "LG CLOi wearable leg exoskeleton on a stand at IFA 2018.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/00/ajax_exosuit_at_maker_faire_2015.gk.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg/1280px-Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.18,
+        "top": 0.16,
+        "right": 0.85,
+        "bottom": 0.92
+      },
+      "note": "Ajax exosuit suspended in its test frame at Maker Faire.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/e/e4/hybrid_assistive_limb%2c_cyberdyne.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg/1280px-Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.22,
+        "top": 0.02,
+        "right": 0.97,
+        "bottom": 0.97
+      },
+      "note": "Cyberdyne Hybrid Assistive Limb exoskeleton legs on museum display.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/2/20/geek_picnic_%28moscow%3b_2014-01-26%29_donsimon_36.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG/1280px-Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.44,
+        "top": 0.19,
+        "right": 0.76,
+        "bottom": 0.74
+      },
+      "note": "Man wearing a powered leg exoskeleton at a public demonstration.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/f/f2/%d0%9f%d0%be%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d0%b5_%d1%81%d0%b8%d0%b4%d1%8f_%d0%b2_%d1%8d%d0%ba%d0%b7%d0%be%d1%81%d0%ba%d0%b5%d0%bb%d0%b5%d1%82%d0%b5_exoheaver.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg/1280px-%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.15,
+        "top": 0.1,
+        "right": 0.8,
+        "bottom": 0.85
+      },
+      "note": "Worker squatting in an industrial back-support exoskeleton.",
+      "at": "2026-08-31"
+    },
+    "technode.com/wp-content/uploads/2026/08/steve-a-johnson-_0iv9lmpdn0-unsplash.jpg": {
+      "url": "https://technode.com/wp-content/uploads/2026/08/steve-a-johnson-_0iV9LmPDn0-unsplash.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Stock Unsplash digital artwork of a circuit-board brain, not a photograph and not of the Shanghai funding round.",
+      "at": "2026-08-31"
+    },
+    "sciencedaily.com/images/1920/sleep-therapy-brain-delta-waves.webp": {
+      "url": "https://www.sciencedaily.com/images/1920/sleep-therapy-brain-delta-waves.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "3D render of a head with glowing brain and data waves, decoration rather than a photograph.",
+      "at": "2026-08-31"
+    },
+    "techcrunch.com/wp-content/uploads/2026/07/prima-implant-glasses-2026.ddq1rrzc_hbfx0.webp": {
+      "url": "https://techcrunch.com/wp-content/uploads/2026/07/prima-implant-glasses-2026.DDQ1RrzC_HBfx0.webp",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Two cut-out elements, the Prima chip and the glasses, composited on one plain backdrop; either crop loses one of them.",
+      "at": "2026-08-31"
+    },
+    "futurism.com/wp-content/uploads/2026/07/eye-implant-restores-vision-approved-sale.jpg": {
+      "url": "https://futurism.com/wp-content/uploads/2026/07/eye-implant-restores-vision-approved-sale.jpg?quality=85",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.44,
+        "top": 0.06,
+        "right": 0.99,
+        "bottom": 0.8
+      },
+      "note": "Macro photograph of the Prima subretinal implant held in tweezers, the implant this story reports approved.",
+      "at": "2026-08-31"
+    },
+    "saludamedical.com/wp-content/themes/gravity-global-child/assets/images/favicon/favicon.png": {
+      "url": "https://www.saludamedical.com/wp-content/themes/gravity-global-child/assets/images/favicon/favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Saluda Medical's favicon logo mark, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "cdn.mos.cms.futurecdn.net/cssctyd9fgagp52swprqza-2000-80.jpg": {
+      "url": "https://cdn.mos.cms.futurecdn.net/cSsCTyD9FgAgp52SwPRQZa-2000-80.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Split composite: a CGI brain on the left and an unrelated portrait on the right.",
+      "at": "2026-08-31"
+    },
+    "mmx.prnewswire.com/media/ms1963674/zenowell-luna-plus.jpg": {
+      "url": "https://mmx.prnewswire.com/media/MS1963674/ZenoWell-Luna-Plus.jpg?id=OA2823823&p=facebook",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.3,
+        "top": 0.03,
+        "right": 0.96,
+        "bottom": 0.97
+      },
+      "note": "ZenoWell's own press photograph of a sleeper using the Luna Plus earpiece and controller.",
+      "at": "2026-08-31"
+    },
+    "sott.net/image/s37/748163/full/1_bionic_eye_a_new_development.jpg": {
+      "url": "https://www.sott.net/image/s37/748163/full/1_Bionic_eye_a_new_development.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "A generic photograph of bionic-eye camera glasses republished by an aggregator, not this study's own picture.",
+      "at": "2026-08-31"
+    },
+    "sciencedaily.com/images/1920/brain-gut-connection.webp": {
+      "url": "https://www.sciencedaily.com/images/1920/brain-gut-connection.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Low-poly wireframe illustration of a brain and intestine, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "singularityhub.com/uploads/2026/07/science-corp-prima-implant-retina-2026.jpeg": {
+      "url": "https://singularityhub.com/uploads/2026/07/science-corp-prima-implant-retina-2026.jpeg?auto=webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.4,
+        "top": 0.05,
+        "right": 0.76,
+        "bottom": 0.8
+      },
+      "note": "Macro photograph of the Prima subretinal implant, the bionic eye this story reports approved in Europe.",
+      "at": "2026-08-31"
+    },
+    "arxiv.org/html/2607.21809v1/forearm_labeleddigits.png": {
+      "url": "https://arxiv.org/html/2607.21809v1/ForeArm_labeledDigits.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Labelled anatomical diagram of forearm cross-sections with a legend, unreadable at card size.",
+      "at": "2026-08-31"
+    },
+    "gigwise.com/wp-content/uploads/2026/07/can-ear-worn-neurotechnology-improve-focus-what-vagus-nerve-stimulation-can-cannot-do.webp": {
+      "url": "https://www.gigwise.com/wp-content/uploads/2026/07/can-ear-worn-neurotechnology-improve-focus-what-vagus-nerve-stimulation-can-cannot-do.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Smooth generated lifestyle image of a woman wearing an ear device, generic decoration rather than this story's picture.",
+      "at": "2026-08-31"
+    },
+    "sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp": {
+      "url": "https://www.sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "3D render of a glowing brain with waveforms, stock decoration.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/674f3166bfcf39e5bb371a05/677161c24c587e02fd639fc4_get-nerivio-hero-desktop.webp": {
+      "url": "https://cdn.prod.website-files.com/674f3166bfcf39e5bb371a05/677161c24c587e02fd639fc4_get-nerivio-hero-desktop.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.42,
+        "top": 0.02,
+        "right": 0.99,
+        "bottom": 0.98
+      },
+      "note": "Theranica's own photograph of the Nerivio arm-worn neuromodulation device, the device this study reports on.",
+      "at": "2026-08-31"
+    },
+    "advancedbionics.com/content/advancedbionics/us/en/home/_jcr_content/root/container/container/container_1052957536/container/image.coreimg.png/1779836349968/product-naida-ci-marvel-uhp-velvet-black.png": {
+      "url": "http://www.advancedbionics.com/content/advancedbionics/us/en/home/_jcr_content/root/container/container/container_1052957536/container/image.coreimg.png/1779836349968/product-naida-ci-marvel-uhp-velvet-black.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Product render of a cochlear implant sound processor on a transparent background, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "sprpainrelief.com/sites/default/files/styles/meta/public/2024-12/spr_shoulder_female.jpg": {
+      "url": "https://www.sprpainrelief.com/sites/default/files/styles/meta/public/2024-12/SPR_Shoulder_Female.jpg?itok=b3Bt8Uyw",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.33,
+        "top": 0,
+        "right": 0.72,
+        "bottom": 0.98
+      },
+      "note": "Photograph of the SPRINT PNS pulse generator and lead taped to a shoulder.",
+      "at": "2026-08-31"
+    },
+    "fasikl.com/wp-content/uploads/2025/06/felix-action-home-repair.jpg": {
+      "url": "https://www.fasikl.com/wp-content/uploads/2025/06/felix-action-home-repair.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.3,
+        "top": 0.05,
+        "right": 0.98,
+        "bottom": 0.95
+      },
+      "note": "Photograph of the Felix wrist-worn stimulator in use during a household task.",
+      "at": "2026-08-31"
+    },
+    "calahealth.com/wp-content/uploads/2023/05/homepage-watch-features.png": {
+      "url": "https://calahealth.com/wp-content/uploads/2023/05/homepage-watch-features.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Product render of the Cala kIQ wristband, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "curonix.com/wp-content/uploads/2025/09/peggy%e2%80%93website-image-for-pns-1.png": {
+      "url": "https://curonix.com/wp-content/uploads/2025/09/Peggy%E2%80%93Website-Image-for-PNS-1.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.25,
+        "top": 0.03,
+        "right": 0.75,
+        "bottom": 0.98
+      },
+      "note": "Studio photograph of a woman wearing the Curonix Freedom PNS belt.",
+      "at": "2026-08-31"
+    },
+    "prod.geske.click/media/int/e06f60aa2711957044/_next/static/media/share.f281e627.png": {
+      "url": "https://prod.geske.click/media/int/e06f60aa2711957044/_next/static/media/share.f281e627.png",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "GESKE marketing banner: wordmark, a 'Skincare Reimagined' headline and a call to action burned in.",
+      "at": "2026-08-31"
+    },
+    "biowave.com/wp-content/uploads/2026/02/bwwraps_hero_3000-scaled.png": {
+      "url": "https://biowave.com/wp-content/uploads/2026/02/BWWRAPS_HERO_3000-scaled.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.28,
+        "top": 0.02,
+        "right": 0.72,
+        "bottom": 0.98
+      },
+      "note": "Photograph of a mannequin fitted with the full set of BioWave wraps.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/b/b5/dalian_liaoning_china_noodlemaker-01.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Dalian_Liaoning_China_Noodlemaker-01.jpg/1280px-Dalian_Liaoning_China_Noodlemaker-01.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "A photograph of a chef pulling hand-made noodles, matched to a device called Noodle.",
+      "at": "2026-08-31"
+    },
+    "neurovalens.com/wp-content/uploads/2024/08/hero-home-2-768x768.png": {
+      "url": "https://neurovalens.com/wp-content/uploads/2024/08/hero-home-2-768x768.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.25,
+        "top": 0.05,
+        "right": 0.8,
+        "bottom": 0.78
+      },
+      "note": "Photograph of a woman wearing the Modius head-worn stimulator.",
+      "at": "2026-08-31"
+    },
+    "somnomed.com/uk/wp-content/uploads/sites/5/2025/11/wake-up-woman-cover-english-1.png": {
+      "url": "https://somnomed.com/uk/wp-content/uploads/sites/5/2025/11/Wake-up-woman-cover-English-1.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.25,
+        "top": 0.18,
+        "right": 0.72,
+        "bottom": 0.8
+      },
+      "note": "Product photograph of the mandibular advancement appliance and its adjustment key.",
+      "at": "2026-08-31"
+    },
+    "manamed.com/.netlify/images": {
+      "url": "https://www.manamed.com/.netlify/images?url=https%3A%2F%2Ffiles.plytix.com%2Fapi%2Fv1.1%2Ffile%2Fpublic_files%2Fpim%2Fassets%2F70%2F5f%2F1d%2F66%2F661d5f70192a3a0001961127%2Fimages%2F04%2Fbe%2F50%2F66%2F6650be045f0c48da7820d27b%2FPF0001_PIMG_00.jpg%3Fs%3D2000x2000&amp;w=96&amp;h=96&amp;fit=cover&amp;dpl=6a88beb6080e7400083aa08c",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Shows ManaMed's PlasmaFlow calf wraps, a different product from the ManaFlexx it was queued for.",
+      "at": "2026-08-31"
+    },
+    "cdn.sanity.io/images/ggwhkgro/production/4e8b62f6439a3790945d1cac5720bfdea59ca340-1920x1080.jpg": {
+      "url": "https://cdn.sanity.io/images/ggwhkgro/production/4e8b62f6439a3790945d1cac5720bfdea59ca340-1920x1080.jpg",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "Half the frame is the EpiMonitor wordmark on white, half a photograph.",
+      "at": "2026-08-31"
+    },
+    "static.wixstatic.com/media/308858_2e6f5b3f8c014f5a91a75341bc18c995%7emv2.webp/v1/fit/w_2500,h_1330,al_c/308858_2e6f5b3f8c014f5a91a75341bc18c995%7emv2.webp": {
+      "url": "https://static.wixstatic.com/media/308858_2e6f5b3f8c014f5a91a75341bc18c995%7Emv2.webp/v1/fit/w_2500,h_1330,al_c/308858_2e6f5b3f8c014f5a91a75341bc18c995%7Emv2.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.15,
+        "top": 0.02,
+        "right": 0.9,
+        "bottom": 0.85
+      },
+      "note": "Photograph of a man wearing the Enobio Dx electrode cap.",
+      "at": "2026-08-31"
+    },
+    "calahealth.com/wp-content/uploads/2023/06/device_on_dock.png": {
+      "url": "https://calahealth.com/wp-content/uploads/2023/06/Device_on_Dock.png",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "The 'cala trio' wordmark on the dock takes a third of the frame and reads as a logo at card size.",
+      "at": "2026-08-31"
+    },
+    "assets.foreo.com/files/static/social/2023-08/social%20share%201200x630%20px.png": {
+      "url": "https://assets.foreo.com/files/static/social/2023-08/social%20share%201200x630%20px.png?VersionId=NcLWu0KWCw_.p_wBpw__bVcEE1UMz3mD",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "FOREO marketing banner with the brand wordmark and product name burned in.",
+      "at": "2026-08-31"
+    },
+    "rapidai.com/hubfs/favicon-rapidai.png": {
+      "url": "https://www.rapidai.com/hubfs/favicon-rapidai.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "RapidAI's red 'R' favicon, not a photograph.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/687e0b863e8ddbc3657ec354/689c75575b360280e31e029b_ipg%202.webp": {
+      "url": "https://cdn.prod.website-files.com/687e0b863e8ddbc3657ec354/689c75575b360280e31e029b_IPG%202.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.02,
+        "top": 0.28,
+        "right": 0.95,
+        "bottom": 0.85
+      },
+      "note": "Macro photograph of the copper receive coil on Nia Therapeutics' implantable pulse generator.",
+      "at": "2026-08-31"
+    },
+    "neurovision.com/hubfs/mark_brainhealth-3.png": {
+      "url": "https://www.neurovision.com/hubfs/mark_brainhealth-3.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "NeuroVision Imaging's node-graph brain logo mark.",
+      "at": "2026-08-31"
+    },
+    "setpointmedical.com/wp-content/uploads/setpoint-favicon-2025-300x300.png": {
+      "url": "https://setpointmedical.com/wp-content/uploads/Setpoint-Favicon-2025-300x300.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Setpoint Medical's teal favicon logo.",
+      "at": "2026-08-31"
+    },
+    "sprtherapeutics.com/sites/default/files/favicon/spr/apple-touch-icon.png": {
+      "url": "http://www.sprtherapeutics.com/sites/default/files/favicon/spr/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "SPR Therapeutics' gradient app icon, no subject matter.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/67576664dbcb8c7b8c61a242/6761d6e71f1fbd0c80a5124e_spk-3152_webclip.png": {
+      "url": "https://cdn.prod.website-files.com/67576664dbcb8c7b8c61a242/6761d6e71f1fbd0c80a5124e_SPK-3152_Webclip.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Spark Biomedical's logo and wordmark.",
+      "at": "2026-08-31"
+    },
+    "viz.ai/wp-content/uploads/2023/06/cropped-favicon-180x180.png": {
+      "url": "https://www.viz.ai/wp-content/uploads/2023/06/cropped-favicon-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Viz.ai's blue chevron favicon.",
+      "at": "2026-08-31"
+    },
+    "eecdafe2.delivery.rocketcdn.me/wp-content/uploads/2025/06/cropped-navigator-logo-180x180.png": {
+      "url": "https://eecdafe2.delivery.rocketcdn.me/wp-content/uploads/2025/06/cropped-Navigator-logo-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "NeuroLutions' Navigator logo mark.",
+      "at": "2026-08-31"
+    },
+    "brainsway.com/apple-touch-icon.png": {
+      "url": "https://www.brainsway.com/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "BrainsWay's touch-icon logo.",
+      "at": "2026-08-31"
+    },
+    "static.wixstatic.com/media/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7emv2.png/v1/fill/w_180%2ch_180%2clg_1%2cusm_0.66_1.00_0.01/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7emv2.png": {
+      "url": "https://static.wixstatic.com/media/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7Emv2.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "A cropped 'NE' wordmark, Neuroelectrics' logo.",
+      "at": "2026-08-31"
+    },
+    "nalumed.com/wp-content/uploads/2017/12/cropped-qcbd-nalu-logo-transparent-background-1-180x180.png": {
+      "url": "https://nalumed.com/wp-content/uploads/2017/12/cropped-qcbd-nalu-logo-transparent-background-1-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "The 'nalu' wordmark, Nalu Medical's logo.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/68236712486104f66d06ca97/6a021ca9ded9ebdceb0ab2a2_neurable%20logo%20-%20hires%20-%20black%20copy.png": {
+      "url": "https://cdn.prod.website-files.com/68236712486104f66d06ca97/6a021ca9ded9ebdceb0ab2a2_Neurable%20Logo%20-%20HiRes%20-%20Black%20copy.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "The 'NEURABLE' wordmark.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/5d9cb416faa4c0b59b9decbc/5e1f489a91fb9e5e753812f2_abm-logo-webclip.jpg": {
+      "url": "https://cdn.prod.website-files.com/5d9cb416faa4c0b59b9decbc/5e1f489a91fb9e5e753812f2_abm-logo-webclip.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Advanced Brain Monitoring's logo mark.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/64e8d3e150408fcb85170968/64e8d3e250408fcb85170aad_fs-webclip.webp": {
+      "url": "https://cdn.prod.website-files.com/64e8d3e150408fcb85170968/64e8d3e250408fcb85170aad_fs-webclip.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "A '{F' monogram favicon.",
+      "at": "2026-08-31"
+    },
+    "ceribell.com/wp-content/uploads/2025/06/cropped-ceribell-icon--180x180.png": {
+      "url": "https://ceribell.com/wp-content/uploads/2025/06/cropped-Ceribell-Icon--180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Ceribell's letter 'C' favicon, heavily blurred at this size.",
+      "at": "2026-08-31"
+    },
+    "synapsebiomedical.com/wp-content/uploads/2023/11/cropped-cropped-synapsebiomedical-favicon-3-180x180.png": {
+      "url": "https://www.synapsebiomedical.com/wp-content/uploads/2023/11/cropped-cropped-SynapseBioMedical-Favicon-3-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Synapse Biomedical's logo mark.",
+      "at": "2026-08-31"
+    },
+    "precisionneuro.io/images/favicon.png": {
+      "url": "https://precisionneuro.io/images/favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Precision Neuroscience's dot-array logo.",
+      "at": "2026-08-31"
+    },
+    "calahealth.com/wp-content/uploads/2023/05/cala-favicon-300x300.png": {
+      "url": "https://calahealth.com/wp-content/uploads/2023/05/cala-favicon-300x300.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Cala Health's favicon logo.",
+      "at": "2026-08-31"
+    },
+    "neurosmedical.com/wp-content/uploads/2024/04/cropped-neuros-logo-180x180.png": {
+      "url": "https://www.neurosmedical.com/wp-content/uploads/2024/04/cropped-Neuros-Logo-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Neuros Medical's figure logo mark.",
+      "at": "2026-08-31"
+    },
+    "brainspecmed.com/wp-content/uploads/2023/09/cropped-brainspec_square_-180x180.png": {
+      "url": "https://brainspecmed.com/wp-content/uploads/2023/09/cropped-BrainSpec_Square_-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "BrainSpec's brain-and-magnifier logo.",
+      "at": "2026-08-31"
+    },
+    "framerusercontent.com/images/yzokbetgxkbmi0audas1qaases.png": {
+      "url": "https://framerusercontent.com/images/yzoKBetgXkBmI0AUdAs1QAAsEs.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Emotiv's 'E' monogram.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/656e26ef10850ea6428fe577/6592fe4d1d30e3c3c87cfec8_favicon.png": {
+      "url": "https://cdn.prod.website-files.com/656e26ef10850ea6428fe577/6592fe4d1d30e3c3c87cfec8_Favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Cognito Therapeutics' sine-wave logo mark.",
+      "at": "2026-08-31"
+    },
+    "ensodata.com/wp-content/uploads/fbrfg/apple-touch-icon.png": {
+      "url": "https://www.ensodata.com/wp-content/uploads/fbrfg/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "EnsoData's pineapple-and-cross icon.",
+      "at": "2026-08-31"
+    },
+    "freespira.com/wp-content/uploads/cropped-favicon-180x180.png": {
+      "url": "https://freespira.com/wp-content/uploads/cropped-Favicon-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Freespira's leaf logo mark.",
+      "at": "2026-08-31"
+    },
+    "intento.ch/wp-content/uploads/2020/04/cropped-android-chrome-512x512-1-180x180.png": {
+      "url": "https://www.intento.ch/wp-content/uploads/2020/04/cropped-android-chrome-512x512-1-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Intento's 'N' logo mark.",
+      "at": "2026-08-31"
+    },
+    "janmedical.com/favicon/apple-touch-icon.png": {
+      "url": "https://janmedical.com/favicon/apple-touch-icon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Jan Medical's pink logo mark.",
+      "at": "2026-08-31"
+    },
+    "mentia.me/wp-content/uploads/2017/05/cropped-mentiasingle_m-180x180.jpg": {
+      "url": "https://www.mentia.me/wp-content/uploads/2017/05/cropped-MentiaSingle_M-180x180.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Mentia's 'M' monogram.",
+      "at": "2026-08-31"
+    },
+    "neuromod.com/wp-content/uploads/2024/10/cropped-neuromod-icon-180x180.png": {
+      "url": "https://neuromod.com/wp-content/uploads/2024/10/cropped-Neuromod-Icon-180x180.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Neuromod's green 'N' logo.",
+      "at": "2026-08-31"
+    },
+    "neurosity.co/icons/icon-512x512.png": {
+      "url": "https://www.neurosity.co/icons/icon-512x512.png?v=d1329b8e650446a98db57d5e443ec8c8",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Neurosity's interlocking-rings logo.",
+      "at": "2026-08-31"
+    },
+    "otoharmonics.com/wp-content/uploads/2025/06/cropped-otoharmonics_3-1-180x180.jpg": {
+      "url": "https://otoharmonics.com/wp-content/uploads/2025/06/cropped-otoharmonics_3-1-180x180.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "A slot-machine graphic from an online casino page, nothing to do with Otoharmonics.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/68bf958d97a069c30695e0c1/68c01fd13292b8059c5b4abc_256x256.png": {
+      "url": "https://cdn.prod.website-files.com/68bf958d97a069c30695e0c1/68c01fd13292b8059c5b4abc_256x256.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Synaptive Medical's white-on-black logo mark.",
+      "at": "2026-08-31"
+    },
+    "cdn.prod.website-files.com/6666d5373e90bd561c0c5d8c/669a260cf52a6c754a8bc3bf_webclip.png": {
+      "url": "https://cdn.prod.website-files.com/6666d5373e90bd561c0c5d8c/669a260cf52a6c754a8bc3bf_webclip.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Motif Neurotech's 'M' logo mark.",
+      "at": "2026-08-31"
+    },
+    "i0.wp.com/ni2o.com/wp-content/uploads/2019/03/cropped-ni2o-favicon.png": {
+      "url": "https://i0.wp.com/ni2o.com/wp-content/uploads/2019/03/cropped-ni2o-favicon.png?fit=180%2C180&#038;ssl=1",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "ni2o's orange favicon.",
+      "at": "2026-08-31"
+    },
+    "static.wixstatic.com/media/fd494d_6580007b105a4b5aa62656112c972973%7emv2.png/v1/fill/w_180%2ch_180%2clg_1%2cusm_0.66_1.00_0.01/fd494d_6580007b105a4b5aa62656112c972973%7emv2.png": {
+      "url": "https://static.wixstatic.com/media/fd494d_6580007b105a4b5aa62656112c972973%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/fd494d_6580007b105a4b5aa62656112c972973%7Emv2.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Wearable Devices' 'W' logo mark.",
+      "at": "2026-08-31"
+    },
+    "cerora.com/wp-content/uploads/2015/07/4color_cerora_logo-transparentbackground.png": {
+      "url": "https://cerora.com/wp-content/uploads/2015/07/4Color_Cerora_Logo-TransparentBackground.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "Cerora's dot-flower logo.",
+      "at": "2026-08-31"
+    },
+    "whispersom.com/wp-content/uploads/2022/03/cropped-device-180x180.jpg": {
+      "url": "https://whispersom.com/wp-content/uploads/2022/03/cropped-device-180x180.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.1,
+        "top": 0.2,
+        "right": 0.92,
+        "bottom": 0.82
+      },
+      "note": "Product photograph of the WhisperSom bedside unit.",
+      "at": "2026-08-31"
+    },
+    "static.wixstatic.com/media/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7emv2_d_2550_2550_s_4_2.gif/v1/fill/w_180%2ch_180%2clg_1%2cusm_0.66_1.00_0.01/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7emv2_d_2550_2550_s_4_2.gif": {
+      "url": "https://static.wixstatic.com/media/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7Emv2_d_2550_2550_s_4_2.gif/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7Emv2_d_2550_2550_s_4_2.gif",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "JuneBrain's brain-outline logo and wordmark.",
+      "at": "2026-08-31"
+    },
+    "upload.wikimedia.org/wikipedia/commons/0/08/typical_deep_brain_stimulation_setup.jpg": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Typical_deep_brain_stimulation_setup.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "3D anatomical schematic with 'electrode' and 'pacemaker' labels, a diagram rather than a photograph.",
+      "at": "2026-08-31"
     }
   },
-  "pending": [
-    {
-      "url": "https://braincheck.com/hubfs/BrainCheck%202025/Images/BrainCheck%20Logo%20Favicon.png",
-      "item": null,
-      "title": "BrainCheck",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://nexalin.com/wp-content/uploads/2021/05/w-icon@3x.png",
-      "item": null,
-      "title": "Nexalin Technology",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Patch_rig.png/1280px-Patch_rig.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "item": null,
-      "title": "Neuropixels Opto: combining high-resolution ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Cochlear_implant_user.jpg",
-      "item": null,
-      "title": "cochlear_implant: Cochlear implant user.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/7/73/Tiefe_Hirnstimulation_-_Sonden_RoeSchaedel_ap.jpg",
-      "item": null,
-      "title": "dbs: Deep brain stimulation",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Prep_for_Deep_Brain_Stimulation.png",
-      "item": null,
-      "title": "dbs: Prep for Deep Brain Stimulation.png",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg/1280px-Vagusstimulator_bei_Lennox-Gastaut-Syndrom_17M_-_CR_ap_-_001.jpg",
-      "item": null,
-      "title": "vns: Vagusstimulator bei Lennox-Gastaut-Syndr",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Tens_unit.jpg",
-      "item": null,
-      "title": "tens: Tens unit.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg/1280px-Barry_Kerzin_meditating_with_EEG_for_neuroscience_research.jpg",
-      "item": null,
-      "title": "eeg: Barry Kerzin meditating with EEG for neu",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/EEG_Recording_Cap.jpg/1280px-EEG_Recording_Cap.jpg",
-      "item": null,
-      "title": "eeg: EEG Recording Cap.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/EEG_Hospital.png",
-      "item": null,
-      "title": "eeg: EEG Hospital.png",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/EEG_Experiment.jpg/1280px-EEG_Experiment.jpg",
-      "item": null,
-      "title": "eeg: EEG Experiment.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg/1280px-Child_undergoing_an_EEG_test_with_electrodes_on_the_head_while_lying_on_a_bed_in_a_clinic_setting.jpg",
-      "item": null,
-      "title": "eeg: Child undergoing an EEG test with electr",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/NIMH_MEG.jpg/1280px-NIMH_MEG.jpg",
-      "item": null,
-      "title": "meg: Magnetoencephalography",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Blonde_fNIRS_lady.jpg/1280px-Blonde_fNIRS_lady.jpg",
-      "item": null,
-      "title": "fnirs: Functional near-infrared spectroscopy",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/FNIRS_EEG_HMD.jpg/1280px-FNIRS_EEG_HMD.jpg",
-      "item": null,
-      "title": "fnirs: FNIRS EEG HMD.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/FNIRS_head_Hitachi_ETG4000_4.jpg/1280px-FNIRS_head_Hitachi_ETG4000_4.jpg",
-      "item": null,
-      "title": "fnirs: FNIRS head Hitachi ETG4000 4.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/MRI-Philips.JPG/1280px-MRI-Philips.JPG",
-      "item": null,
-      "title": "mri: MRI-Philips.JPG",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg/1280px-Electromyographic_recording_at_adductor_pollicis_muscle_and_stimulation_of_the_ulnar_nerve.jpg",
-      "item": null,
-      "title": "emg: Electromyographic recording at adductor ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Myoelectric_prosthetic_arm.jpg",
-      "item": null,
-      "title": "prosthetic: Myoelectric prosthetic arm.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Brain_TMS.jpg/1280px-Brain_TMS.jpg",
-      "item": null,
-      "title": "tms: Brain TMS.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Anterior_thoracic_SCS.jpg",
-      "item": null,
-      "title": "scs: Spinal cord stimulator",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Synapse_IPG.jpg/1280px-Synapse_IPG.jpg",
-      "item": null,
-      "title": "scs: Synapse IPG.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/TENS.jpg/1280px-TENS.jpg",
-      "item": null,
-      "title": "scs: TENS.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/4-week-old_neurons_%287184654817%29.jpg/1280px-4-week-old_neurons_%287184654817%29.jpg",
-      "item": null,
-      "title": "microscopy: 4-week-old neurons (7184654817).jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg/1280px-%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%B5_%D0%B2%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_22.05.16.jpg",
-      "item": null,
-      "title": "exoskeleton: Первое впечатление 22.05.16.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg/1280px-%D0%AD%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82_ExoLite.jpg",
-      "item": null,
-      "title": "exoskeleton: Экзоскелет ExoLite.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg/1280px-LG_CLOi%2C_IFA_2018%2C_Berlin_%28P1070245%29.jpg",
-      "item": null,
-      "title": "exoskeleton: LG CLOi, IFA 2018, Berlin (P1070245).jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg/1280px-Ajax_Exosuit_at_Maker_Faire_2015.gk.jpg",
-      "item": null,
-      "title": "exoskeleton: Ajax Exosuit at Maker Faire 2015.gk.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg/1280px-Hybrid_Assistive_Limb%2C_CYBERDYNE.jpg",
-      "item": null,
-      "title": "exoskeleton: Hybrid Assistive Limb, CYBERDYNE.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG/1280px-Geek_Picnic_%28Moscow%3B_2014-01-26%29_DonSimon_36.JPG",
-      "item": null,
-      "title": "exoskeleton: Geek Picnic (Moscow; 2014-01-26) DonSimo",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg/1280px-%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%B8%D0%B4%D1%8F_%D0%B2_%D1%8D%D0%BA%D0%B7%D0%BE%D1%81%D0%BA%D0%B5%D0%BB%D0%B5%D1%82%D0%B5_ExoHeaver.jpg",
-      "item": null,
-      "title": "exoskeleton: Положение сидя в экзоскелете ExoHeaver.j",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Aktivni_egzoskelet_02%2C_1974._godina.jpg",
-      "item": null,
-      "title": "exoskeleton: Aktivni egzoskelet 02, 1974. godina.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/01TTRDZN2020.jpg",
-      "item": null,
-      "title": "electrode: 01TTRDZN2020.jpg",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://technode.com/wp-content/uploads/2026/08/steve-a-johnson-_0iV9LmPDn0-unsplash.jpg",
-      "item": null,
-      "title": "Shanghai - based BCI startup raises RMB330 m",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sciencedaily.com/images/1920/sleep-therapy-brain-delta-waves.webp",
-      "item": null,
-      "title": "AI can tell if your brain is aging faster th",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://techcrunch.com/wp-content/uploads/2026/07/prima-implant-glasses-2026.DDQ1RrzC_HBfx0.webp",
-      "item": null,
-      "title": "Science Corporation vision - restoring chip ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://futurism.com/wp-content/uploads/2026/07/eye-implant-restores-vision-approved-sale.jpg?quality=85",
-      "item": null,
-      "title": "Eye Implant That Restores Vision to the Blin",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.saludamedical.com/wp-content/themes/gravity-global-child/assets/images/favicon/favicon.png",
-      "item": null,
-      "title": "Saluda Medical - 2026 Funding Rounds & List ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.mos.cms.futurecdn.net/cSsCTyD9FgAgp52SwPRQZa-2000-80.jpg",
-      "item": null,
-      "title": "I electrocuted my own vagus nerve every day ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Elon_Musk_unveiling_Neuralink.jpg/1280px-Elon_Musk_unveiling_Neuralink.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "item": null,
-      "title": "How Neuralink brain chip transformed life of",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://mmx.prnewswire.com/media/MS1963674/ZenoWell-Luna-Plus.jpg?id=OA2823823&p=facebook",
-      "item": null,
-      "title": "ZenoWell Unveils Luna Plus : An AI - Driven ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sott.net/image/s37/748163/full/1_Bionic_eye_a_new_development.jpg",
-      "item": null,
-      "title": "Deep learning refines how bionic eyes commun",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sciencedaily.com/images/1920/brain-gut-connection.webp",
-      "item": null,
-      "title": "Your gut may help your brain decide what to ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://singularityhub.com/uploads/2026/07/science-corp-prima-implant-retina-2026.jpeg?auto=webp",
-      "item": null,
-      "title": "Europe Approves Bionic Eye to Restore Vision",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://arxiv.org/html/2607.21809v1/ForeArm_labeledDigits.png",
-      "item": null,
-      "title": "Leveraging Agonistic-Antagonistic Coactivati",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.gigwise.com/wp-content/uploads/2026/07/can-ear-worn-neurotechnology-improve-focus-what-vagus-nerve-stimulation-can-cannot-do.webp",
-      "item": null,
-      "title": "Can Ear - Worn Neurotechnology Improve Focus",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sciencedaily.com/images/1920/brain-waves-neural-activity-signals.webp",
-      "item": null,
-      "title": "Scientists discover a hidden brain rhythm th",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/674f3166bfcf39e5bb371a05/677161c24c587e02fd639fc4_get-nerivio-hero-desktop.webp",
-      "item": null,
-      "title": "Treatment Patterns Among US Veterans Using R",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "http://www.advancedbionics.com/content/advancedbionics/us/en/home/_jcr_content/root/container/container/container_1052957536/container/image.coreimg.png/1779836349968/product-naida-ci-marvel-uhp-velvet-black.png",
-      "item": null,
-      "title": "Bilateral Benefit in Adult Users of the HiRe",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.sprpainrelief.com/sites/default/files/styles/meta/public/2024-12/SPR_Shoulder_Female.jpg?itok=b3Bt8Uyw",
-      "item": null,
-      "title": "SPRINT PNS System",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.fasikl.com/wp-content/uploads/2025/06/felix-action-home-repair.jpg",
-      "item": null,
-      "title": "Felix NeuroAI  System",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://calahealth.com/wp-content/uploads/2023/05/homepage-watch-features.png",
-      "item": null,
-      "title": "Cala kIQ Plus",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://curonix.com/wp-content/uploads/2025/09/Peggy%E2%80%93Website-Image-for-PNS-1.png",
-      "item": null,
-      "title": "Freedom Peripheral Nerve Stimulator (PNS) Sy",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://prod.geske.click/media/int/e06f60aa2711957044/_next/static/media/share.f281e627.png",
-      "item": null,
-      "title": "SmartAppGuidedTM MicroCurrent Face-Lift Pen ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://biowave.com/wp-content/uploads/2026/02/BWWRAPS_HERO_3000-scaled.png",
-      "item": null,
-      "title": "BioWave BioWraps",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Dalian_Liaoning_China_Noodlemaker-01.jpg/1280px-Dalian_Liaoning_China_Noodlemaker-01.jpg",
-      "item": null,
-      "title": "Noodle",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neurovalens.com/wp-content/uploads/2024/08/hero-home-2-768x768.png",
-      "item": null,
-      "title": "Modius Spero",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://somnomed.com/uk/wp-content/uploads/sites/5/2025/11/Wake-up-woman-cover-English-1.png",
-      "item": null,
-      "title": "DreamClear",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.manamed.com/.netlify/images?url=https%3A%2F%2Ffiles.plytix.com%2Fapi%2Fv1.1%2Ffile%2Fpublic_files%2Fpim%2Fassets%2F70%2F5f%2F1d%2F66%2F661d5f70192a3a0001961127%2Fimages%2F04%2Fbe%2F50%2F66%2F6650be045f0c48da7820d27b%2FPF0001_PIMG_00.jpg%3Fs%3D2000x2000&amp;w=96&amp;h=96&amp;fit=cover&amp;dpl=6a88beb6080e7400083aa08c",
-      "item": null,
-      "title": "ManaFlexx 2 (model: MF002-RX, MF002-OTC)",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.sanity.io/images/ggwhkgro/production/4e8b62f6439a3790945d1cac5720bfdea59ca340-1920x1080.jpg",
-      "item": null,
-      "title": "EpiMonitor",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://static.wixstatic.com/media/308858_2e6f5b3f8c014f5a91a75341bc18c995%7Emv2.webp/v1/fit/w_2500,h_1330,al_c/308858_2e6f5b3f8c014f5a91a75341bc18c995%7Emv2.webp",
-      "item": null,
-      "title": "Enobio Dx (Enobio Dx 8);Enobio Dx (Enobio Dx",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://calahealth.com/wp-content/uploads/2023/06/Device_on_Dock.png",
-      "item": null,
-      "title": "Cala Trio",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://assets.foreo.com/files/static/social/2023-08/social%20share%201200x630%20px.png?VersionId=NcLWu0KWCw_.p_wBpw__bVcEE1UMz3mD",
-      "item": null,
-      "title": "BEAR 2 Body",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.rapidai.com/hubfs/favicon-rapidai.png",
-      "item": null,
-      "title": "iSchemaView, Inc.",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/687e0b863e8ddbc3657ec354/689c75575b360280e31e029b_IPG%202.webp",
-      "item": null,
-      "title": "Nia Therapeutics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.empatica.com/website/assets/images/favicons/favicon.png",
-      "item": null,
-      "title": "Empatica",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.neurovision.com/hubfs/mark_brainhealth-3.png",
-      "item": null,
-      "title": "NeuroVision Imaging",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://setpointmedical.com/wp-content/uploads/Setpoint-Favicon-2025-300x300.png",
-      "item": null,
-      "title": "Setpoint Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "http://www.sprtherapeutics.com/sites/default/files/favicon/spr/apple-touch-icon.png",
-      "item": null,
-      "title": "SPR Therapeutics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/67576664dbcb8c7b8c61a242/6761d6e71f1fbd0c80a5124e_SPK-3152_Webclip.png",
-      "item": null,
-      "title": "Spark Biomedical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.viz.ai/wp-content/uploads/2023/06/cropped-favicon-180x180.png",
-      "item": null,
-      "title": "Viz.AI",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://eecdafe2.delivery.rocketcdn.me/wp-content/uploads/2025/06/cropped-Navigator-logo-180x180.png",
-      "item": null,
-      "title": "NeuroLutions",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.brainsway.com/apple-touch-icon.png",
-      "item": null,
-      "title": "BrainsWay",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://static.wixstatic.com/media/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/fb9608_bb3e417bf42e4329a988fe6f77539f8d%7Emv2.png",
-      "item": null,
-      "title": "Neuroelectrics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://nalumed.com/wp-content/uploads/2017/12/cropped-qcbd-nalu-logo-transparent-background-1-180x180.png",
-      "item": null,
-      "title": "Nalu Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/68236712486104f66d06ca97/6a021ca9ded9ebdceb0ab2a2_Neurable%20Logo%20-%20HiRes%20-%20Black%20copy.png",
-      "item": null,
-      "title": "Neurable",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/5d9cb416faa4c0b59b9decbc/5e1f489a91fb9e5e753812f2_abm-logo-webclip.jpg",
-      "item": null,
-      "title": "Advanced Brain Monitoring",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/64e8d3e150408fcb85170968/64e8d3e250408fcb85170aad_fs-webclip.webp",
-      "item": null,
-      "title": "Autonomic Technologies",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://ceribell.com/wp-content/uploads/2025/06/cropped-Ceribell-Icon--180x180.png",
-      "item": null,
-      "title": "Ceribell",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.synapsebiomedical.com/wp-content/uploads/2023/11/cropped-cropped-SynapseBioMedical-Favicon-3-180x180.png",
-      "item": null,
-      "title": "Synapse Biomedical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://precisionneuro.io/images/favicon.png",
-      "item": null,
-      "title": "Precision Neuroscience",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://calahealth.com/wp-content/uploads/2023/05/cala-favicon-300x300.png",
-      "item": null,
-      "title": "Cala Health",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.neurosmedical.com/wp-content/uploads/2024/04/cropped-Neuros-Logo-180x180.png",
-      "item": null,
-      "title": "Neuros Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://brainspecmed.com/wp-content/uploads/2023/09/cropped-BrainSpec_Square_-180x180.png",
-      "item": null,
-      "title": "BrainSpec",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://framerusercontent.com/images/yzoKBetgXkBmI0AUdAs1QAAsEs.png",
-      "item": null,
-      "title": "Emotiv",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/656e26ef10850ea6428fe577/6592fe4d1d30e3c3c87cfec8_Favicon.png",
-      "item": null,
-      "title": "Cognito Therapeutics",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.ensodata.com/wp-content/uploads/fbrfg/apple-touch-icon.png",
-      "item": null,
-      "title": "Ensodata",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://freespira.com/wp-content/uploads/cropped-Favicon-180x180.png",
-      "item": null,
-      "title": "Freespira",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.intento.ch/wp-content/uploads/2020/04/cropped-android-chrome-512x512-1-180x180.png",
-      "item": null,
-      "title": "Intento",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://janmedical.com/favicon/apple-touch-icon.png",
-      "item": null,
-      "title": "Jan Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.mentia.me/wp-content/uploads/2017/05/cropped-MentiaSingle_M-180x180.jpg",
-      "item": null,
-      "title": "Mentia",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://neuromod.com/wp-content/uploads/2024/10/cropped-Neuromod-Icon-180x180.png",
-      "item": null,
-      "title": "Neuromod",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://www.neurosity.co/icons/icon-512x512.png?v=d1329b8e650446a98db57d5e443ec8c8",
-      "item": null,
-      "title": "Neurosity",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://otoharmonics.com/wp-content/uploads/2025/06/cropped-otoharmonics_3-1-180x180.jpg",
-      "item": null,
-      "title": "Otoharmonics Corporation",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/68bf958d97a069c30695e0c1/68c01fd13292b8059c5b4abc_256x256.png",
-      "item": null,
-      "title": "Synaptive Medical",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cdn.prod.website-files.com/6666d5373e90bd561c0c5d8c/669a260cf52a6c754a8bc3bf_webclip.png",
-      "item": null,
-      "title": "Motif Neurotech",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://i0.wp.com/ni2o.com/wp-content/uploads/2019/03/cropped-ni2o-favicon.png?fit=180%2C180&#038;ssl=1",
-      "item": null,
-      "title": "ni2o",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://static.wixstatic.com/media/fd494d_6580007b105a4b5aa62656112c972973%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/fd494d_6580007b105a4b5aa62656112c972973%7Emv2.png",
-      "item": null,
-      "title": "Wearable Devices",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://cerora.com/wp-content/uploads/2015/07/4Color_Cerora_Logo-TransparentBackground.png",
-      "item": null,
-      "title": "Cerora",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://whispersom.com/wp-content/uploads/2022/03/cropped-device-180x180.jpg",
-      "item": null,
-      "title": "WhisperSom Corporation",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://static.wixstatic.com/media/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7Emv2_d_2550_2550_s_4_2.gif/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/a5d5ab_55baf8c6f1d344688054e4c198111c2a%7Emv2_d_2550_2550_s_4_2.gif",
-      "item": null,
-      "title": "Junebrain",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    },
-    {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Typical_deep_brain_stimulation_setup.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
-      "item": null,
-      "title": "Deep brain stimulation induces white matter ",
-      "why": "where is the subject",
-      "at": "2026-08-23"
-    }
-  ],
+  "pending": [],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
 }
