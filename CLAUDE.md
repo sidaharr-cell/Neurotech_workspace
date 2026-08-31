@@ -63,9 +63,15 @@ sequence of its own: it used to list every step in YAML, which is how the sequen
 the manual command drifted apart.
 
 The odd minute and the timeouts are both scars. Asking for `0 6` put the job at the back
-of the longest cron queue GitHub has, and starts drifted from six minutes late to twelve
-hours late over a week; `23 6` is the only lever a schedule offers, and nothing downstream
-assumes a start time. The 45-minute cap used to sit on the JOB, so the runs of 26 and 27
+of the longest cron queue GitHub has. **The run has never started on time**: runs 54-63
+were 44 to 64 minutes late every day, and from run 64 (27 Aug 2026) the delay went to
+hours — up to 12h 21m. A cron is when a run becomes *eligible*, not when it starts, and
+GitHub's docs allow both delay under load and dropping a run outright. `23 6` is the only
+lever a schedule offers and it guarantees nothing, so nothing downstream may assume a
+start time. The one thing the drift must not do is cross midnight UTC — the window and
+`src/lib/homepage.js` both key off the UTC calendar day, so a start past 00:00 means one
+day with an empty window and the next with two days in it. For a real start time, point
+something with an actual clock at the `workflow_dispatch` API; a dispatch runs at once. The 45-minute cap used to sit on the JOB, so the runs of 26 and 27
 Aug 2026 that overran it were *cancelled* — which skipped the commit and skipped
 `verify:cron`, losing the day's pictures and silencing the alarm, while showing up as
 neither a failure nor a success. The cap is now on the sequence step (55 min, against a

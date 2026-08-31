@@ -2,13 +2,24 @@ name: Daily Neurotech Refresh
 
 on:
   schedule:
-    # 06:23 UTC, not 06:00. GitHub queues every scheduled workflow on the
-    # planet at the top of the hour and runs them as capacity frees up, so a
-    # job asking for :00 is at the back of the longest queue of the day. Runs
-    # 55-62 started within ten minutes of their slot; runs 63-68, all still
-    # asking for :00, started as much as twelve hours late. An odd minute is
-    # the only lever the schedule offers — GitHub promises no start time for
-    # cron either way, which is why nothing downstream assumes one.
+    # 06:23 UTC, not 06:00. A cron here is when a run becomes ELIGIBLE, not
+    # when it starts: GitHub queues every scheduled workflow on the planet and
+    # dispatches as runners free up, so a job asking for :00 joins the longest
+    # queue of the day. This one has never once started on time. Runs 54-63
+    # were 44 to 64 minutes late, every day; from run 64 (27 Aug 2026) the
+    # delay went to hours — 11h 28m, 12h 21m, 6h 30m, 5h 33m, 7h 06m.
+    #
+    # An odd minute is the only lever a schedule offers, and it promises
+    # nothing; GitHub's docs allow for delay under load and for dropping a run
+    # outright. Nothing downstream may assume a start time. What it MUST NOT
+    # do is slip past midnight UTC: the "What's new today" window and
+    # src/lib/homepage.js both key off the UTC calendar day, so a start that
+    # crossed 00:00 would leave one day with an empty window and the next with
+    # two days of items. Run 65 came within five and a half hours of that.
+    #
+    # If a real start time is ever needed, the fix is not here: give something
+    # with an actual clock the workflow_dispatch API. A dispatch runs at once
+    # — it is only GitHub's own scheduler that queues.
     - cron: '23 6 * * *'  # every day at 06:23 UTC
   workflow_dispatch:        # lets you trigger manually from GitHub UI
 
