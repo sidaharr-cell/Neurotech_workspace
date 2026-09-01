@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { pickLead, isReputableSource, hasRealImage } from './sources'
+import { pickLead, rankLead, isReputableSource, hasRealImage } from './sources'
 
 const item = (over = {}) => ({
   id: over.id,
@@ -31,6 +31,36 @@ describe('pickLead', () => {
     const a = item({ id: 'wire-a', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 1 } })
     const b = item({ id: 'wire-b', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 99 } })
     expect(pickLead([a, b]).id).toBe('wire-b')
+  })
+})
+
+// The floor decides how good the lead is. It must not also decide how MANY
+// leads there are: dropping everything below it left chooseLead with four
+// candidates on 31 Aug 2026, all four already spent, and the front page led
+// with the same story for four days out of five.
+describe('rankLead', () => {
+  const aggregator = item({ id: 'wire', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 99 } })
+  const journal = item({ id: 'journal', metadata: { rankScore: 1 } })
+
+  it('keeps the reputable candidates first', () => {
+    expect(rankLead([aggregator, journal]).map(i => i.id)).toEqual(['journal', 'wire'])
+  })
+
+  it('keeps the rest of the list below them rather than dropping it', () => {
+    expect(rankLead([aggregator, journal])).toHaveLength(2)
+  })
+
+  it('orders within each tier by significance', () => {
+    const dull = item({ id: 'dull', metadata: { rankScore: 1 } })
+    const strong = item({ id: 'strong', metadata: { rankScore: 50 } })
+    const wireB = item({ id: 'wire-b', entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 1 } })
+    expect(rankLead([dull, wireB, aggregator, strong]).map(i => i.id))
+      .toEqual(['strong', 'dull', 'wire', 'wire-b'])
+  })
+
+  it('returns an empty list for an empty or missing one', () => {
+    expect(rankLead([])).toEqual([])
+    expect(rankLead(undefined)).toEqual([])
   })
 
   it('returns undefined for an empty or missing list', () => {
