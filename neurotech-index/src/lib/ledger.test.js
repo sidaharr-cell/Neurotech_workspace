@@ -127,4 +127,42 @@ describe('the lead changes every day', () => {
     expect(chooseLead(ledger, [{ id: 'yesterday' }], '2026-08-23').id).toBe('yesterday')
     expect(chooseLead(ledger, [], '2026-08-23')).toBe(null)
   })
+
+  // The last resort used to be candidates[0], which is the highest-ranked, and
+  // the highest-ranked is the story that led yesterday — so on an exhausted
+  // day the fallback re-elected the incumbent and kept re-electing it. Taking
+  // the one that led longest ago cycles instead of sticking.
+  it('leads with the longest-ago story when every candidate is spent', () => {
+    // 'yesterday' led on the 22nd and 'old' on the 12th; both are inside the
+    // window, and 'yesterday' is offered first as the better story.
+    const spent = [{ id: 'yesterday' }, { id: 'old' }]
+    expect(chooseLead(ledger, spent, '2026-08-23').id).toBe('old')
+  })
+
+  it('keeps cycling rather than settling on one story', () => {
+    const spent = [{ id: 'yesterday' }, { id: 'old' }]
+    let l = ledger
+    const run = []
+    for (const date of ['2026-08-23', '2026-08-24', '2026-08-25', '2026-08-26']) {
+      const pick = chooseLead(l, spent, date)
+      run.push(pick.id)
+      l = recordLead(l, { date, item: pick.id })
+    }
+    expect(run).toEqual(['old', 'yesterday', 'old', 'yesterday'])
+  })
+
+  it('never counts a story that has not led as the most recent', () => {
+    const spent = [{ id: 'yesterday' }, { id: 'old' }, { id: 'unled' }]
+    // 'unled' is not banned at all, so it wins before the fallback is reached.
+    expect(chooseLead(ledger, spent, '2026-08-23').id).toBe('unled')
+  })
+
+  it('breaks a tie on the caller’s order, so the best story still wins', () => {
+    const both = recordLead(recordLead(EMPTY, { date: '2026-08-22', item: 'a' }), { date: '2026-08-22', item: 'b' })
+    // recordLead keeps one entry per day, so give them the same day directly.
+    const same = { ...EMPTY, leads: [{ date: '2026-08-22', item: 'a' }, { date: '2026-08-22', item: 'b' }] }
+    expect(both.leads).toHaveLength(1)
+    expect(chooseLead(same, [{ id: 'a' }, { id: 'b' }], '2026-08-23').id).toBe('a')
+    expect(chooseLead(same, [{ id: 'b' }, { id: 'a' }], '2026-08-23').id).toBe('b')
+  })
 })

@@ -71,12 +71,30 @@ const significance = i => neurotechCentrality(i) * 3 + (hasRealImage(i) ? 2 : 0)
  * beside it; the control is gone (29 Aug 2026) and with it the second
  * ordering, because a date sort with nothing to set it was a branch that could
  * only ever be reached by a caller getting the argument wrong.
+ *
+ * **The source floor tiers; it does not truncate.** This returned the
+ * reputable items ALONE whenever there was at least one, which reads as the
+ * same rule and is not: it decides how good the lead is AND how many leads
+ * exist, and the second one is not its business. Measured 31 Aug 2026: 410
+ * feed rows, 11 carrying a lead-worthy picture, and 4 left after this filter —
+ * all four of which had led inside the fortnight, so chooseLead had nothing
+ * unbanned to find and fell through to its last resort. The front page led
+ * with the same story on 27, 29, 30 and 31 August and would not have moved
+ * again on its own.
+ *
+ * Returning reputable-first and then the rest keeps the floor exactly where it
+ * was — a reputable story wins whenever one is eligible, which is what
+ * "reputable whenever the page has one" was always supposed to mean — while
+ * leaving somewhere to go on the day they are all spent. Degrading one tier
+ * for one day is a smaller cost than a week of the same headline.
  */
 export function rankLead(items) {
   if (!items?.length) return []
-  const reputable = items.filter(isReputableSource)
-  const pool = reputable.length ? reputable : items
-  return [...pool].sort((a, b) => significance(b) - significance(a))
+  const bySignificance = (a, b) => significance(b) - significance(a)
+  return [
+    ...items.filter(isReputableSource).sort(bySignificance),
+    ...items.filter(i => !isReputableSource(i)).sort(bySignificance),
+  ]
 }
 
 /**

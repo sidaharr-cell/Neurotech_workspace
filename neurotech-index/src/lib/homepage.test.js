@@ -166,6 +166,54 @@ describe('the lead changes every day', () => {
   })
 })
 
+// The failure this pair exists to prevent, end to end. The lead's source floor
+// used to drop every candidate below it, so on a day when the reputable
+// stories had all led inside the fortnight there was nothing left to rotate
+// to and the page re-elected yesterday's lead — for four days out of five,
+// from 27 to 31 Aug 2026.
+describe('the lead moves even when the reputable tier is spent', () => {
+  const items = [
+    photo('rep-a', 2000, 1300, { metadata: { rankScore: 100 } }),
+    photo('rep-b', 2000, 1300, { metadata: { rankScore: 90 } }),
+    photo('wire', 2000, 1300, { entry_type: 'news', source: 'ScienceDaily', metadata: { rankScore: 80 } }),
+  ]
+
+  it('keeps the source floor while a reputable story is free', () => {
+    const ledger = recordLead(EMPTY, { date: '2026-08-23', item: 'rep-a' })
+    expect(composeStories(items, { ledger, date: '2026-08-24' }).lead.id).toBe('rep-b')
+  })
+
+  it('drops a tier rather than repeat yesterday, once they are all spent', () => {
+    let ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'rep-a' })
+    ledger = recordLead(ledger, { date: '2026-08-23', item: 'rep-b' })
+    expect(composeStories(items, { ledger, date: '2026-08-24' }).lead.id).toBe('wire')
+  })
+
+  it('still moves on the day after that, with every story spent', () => {
+    let ledger = recordLead(EMPTY, { date: '2026-08-22', item: 'rep-a' })
+    ledger = recordLead(ledger, { date: '2026-08-23', item: 'rep-b' })
+    ledger = recordLead(ledger, { date: '2026-08-24', item: 'wire' })
+    // Nothing is free now. The oldest lead is rep-a, so it comes back round
+    // rather than the page settling on the story that led last night.
+    expect(composeStories(items, { ledger, date: '2026-08-25' }).lead.id).toBe('rep-a')
+  })
+
+  it('never repeats the previous day across a fortnight of thin days', () => {
+    const dayAfter = n =>
+      new Date(new Date('2026-08-22T00:00:00Z').getTime() + n * 86400000).toISOString().slice(0, 10)
+    let ledger = EMPTY
+    const run = []
+    for (let n = 0; n < 14; n++) {
+      const date = dayAfter(n)
+      const { lead } = composeStories(items, { ledger, date })
+      run.push(lead.id)
+      ledger = recordLead(ledger, { date, item: lead.id })
+    }
+    expect(run).toHaveLength(14)
+    expect(run.every((id, i) => i === 0 || id !== run[i - 1])).toBe(true)
+  })
+})
+
 describe('pickNotable', () => {
   const papers = [
     { doi: '10.1/AAA', title: 'Deep brain stimulation in Parkinson disease', pctile: 0.99 },

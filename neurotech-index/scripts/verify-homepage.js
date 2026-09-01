@@ -48,7 +48,8 @@ import { dirname, join } from 'path'
 import { getNewsFeed } from '../src/lib/data.js'
 import { SLOTS, composeStories, shownKeys, pickNotable } from '../src/lib/homepage.js'
 import { assignImages, leadPicture, usableImage, storyPicture, canLead } from '../src/lib/image.js'
-import { ownerOf, lastLead, leadOn, keyOf, recentLeadIds, LEAD_MEMORY_DAYS } from '../src/lib/ledger.js'
+import { ownerOf, leadOn, keyOf, recentLeadIds, LEAD_MEMORY_DAYS } from '../src/lib/ledger.js'
+import { rankLead, isReputableSource } from '../src/lib/sources.js'
 import LEDGER from '../src/data/image-ledger.json'
 import REVIEW from '../src/data/image-review.json'
 
@@ -153,14 +154,25 @@ for (const s of misbound) console.log(`    ✗ picture belongs to another story:
 // site, AND a story that has not led inside the memory window. Nine
 // lead-worthy stories against a fortnight's memory is nine days of rotation.
 const usable = feed.filter(s => storyPicture(s, { ledger: LEDGER }))
-const leadable = usable.filter(canLead)
+// Ask rankLead, not canLead alone. These two disagreed, and the gap between
+// them is where the lead quietly stopped rotating: this printed "7 not used as
+// a lead in the last 14 days" on a night when the ordering chooseLead was
+// actually handed held four stories and every one of them was spent. A check
+// that measures a different pool from the one the page walks cannot see the
+// failure it exists to catch. rankLead no longer drops the rest of the list,
+// so the top tier is reported separately — it is the number that ran out.
+const leadable = rankLead(usable.filter(canLead))
+const reputableLeads = leadable.filter(isReputableSource)
 const spentLeads = recentLeadIds(LEDGER, new Date().toISOString().slice(0, 10))
-const freeLeads = leadable.filter(s => !spentLeads.has(s.id)).length
+const free = s => !spentLeads.has(s.id)
+const freeLeads = leadable.filter(free).length
+const freeReputable = reputableLeads.filter(free).length
 const headroom = usable.length - stories.length
 
 console.log('\nHeadroom\n')
 console.log(`  ${headroom > 0 ? '✓' : '!'} ${usable.length} stories carry a usable photograph, for ${stories.length} frames (spare: ${headroom})`)
 console.log(`  ${freeLeads > 3 ? '✓' : '!'} ${leadable.length} of them can lead, ${freeLeads} not used as a lead in the last ${LEAD_MEMORY_DAYS} days`)
+console.log(`  ${freeReputable > 0 ? '✓' : '!'} ${reputableLeads.length} clear the lead's source floor, ${freeReputable} of those unused`)
 
 // ── The lead ────────────────────────────────────────────────────────────────
 //
@@ -168,9 +180,20 @@ console.log(`  ${freeLeads > 3 ? '✓' : '!'} ${leadable.length} of them can lea
 // its own (chooseLead in src/lib/ledger.js), so a failure here means the
 // ledger stopped being written — which is exactly the silent failure worth an
 // alarm, since the page would go on showing one story indefinitely.
-const previous = lastLead(LEDGER)
-const todayEntry = leadOn(LEDGER, new Date().toISOString().slice(0, 10))
-const staleLead = Boolean(lead && previous && previous.item === lead.id && previous.date !== todayEntry?.date)
+const todayStr = new Date().toISOString().slice(0, 10)
+const todayEntry = leadOn(LEDGER, todayStr)
+// The last lead recorded on a day that is NOT today. Comparing against the
+// ledger's last entry full stop meant that once the run had written today's
+// entry the comparison was the entry against itself, and the guard bolted on
+// to notice that (`previous.date !== todayEntry.date`) skipped the check
+// entirely — so on the one day the alarm was needed it stayed silent. Ask the
+// question a reader would: is the story at the top the story that was at the
+// top the last day this page had one?
+const previous = [...(LEDGER.leads || [])]
+  .filter(l => String(l.date).slice(0, 10) !== todayStr)
+  .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+  .pop() || null
+const staleLead = Boolean(lead && previous && previous.item === lead.id)
 
 console.log('\nThe lead\n')
 console.log(`  today      ${lead ? String(lead.title).slice(0, 64) : '(the feed came back empty)'}`)

@@ -170,6 +170,22 @@ export function recordLead(ledger, { date, item, image = null, title = null }) {
 }
 
 /**
+ * When each of these stories last led, as a date string per id, with '' for a
+ * story that never has. Today's own entry is not history — it is the thing
+ * being decided — so it does not count.
+ */
+function lastLedById(ledger, list, date) {
+  const today = day(date)
+  const seen = new Map(list.map(c => [c.id, '']))
+  for (const l of ledger?.leads || []) {
+    const d = day(l.date)
+    if (d === today || !seen.has(l.item)) continue
+    if (d > seen.get(l.item)) seen.set(l.item, d)
+  }
+  return seen
+}
+
+/**
  * Choose the lead for a day from a list of candidates already in preference
  * order.
  *
@@ -178,9 +194,17 @@ export function recordLead(ledger, { date, item, image = null, title = null }) {
  * the feed re-sorts. Otherwise the first candidate that has not led recently
  * wins, which is what makes the lead change even on a day the job never ran.
  *
- * The last resort is the first candidate regardless of history: a page with a
- * repeated lead is worse than a page with no lead, but only just, and this is
- * only reached when every story on offer has led inside the fortnight.
+ * The last resort — every story on offer has led inside the fortnight — is the
+ * one that led LONGEST ago, not the first in the list. Taking the first was
+ * taking the highest-ranked, and the highest-ranked is the story that led
+ * yesterday, so the fallback re-elected the incumbent every single day and the
+ * page stopped moving. It did exactly that from 29 to 31 Aug 2026. Ties keep
+ * the caller's order, so among equally stale candidates the best one still
+ * wins.
+ *
+ * This is a floor, not the mechanism: with a healthy candidate pool it is
+ * never reached, and rankLead in lib/sources.js is what keeps the pool wide
+ * enough that it is not.
  */
 export function chooseLead(ledger, candidates, date) {
   const list = (candidates || []).filter(Boolean)
@@ -191,5 +215,8 @@ export function chooseLead(ledger, candidates, date) {
     if (found) return found
   }
   const banned = recentLeadIds(ledger, date)
-  return list.find(c => !banned.has(c.id)) || list[0]
+  const free = list.find(c => !banned.has(c.id))
+  if (free) return free
+  const led = lastLedById(ledger, list, date)
+  return list.reduce((best, c) => (led.get(c.id) < led.get(best.id) ? c : best), list[0])
 }
