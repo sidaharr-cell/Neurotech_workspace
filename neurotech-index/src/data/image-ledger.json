@@ -181,6 +181,12 @@
       "title": "This researcher’s development could inspire new and next-gen neuromod technologies",
       "url": "https://www.medicaldesignandoutsourcing.com/wp-content/uploads/2026/08/Stavros-Zanos.jpg",
       "at": "2026-09-03"
+    },
+    "static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png": {
+      "item": "272c28af-c80a-4509-971f-a33db51465a6",
+      "title": "Non - invasive focused ultrasound treatment stops Parkinson tremor",
+      "url": "https://static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png",
+      "at": "2026-09-04"
     }
   },
   "leads": [
@@ -255,6 +261,12 @@
       "item": "5b9ead71-86fa-49b3-a460-169c4d04b3a4",
       "image": "https://i.insider.com/6a5fa868ce52cb26b8391eac?&format=jpeg",
       "title": "Investors Are Valuing Elon Musk Neuralink at $42 Billion on Secondary Markets"
+    },
+    {
+      "date": "2026-09-04",
+      "item": "d489f376-0c75-4167-96c3-8490e9ae40f2",
+      "image": "https://assets.newatlas.com/dims4/default/a060c1b/2147483647/strip/true/crop/2512x1319+0+178/resize/1200x630!/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Fe7%2F6c%2Fe3a80a7c4df9af53777babc2799a%2Fett1.jpg&na.image_optimisation=0",
+      "title": "Wireless retinal implant approved for sale across 30 countries"
     }
   ]
 }
