@@ -2306,6 +2306,13 @@
       "title": null,
       "why": "unreviewed",
       "at": "2026-09-03"
+    },
+    {
+      "url": "https://static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png",
+      "item": null,
+      "title": null,
+      "why": "unreviewed",
+      "at": "2026-09-04"
     }
   ],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
