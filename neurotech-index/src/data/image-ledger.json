@@ -187,6 +187,24 @@
       "title": "Non - invasive focused ultrasound treatment stops Parkinson tremor",
       "url": "https://static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png",
       "at": "2026-09-04"
+    },
+    "d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg": {
+      "item": "c2eccd2f-d42a-4267-bf5f-11a86ddefd3f",
+      "title": "Nearly Everyone in a Paralysis Survey Would Accept a Brain Implant for One Rarely Discussed Function",
+      "url": "https://d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg",
+      "at": "2026-09-05"
+    },
+    "cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg": {
+      "item": "ab3d65f2-ea19-44b1-a96d-0fb241e029e1",
+      "title": "Brain tech push gains pace as China draws up standards and firms challenge Neuralink",
+      "url": "https://cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg?itok=Ifh9UZnP&v=1787725199",
+      "at": "2026-09-05"
+    },
+    "news.kaist.ac.kr/_prog/download": {
+      "item": "aff6475d-0a87-4839-837d-bd9696657e0f",
+      "title": "US - Controlled Neural Implant in Korea Advances IoT Brain Research",
+      "url": "https://news.kaist.ac.kr/_prog/download/?editor_image=/images/000139/people_3.jpg",
+      "at": "2026-09-05"
     }
   },
   "leads": [
@@ -267,6 +285,12 @@
       "item": "d489f376-0c75-4167-96c3-8490e9ae40f2",
       "image": "https://assets.newatlas.com/dims4/default/a060c1b/2147483647/strip/true/crop/2512x1319+0+178/resize/1200x630!/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Fe7%2F6c%2Fe3a80a7c4df9af53777babc2799a%2Fett1.jpg&na.image_optimisation=0",
       "title": "Wireless retinal implant approved for sale across 30 countries"
+    },
+    {
+      "date": "2026-09-05",
+      "item": "26467ec4-a245-4ca7-a3c5-4369a1e8573a",
+      "image": "https://d.ibtimes.co.uk/en/full/1825376/khalil-ismail.jpg",
+      "title": "Khalil Ismail Bet : Neural Interfaces Will Become Objects of Desire"
     }
   ]
 }

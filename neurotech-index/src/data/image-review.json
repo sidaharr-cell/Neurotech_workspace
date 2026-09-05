@@ -2313,6 +2313,27 @@
       "title": null,
       "why": "unreviewed",
       "at": "2026-09-04"
+    },
+    {
+      "url": "https://cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg?itok=Ifh9UZnP&v=1787725199",
+      "item": null,
+      "title": null,
+      "why": "unreviewed",
+      "at": "2026-09-05"
+    },
+    {
+      "url": "https://news.kaist.ac.kr/_prog/download/?editor_image=/images/000139/people_3.jpg",
+      "item": null,
+      "title": null,
+      "why": "unreviewed",
+      "at": "2026-09-05"
+    },
+    {
+      "url": "https://d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg",
+      "item": null,
+      "title": null,
+      "why": "unreviewed",
+      "at": "2026-09-05"
     }
   ],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
