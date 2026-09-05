@@ -83,7 +83,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 2000,
     "image_h": 2898,
-    "image_checked_at": "2026-09-04T11:53:24.490Z",
+    "image_checked_at": "2026-09-05T11:09:35.937Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -122,7 +122,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 2000,
     "image_h": 1333,
-    "image_checked_at": "2026-09-04T11:53:25.002Z",
+    "image_checked_at": "2026-09-05T11:09:36.708Z",
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -160,7 +160,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 2000,
     "image_h": 732,
-    "image_checked_at": "2026-09-04T11:53:24.831Z",
+    "image_checked_at": "2026-09-05T11:09:36.403Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -224,7 +224,7 @@
     "fwci": 13.9169,
     "citedBy": 2,
     "relevance": 7,
-    "significance": "As brain-computer interfaces move toward clinical deployment in stroke and spinal cord injury populations, understanding the perspectives and concerns of patients and medical teams is essential for design and implementation. This perception study directly informs how BCI systems should be presented, refined, and integrated into surgical practice to maximize acceptance and utility. For neurotechnology developers and clinicians, this bridges the gap between technical capability and real-world clinical adoption of implanted systems."
+    "significance": "This work investigates patient acceptance and expectations around implanted brain-computer interfaces as a therapeutic option for stroke and spinal cord injury survivors. Understanding patient perception is essential for neurotech developers designing invasive systems, as device adoption and long-term compliance depend on realistic patient expectations, informed consent, and alignment between engineering capabilities and patient needs. The study bridges the gap between technical feasibility and real-world deployment by examining the human factors that shape BCI clinical translation."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",
