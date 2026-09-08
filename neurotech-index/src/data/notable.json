@@ -83,7 +83,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Typical_deep_brain_stimulation_setup.jpg",
     "image_w": 2000,
     "image_h": 2898,
-    "image_checked_at": "2026-09-07T13:10:07.182Z",
+    "image_checked_at": "2026-09-08T11:50:29.313Z",
     "title": "Deep brain stimulation induces white matter remodeling and functional changes to brain-wide networks.",
     "authors": [
       "Satoka H Fujimoto",
@@ -106,9 +106,9 @@
     "doi": "10.1038/s41593-026-02301-4",
     "url": "https://doi.org/10.1038/s41593-026-02301-4",
     "publishedAt": "2026-06-01",
-    "pctile": 0.99449253,
-    "fwci": 26.5394,
-    "citedBy": 13,
+    "pctile": 0.99584697,
+    "fwci": 28.8936,
+    "citedBy": 14,
     "relevance": 8,
     "significance": "This study reveals how DBS mechanically remodels white matter and reorganizes brain networks, providing crucial biological mechanisms explaining why this treatment alleviates depression."
   },
@@ -122,7 +122,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_The_Modular_Prosthetic_Limb_(MPL)..jpg",
     "image_w": 2000,
     "image_h": 1333,
-    "image_checked_at": "2026-09-07T13:10:08.073Z",
+    "image_checked_at": "2026-09-08T11:50:30.197Z",
     "title": "Long-term independent use of an intracortical brain-computer interface for speech and cursor control.",
     "authors": [
       "Nicholas S Card",
@@ -160,7 +160,7 @@
     "image_source_url": "https://commons.wikimedia.org/wiki/File:Patch_rig.png",
     "image_w": 2000,
     "image_h": 732,
-    "image_checked_at": "2026-09-07T13:10:07.660Z",
+    "image_checked_at": "2026-09-08T11:50:29.901Z",
     "title": "Neuropixels Opto: combining high-resolution electrophysiology and optogenetics.",
     "authors": [
       "Anna A Lakunina",
@@ -224,7 +224,7 @@
     "fwci": 13.9169,
     "citedBy": 2,
     "relevance": 7,
-    "significance": "Stroke and spinal cord injury cause severe motor and sensory deficits, and brain-computer interfaces offer a potential bypass to restore function; however, invasive BCI systems require neurosurgical implantation, which carries risks and must be accepted by patients and clinicians. This study gathers crucial human factors data about surgery perceptions to guide how neurotechnology companies and clinical teams present and deploy ECoG-based BCIs in real-world contexts. Understanding patient and provider acceptance is essential for translating experimental BCI systems into widespread clinical adoption."
+    "significance": "Stroke and spinal cord injury cause persistent motor and sensory loss; invasive ECoG-based BCIs offer a potential bypass to restore lost function. This study examines how patients perceive the risks and benefits of BCI implant surgery, gathering insights that inform device development and clinical translation strategy. Understanding patient acceptance is essential for neurotechnology practitioners designing implantable systems and planning clinical trials, as it shapes recruitment, adoption, and real-world deployment."
   },
   {
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Basic_outpatient_TMS_setup_%28cropped%29.jpg/1280px-Basic_outpatient_TMS_setup_%28cropped%29.jpg",

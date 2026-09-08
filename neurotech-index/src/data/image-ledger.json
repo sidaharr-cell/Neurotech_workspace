@@ -205,6 +205,18 @@
       "title": "US - Controlled Neural Implant in Korea Advances IoT Brain Research",
       "url": "https://news.kaist.ac.kr/_prog/download/?editor_image=/images/000139/people_3.jpg",
       "at": "2026-09-05"
+    },
+    "news.ki.se/sites/nyheter/files/qbank/socialmediaumhiiiworkshoponsciencecommunication%283%29_custom20260824154905.webp": {
+      "item": "2d4cb4f7-d326-44f8-9f4c-b3ad6f671644",
+      "title": "NeurotechEU Hackathon : FNIRS , EEG Wearables Unveiled",
+      "url": "https://news.ki.se/sites/nyheter/files/qbank/SocialMediaUMHIIIWorkshoponScienceCommunication%283%29_custom20260824154905.webp",
+      "at": "2026-09-08"
+    },
+    "assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90": {
+      "item": "7408d247-e8a8-49be-a2ca-a1311230cf37",
+      "title": "Brain wave-tracking wearable promises to detect your level of focus",
+      "url": "https://assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg",
+      "at": "2026-09-08"
     }
   },
   "leads": [
@@ -303,6 +315,12 @@
       "item": "c2eccd2f-d42a-4267-bf5f-11a86ddefd3f",
       "image": "https://d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg",
       "title": "Nearly Everyone in a Paralysis Survey Would Accept a Brain Implant for One Rarely Discussed Function"
+    },
+    {
+      "date": "2026-09-08",
+      "item": "2d4cb4f7-d326-44f8-9f4c-b3ad6f671644",
+      "image": "https://news.ki.se/sites/nyheter/files/qbank/SocialMediaUMHIIIWorkshoponScienceCommunication%283%29_custom20260824154905.webp",
+      "title": "NeurotechEU Hackathon : FNIRS , EEG Wearables Unveiled"
     }
   ]
 }
