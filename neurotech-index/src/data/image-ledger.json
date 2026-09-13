@@ -217,6 +217,12 @@
       "title": "Brain wave-tracking wearable promises to detect your level of focus",
       "url": "https://assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg",
       "at": "2026-09-08"
+    },
+    "sciencealert.com/images/2026/09/brainimplantchip.jpg": {
+      "item": "59f7241f-9a85-4da8-bb71-87a687c55f97",
+      "title": "A Brain Implant in Korea Was Just Controlled From The US",
+      "url": "https://www.sciencealert.com/images/2026/09/BrainImplantChip.jpg",
+      "at": "2026-09-13"
     }
   },
   "leads": [
@@ -345,6 +351,12 @@
       "item": "1a12181f-b425-4e85-a50b-5b92db0693df",
       "image": "https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202608/mit-picower-Axonsinferno.jpg?itok=y8K7Oxeh",
       "title": "Brain circuit keeps tabs on what just happened to aid judgment of what’s happening now"
+    },
+    {
+      "date": "2026-09-13",
+      "item": "59f7241f-9a85-4da8-bb71-87a687c55f97",
+      "image": "https://www.sciencealert.com/images/2026/09/BrainImplantChip.jpg",
+      "title": "A Brain Implant in Korea Was Just Controlled From The US"
     }
   ]
 }
