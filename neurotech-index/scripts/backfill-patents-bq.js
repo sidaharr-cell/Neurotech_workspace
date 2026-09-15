@@ -18,6 +18,7 @@
 import { BigQuery } from '@google-cloud/bigquery'
 import { createClient } from '@supabase/supabase-js'
 import { NEUROTECH_CPC, patentTags } from './backfill-patents.js'
+import { stripTags } from './lib/entities.js'
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 const fmtDate = n => {
@@ -51,17 +52,22 @@ async function main() {
 
   const patents = rows
     .filter(r => r.publication_number && r.title)
-    .map(r => ({
-      patent_number: r.publication_number,
-      title: r.title,
-      abstract: null,
-      assignee: r.assignee || null,
-      grant_date: fmtDate(r.grant_date),
-      cpc_codes: r.cpc_codes || [],
-      tags: patentTags(r.title, r.cpc_codes || []),
-      url: `https://patents.google.com/patent/${r.publication_number}`,
-      source: 'bigquery',
-    }))
+    .map(r => {
+      // BigQuery titles carry HTML entities (&#39; &#34; …); decode once so the
+      // stored title and the tags derived from it see the same text.
+      const title = stripTags(r.title)
+      return {
+        patent_number: r.publication_number,
+        title,
+        abstract: null,
+        assignee: r.assignee || null,
+        grant_date: fmtDate(r.grant_date),
+        cpc_codes: r.cpc_codes || [],
+        tags: patentTags(title, r.cpc_codes || []),
+        url: `https://patents.google.com/patent/${r.publication_number}`,
+        source: 'bigquery',
+      }
+    })
 
   console.log(`Upserting ${patents.length} patents...`)
   let upserted = 0

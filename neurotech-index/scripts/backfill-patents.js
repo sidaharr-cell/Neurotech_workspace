@@ -12,6 +12,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { DEVICE_CLASSES } from '../src/lib/taxonomy.js'
 import { classify } from '../src/lib/classify.js'
+import { stripTags } from './lib/entities.js'
 
 const API = 'https://search.patentsview.org/api/v1/patent/'
 const KEY = process.env.PATENTSVIEW_API_KEY
@@ -114,14 +115,18 @@ function toRow(p) {
   const num = p.patent_id
   const assignee = p.assignees?.[0]?.assignee_organization || null
   const cpc = (p.cpc_current || []).map(c => c.cpc_subgroup_id).filter(Boolean)
+  // Source text carries HTML entities (&#39; &#34; …); decode once so the stored
+  // title, the tags derived from it, and the classifier all see the same text.
+  const title = stripTags(p.patent_title) || '(untitled)'
+  const abstract = stripTags(p.patent_abstract) || null
   const row = {
     patent_number: num,
-    title: p.patent_title || '(untitled)',
-    abstract: p.patent_abstract || null,
+    title,
+    abstract,
     assignee,
     grant_date: p.patent_date || null,
     cpc_codes: [...new Set(cpc)],
-    tags: patentTags(`${p.patent_title} ${p.patent_abstract}`, cpc),
+    tags: patentTags(`${title} ${abstract || ''}`, cpc),
     url: `https://patents.google.com/patent/${num}`,
     source: 'patentsview',
   }
