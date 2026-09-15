@@ -223,6 +223,12 @@
       "title": "A Brain Implant in Korea Was Just Controlled From The US",
       "url": "https://www.sciencealert.com/images/2026/09/BrainImplantChip.jpg",
       "at": "2026-09-13"
+    },
+    "media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/new-headset-to-cure-depression-science-flow29472(2).jpg": {
+      "item": "a1b8e103-0ae6-4c4a-8f7f-caed2f231d3b",
+      "title": "A New Headset to Help With Depression Is Now Available in the US",
+      "url": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
+      "at": "2026-09-15"
     }
   },
   "leads": [
@@ -363,6 +369,12 @@
       "item": "7408d247-e8a8-49be-a2ca-a1311230cf37",
       "image": "https://assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg",
       "title": "Brain wave-tracking wearable promises to detect your level of focus"
+    },
+    {
+      "date": "2026-09-15",
+      "item": "a1b8e103-0ae6-4c4a-8f7f-caed2f231d3b",
+      "image": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
+      "title": "A New Headset to Help With Depression Is Now Available in the US"
     }
   ]
 }
