@@ -29,6 +29,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import { createClient } from '@supabase/supabase-js'
+import { stripTags } from './lib/entities.js'
 import Anthropic from '@anthropic-ai/sdk'
 
 const __dir = dirname(fileURLToPath(import.meta.url))
@@ -62,7 +63,7 @@ const isDistinctive = name => name.split(/\s+/).some(t => { const w = t.toLowerC
 const searchable = n => n.replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim().length >= 4
 
 const tag = (block, t) => block.match(new RegExp(`<${t}[^>]*>([\\s\\S]*?)</${t}>`))?.[1]
-const strip = s => (s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+const strip = s => stripTags(s)
 
 // Stage 1 — candidates genuinely affiliated with the company (org-verified).
 async function candidates(name, { city, host }) {
