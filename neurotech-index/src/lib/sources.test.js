@@ -86,11 +86,37 @@ describe('isReputableSource', () => {
     expect(isReputableSource({ entry_type: 'news', source: 'ScienceDaily' })).toBe(false)
     expect(isReputableSource(null)).toBe(false)
   })
+
+  // Added 16 Sep 2026. The general-interest outlets cover the field; these are
+  // the ones that cover it with a photograph, and without them the floor
+  // admitted none of the five stories that could actually lead.
+  it('accepts the trade and science desks that shoot their own pictures', () => {
+    for (const source of ['New Atlas', 'Medical Xpress', 'ScienceAlert', 'NeuroNews']) {
+      expect(isReputableSource({ entry_type: 'news', source })).toBe(true)
+    }
+  })
+
+  // `source` is the feed's label on a curated row and the bare host on others,
+  // so the same outlet must not clear the floor only when ingested one way.
+  it('recognises an outlet by its host as well as by its label', () => {
+    expect(isReputableSource({ entry_type: 'news', source: 'newatlas.com' })).toBe(true)
+    expect(isReputableSource({ entry_type: 'news', source: 'medicalxpress.com' })).toBe(true)
+    expect(isReputableSource({ entry_type: 'news', source: 'sciencealert.com' })).toBe(true)
+    expect(isReputableSource({ entry_type: 'news', source: 'neuronewsinternational.com' })).toBe(true)
+  })
+
+  // The floor still keeps a press release off the top of the page; that is the
+  // thing it was written for, and widening it for trade desks must not blur it.
+  it('still refuses the wires and the verbatim republishers', () => {
+    for (const source of ['PR Newswire', 'prnewswire.com', 'GlobeNewswire', 'Business Wire', 'ScienceDaily', 'sciencedaily.com']) {
+      expect(isReputableSource({ entry_type: 'news', source })).toBe(false)
+    }
+  })
 })
 
 describe('hasRealImage', () => {
   const shot = (over = {}) =>
-    ({ metadata: { image: 'a.jpg', imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
+    ({ metadata: { image: 'a.jpg', imageKind: 'photo', imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
 
   it('is true for a photograph of the record, big enough for the frame', () => {
     expect(hasRealImage(shot())).toBe(true)

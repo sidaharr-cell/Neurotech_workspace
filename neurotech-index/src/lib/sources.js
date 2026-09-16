@@ -8,10 +8,43 @@ import { storyImage } from './image'
 
 // Quality news outlets fit to headline the homepage. Journals are handled by
 // entry_type, so this is only the news allow-list.
+//
+// The general-interest half of this list is where the field is COVERED; the
+// trade half is where it is covered WITH A PHOTOGRAPH, and until 16 Sep 2026
+// only the first half was here. Measured that day: of five stories carrying a
+// lead-worthy photograph of their own, ZERO cleared this floor — so the floor
+// admitted nothing, `rankLead`'s reputable tier was empty every night, and the
+// lead came from the fallback tier unconditionally. A floor that never admits
+// anything is not a standard, it is a warning that fires daily, and it was
+// losing the lead to a PR Newswire item while a New Atlas report on a retinal
+// implant approval sat below it in the same list.
+//
+// So the four desks that actually cover neurotechnology and shoot or commission
+// their own pictures are in. The line is unchanged in kind — a press RELEASE
+// still cannot lead, and prnewswire, globenewswire and businesswire are still
+// nowhere near this list. What moved is the recognition that a trade title with
+// an editor is not a wire.
+//
+// **ScienceDaily is still out, and the distinction is worth keeping straight**,
+// because Medical Xpress belongs to the same Science X network and it is easy to
+// read this as the rule bending. ScienceDaily republishes an institution's
+// release verbatim under its own masthead and illustrates it with stock; Medical
+// Xpress selects, edits and carries the institution's own photograph, which is
+// what the 16 Sep lead ran (Western University's photograph of the researcher,
+// reviewed and approved). If Medical Xpress ever starts arriving as unedited
+// wire copy, it comes back out — the test is the picture and the byline, not the
+// domain.
 const REPUTABLE_NEWS = [
   'stat', 'mit news', 'mit technology review', 'the transmitter', 'new scientist',
   'ieee spectrum', 'scientific american', 'new york times', 'reuters', 'associated press',
   'npr', 'the guardian', 'the economist', 'wired', 'quanta', 'nature news',
+  // The trade and science desks that cover this field with their own pictures.
+  // Both spellings of each: `source` is the feed's label ("New Atlas") on a row
+  // that came from a curated feed and the bare host ("newatlas.com") on one that
+  // arrived another way, and a floor that only matched one of them would let the
+  // same outlet in or out depending on how it was ingested.
+  'new atlas', 'newatlas', 'medical xpress', 'medicalxpress',
+  'sciencealert', 'science alert', 'neuronews',
 ]
 
 /** True if this item's source is reputable enough to be the lead story. */

@@ -144,13 +144,20 @@ const feed = [...top, ...sorted.slice(LIMIT_ROWS).filter(r => !inTop.has(r) && p
 /**
  * Would the PAGE run this row's stored picture?
  *
- * Everything holds() asks except the review. This is the predicate getNewsFeed
- * appends its photograph tail with (hasRealImage in src/lib/sources.js), so it
- * is what decides whether a story below the rank cut appears at all — and it
- * has to be asked here separately, because using holds() for the tail excluded
- * precisely the rows that needed clearing. A story whose picture had been
- * reviewed and REJECTED still reached the page on the strength of that
- * picture, and this script could not see it to clear it.
+ * Everything holds() asks except the review, which is what decides whether a
+ * story below the rank cut is worth looking at here at all. It has to be asked
+ * separately from holds(), because using holds() excluded precisely the rows
+ * that needed clearing: a story whose picture had been reviewed and REJECTED
+ * still reached the page on the strength of that picture, and this script could
+ * not see it to clear it.
+ *
+ * It is deliberately WIDER than the page. It used to be the same question
+ * getNewsFeed's photograph tail asks (hasRealImage in src/lib/sources.js), and
+ * since 16 Sep 2026 it is not: usableImage now drops a picture with no verdict
+ * (kindOf in src/lib/image.js), so the page's tail no longer carries unreviewed
+ * rows. This one still must, or the rows with an unreviewed stored picture would
+ * fall out of the pool before holds() could queue them — which is the same trap,
+ * one gate further along.
  */
 function pageWouldShow(row) {
   const m = row.metadata || {}

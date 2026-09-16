@@ -37,6 +37,36 @@ import { isFree, keyOf } from './ledger'
 const KIND = { real: 'photo' }
 
 /**
+ * The kind recorded against a stored picture — and what a MISSING one means.
+ *
+ * `null` here is not an absent field, it is a verdict. `classifyImageUrl` in
+ * scripts/refresh.js (and the same call in scripts/backfill-news.js) writes the
+ * kind as null exactly when `src/data/image-review.json` holds no ruling on the
+ * file, and queues it for the reviewer; its own comment says the page reads that
+ * as no picture. The page did not. This read `KIND[kind] || kind || 'photo'`, so
+ * a null fell through two falsy branches and came out as a photograph, and the
+ * one invariant the whole picture pipeline rests on — unreviewed means no — held
+ * everywhere in `scripts/` and nowhere a reader could see.
+ *
+ * What it cost, measured 16 Sep 2026: of the thirteen stories eligible to lead
+ * the front page, SEVEN carried a picture nobody had looked at, and all seven had
+ * led inside the fortnight. Among them were a conference flyer with a QR code and
+ * a sponsor bar, a publisher's social card with its masthead burned into the
+ * corner, and an agency file photograph of a rehabilitation session standing in
+ * for a story about an opinion survey. Each had been fetched, stored, queued, and
+ * published in the same night.
+ *
+ * So a picture with no recorded kind is `unreviewed`, which `usableImage` rejects
+ * alongside 'stock' and 'motif'. Every path that stores a picture after a verdict
+ * writes a concrete kind — 'photo' in source-story-images.js and
+ * apply-card-images.js, the resolver's own kind in backfill-images.js — so this
+ * costs nothing but the pictures it is meant to cost. 'real' is the pipeline's
+ * first vocabulary and still maps to 'photo'; that is a legacy spelling of a
+ * verdict, not the absence of one.
+ */
+const kindOf = raw => (raw ? KIND[raw] || raw : 'unreviewed')
+
+/**
  * How a picture should sit in its frame: filling it, or shown whole.
  *
  * Every photograph fills its frame. A picture shown whole inside a landscape
@@ -78,7 +108,7 @@ export function imageOf(entity) {
   if (m.image) {
     return {
       url: m.image,
-      kind: KIND[m.imageKind] || m.imageKind || 'photo',
+      kind: kindOf(m.imageKind),
       subject: m.imageSubject || 'item',
       credit: m.imageCredit || null,
       license: m.imageLicense || null,
@@ -92,7 +122,7 @@ export function imageOf(entity) {
   if (entity.image_url) {
     return {
       url: entity.image_url,
-      kind: entity.image_kind || 'photo',
+      kind: kindOf(entity.image_kind),
       subject: entity.image_subject || 'item',
       credit: entity.image_credit || null,
       license: entity.image_license || null,
@@ -120,7 +150,11 @@ export function usableImage(entity, { own = false } = {}) {
   // on "a picture is a photograph somebody took, or it is a figure of the
   // record's own numbers". Neither is a picture, and a row carrying either
   // shows its data figure.
-  if (!img || img.kind === 'stock' || img.kind === 'motif') return null
+  // 'unreviewed' is a picture with no verdict in image-review.json — see kindOf.
+  // It is rejected here rather than at imageOf so the record still reports what
+  // it is holding (CompanyPage reads imageOf directly, and a debugging session
+  // wants to see the URL that is being withheld, not an empty block).
+  if (!img || img.kind === 'stock' || img.kind === 'motif' || img.kind === 'unreviewed') return null
   // A logo is a mark, not a picture. It says nothing about what a company
   // builds or what a story is about, and a page of them reads as a directory.
   // Records whose only image is a mark show their data figure instead.
