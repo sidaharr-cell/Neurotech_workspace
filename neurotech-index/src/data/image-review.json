@@ -2290,121 +2290,273 @@
       "box": null,
       "note": "A US Navy stock photograph of the Modular Prosthetic Limb on a desk, via Wikimedia Commons: real, single and safe, but a generic picture of a robotic arm rather than this paper's own figure, and the paper is about speech and cursor control, not a prosthetic limb.",
       "at": "2026-09-01"
+    },
+    "medicaldesignandoutsourcing.com/wp-content/uploads/2026/08/stavros-zanos.jpg": {
+      "url": "https://www.medicaldesignandoutsourcing.com/wp-content/uploads/2026/08/Stavros-Zanos.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.17,
+        "top": 0.02,
+        "right": 0.74,
+        "bottom": 1
+      },
+      "note": "Researcher portrait in his own lab, oscilloscopes and bench behind him; the story is about this researcher.",
+      "at": "2026-09-16"
+    },
+    "static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png": {
+      "url": "https://static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.05,
+        "top": 0.14,
+        "right": 0.92,
+        "bottom": 1
+      },
+      "note": "Clinician and patient after the focused-ultrasound procedure this story reports. Frame grab but clean — no chyron, logo or advert, only a 2px artefact on the top edge.",
+      "at": "2026-09-16"
+    },
+    "cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg": {
+      "url": "https://cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg?itok=Ifh9UZnP&v=1787725199",
+      "photo": true,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "REJECT: a South China Morning Post social card — the masthead bar is burned into the lower left. The photograph under it is on topic; the branding is not ours to run.",
+      "at": "2026-09-16"
+    },
+    "news.kaist.ac.kr/_prog/download": {
+      "url": "https://news.kaist.ac.kr/_prog/download/?editor_image=/images/000139/people_3.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.1,
+        "top": 0.33,
+        "right": 0.93,
+        "bottom": 0.97
+      },
+      "note": "The KAIST group behind this study, with their own graphical abstract on the laptop.",
+      "at": "2026-09-16"
+    },
+    "d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg": {
+      "url": "https://d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT on depicts: an AFP/Getty file photograph of a BCI rehabilitation session, used as wire art for a story about a paralysis ATTITUDES SURVEY. The man pictured is not a survey subject; beside that headline the picture claims he is.",
+      "at": "2026-09-16"
+    },
+    "assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90": {
+      "url": "https://assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.35,
+        "top": 0,
+        "right": 1,
+        "bottom": 0.95
+      },
+      "note": "The Atlas earpiece worn behind the ear — the device this story is about.",
+      "at": "2026-09-16"
+    },
+    "images.theconversation.com/files/757692/original/file-20260903-50-23psfd.jpg": {
+      "url": "https://images.theconversation.com/files/757692/original/file-20260903-50-23psfd.jpg?ixlib=rb-4.1.1&rect=0%2C0%2C6007%2C3003&q=45&auto=format&fit=crop",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.11,
+        "top": 0.08,
+        "right": 0.64,
+        "bottom": 1
+      },
+      "note": "A hand holding an endovascular stent-electrode: the outlet’s own lead photograph for its piece on brain implants and their security.",
+      "at": "2026-09-16"
+    },
+    "news.ki.se/sites/nyheter/files/qbank/socialmediaumhiiiworkshoponsciencecommunication%283%29_custom20260824154905.webp": {
+      "url": "https://news.ki.se/sites/nyheter/files/qbank/SocialMediaUMHIIIWorkshoponScienceCommunication%283%29_custom20260824154905.webp",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "REJECT: an event flyer, not a photograph — title set over the image, a QR code, dates, and a sponsor bar (EU, Radboud, artinis, NIRx).",
+      "at": "2026-09-16"
+    },
+    "storage.imrpress.com/jin/2092588507986714624/6/1757-448x-25-8-52601/fig1.jpg": {
+      "url": "https://storage.imrpress.com/JIN/2092588507986714624/6/1757-448X-25-8-52601/fig1.jpg?x-oss-process=image/resize,w_600",
+      "photo": false,
+      "single": false,
+      "safe": false,
+      "depicts": true,
+      "box": null,
+      "note": "REJECT: a four-panel figure (A-D) with a keyed legend; panels B and D show exposed cortex through a cranial window.",
+      "at": "2026-09-16"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/brain-implants.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/brain-implants.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: a 3D render of a stylised brain on a studio background. Not a photograph and not of this story.",
+      "at": "2026-09-16"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/b06310ac-9c74-4d95-a83f6460bfcf85c8/6780bcdf-cfd2-4b7e-9db31786215f5bf3/websitewebp_xl-fnsys_main%20visual_purple_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/B06310AC-9C74-4D95-A83F6460BFCF85C8/6780BCDF-CFD2-4B7E-9DB31786215F5BF3/WebsiteWebP_XL-FNSYS_Main%20Visual_Purple_Website.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: Frontiers in Systems Neuroscience masthead art — a 3D neuron render the journal runs on every article.",
+      "at": "2026-09-16"
+    },
+    "sciencealert.com/images/2026/09/brainimplantchip.jpg": {
+      "url": "https://www.sciencealert.com/images/2026/09/BrainImplantChip.jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.36,
+        "top": 0.12,
+        "right": 0.7,
+        "bottom": 0.9
+      },
+      "note": "The implantable optoelectronic device from this story, lit, photographed on the bench.",
+      "at": "2026-09-16"
+    },
+    "khaama.com/wp-content/uploads/2026/08/nuerulink-musk.jpg": {
+      "url": "https://www.khaama.com/wp-content/uploads/2026/08/Nuerulink-mUsk.jpg",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: a generated illustration of a brain with a chip on a dish. Not a photograph; nothing to do with the trial announced.",
+      "at": "2026-09-16"
+    },
+    "media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/new-headset-to-cure-depression-science-flow29472(2).jpg": {
+      "url": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.15,
+        "top": 0.28,
+        "right": 0.73,
+        "bottom": 1
+      },
+      "note": "WIRED’s own studio photograph of the Flow headset being worn — the device this story is about.",
+      "at": "2026-09-16"
+    },
+    "media.wired.com/photos/6aa8633c181b95a3e876fad6/191:100/w_1280,c_limit/new-headset-to-cure-depression-science-flow29472(2).jpg": {
+      "url": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/191:100/w_1280,c_limit/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.19,
+        "top": 0.03,
+        "right": 0.72,
+        "bottom": 1
+      },
+      "note": "The same WIRED headset photograph at the outlet’s 191:100 crop.",
+      "at": "2026-09-16"
+    },
+    "jneurosci.org/sites/default/files/highwire/jneuro/46/36.cover-source.jpg": {
+      "url": "https://www.jneurosci.org/sites/default/files/highwire/jneuro/46/36.cover-source.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: a JNeurosci issue cover — masthead, volume line and Society for Neuroscience logo. Not this paper’s figure.",
+      "at": "2026-09-16"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/72f1f27c-5965-4a63-b4626b9488482d47/628582bd-7152-437f-9895d1eeb514958e/websitewebp_xl-fpain_main%20visual_orange_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/72F1F27C-5965-4A63-B4626B9488482D47/628582BD-7152-437F-9895D1EEB514958E/WebsiteWebP_XL-FPAIN_Main%20Visual_Orange_Website.webp",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT on depicts: Frontiers in Pain Research masthead art — a stock photograph of someone holding their neck with a red pain glow. Not the study.",
+      "at": "2026-09-16"
+    },
+    "scx2.b-cdn.net/gfx/news/hires/2026/how-can-focused-ultras.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/how-can-focused-ultras.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: a photo-illustration — cut-out stock models on a designed background with an annotated MRI inset composited in.",
+      "at": "2026-09-16"
+    },
+    "scx2.b-cdn.net/gfx/news/2026/novel-drug-releasing-e.jpg": {
+      "url": "https://scx2.b-cdn.net/gfx/news/2026/novel-drug-releasing-e.jpg",
+      "photo": false,
+      "single": false,
+      "safe": true,
+      "depicts": true,
+      "box": null,
+      "note": "REJECT: the paper’s graphical abstract — anatomical schematic, labelled callouts, inset micrographs and plots.",
+      "at": "2026-09-16"
+    },
+    "d2csxpduxe849s.cloudfront.net/media/e32629c6-9347-4f84-81feaef7bfa342b3/6aabbf14-f784-4d3a-922aaf7c5c78eeb0/29c4e326-3de9-44fe-bcb33242f26a4bc3/websitewebp_xl-fpsyt_main%20visual_purple_website.webp": {
+      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/6AABBF14-F784-4D3A-922AAF7C5C78EEB0/29C4E326-3DE9-44FE-BCB33242F26A4BC3/WebsiteWebP_XL-FPSYT_Main%20Visual_Purple_Website.webp",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: Frontiers in Psychiatry masthead art — a tractography-style render inside a glass head.",
+      "at": "2026-09-16"
+    },
+    "assets.newatlas.com/dims4/default/177d33e/2147483647/strip/true/crop/2000x1050+0+142/resize/1200x630!/quality/90": {
+      "url": "https://assets.newatlas.com/dims4/default/177d33e/2147483647/strip/true/crop/2000x1050+0+142/resize/1200x630!/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg&na.image_optimisation=0",
+      "photo": true,
+      "single": true,
+      "safe": true,
+      "depicts": true,
+      "box": {
+        "left": 0.38,
+        "top": 0,
+        "right": 1,
+        "bottom": 1
+      },
+      "note": "The same New Atlas photograph of the Atlas earpiece at the outlet’s 1200x630 crop.",
+      "at": "2026-09-16"
+    },
+    "empatica.com/assets/images/favicons/favicon.png": {
+      "url": "https://www.empatica.com/assets/images/favicons/favicon.png",
+      "photo": false,
+      "single": true,
+      "safe": true,
+      "depicts": false,
+      "box": null,
+      "note": "REJECT: Empatica’s favicon — a logo mark, not a picture of anything.",
+      "at": "2026-09-16"
     }
   },
-  "pending": [
-    {
-      "url": "https://www.empatica.com/assets/images/favicons/favicon.png",
-      "item": null,
-      "title": "Empatica",
-      "why": "where is the subject",
-      "at": "2026-09-02"
-    },
-    {
-      "url": "https://www.medicaldesignandoutsourcing.com/wp-content/uploads/2026/08/Stavros-Zanos.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-03"
-    },
-    {
-      "url": "https://static.foxnews.com/foxnews.com/content/uploads/2026/08/notremors.png",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-04"
-    },
-    {
-      "url": "https://cdn.i-scmp.com/sites/default/files/styles/og_image_scmp_generic/public/d8/images/canvas/2026/08/26/c4b18dc4-8900-4d54-a2dc-e9878543cc1d_de49f8db.jpg?itok=Ifh9UZnP&v=1787725199",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-05"
-    },
-    {
-      "url": "https://news.kaist.ac.kr/_prog/download/?editor_image=/images/000139/people_3.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-05"
-    },
-    {
-      "url": "https://d.medicaldaily.com/en/full/485029/fabrice-coffrini-afp-via-getty-images.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-05"
-    },
-    {
-      "url": "https://assets.newatlas.com/dims4/default/f0ea61f/2147483647/strip/true/crop/2000x1333+0+0/resize/1440x960!/format/webp/quality/90/?url=https%3A%2F%2Fnewatlas-brightspot.s3.ap-southeast-2.amazonaws.com%2Ff3%2F4b%2F259263d645818b25cd61fe32c40c%2Fthe-atlas-combines-an-eeg-imu-and-other-sensors-to-record-brain-waves-throughout-your-day-to-detect-when-youre-truly-focused.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-08"
-    },
-    {
-      "url": "https://images.theconversation.com/files/757692/original/file-20260903-50-23psfd.jpg?ixlib=rb-4.1.1&rect=0%2C0%2C6007%2C3003&q=45&auto=format&fit=crop",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-08"
-    },
-    {
-      "url": "https://news.ki.se/sites/nyheter/files/qbank/SocialMediaUMHIIIWorkshoponScienceCommunication%283%29_custom20260824154905.webp",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-08"
-    },
-    {
-      "url": "https://storage.imrpress.com/JIN/2092588507986714624/6/1757-448X-25-8-52601/fig1.jpg?x-oss-process=image/resize,w_600",
-      "item": "ee1eb8e7-73e6-415f-8ac9-a6c5502b5160",
-      "title": "Evaluating a Transparent Cranial Window for  Observation of µECoG Arrays on the ",
-      "why": "the photograph this outlet ran",
-      "at": "2026-09-08"
-    },
-    {
-      "url": "https://scx2.b-cdn.net/gfx/news/hires/2026/brain-implants.jpg",
-      "item": "834b5c23-411e-43b3-ad80-cb7fc0297b91",
-      "title": "Experimental brain implants are on the rise. What happens after the trials are o",
-      "why": "the photograph this outlet ran",
-      "at": "2026-09-09"
-    },
-    {
-      "url": "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/B06310AC-9C74-4D95-A83F6460BFCF85C8/6780BCDF-CFD2-4B7E-9DB31786215F5BF3/WebsiteWebP_XL-FNSYS_Main%20Visual_Purple_Website.webp",
-      "item": "38dd8ec9-65b4-41a1-ae01-dd2d22d97710",
-      "title": "PQ-Neurolink: latency-aware post-quantum-ready secure communication for distribu",
-      "why": "the photograph this outlet ran",
-      "at": "2026-09-11"
-    },
-    {
-      "url": "https://www.sciencealert.com/images/2026/09/BrainImplantChip.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-13"
-    },
-    {
-      "url": "https://www.khaama.com/wp-content/uploads/2026/08/Nuerulink-mUsk.jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-13"
-    },
-    {
-      "url": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/master/pass/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
-      "item": null,
-      "title": null,
-      "why": "unreviewed",
-      "at": "2026-09-15"
-    },
-    {
-      "url": "https://media.wired.com/photos/6aa8633c181b95a3e876fad6/191:100/w_1280,c_limit/New-Headset-to-Cure-Depression-Science-FLOW29472(2).jpg",
-      "item": "a1b8e103-0ae6-4c4a-8f7f-caed2f231d3b",
-      "title": "A New Headset to Help With Depression Is Now Available in the US",
-      "why": "the photograph this outlet ran",
-      "at": "2026-09-15"
-    }
-  ],
+  "pending": [],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (.claude/skills/refresh-home-images) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
 }

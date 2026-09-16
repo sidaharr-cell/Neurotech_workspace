@@ -32,10 +32,26 @@ describe('usableImage', () => {
   })
 
   it('holds the lead to a picture of the story itself', () => {
-    const illustration = feedRow({ imageSubject: 'class' })
+    const illustration = feedRow({ imageKind: 'photo', imageSubject: 'class' })
     expect(usableImage(illustration)).toBeTruthy()
     expect(usableImage(illustration, { own: true })).toBeNull()
-    expect(usableImage(feedRow({ imageSubject: 'item' }), { own: true })).toBeTruthy()
+    expect(usableImage(feedRow({ imageKind: 'photo', imageSubject: 'item' }), { own: true })).toBeTruthy()
+  })
+
+  // The invariant the whole picture pipeline rests on, held at the page
+  // boundary rather than only in scripts/. classifyImageUrl writes the kind as
+  // null for a file image-review.json has no ruling on; this read that as a
+  // photograph, and seven unreviewed pictures led the front page in a fortnight
+  // — a conference flyer with a QR code among them.
+  it('refuses a picture nobody has looked at', () => {
+    expect(usableImage(feedRow({ imageKind: null }))).toBeNull()
+    expect(usableImage(feedRow({ imageKind: null }), { own: true })).toBeNull()
+    expect(usableImage(feedRow({}))).toBeNull()
+    expect(canLead({ id: 'a', metadata: { image: 'https://x/a.jpg', imageKind: null, imageSubject: 'item', imageW: 2400, imageH: 1600 } })).toBe(false)
+  })
+
+  it('still reports what an unreviewed row is holding, so it can be found', () => {
+    expect(imageOf(feedRow({ imageKind: null }))).toMatchObject({ url: 'https://x/a.jpg', kind: 'unreviewed' })
   })
 })
 
@@ -79,7 +95,7 @@ describe('creditLine', () => {
 describe('assignImages: a photograph of the story, or nothing', () => {
   // Big enough for a card. Anything smaller is a separate rule, tested below.
   const shot = (id, url, over = {}) =>
-    ({ id, metadata: { image: url, imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
+    ({ id, metadata: { image: url, imageKind: 'photo', imageSubject: 'item', imageW: 1600, imageH: 1200, ...over } })
 
   it('gives a card the photograph it brought with it', () => {
     expect(assignImages([shot('a', 'https://x/a.jpg')]).get('a').url).toBe('https://x/a.jpg')
@@ -112,7 +128,7 @@ describe('assignImages: a photograph of the story, or nothing', () => {
 })
 
 describe('assignImages: high resolution or the data figure', () => {
-  const at = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'item', imageW: w, imageH: h } })
+  const at = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageKind: 'photo', imageSubject: 'item', imageW: w, imageH: h } })
 
   it('runs a picture that clears the frame at 2x', () => {
     expect(assignImages([at(1600, 1200)]).has('a')).toBe(true)
@@ -137,7 +153,7 @@ describe('assignImages: high resolution or the data figure', () => {
 })
 
 describe('assignImages: one photograph, one story', () => {
-  const shot = (id, url) => ({ id, metadata: { image: url, imageSubject: 'item', imageW: 1600, imageH: 1200 } })
+  const shot = (id, url) => ({ id, metadata: { image: url, imageKind: 'photo', imageSubject: 'item', imageW: 1600, imageH: 1200 } })
   const WIRE = 'https://cdn.wire.example/photo.jpg'
 
   it('never gives two cards on the page the same picture', () => {
@@ -167,7 +183,7 @@ describe('assignImages: one photograph, one story', () => {
 })
 
 describe('the lead', () => {
-  const shot = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'item', imageW: w, imageH: h } })
+  const shot = (w, h) => ({ id: 'a', metadata: { image: 'https://x/a.jpg', imageKind: 'photo', imageSubject: 'item', imageW: w, imageH: h } })
 
   it('needs a picture wide enough for a frame eleven hundred pixels across', () => {
     expect(canLead(shot(1600, 1200))).toBe(true)
@@ -175,7 +191,7 @@ describe('the lead', () => {
   })
 
   it('takes a photograph of the story or nothing', () => {
-    const illustrated = { id: 'a', metadata: { image: 'https://x/a.jpg', imageSubject: 'class', imageW: 2000, imageH: 1500 } }
+    const illustrated = { id: 'a', metadata: { image: 'https://x/a.jpg', imageKind: 'photo', imageSubject: 'class', imageW: 2000, imageH: 1500 } }
     expect(canLead(illustrated)).toBe(false)
     expect(leadPicture(illustrated, undefined)).toBeNull()
   })

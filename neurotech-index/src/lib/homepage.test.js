@@ -241,7 +241,7 @@ describe('the lead always carries a picture', () => {
   const withImage = (id, url, over = {}) => story({
     id,
     ...over,
-    metadata: { rankScore: over.rank ?? 50, image: url, imageSubject: 'item', imageW: 1280, imageH: 960 },
+    metadata: { rankScore: over.rank ?? 50, image: url, imageKind: 'photo', imageSubject: 'item', imageW: 1280, imageH: 960 },
   })
   const noImage = (id, rank) => story({ id, metadata: { rankScore: rank } })
 
@@ -256,7 +256,7 @@ describe('the lead always carries a picture', () => {
   })
 
   it('will not lead on an illustration too small for the slot', () => {
-    const small = story({ id: 'small', metadata: { rankScore: 99, image: 'https://x/s.jpg', imageSubject: 'class', imageW: 700, imageH: 500 } })
+    const small = story({ id: 'small', metadata: { rankScore: 99, image: 'https://x/s.jpg', imageKind: 'photo', imageSubject: 'class', imageW: 700, imageH: 500 } })
     const big = withImage('big', 'https://x/b.jpg', { rank: 10 })
     expect(composeStories([small, big]).lead.id).toBe('big')
   })
