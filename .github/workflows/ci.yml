@@ -5,7 +5,7 @@ name: CI
 # anywhere ran the test suite.
 on:
   push:
-    branches: [main, revamp]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

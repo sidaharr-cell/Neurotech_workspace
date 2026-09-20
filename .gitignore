@@ -1,5 +1,6 @@
-# Local Claude Code settings (machine-specific permissions)
-.claude/settings.local.json
+# Local agent and editor tooling — not part of the project
+.claude/
+CLAUDE.md
 
 # Secrets — never commit (belt-and-suspenders; subfolders also ignore these)
 .env
