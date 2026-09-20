@@ -44,6 +44,15 @@ const titleCase = s => (s || '').toLowerCase().replace(/\b\w/g, c => c.toUpperCa
 const normLabName = n => String(n || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\blab(oratory)?\b|\bgroup\b/g, ' ').replace(/\s+/g, ' ').trim()
 const withProto = u => { u = String(u || '').trim(); return u ? (/^https?:\/\//i.test(u) ? u : `https://${u}`) : null }
 
+// The upstream Airtable carries stray contact addresses in columns that do not
+// mean an address: a PI's email in Principal Investigator, in Website, in
+// Faculty. They are a person's contact details, they are not what the column
+// says, and the live fetch below overwrites the committed snapshot on every
+// nightly run — so a value dropped here stays dropped instead of coming back
+// tomorrow. Anchored, because a field that merely contains an @ is not one.
+const dropEmail = v =>
+  (typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v.trim()) ? null : v)
+
 // NeuroTechX "Academic Labs" — global academic labs with real homepages.
 // Fetched live so the list auto-updates; falls back to the committed snapshot.
 async function loadAcademicLabs() {
@@ -51,8 +60,9 @@ async function loadAcademicLabs() {
   try {
     const { rows } = await fetchSharedView(ACADEMIC_SHARE)
     src = rows.filter(r => r['Lab Name']).map(r => ({
-      labName: r['Lab Name'], university: r['University'], pi: r['Principal Investigator'],
-      city: r['City'], country: r['Country'], website: r['Website'], faculty: r['Faculty'] || null,
+      labName: r['Lab Name'], university: dropEmail(r['University']), pi: dropEmail(r['Principal Investigator']),
+      city: r['City'], country: r['Country'], website: dropEmail(r['Website']),
+      faculty: dropEmail(r['Faculty']) || null,
       subjects: r['Subject(s)'] || [], methods: r['Method(s)'] || [],
     }))
     writeFileSync(resolve(__dir, ACADEMIC_SNAPSHOT), JSON.stringify(src, null, 0))
