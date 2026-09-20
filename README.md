@@ -105,8 +105,9 @@ reaches the site because a person looked at it, not because a search engine
 returned it.
 
 Candidates found by the pipeline land in a queue in
-`src/data/image-review.json`. Judgement happens offline, in the
-`neurotech-index/docs/home-image-review.md` runbook, and is written back as data.
+`src/data/image-review.json`. Judgement happens offline, following the runbook in
+[`neurotech-index/docs/home-image-review.md`](neurotech-index/docs/home-image-review.md),
+and is written back as data.
 Every candidate is asked four questions, and all four must be yes to publish:
 is it a photograph, is it one uninterrupted image, is it safe beside a headline,
 and is it a picture **of** the thing it was queued for.

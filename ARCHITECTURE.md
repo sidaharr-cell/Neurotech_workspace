@@ -58,7 +58,7 @@ by accident. Check a script's header before running it.
 There is **no typecheck** — the codebase is plain JS/JSX with no TypeScript. Where the
 build spec asks for "typecheck passes", read it as "build + lint pass".
 
-CI (`.github/workflows/ci.yml`, on push to `main`/`revamp` and on PRs) runs lint, tests,
+CI (`.github/workflows/ci.yml`, on push to `main` and on PRs) runs lint, tests,
 build, and `validate:funding`. `.github/workflows/refresh.yml` runs `npm run daily` at
 06:23 UTC, then commits the data files it wrote, then `verify:cron`. The workflow holds no
 sequence of its own: it used to list every step in YAML, which is how the sequence and
