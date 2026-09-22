@@ -2571,6 +2571,13 @@
       "title": null,
       "why": "unreviewed",
       "at": "2026-09-21"
+    },
+    {
+      "url": "https://www.sciencedaily.com/images/1920/maxialtrode-illustration.webp",
+      "item": null,
+      "title": null,
+      "why": "unreviewed",
+      "at": "2026-09-22"
     }
   ],
   "note": "Picture decisions made by looking at the picture, and the queue of pictures still waiting for one. Written by the daily reviewer (neurotech-index/docs/home-image-review.md) and read by scripts/lib/review.js. No script in this repo calls a model API; this file is where the judgement comes from. Unreviewed means no."
